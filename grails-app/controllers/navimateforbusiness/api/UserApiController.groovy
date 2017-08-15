@@ -8,26 +8,19 @@ import javax.xml.bind.Marshaller
 
 class UserApiController {
 
-    def redisService
+    def authService
 
     def getMyProfile() {
         def accessToken = request.getHeader("X-Auth-Token")
         if (!accessToken) {
             throw new ApiException("Unauthorized", 401)
         }
-        def sessionDataStr = redisService.get("accessToken:$accessToken")
-        def sessionData
-        if (sessionDataStr) {
-            sessionData = JSON.parse(sessionDataStr)
-        }
-        if (!sessionData) {
-            throw new ApiException("Unauthorized", 401)
-        }
-        User user = User.get(sessionData.userId)
+        def user = authService.getUserFromAccessToken(accessToken)
         render navimateforbusiness.Marshaller.serializeUser(user) as JSON
     }
 
     def updateMyProfile() {
+        def input = request.JSON
         //TODO:
     }
 }
