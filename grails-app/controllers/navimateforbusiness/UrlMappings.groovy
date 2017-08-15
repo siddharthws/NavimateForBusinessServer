@@ -9,7 +9,10 @@ class UrlMappings {
             }
         }
 
-        "500"(view:'/error')
-        "404"(view:'/notFound')
+        "/api/auth/register" (controller: "AuthApi") { action = [POST: "register"] }
+        "/api/auth/login" (controller: "AuthApi") { action = [POST: "login"] }
+
+        "500"(controller: "Utils", action: "handleError")
+        "404"(controller: "Utils", action: "handle404")
     }
 }

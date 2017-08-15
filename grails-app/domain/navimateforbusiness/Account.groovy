@@ -10,7 +10,7 @@ class Account {
     ]
 
     Date dateCreated
-    Date lastModified
+    Date lastUpdated
 
     static constraints = {
 

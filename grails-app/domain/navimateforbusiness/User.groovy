@@ -8,11 +8,10 @@ class User {
     String email
     navimateforbusiness.Status status = navimateforbusiness.Status.ACTIVE
     String fcmId
+    navimateforbusiness.Role role
 
     Date dateCreated
-    Date lastModified
-
-    navimateforbusiness.Role role
+    Date lastUpdated
 
     static belongsTo = [
             account: Account
@@ -21,6 +20,7 @@ class User {
     static constraints = {
         email nullable: true
         fcmId nullable: true
+        account nullable: true
     }
 
     static mapping = {
