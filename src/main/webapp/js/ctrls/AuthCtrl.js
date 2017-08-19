@@ -5,7 +5,7 @@ app.controller("AuthCtrl", function ($scope, $rootScope, $http, $location) {
       phoneNumber: $scope.phoneNumber,
       password: $scope.password
     }
-    $http.post("/api/authApi/register", payload)
+    $http.post("/api/auth/register", payload)
       .then(function (response) {
         console.log(response.data)
         $location.path("/login")
