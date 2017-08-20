@@ -1,5 +1,5 @@
 package navimateforbusiness
 
-enum Status {
+enum UserStatus {
     INACTIVE, ACTIVE
 }

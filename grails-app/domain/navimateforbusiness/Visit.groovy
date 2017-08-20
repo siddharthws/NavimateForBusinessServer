@@ -1,17 +1,14 @@
 package navimateforbusiness
 
-class Account {
+class Visit {
 
     // Timestamp
     Date dateCreated
     Date lastUpdated
 
-    // Company Name
-    String          companyName
-
-    // List of users
-    static hasMany = [
-            users: User
+    static belongsTo = [
+            user: User,
+            task: Task
     ]
 
     static constraints = {

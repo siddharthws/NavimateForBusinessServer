@@ -2,28 +2,47 @@ package navimateforbusiness
 
 class User {
 
+    // Timestamp
+    Date dateCreated
+    Date lastUpdated
+
+    // Contact Information
     String name
     String phoneNumber
     String password
     String email
-    navimateforbusiness.Status status = navimateforbusiness.Status.ACTIVE
     String fcmId
+
+    // Account Information
+    navimateforbusiness.UserStatus status
     navimateforbusiness.Role role
-
-    Date dateCreated
-    Date lastUpdated
-
     static belongsTo = [
-            account: Account
+            account: Account,
+            superior: User
+    ]
+
+    // Data
+    static hasMany = [
+            subordinates:   User,
+            leads:          Lead,
+            tasks:          Task,
+            forms:          Form,
+            visits:         Visit
     ]
 
     static constraints = {
-        email nullable: true
-        fcmId nullable: true
-        account nullable: true
+        password        nullable: true
+        email           nullable: true
+        fcmId           nullable: true
+        account         nullable: true
+        subordinates    nullable: true
+        leads           nullable: true
+        tasks           nullable: true
+        forms           nullable: true
+        visits          nullable: true
     }
 
     static mapping = {
-        table 'nvm_user'
+        table 'nvm_user'            // table name 'user' is not allowed
     }
 }
