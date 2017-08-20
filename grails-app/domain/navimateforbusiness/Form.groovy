@@ -1,17 +1,19 @@
 package navimateforbusiness
 
-class Account {
+import grails.converters.JSON
+
+class Form {
 
     // Timestamp
     Date dateCreated
     Date lastUpdated
 
-    // Company Name
-    String          companyName
+    String name
+    JSON   dataJson
 
-    // List of users
-    static hasMany = [
-            users: User
+    static belongsTo = [
+            user: User,
+            task: Task
     ]
 
     static constraints = {
