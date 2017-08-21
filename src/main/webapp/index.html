@@ -4,13 +4,14 @@
   <meta charset="UTF-8">
   <title>Navimate For Business</title>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.3/angular-ui-router.min.js"></script>
 
   <script src="/static/js/app.js"></script>
   <script src="/static/js/ctrls/AuthCtrl.js"></script>
   <link rel="shortcut icon" href="">
 </head>
 <body ng-app="navimate">
-  <div ng-view></div>
+  <!-- Blank Index File. Head HTML of SPA. UI-Router used to populate views -->
+  <div ui-view></div>
 </body>
 </html>
