@@ -9,11 +9,12 @@ class Form {
     Date lastUpdated
 
     String name
-    JSON   dataJson
+    String data
 
     static belongsTo = [
-            user: User,
-            task: Task
+            account:    Account,
+            owner:      User,
+            task:       Task
     ]
 
     static constraints = {

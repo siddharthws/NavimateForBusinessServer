@@ -7,8 +7,9 @@ class Visit {
     Date lastUpdated
 
     static belongsTo = [
-            user: User,
-            task: Task
+            account:    Account,
+            rep:        User,
+            task:       Task
     ]
 
     static constraints = {

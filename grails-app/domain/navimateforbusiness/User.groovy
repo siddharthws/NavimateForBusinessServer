@@ -18,12 +18,12 @@ class User {
     navimateforbusiness.Role role
     static belongsTo = [
             account: Account,
-            superior: User
+            manager: User
     ]
 
     // Data
     static hasMany = [
-            subordinates:   User,
+            reps:           User,
             leads:          Lead,
             tasks:          Task,
             forms:          Form,
@@ -34,12 +34,8 @@ class User {
         password        nullable: true
         email           nullable: true
         fcmId           nullable: true
+        manager         nullable: true
         account         nullable: true
-        subordinates    nullable: true
-        leads           nullable: true
-        tasks           nullable: true
-        forms           nullable: true
-        visits          nullable: true
     }
 
     static mapping = {
