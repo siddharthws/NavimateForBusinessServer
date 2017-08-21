@@ -7,11 +7,13 @@ class Account {
     Date lastUpdated
 
     // Company Name
-    String          companyName
+    String          name
 
     // List of users
+    User admin
     static hasMany = [
-            users: User
+            managers: User,
+            reps: User
     ]
 
     static constraints = {

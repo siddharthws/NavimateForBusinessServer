@@ -8,22 +8,21 @@ class Task {
 
     // Associated Users
     static belongsTo = [
-            manager: User
+            account:    Account,
+            manager:    User
     ]
     User rep
 
     // Data
     Lead lead
     navimateforbusiness.TaskStatus status = TaskStatus.OPEN
-    Form formTemplate
+    Form template
     static hasMany = [
-            submittedForms:     Form,
-            visits:             Visit
+            forms:      Form,
+            visits:     Visit
     ]
 
     static constraints = {
-        submittedForms  nullable: true
-        visits          nullable: true
     }
 
     static mapping = {

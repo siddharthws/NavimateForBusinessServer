@@ -6,17 +6,27 @@ class Lead {
     Date dateCreated
     Date lastUpdated
 
-    String companyName
-    String contactName
-    String contactPhone
+    // Contact Info
+    String company
+    String name
+    String phone
+    String email
+
+    // Location
     double latitude
     double longitude
+    String address
 
     static belongsTo = [
+            account: Account,
             manager: User
     ]
 
     static constraints = {
+        company         nullable: true
+        email           nullable: true
+        latitude        nullable: true
+        longitude       nullable: true
     }
 
     static mapping = {
