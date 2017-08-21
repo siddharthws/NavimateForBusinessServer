@@ -13,4 +13,7 @@ app.controller("AuthCtrl", function ($scope, $rootScope, $http, $location) {
         console.log(error)
       })
   }
+
+      $scope.login = function () {
+  }
 })
