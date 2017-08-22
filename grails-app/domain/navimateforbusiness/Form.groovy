@@ -17,6 +17,10 @@ class Form {
             task:       Task
     ]
 
+    static mappedBy = [
+            task: 'forms'
+    ]
+
     static constraints = {
     }
 

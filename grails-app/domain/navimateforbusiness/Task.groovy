@@ -22,6 +22,11 @@ class Task {
             visits:     Visit
     ]
 
+    static mappedBy = [
+            manager:            'createdTasks',
+            rep:                'assignedTasks'
+    ]
+
     static constraints = {
     }
 
