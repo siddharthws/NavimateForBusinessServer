@@ -35,7 +35,7 @@ class AuthService {
     }
 
     def logout(String accessToken) {
-        redisService.get("accessToken:$accessToken")
+        redisService.del("accessToken:$accessToken")
     }
 
     def getUserFromAccessToken(String accessToken) {

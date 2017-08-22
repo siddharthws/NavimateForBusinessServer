@@ -23,4 +23,28 @@ class UserApiController {
         def input = request.JSON
         //TODO:
     }
+
+    def getTeam() {
+        def accessToken = request.getHeader("X-Auth-Token")
+        if (!accessToken) {
+            throw new ApiException("Unauthorized", 401)
+        }
+        def user = authService.getUserFromAccessToken(accessToken)
+    }
+
+    def getTask() {
+        def accessToken = request.getHeader("X-Auth-Token")
+        if (!accessToken) {
+            throw new ApiException("Unauthorized", 401)
+        }
+        def user = authService.getUserFromAccessToken(accessToken)
+    }
+
+    def getForm() {
+        def accessToken = request.getHeader("X-Auth-Token")
+        if (!accessToken) {
+            throw new ApiException("Unauthorized", 401)
+        }
+        def user = authService.getUserFromAccessToken(accessToken)
+    }
 }
