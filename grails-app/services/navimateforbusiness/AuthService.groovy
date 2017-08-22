@@ -21,6 +21,23 @@ class AuthService {
         return user
     }
 
+    def login(long id) {
+        // Generate Access Token
+        def accessToken = UUID.randomUUID().toString()
+
+        // Login user
+        redisService.set("accessToken:$accessToken", ([
+                userId   : id,
+                loginTime: new Date()
+        ] as JSON).toString())
+
+        return accessToken
+    }
+
+    def logout(String accessToken) {
+        redisService.get("accessToken:$accessToken")
+    }
+
     def getUserFromAccessToken(String accessToken) {
         def sessionDataStr = redisService.get("accessToken:$accessToken")
         def sessionData
