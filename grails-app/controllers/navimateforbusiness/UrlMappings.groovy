@@ -13,7 +13,11 @@ class UrlMappings {
         "/api/auth/login" (controller: "AuthApi") { action = [POST: "login"] }
         "/api/auth/logout" (controller: "AuthApi") { action = [GET: "logout"] }
 
-        "/api/users/me" (controller: "UserApi") {action = [GET: "getMyProfile", POST: "updateMyProfile"]}
+        // User Info APIs
+        "/api/users/me"         (controller: "UserApi") {action = [GET: "getMyProfile", POST: "updateMyProfile"]}
+        "/api/users/team"       (controller: "UserApi") {action = [GET: "getTeam"]}
+        "/api/users/task"       (controller: "UserApi") {action = [GET: "getTask"]}
+        "/api/users/form"       (controller: "UserApi") {action = [GET: "getForm"]}
 
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
