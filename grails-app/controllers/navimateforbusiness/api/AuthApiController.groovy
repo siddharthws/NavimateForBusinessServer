@@ -9,10 +9,11 @@ import navimateforbusiness.User
 class AuthApiController {
 
     def authService
-    def redisService
 
     def register() {
         def input = request.JSON
+
+        // Validate User
         if (!input.name || !input.phoneNumber || !input.password) {
             throw new ApiException("Please check input", 400)
         }
@@ -20,7 +21,11 @@ class AuthApiController {
         if (existingUser) {
             throw new ApiException("User with phone umber already exists", 409)
         }
+
+        // Register User
         authService.register(input)
+
+        // Send response
         def resp = [success: true]
         render resp as JSON
     }
@@ -32,11 +37,9 @@ class AuthApiController {
             throw new ApiException("Invalid phone number or password", 401)
         }
         // log the user in
-        def accessToken = UUID.randomUUID().toString()
-        redisService.set("accessToken:$accessToken", ([
-                userId   : user.id,
-                loginTime: new Date()
-        ] as JSON).toString())
+        def accessToken = authService.login(user.id)
+
+        // Send response
         def resp = [
                 accessToken: accessToken,
                 name  : user.name
@@ -47,7 +50,7 @@ class AuthApiController {
     def logout() {
         def accessToken = request.getHeader("X-Auth-Token")
         if (accessToken) {
-            redisService.get("accessToken:$accessToken")
+            authService.logout(accessToken)
         }
         def resp = [success: true]
         render resp as JSON
