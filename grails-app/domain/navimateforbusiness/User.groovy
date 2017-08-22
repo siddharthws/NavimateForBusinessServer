@@ -25,7 +25,8 @@ class User {
     static hasMany = [
             reps:           User,
             leads:          Lead,
-            tasks:          Task,
+            createdTasks:   Task,
+            assignedTasks:  Task,
             forms:          Form,
             visits:         Visit
     ]
