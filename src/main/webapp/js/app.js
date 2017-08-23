@@ -40,7 +40,8 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     .state('dashboard', {
         abstract: true,
         url: '/dashboard',
-        templateUrl: '../views/dashboard.html'
+        templateUrl: '../views/dashboard.html',
+        controller: 'AuthCtrl'
     })
     .state('dashboard.team', {
         abstract: true,
