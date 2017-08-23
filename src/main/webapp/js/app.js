@@ -29,19 +29,19 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     .state('home.login', {
         url: '/login',
         templateUrl: '../views/home/login.html',
-        controller: 'AuthCtrl'
+        controller: 'LoginCtrl'
     })
     .state('home.register', {
         url: '/register',
         templateUrl: '../views/home/register.html',
-        controller: 'AuthCtrl'
+        controller: 'RegisterCtrl'
     })
       // Dashboard mappings
     .state('dashboard', {
         abstract: true,
         url: '/dashboard',
         templateUrl: '../views/dashboard.html',
-        controller: 'AuthCtrl'
+        controller: 'DashboardCtrl'
     })
     .state('dashboard.team', {
         abstract: true,
