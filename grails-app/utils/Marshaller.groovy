@@ -12,5 +12,18 @@ class Marshaller {
                 email: user.email
         ]
     }
+
+    static def serializeLead(Lead lead){
+        return [
+                id:             lead.id,
+                company:        lead.company,
+                name:           lead.name,
+                phoneNumber:    lead.phone,
+                email:          lead.email,
+                address:        lead.address,
+                latitude:       lead.latitude,
+                longitude:      lead.longitude
+        ]
+    }
 }
 

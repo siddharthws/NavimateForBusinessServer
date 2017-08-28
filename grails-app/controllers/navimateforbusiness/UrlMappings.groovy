@@ -19,6 +19,9 @@ class UrlMappings {
         "/api/users/task"       (controller: "UserApi") {action = [GET: "getTask"]}
         "/api/users/form"       (controller: "UserApi") {action = [GET: "getForm"]}
 
+        // Lead Related APIs
+        "/api/leads/upload"         (controller: "LeadApi") {action = [POST: "upload"]}
+
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
     }
