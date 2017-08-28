@@ -15,7 +15,7 @@ app.service("ExcelService", function ($http, $localStorage) {
             var cols = []
             for (col = range.s.c; col <= range.e.c; col++){
                 var cell = worksheet[XLSX.utils.encode_cell({r: row, c: col})]
-                if (cell != undefined)
+                if (cell)
                 {
                     cols.push(cell.v)
                 }

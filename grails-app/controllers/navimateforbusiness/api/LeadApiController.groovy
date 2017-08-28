@@ -23,14 +23,11 @@ class LeadApiController {
         JSONArray excelJson = JSON.parse(request.JSON.excelData)
         ArrayList<Lead> leads = leadService.parseExcel(user, excelJson)
 
-        // Serialize Response
-        JSONArray resp = new JSONArray()
-        for (Lead lead : leads)
-        {
+        // Send response
+        def resp = new JSONArray();
+        leads.each { lead ->
             resp.add(Marshaller.serializeLead(lead))
         }
-
-        // Send response
         render resp as JSON
     }
 }

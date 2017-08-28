@@ -8,14 +8,14 @@ class LeadService {
 
     def parseExcel(User manager, JSONArray excelJson) {
         // Parse JSON to Lead Object
-        ArrayList<Lead> leads = ParseToLeads(manager, excelJson)
+        def leads = parseToLeads(manager, excelJson)
 
         // TODO: Init Lat / Lng from Address using Places API
 
         return leads
     }
 
-    ArrayList<Lead> ParseToLeads(User manager, JSONArray excelJson){
+    ArrayList<Lead> parseToLeads(User manager, JSONArray excelJson){
         ArrayList<Lead> leads = new ArrayList<>()
 
         // Get all Column Names
@@ -32,7 +32,7 @@ class LeadService {
 
         // Ensure Mandatory Columns are present
         if ((nameIdx == -1) || (phoneIdx == -1) || (addressIdx == -1)){
-            throw new navimateforbusiness.ApiException("Mandatory columns missing", 401)
+            throw new navimateforbusiness.ApiException("Mandatory columns missing", 400)
         }
 
         // Create Lead Objects
@@ -46,7 +46,7 @@ class LeadService {
             if ((name == null) || (name.length() == 0) ||
                 (phone == null) || (phone.length() == 0) ||
                 (address == null) || (address.length() == 0)){
-                throw new navimateforbusiness.ApiException("Data in mandatory columns missing", 401)
+                throw new navimateforbusiness.ApiException("Data in mandatory columns missing", 400)
             }
 
             // Create Lead Objects
