@@ -9,6 +9,7 @@ import org.grails.web.json.JSONArray
 class LeadApiController {
 
     def leadService
+    def authService
 
     def upload() {
         // Authenticate User
@@ -16,19 +17,17 @@ class LeadApiController {
         if (!accessToken) {
             throw new ApiException("Unauthorized", 401)
         }
+        def user = authService.getUserFromAccessToken(accessToken)
 
         // Parse Input
         JSONArray excelJson = JSON.parse(request.JSON.excelData)
-        ArrayList<Lead> leads = leadService.parseExcel(excelJson)
-
-        // Serialize Response
-        JSONArray resp = new JSONArray()
-        for (Lead lead : leads)
-        {
-            resp.add(Marshaller.serializeLead(lead))
-        }
+        ArrayList<Lead> leads = leadService.parseExcel(user, excelJson)
 
         // Send response
+        def resp = new JSONArray();
+        leads.each { lead ->
+            resp.add(Marshaller.serializeLead(lead))
+        }
         render resp as JSON
     }
 }
