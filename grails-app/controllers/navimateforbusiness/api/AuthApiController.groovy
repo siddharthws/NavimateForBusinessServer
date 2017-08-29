@@ -3,6 +3,7 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.Account
 import navimateforbusiness.ApiException
+import navimateforbusiness.Constants
 import navimateforbusiness.Role
 import navimateforbusiness.User
 
@@ -15,11 +16,11 @@ class AuthApiController {
 
         // Validate User
         if (!input.name || !input.phoneNumber || !input.password) {
-            throw new ApiException("Please check input", 400)
+            throw new ApiException("Please check input", Constants.HttpCodes.BAD_REQUEST)
         }
         def existingUser = User.findByPhoneNumber(input.phoneNumber)
         if (existingUser) {
-            throw new ApiException("User with phone umber already exists", 409)
+            throw new ApiException("User with phone umber already exists", Constants.HttpCodes.CONFLICT)
         }
 
         // Register User
@@ -34,7 +35,7 @@ class AuthApiController {
         def input = request.JSON
         User user = User.findByPhoneNumberAndPassword(input.phoneNumber, input.password)
         if (!user) {
-            throw new ApiException("Invalid phone number or password", 401)
+            throw new ApiException("Invalid phone number or password", Constants.HttpCodes.UNAUTHORIZED)
         }
         // log the user in
         def accessToken = authService.login(user.id)
