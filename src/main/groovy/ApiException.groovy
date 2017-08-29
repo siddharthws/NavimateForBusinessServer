@@ -3,7 +3,8 @@ package navimateforbusiness
 import org.grails.core.exceptions.GrailsException
 
 class ApiException extends GrailsException {
-    int responseCode = 500 // response code to send for this exception
+    // response code to send for this exception
+    int responseCode = navimateforbusiness.Constants.HttpCodes.INTERNAL_SERVER_ERROR
 
     public ApiException() {}
 

@@ -32,7 +32,7 @@ class LeadService {
 
         // Ensure Mandatory Columns are present
         if ((nameIdx == -1) || (phoneIdx == -1) || (addressIdx == -1)){
-            throw new navimateforbusiness.ApiException("Mandatory columns missing", 400)
+            throw new navimateforbusiness.ApiException("Mandatory columns missing", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Create Lead Objects
@@ -46,7 +46,7 @@ class LeadService {
             if ((name == null) || (name.length() == 0) ||
                 (phone == null) || (phone.length() == 0) ||
                 (address == null) || (address.length() == 0)){
-                throw new navimateforbusiness.ApiException("Data in mandatory columns missing", 400)
+                throw new navimateforbusiness.ApiException("Data in mandatory columns missing", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Create Lead Objects

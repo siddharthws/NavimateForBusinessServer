@@ -45,7 +45,7 @@ class AuthService {
             sessionData = JSON.parse(sessionDataStr)
         }
         if (!sessionData) {
-            throw new navimateforbusiness.ApiException("Unauthorized", 401)
+            throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
         }
         return User.get(sessionData.userId)
     }

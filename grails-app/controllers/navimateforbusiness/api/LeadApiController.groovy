@@ -2,6 +2,7 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import navimateforbusiness.ApiException
+import navimateforbusiness.Constants
 import navimateforbusiness.Lead
 import navimateforbusiness.Marshaller
 import org.grails.web.json.JSONArray
@@ -15,7 +16,7 @@ class LeadApiController {
         // Authenticate User
         def accessToken = request.getHeader("X-Auth-Token")
         if (!accessToken) {
-            throw new ApiException("Unauthorized", 401)
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
         }
         def user = authService.getUserFromAccessToken(accessToken)
 
