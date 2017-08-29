@@ -15,11 +15,11 @@ class LeadService {
         return leads
     }
 
-    ArrayList<Lead> parseToLeads(User manager, JSONArray excelJson){
-        ArrayList<Lead> leads = new ArrayList<>()
+    def parseToLeads(User manager, JSONArray excelJson){
+        def leads = []
 
         // Get all Column Names
-        ArrayList<String> columns = excelJson.getJSONArray(0)
+        def columns = excelJson[0]
 
         // Get indexes of columns
         int nameIdx = columns.indexOf("Name")
@@ -37,15 +37,13 @@ class LeadService {
 
         // Create Lead Objects
         for (int i = 1; i < excelJson.length(); i++){
-            JSONArray rowData = excelJson.get(i)
-            String name = rowData.get(nameIdx)
-            String phone = rowData.get(phoneIdx)
-            String address = rowData.get(addressIdx)
+            def row = excelJson[i]
+            String name = row[nameIdx]
+            String phone = row[phoneIdx]
+            String address = row[addressIdx]
 
             // Ensure data is present for mandatory columns
-            if ((name == null) || (name.length() == 0) ||
-                (phone == null) || (phone.length() == 0) ||
-                (address == null) || (address.length() == 0)){
+            if (!name || !phone || !address){
                 throw new navimateforbusiness.ApiException("Data in mandatory columns missing", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
 
@@ -59,8 +57,8 @@ class LeadService {
             // Populate Optional
             if (emailIdx != -1)
             {
-                String email = rowData.get(emailIdx)
-                if ((email != null) && (email.size() != 0))
+                String email = row[emailIdx]
+                if (email)
                 {
                     lead.email = email
                 }
@@ -68,8 +66,8 @@ class LeadService {
 
             if (companyIdx != -1)
             {
-                String company = rowData.get(companyIdx)
-                if ((company != null) && (company.size() != 0))
+                String company = row[companyIdx]
+                if (company)
                 {
                     lead.company = company
                 }
@@ -77,16 +75,16 @@ class LeadService {
 
             if ((latIdx != -1) && (lngIdx != -1))
             {
-                Double lat = rowData.get(latIdx)
-                Double lng = rowData.get(lngIdx)
-                if ((lat != null) && (lng != null))
+                Double lat = row[latIdx]
+                Double lng = row[lngIdx]
+                if (lat && lng)
                 {
                     lead.latitude = lat
                     lead.longitude = lng
                 }
             }
 
-            leads.add(lead)
+            leads.push(lead)
         }
 
         return leads
