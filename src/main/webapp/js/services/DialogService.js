@@ -5,12 +5,22 @@
 app.service('DialogService', function($mdDialog) {
 
     // Launch Alert Dialog
-    this.alert = function ($scope, message) {
-        // Placeholder
+    this.alert = function (message) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '../views/dialogs/Alert.html',
+                            controller: 'AlertCtrl',
+                            clickOutsideToClose: true,
+                            locals: { message: message }
+        })
     }
 
     // Launch Confirm Dialog
-    this.confirm = function ($scope, message) {
-        // Placeholder
+    this.confirm = function (message) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '../views/dialogs/Confirm.html',
+                            controller: 'ConfirmCtrl',
+                            clickOutsideToClose: true,
+                            locals: { message: message }
+        })
     }
 })
