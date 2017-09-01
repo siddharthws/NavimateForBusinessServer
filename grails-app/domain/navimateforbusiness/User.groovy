@@ -36,7 +36,6 @@ class User {
         email           nullable: true
         fcmId           nullable: true
         manager         nullable: true
-        account         nullable: true
     }
 
     static mapping = {
