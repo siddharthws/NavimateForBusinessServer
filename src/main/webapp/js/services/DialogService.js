@@ -23,4 +23,13 @@ app.service('DialogService', function($mdDialog) {
                             locals: { message: message }
         })
     }
+
+    // Launch Confirm Dialog
+    this.login = function () {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '../views/dialogs/Login.html',
+                            controller: 'LoginCtrl',
+                            clickOutsideToClose: true
+        })
+    }
 })
