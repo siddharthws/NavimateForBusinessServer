@@ -24,11 +24,20 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
-    // Launch Confirm Dialog
+    // Launch Login Dialog
     this.login = function () {
         // Show Dialog
         $mdDialog.show({    templateUrl: '../views/dialogs/Login.html',
                             controller: 'LoginCtrl',
+                            clickOutsideToClose: true
+        })
+    }
+
+    // Launch Register Dialog
+    this.register = function () {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '../views/dialogs/Register.html',
+                            controller: 'RegisterCtrl',
                             clickOutsideToClose: true
         })
     }
