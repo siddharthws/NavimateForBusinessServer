@@ -9,16 +9,24 @@ class AuthService {
     def redisService
 
     def register(input) {
-        User user = new User(name: input.name, phoneNumber: input.phoneNumber,
-                password: input.password)
-        user.role = navimateforbusiness.Role.ADMIN
-        user.save(flush: true, failOnError: true)
+        // Create and save a new account
         Account account = new Account(name: input.name)
-        account.admin = user
         account.save(flush: true, failOnError: true)
-        user.account = account
-        user.save(flush: true, failOnError: true)
-        return user
+
+        // Create and save a new Admin user
+        User manager = new User(    name:           input.name,
+                                    phoneNumber:    input.phoneNumber,
+                                    password:       input.password,
+                                    account:        account,
+                                    role:           navimateforbusiness.Role.ADMIN,
+                                    status:         navimateforbusiness.UserStatus.ACTIVE)
+        manager.save(flush: true, failOnError: true)
+
+        // Assign admin to account
+        account.admin = manager
+        account.save(flush: true, failOnError: true)
+
+        return manager
     }
 
     def login(long id) {
