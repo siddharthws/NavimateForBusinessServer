@@ -20,23 +20,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
   $stateProvider
       // Homepage Mappings
     .state('home', {
-      abstract: true,
-      url: '',
-      templateUrl: '../views/home.html'
-    })
-    .state('home.features', {
         url: '',
-        templateUrl: '../views/home/features.html'
-    })
-    .state('home.login', {
-        url: '/login',
-        templateUrl: '../views/home/login.html',
-        controller: 'LoginCtrl'
-    })
-    .state('home.register', {
-        url: '/register',
-        templateUrl: '../views/home/register.html',
-        controller: 'RegisterCtrl'
+        templateUrl: '../views/home.html',
+        controller: 'HomeCtrl'
     })
       // Dashboard mappings
     .state('dashboard', {
