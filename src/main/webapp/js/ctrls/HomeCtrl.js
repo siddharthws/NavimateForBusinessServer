@@ -5,7 +5,7 @@
 app.controller('HomeCtrl', function ($scope, DialogService) {
 
     $scope.login = function () {
-        // Placeholder
+        DialogService.login()
     }
 
     $scope.register = function () {
