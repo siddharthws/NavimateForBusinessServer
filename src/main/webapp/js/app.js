@@ -34,7 +34,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     })
     .state('dashboard.team', {
         abstract: true,
-        url: '/team'
+        url: '/team',
+        templateUrl: '../views/dashboard/team.html',
+        controller: 'TeamCtrl'
     })
     .state('dashboard.team.manage', {
         url: '/manage',
@@ -48,7 +50,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     })
     .state('dashboard.lead', {
         abstract: true,
-        url: '/leads'
+        url: '/leads',
+        templateUrl: '../views/dashboard/leads.html',
+        controller: 'LeadCtrl'
     })
     .state('dashboard.lead.manage', {
         url: '/manage',
@@ -62,7 +66,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     })
     .state('dashboard.tasks', {
         abstract: true,
-        url: '/tasks'
+        url: '/tasks',
+        templateUrl: '../views/dashboard/tasks.html',
+        controller: 'TaskCtrl'
     })
     .state('dashboard.tasks.manage', {
         url: '/manage',
@@ -76,7 +82,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     })
     .state('dashboard.forms', {
         abstract: true,
-        url: '/forms'
+        url: '/forms',
+        templateUrl: '../views/dashboard/forms.html',
+        controller: 'FormCtrl'
     })
     .state('dashboard.forms.manage', {
         url: '/manage',
