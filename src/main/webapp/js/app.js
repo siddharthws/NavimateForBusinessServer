@@ -2,7 +2,8 @@ var app = angular.module("navimate", [
   'ui.router',
   'ngStorage',
   'angular-js-xlsx',
-  'ngMaterial'
+  'ngMaterial',
+  'ngMap'
 ]);
 
 app.config(['$locationProvider', function ($locationProvider) {
