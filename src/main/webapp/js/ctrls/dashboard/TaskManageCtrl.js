@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TaskManageCtrl", function ($scope, $http, $location, $localStorage, ExcelService) {
+app.controller("TaskManageCtrl", function ($scope, $http, $location, $localStorage, ExcelService, DialogService) {
 
     $scope.init = function ()
     {
@@ -27,8 +27,8 @@ app.controller("TaskManageCtrl", function ($scope, $http, $location, $localStora
     $scope.excelRead = function (workbook) {
         ExcelService.excelRead(workbook).then(
             function (response) {
-                // Excel File Parsed succesfully
-                console.log(response.data)
+                // Launch Map Editor Dialod
+                DialogService.mapEditor(response.data)
             },
             function (error) {
                 // Excel File Parse Error
