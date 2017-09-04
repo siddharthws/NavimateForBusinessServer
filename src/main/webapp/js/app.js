@@ -48,18 +48,18 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         templateUrl: '../views/dashboard/team/report.html',
         controller: 'TeamReportCtrl'
     })
-    .state('dashboard.lead', {
+    .state('dashboard.leads', {
         abstract: true,
         url: '/leads',
         templateUrl: '../views/dashboard/leads.html',
         controller: 'LeadCtrl'
     })
-    .state('dashboard.lead.manage', {
+    .state('dashboard.leads.manage', {
         url: '/manage',
         templateUrl: '../views/dashboard/leads/manage.html',
         controller: 'LeadManageCtrl'
     })
-    .state('dashboard.lead.report', {
+    .state('dashboard.leads.report', {
         url: '/report',
         templateUrl: '../views/dashboard/leads/report.html',
         controller: 'LeadReportCtrl'

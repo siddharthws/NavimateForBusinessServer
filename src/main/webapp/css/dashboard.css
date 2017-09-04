@@ -24,3 +24,7 @@
 .dashboard-content{
     height: 100%;
 }
+
+.dashboard-content-options{
+    background-color: black;
+}
