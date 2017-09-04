@@ -46,6 +46,20 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         templateUrl: '../views/dashboard/team/report.html',
         controller: 'TeamReportCtrl'
     })
+    .state('dashboard.lead', {
+        abstract: true,
+        url: '/leads'
+    })
+    .state('dashboard.lead.manage', {
+        url: '/manage',
+        templateUrl: '../views/dashboard/leads/manage.html',
+        controller: 'LeadManageCtrl'
+    })
+    .state('dashboard.lead.report', {
+        url: '/report',
+        templateUrl: '../views/dashboard/leads/report.html',
+        controller: 'LeadReportCtrl'
+    })
     .state('dashboard.tasks', {
         abstract: true,
         url: '/tasks'
