@@ -13,6 +13,7 @@ app.config(['$locationProvider', function ($locationProvider) {
 app.config(function ($stateProvider, $urlRouterProvider) {
 
     // Configure URL mapping for non existent URLs
+  $urlRouterProvider.when('', '/')
   $urlRouterProvider.when('/dashboard', '/dashboard/team/manage')
   $urlRouterProvider.when('/dashboard/team', '/dashboard/team/manage')
   $urlRouterProvider.when('/dashboard/tasks', '/dashboard/tasks/manage')
@@ -21,7 +22,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
   $stateProvider
       // Homepage Mappings
     .state('home', {
-        url: '',
+        url: '/',
         templateUrl: '../views/home.html',
         controller: 'HomeCtrl'
     })
