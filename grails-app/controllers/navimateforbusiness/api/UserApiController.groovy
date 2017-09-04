@@ -33,6 +33,14 @@ class UserApiController {
         def user = authService.getUserFromAccessToken(accessToken)
     }
 
+    def getLead() {
+        def accessToken = request.getHeader("X-Auth-Token")
+        if (!accessToken) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+        def user = authService.getUserFromAccessToken(accessToken)
+    }
+
     def getTask() {
         def accessToken = request.getHeader("X-Auth-Token")
         if (!accessToken) {

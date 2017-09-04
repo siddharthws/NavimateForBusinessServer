@@ -16,6 +16,7 @@ class UrlMappings {
         // User Info APIs
         "/api/users/me"         (controller: "UserApi") {action = [GET: "getMyProfile", POST: "updateMyProfile"]}
         "/api/users/team"       (controller: "UserApi") {action = [GET: "getTeam"]}
+        "/api/users/lead"       (controller: "UserApi") {action = [GET: "getLead"]}
         "/api/users/task"       (controller: "UserApi") {action = [GET: "getTask"]}
         "/api/users/form"       (controller: "UserApi") {action = [GET: "getForm"]}
 
