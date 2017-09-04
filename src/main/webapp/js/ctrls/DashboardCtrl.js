@@ -4,12 +4,12 @@
 
 app.controller('DashboardCtrl', function ($scope, $location, $localStorage, AuthService) {
 
-    $scope.btnLogout = function(){
+    $scope.logout = function(){
         AuthService.logout()
             .then(
                 function (response) {
                     $localStorage.accessToken = ""
-                    $location.path("/login")
+                    $location.path("")
                 },
                 function (error) {
                     console.log(error)
