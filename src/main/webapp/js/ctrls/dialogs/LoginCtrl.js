@@ -2,7 +2,7 @@
  * Created by Siddharth on 01-09-2017.
  */
 
-app.controller('LoginCtrl', function ($scope, $mdDialog, $location, $localStorage, AuthService) {
+app.controller('LoginCtrl', function ($scope, $mdDialog, $state, $localStorage, AuthService) {
 
     $scope.login = function(){
 
@@ -14,7 +14,7 @@ app.controller('LoginCtrl', function ($scope, $mdDialog, $location, $localStorag
 
                     // Redirect to dashboard
                     $localStorage.accessToken = response.data.accessToken;
-                    $location.path("/dashboard")
+                    $state.go("dashboard.team.report")
                 },
                 function (error) {
                     // Login Failure

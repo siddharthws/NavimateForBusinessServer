@@ -2,7 +2,7 @@
  * Created by Siddharth on 04-09-2017.
  */
 
-app.controller("TaskCtrl", function ($scope, $http, $localStorage, $location) {
+app.controller("TaskCtrl", function ($scope, $http, $localStorage, $state) {
 
     $scope.init = function ()
     {
@@ -19,7 +19,7 @@ app.controller("TaskCtrl", function ($scope, $http, $localStorage, $location) {
                 },
                 function (error) {
                     console.log(error)
-                    $location.path('')
+                    $state.go('home')
                 }
             )
     }
