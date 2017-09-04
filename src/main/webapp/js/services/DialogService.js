@@ -41,4 +41,14 @@ app.service('DialogService', function($mdDialog) {
                             clickOutsideToClose: true
         })
     }
+
+    // Launch Map Editor Dialog
+    this.mapEditor = function (leads) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '../views/dialogs/MapEditor.html',
+                            controller: 'MapEditorCtrl',
+                            clickOutsideToClose: true,
+                            locals: { leads: leads }
+        })
+    }
 })
