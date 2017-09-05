@@ -1,8 +1,7 @@
-<div>
-    <div class="container-fluid dashboard-content-options">
-        <button ui-sref="dashboard.tasks.manage">Manage</button>
-        <button ui-sref="dashboard.tasks.report">Report</button>
-    </div>
 
-    <div class="dashboard-content-pane" ui-view></div>
+<div class="content-options">
+    <button ui-sref="dashboard.tasks.manage">Manage</button>
+    <button ui-sref="dashboard.tasks.report">Report</button>
 </div>
+
+<div class="content-container d-flex flex-column" ui-view></div>

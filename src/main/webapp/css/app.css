@@ -3,6 +3,7 @@
 body, html {
     height: 100%;
     width: 100%;
+    background-color: white;
 }
 
 /* Reset Container padding and margins to 0 */
