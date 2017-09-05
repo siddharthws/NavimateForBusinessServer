@@ -18,9 +18,9 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
   <link rel="stylesheet" href="/static/css/app.css">
-  <link rel="stylesheet" href="/static/css/index.css">
   <link rel="stylesheet" href="/static/css/home.css">
   <link rel="stylesheet" href="/static/css/dashboard.css">
+  <link rel="stylesheet" href="/static/css/dashboard/content.css">
   <link rel="stylesheet" href="/static/css/dialogs/login.css">
   <link rel="stylesheet" href="/static/css/dialogs/register.css">
   <link rel="stylesheet" href="/static/css/dialogs/mapEditor.css">
@@ -30,7 +30,7 @@
 </head>
 <body ng-app="navimate">
   <!-- Blank Index File. Head HTML of SPA. UI-Router used to populate views -->
-  <div class="index-content" ui-view></div>
+  <div class="full-height full-width" ui-view></div>
 
   <script src="/static/js/services/AuthService.js"></script>
   <script src="/static/js/services/ExcelService.js"></script>

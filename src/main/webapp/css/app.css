@@ -10,3 +10,12 @@ body, html {
     padding:    0;
     margin:     0;
 }
+
+/* Classes for specific properties */
+.full-height {
+    height: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
