@@ -4,5 +4,11 @@
 </div>
 
 <div class="content-data">
-    Content Data
+    <ul>
+        <li class="content-list-item d-flex" ng-repeat="member in team">
+            {{member.name}}
+            <div class="full-flex"></div>
+            <button>Delete</button>
+        </li>
+    </ul>
 </div>
