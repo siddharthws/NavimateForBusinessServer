@@ -6,6 +6,11 @@ body, html {
     background-color: white;
 }
 
+ul {
+    list-style-type: none;
+    padding: 0px;
+}
+
 /* Reset Container padding and margins to 0 */
 [class*="col-"], .row, .container, .container-fluid {
     padding:    0;
@@ -19,4 +24,8 @@ body, html {
 
 .full-width {
     width: 100%;
+}
+
+.full-flex{
+    flex: 1;
 }

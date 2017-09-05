@@ -15,7 +15,8 @@ app.controller("TeamCtrl", function ($scope, $http, $localStorage, $state) {
         })
             .then(
                 function (response) {
-                    console.log("Content View Info received")
+                    console.log(response.data)
+                    $scope.team = response.data
                 },
                 function (error) {
                     console.log(error)
