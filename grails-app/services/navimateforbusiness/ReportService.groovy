@@ -36,4 +36,36 @@ class ReportService {
 
         report
     }
+
+    def getLeadReport(User manager) {
+        def report = []
+
+        // Get all leads for this user
+        List<Lead> leads = Lead.findAllByManager(manager)
+        for (Lead lead : leads){
+            // Get all tasks for this lead
+            List<Task> tasks = Task.findAllByLead(lead)
+            for (Task task : tasks){
+                // Add an entry in report for each form in this task
+                for (Form form : task.forms) {
+                    def row = [ rep: task.rep.name,
+                                lead: task.lead.company,
+                                form: form.data]
+
+                    report.push(row)
+                }
+
+                // If no forms in this task, add single entry with empty form
+                if (task.forms.size() == 0) {
+                    def row = [ rep: task.rep.name,
+                                lead: task.lead.company,
+                                form: "No Forms Added"]
+
+                    report.push(row)
+                }
+            }
+        }
+
+        report
+    }
 }
