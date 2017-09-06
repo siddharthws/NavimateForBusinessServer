@@ -1,8 +1,31 @@
 <!-- Tasks Manage HTML -->
 <div class="content-toolbar">
-    <button>Toolbar Button</button>
+    <button>Add</button>
 </div>
 
 <div class="content-data">
-    <p>Content Data</p>
+    <table class="table table-striped" ng-table="">
+        <thead>
+        <th>
+            Company
+        </th>
+        <th>
+            Rep
+        </th>
+        <th>
+            Status
+        </th>
+        </thead>
+        <tr ng-repeat="task in tasks">
+            <td class="text-center">
+                {{task.lead}}
+            </td>
+            <td class="text-center">
+                {{task.rep}}
+            </td>
+            <td class="text-center">
+                {{task.status}}
+            </td>
+        </tr>
+    </table>
 </div>
