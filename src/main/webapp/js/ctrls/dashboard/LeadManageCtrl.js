@@ -7,9 +7,6 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
     // Init Variables
     $scope.leads = []
 
-    // Table Parameters
-    $scope.leadTableParams = new NgTableParams({}, {dataset: $scope.leads})
-
     // Send request to get list of leads
     $http({
         method:     'GET',
