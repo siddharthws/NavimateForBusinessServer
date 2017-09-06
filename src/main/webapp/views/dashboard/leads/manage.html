@@ -1,8 +1,31 @@
 <!-- Lead Manage HTML -->
 <div class="content-toolbar">
-    <button>Toolbar Button</button>
+    <js-xls onread="excelRead" onerror="excelError"></js-xls>
 </div>
 
 <div class="content-data">
-    <p>Content Data</p>
+    <table class="table table-striped" ng-table="leadTableParams">
+        <thead>
+        <th>
+            Company
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Phone
+        </th>
+        </thead>
+        <tr ng-repeat="lead in leads">
+            <td class="text-center">
+                {{lead.company}}
+            </td>
+            <td class="text-center">
+                {{lead.name}}
+            </td>
+            <td class="text-center">
+                {{lead.phoneNumber}}
+            </td>
+        </tr>
+    </table>
 </div>
