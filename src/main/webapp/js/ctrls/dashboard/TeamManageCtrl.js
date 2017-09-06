@@ -15,7 +15,6 @@ app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state)
         })
             .then(
                 function (response) {
-                    console.log(response.data)
                     $scope.team = response.data
                 },
                 function (error) {
