@@ -3,6 +3,7 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
+import navimateforbusiness.Lead
 import navimateforbusiness.User
 import org.grails.web.json.JSONArray
 
@@ -36,7 +37,7 @@ class UserApiController {
         // Get Team List
         List<User> team = User.findAllByManager(user)
 
-        def resp = new JSONArray();
+        def resp = new JSONArray()
         team.each { member ->
             resp.add(navimateforbusiness.Marshaller.serializeUser(member))
         }
@@ -49,6 +50,15 @@ class UserApiController {
             throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
         }
         def user = authService.getUserFromAccessToken(accessToken)
+
+        // Get Lead List
+        List<Lead> leads = Lead.findAllByManager(user)
+
+        def resp = new JSONArray()
+        leads.each { lead ->
+            resp.add(navimateforbusiness.Marshaller.serializeLead(lead))
+        }
+        render resp as JSON
     }
 
     def getTask() {
