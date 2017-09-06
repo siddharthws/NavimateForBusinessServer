@@ -22,6 +22,7 @@ class UrlMappings {
 
         // Report Related APIs
         "/api/reports/team"     (controller: "ReportApi") {action = {GET: "getTeamReport"}}
+        "/api/reports/lead"     (controller: "ReportApi") {action = {GET: "getLeadReport"}}
 
         // Lead Related APIs
         "/api/leads/upload"         (controller: "LeadApi") {action = [POST: "upload"]}

@@ -1,8 +1,41 @@
 <!-- Lead Report HTML -->
-<div class="content-toolbar">
-    <button>Toolbar Button</button>
+<div class="content-toolbar d-flex justify-content-between">
+    <div class="align-self-center" ng-dropdown-multiselect=""></div>
+
+    <div class="d-flex flex-column justify-content-between">
+        <md-datepicker ng-model="fromDate">From : </md-datepicker>
+        <md-datepicker ng-model="toDate">To : </md-datepicker>
+    </div>
+
+    <div class="d-flex flex-column justify-content-between">
+        <button>Export</button>
+        <button>Sync</button>
+    </div>
 </div>
 
 <div class="content-data">
-    <p>Content Data</p>
+    <table class="table table-bordered" ng-table="">
+        <thead>
+        <th>
+            Lead
+        </th>
+        <th>
+            Rep
+        </th>
+        <th>
+            Form
+        </th>
+        </thead>
+        <tr ng-repeat="row in report">
+            <td>
+                {{row.lead}}
+            </td>
+            <td>
+                {{row.rep}}
+            </td>
+            <td>
+                {{row.form}}
+            </td>
+        </tr>
+    </table>
 </div>
