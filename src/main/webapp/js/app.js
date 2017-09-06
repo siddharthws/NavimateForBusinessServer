@@ -78,11 +78,6 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         templateUrl: '../views/dashboard/tasks/manage.html',
         controller: 'TaskManageCtrl'
     })
-    .state('dashboard.tasks.report', {
-        url: '/report',
-        templateUrl: '../views/dashboard/tasks/report.html',
-        controller: 'TaskReportCtrl'
-    })
     .state('dashboard.forms', {
         abstract: true,
         url: '/forms',
@@ -93,10 +88,5 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         url: '/manage',
         templateUrl: '../views/dashboard/forms/manage.html',
         controller: 'FormManageCtrl'
-    })
-    .state('dashboard.forms.edit', {
-        url: '/edit',
-        templateUrl: '../views/dashboard/forms/editor.html',
-        controller: 'FormEditorCtrl'
     })
 });
