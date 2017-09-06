@@ -20,6 +20,9 @@ class UrlMappings {
         "/api/users/task"       (controller: "UserApi") {action = [GET: "getTask"]}
         "/api/users/form"       (controller: "UserApi") {action = [GET: "getForm"]}
 
+        // Report Related APIs
+        "/api/reports/team"     (controller: "ReportApi") {action = {GET: "getTeamReport"}}
+
         // Lead Related APIs
         "/api/leads/upload"         (controller: "LeadApi") {action = [POST: "upload"]}
 
