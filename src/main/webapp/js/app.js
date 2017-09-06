@@ -4,7 +4,8 @@ var app = angular.module("navimate", [
   'angular-js-xlsx',
   'ngMaterial',
   'ngMap',
-  'ngTable'
+  'ngTable',
+  'angularjs-dropdown-multiselect'
 ]);
 
 app.config(['$locationProvider', function ($locationProvider) {
