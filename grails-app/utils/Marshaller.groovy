@@ -25,5 +25,13 @@ class Marshaller {
                 longitude:      lead.longitude
         ]
     }
+
+    static def serializeForm(Form form) {
+        return [
+                id:     form.id,
+                name:   form.name,
+                data:   form.data
+        ]
+    }
 }
 

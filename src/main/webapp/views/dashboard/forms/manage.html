@@ -1,8 +1,27 @@
 <!-- Form Manage HTML -->
-<div class="content-toolbar">
-    <button>Toolbar Button</button>
-</div>
-
 <div class="content-data">
-    <p>Content Data</p>
+    <table class="table table-striped" ng-table="">
+        <thead>
+        <th>
+            Name
+        </th>
+        <th>
+            Data
+        </th>
+        <th>
+            Actions
+        </th>
+        </thead>
+        <tr ng-repeat="form in forms">
+            <td class="text-center">
+                {{form.name}}
+            </td>
+            <td class="text-center">
+                {{form.data}}
+            </td>
+            <td>
+                <button>View</button>
+            </td>
+        </tr>
+    </table>
 </div>
