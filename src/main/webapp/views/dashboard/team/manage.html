@@ -4,11 +4,28 @@
 </div>
 
 <div class="content-data">
-    <ul>
-        <li class="content-list-item d-flex" ng-repeat="member in team">
-            {{member.name}}
-            <div class="full-flex"></div>
-            <button>Delete</button>
-        </li>
-    </ul>
+    <table class="table table-striped" ng-table="">
+        <thead>
+        <th>
+            Name
+        </th>
+        <th>
+            Phone
+        </th>
+        <th>
+            Actions
+        </th>
+        </thead>
+        <tr ng-repeat="rep in team">
+            <td class="text-center">
+                {{rep.name}}
+            </td>
+            <td class="text-center">
+                {{rep.phoneNumber}}
+            </td>
+            <td>
+                <button>Delete</button>
+            </td>
+        </tr>
+    </table>
 </div>
