@@ -5,6 +5,7 @@ import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
 import navimateforbusiness.Form
 import navimateforbusiness.Lead
+import navimateforbusiness.Task
 import navimateforbusiness.User
 import org.grails.web.json.JSONArray
 
@@ -68,6 +69,15 @@ class UserApiController {
             throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
         }
         def user = authService.getUserFromAccessToken(accessToken)
+
+        // Get Form List
+        List<Task> tasks = Task.findAllByManager(user)
+
+        def resp = new JSONArray()
+        tasks.each { task ->
+            resp.add(navimateforbusiness.Marshaller.serializeTask(task))
+        }
+        render resp as JSON
     }
 
     def getForm() {

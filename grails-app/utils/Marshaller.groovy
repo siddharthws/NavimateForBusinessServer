@@ -26,6 +26,15 @@ class Marshaller {
         ]
     }
 
+    static def serializeTask(Task task) {
+        return [
+                id:         task.id,
+                lead:       task.lead.company,
+                rep:        task.rep.name,
+                status:     task.status.name()
+        ]
+    }
+
     static def serializeForm(Form form) {
         return [
                 id:     form.id,
