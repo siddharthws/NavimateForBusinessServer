@@ -5,8 +5,11 @@ import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
 import navimateforbusiness.Form
 import navimateforbusiness.Lead
+import navimateforbusiness.Role
+import navimateforbusiness.SmsHelper
 import navimateforbusiness.Task
 import navimateforbusiness.User
+import navimateforbusiness.UserStatus
 import org.grails.web.json.JSONArray
 
 import javax.xml.bind.Marshaller
@@ -43,6 +46,39 @@ class UserApiController {
         team.each { member ->
             resp.add(navimateforbusiness.Marshaller.serializeUser(member))
         }
+        render resp as JSON
+    }
+
+    def addRep() {
+        def accessToken = request.getHeader("X-Auth-Token")
+        if (!accessToken) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+        def user = authService.getUserFromAccessToken(accessToken)
+
+        // Check if rep is already registered in this manager's team
+        User rep = User.findByPhoneNumberAndManager(request.JSON.phoneNumber, user)
+        if (rep) {
+            rep.name = request.JSON.name
+            rep.manager = user
+            rep.account = user.account
+        }
+        else {
+            // Create New Rep Object
+            rep = new User(
+                    account: user.account,
+                    manager: user,
+                    name: request.JSON.name,
+                    phoneNumber: request.JSON.phoneNumber,
+                    role: Role.REP,
+                    status: UserStatus.INACTIVE)
+
+            // Send SMS to new user
+            SmsHelper.SendSms(rep.phoneNumber, user.name + " has added you to navimate. Join on https://play.google.com/store/apps/details?id=com.navimate.business")
+        }
+        rep.save(flush: true, failOnError: true)
+
+        def resp = [success: true]
         render resp as JSON
     }
 
