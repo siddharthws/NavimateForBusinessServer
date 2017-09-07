@@ -51,4 +51,23 @@ app.service('DialogService', function($mdDialog) {
                             locals: { leads: leads }
         })
     }
+
+    // Launch Lead Selector Dialog
+    this.leadSelector = function () {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '../views/dialogs/LeadSelector.html',
+                            controller: 'LeadSelectorCtrl',
+                            clickOutsideToClose: true
+        })
+    }
+
+    // Launch Task Creator Dialog
+    this.taskCreator = function (leads) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '../views/dialogs/TaskCreator.html',
+                            controller: 'TaskCreatorCtrl',
+                            clickOutsideToClose: true,
+                            locals: { leads: leads }
+        })
+    }
 })
