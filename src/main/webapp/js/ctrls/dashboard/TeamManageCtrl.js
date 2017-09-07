@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state) {
+app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state, DialogService) {
 
     /*--------------------------------- INIT -----------------------------------*/
     // Get team for this user
@@ -24,4 +24,8 @@ app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state)
     )
 
     /*--------------------------------- APIs -----------------------------------*/
+    $scope.add = function () {
+        // Show Add rep dialog
+        DialogService.addRep()
+    }
 })

@@ -51,4 +51,13 @@ app.service('DialogService', function($mdDialog) {
                             locals: { leads: leads }
         })
     }
+
+    // Launch Rep Add Dialog
+    this.addRep = function () {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '../views/dialogs/AddRep.html',
+                            controller: 'AddRepCtrl',
+                            clickOutsideToClose: true
+        })
+    }
 })
