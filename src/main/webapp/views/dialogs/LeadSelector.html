@@ -1,4 +1,18 @@
 <!-- HTML template for Lead Selector Dialog -->
 <md-dialog>
-    Lead Selector Dialog
+    <p> Select Leads : </p>
+    <ul>
+        <li ng-repeat="lead in leads">
+            <input type="checkbox"
+                   ng-checked="selection.indexOf(lead.id) > -1"
+                   ng-click="toggleSelection(lead.id)">
+            {{lead.name}}
+        </li>
+    </ul>
+
+    <p> Or... Upload from spreadsheet</p>
+    <js-xls onread="excelRead" onerror="excelError"></js-xls>
+
+    <button ng-click="next()" ng-show="selection.length">Next</button>
+    <button ng-click="cancel()">Cancel</button>
 </md-dialog>
