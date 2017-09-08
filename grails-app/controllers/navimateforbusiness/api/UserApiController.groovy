@@ -14,6 +14,7 @@ import javax.xml.bind.Marshaller
 class UserApiController {
 
     def authService
+    def taskService
 
     def getMyProfile() {
         def accessToken = request.getHeader("X-Auth-Token")
@@ -77,6 +78,20 @@ class UserApiController {
         tasks.each { task ->
             resp.add(navimateforbusiness.Marshaller.serializeTask(task))
         }
+        render resp as JSON
+    }
+
+    def updateTask() {
+        def accessToken = request.getHeader("X-Auth-Token")
+        if (!accessToken) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+        def user = authService.getUserFromAccessToken(accessToken)
+
+        JSONArray tasksJson = JSON.parse(request.JSON.tasks)
+        taskService.updateTasks(user, tasksJson)
+
+        def resp = [success: true]
         render resp as JSON
     }
 

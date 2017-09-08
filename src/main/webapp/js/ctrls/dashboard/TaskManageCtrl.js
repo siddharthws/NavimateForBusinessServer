@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TaskManageCtrl", function ($scope, $http, $localStorage, $state) {
+app.controller("TaskManageCtrl", function ($scope, $http, $localStorage, $state, DialogService) {
 
     $http({
         method:     'GET',
@@ -20,4 +20,8 @@ app.controller("TaskManageCtrl", function ($scope, $http, $localStorage, $state)
             $state.go('home')
         }
     )
+
+    $scope.add = function () {
+        DialogService.leadSelector()
+    }
 })

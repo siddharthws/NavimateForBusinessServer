@@ -1,0 +1,30 @@
+<!-- HTML template for Lead Selector Dialog -->
+<md-dialog>
+    <table class="table table-striped" ng-table="">
+        <thead>
+        <th>
+            Company
+        </th>
+        <th>
+            Rep
+        </th>
+        <th>
+            Template
+        </th>
+        </thead>
+        <tr ng-repeat="task in tasks">
+            <td class="text-center">
+                <select ng-model="task.lead.id" ng-options="lead.id as lead.company for lead in leads"/>
+            </td>
+            <td class="text-center">
+                <select ng-model="task.rep" ng-options="rep.name for rep in team"/>
+            </td>
+            <td class="text-center">
+                <select ng-model="task.template" ng-options="template.name for template in formTemplates"/>
+            </td>
+        </tr>
+    </table>
+
+    <button ng-click="add()">Add</button>
+    <button ng-click="create()">Create</button>
+</md-dialog>
