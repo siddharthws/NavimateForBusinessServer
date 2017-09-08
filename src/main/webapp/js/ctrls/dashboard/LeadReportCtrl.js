@@ -2,7 +2,7 @@
  * Created by Siddharth on 04-09-2017.
  */
 
-app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state) {
+app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state, ExcelService) {
 
     // Init Variables
     $scope.report = []
@@ -24,4 +24,12 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state)
             $state.go('home')
         }
     )
+
+    $scope.export = function () {
+        // Get table to export
+        var table = $('.lead-report-table').get(0)
+
+        // Call Excel Service
+        ExcelService.export(table, "Lead-Report")
+    }
 })

@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamReportCtrl", function ($scope, $http, $localStorage, $state, NgTableParams) {
+app.controller("TeamReportCtrl", function ($scope, $http, $localStorage, $state, ExcelService) {
 
     // Init Variables
     $scope.report = []
@@ -15,13 +15,21 @@ app.controller("TeamReportCtrl", function ($scope, $http, $localStorage, $state,
             'X-Auth-Token':    $localStorage.accessToken
         }
     })
-        .then(
-            function (response) {
-                $scope.report = response.data
-            },
-            function (error) {
-                console.log(error)
-                $state.go('home')
-            }
-        )
+    .then(
+        function (response) {
+            $scope.report = response.data
+        },
+        function (error) {
+            console.log(error)
+            $state.go('home')
+        }
+    )
+
+    $scope.export = function () {
+        // Get table to export
+        var table = $('.team-report-table').get(0)
+
+        // Call Excel Service
+        ExcelService.export(table, "Team-Report")
+    }
 })
