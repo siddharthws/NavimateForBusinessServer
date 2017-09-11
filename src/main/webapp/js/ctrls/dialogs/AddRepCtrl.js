@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('AddRepCtrl', function ($scope, $http, $localStorage, $mdDialog, ToastService) {
+app.controller('AddRepCtrl', function ($scope, $http, $localStorage, $mdDialog, ToastService, teamUpdateCb) {
 
     $scope.add = function () {
         if (validate()) {
@@ -37,6 +37,9 @@ app.controller('AddRepCtrl', function ($scope, $http, $localStorage, $mdDialog, 
                     // Hide dialog and show toast
                     $mdDialog.hide()
                     ToastService.toast("Rep Added")
+
+                    // Trigger Callback
+                    teamUpdateCb()
                 },
                 function (error) {
                     ToastService.toast("Unable to add rep")
