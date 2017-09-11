@@ -2,8 +2,9 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state) {
+app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state, DialogService) {
 
+    /* ------------------------------- INIT -----------------------------------*/
     $scope.init = function ()
     {
         $http({
@@ -26,4 +27,9 @@ app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state)
 
     // Init View
     $scope.init()
+
+    /* ------------------------------- APIs -----------------------------------*/
+    $scope.add = function () {
+        DialogService.addRep()
+    }
 })
