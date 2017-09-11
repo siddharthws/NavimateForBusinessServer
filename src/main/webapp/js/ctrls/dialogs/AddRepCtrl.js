@@ -3,11 +3,45 @@
  */
 
 // Controller for Alert Dialog
-app.controller('AddRepCtrl', function ($scope, $mdDialog, ToastService) {
+app.controller('AddRepCtrl', function ($scope, $http, $localStorage, $mdDialog, ToastService) {
 
     $scope.add = function () {
         if (validate()) {
-            // Placeholder for success validation
+            // Get Phone Number with country code
+            var phone
+            if ($scope.countryCode) {
+                phone = $scope.countryCode + $scope.phoneNumber
+            }
+            else {
+                phone = "91" + $scope.phoneNumber
+            }
+
+            // Get Email
+            var email = $scope.email ? $scope.email : "";
+
+            // Send Register Request
+            $http({
+                method:     'POST',
+                url:        '/api/users/team',
+                headers:    {
+                    'X-Auth-Token':    $localStorage.accessToken
+                },
+                data:       {
+                    name:           $scope.name,
+                    phoneNumber:    phone,
+                    email:          email
+                }
+            })
+            .then(
+                function (response) {
+                    // Hide dialog and show toast
+                    $mdDialog.hide()
+                    ToastService.toast("Rep Added")
+                },
+                function (error) {
+                    ToastService.toast("Unable to add rep")
+                    console.log(error)
+                })
         }
     }
 
