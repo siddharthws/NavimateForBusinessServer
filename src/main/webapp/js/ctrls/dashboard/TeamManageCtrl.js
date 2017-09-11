@@ -30,6 +30,6 @@ app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state,
 
     /* ------------------------------- APIs -----------------------------------*/
     $scope.add = function () {
-        DialogService.addRep()
+        DialogService.addRep($scope.init)
     }
 })
