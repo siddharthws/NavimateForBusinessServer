@@ -1,12 +1,15 @@
 <!-- HTML template for Alert Dialog -->
-<md-dialog>
-    <md-dialog-content>
-        {{message}}
-    </md-dialog-content>
+<md-dialog class="dialog-container dialog-alert">
+    <div class="dialog-header">
+        Alert
+        <hr>
+    </div>
 
-    <md-dialog-actions>
-        <md-button ng-click="ok()">
-            OK
-        </md-button>
-    </md-dialog-actions>
+    <div class="dialog-message">
+        {{message}}
+    </div>
+
+    <div class="d-flex justify-content-end dialog-buttons">
+        <button class="button button-primary" ng-click="ok()">OK</button>
+    </div>
 </md-dialog>
