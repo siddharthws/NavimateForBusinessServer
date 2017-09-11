@@ -34,6 +34,13 @@ ul {
     flex: 1;
 }
 
+/* MD Toast Positioning Hack */
+md-toast.md-center {
+    left: 50%;
+    bottom: 50px;
+    text-align: center;
+    transform: translate3d(-50%, 0, 0);
+}
 /* General Button Styling*/
 .button {
     margin: 5px;
