@@ -1,15 +1,16 @@
 <!-- HTML template for Confirm Dialog -->
-<md-dialog>
-    <md-dialog-content>
-        {{message}}
-    </md-dialog-content>
+<md-dialog class="dialog-container dialog-confirm">
+    <div class="dialog-header">
+        Confirm
+        <hr>
+    </div>
 
-    <md-dialog-actions>
-        <md-button ng-click="no()">
-            NO
-        </md-button>
-        <md-button ng-click="yes()">
-            YES
-        </md-button>
-    </md-dialog-actions>
+    <div class="dialog-message">
+        {{message}}
+    </div>
+
+    <div class="d-flex justify-content-end dialog-buttons">
+        <button class="button button-primary" ng-click="yes()">YES</button>
+        <button class="button" ng-click="no()">NO</button>
+    </div>
 </md-dialog>
