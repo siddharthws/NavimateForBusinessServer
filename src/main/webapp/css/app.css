@@ -1,5 +1,9 @@
 /* General styling classes for app */
 
+* {
+    font-family: "Open Sans";
+}
+
 body, html {
     height: 100%;
     width: 100%;
