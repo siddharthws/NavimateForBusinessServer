@@ -1,4 +1,28 @@
 <!-- HTML template for Alert Dialog -->
 <md-dialog class="dialog-container dialog-add-rep">
-    Add Rep Dialog Placeholder
+    <div class="dialog-header">
+        Add Rep
+        <hr>
+    </div>
+
+    <div class="dialog-form d-flex">
+        <div class="d-flex flex-column justify-content-around">
+            <span>Name *</span>
+            <span>Phone *</span>
+            <span>Email</span>
+        </div>
+        <div class="d-flex flex-column full-flex">
+            <input ng-model="name" type="text" placeholder="Enter name...">
+            <div class="d-flex">
+                <input style="width: 50px" ng-model="countryCode" type="number" placeholder="91">
+                <input class="full-flex" ng-model="phoneNumber" type="number" placeholder="Enter mobile number...">
+            </div>
+            <input ng-model="email" type="text" placeholder="Enter email... (optional)">
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end dialog-buttons">
+        <button class="button button-primary" ng-click="add()">Add</button>
+        <button class="button" ng-click="cancel()">Cancel</button>
+    </div>
 </md-dialog>
