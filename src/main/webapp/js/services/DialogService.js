@@ -61,4 +61,13 @@ app.service('DialogService', function($mdDialog) {
                             locals: { teamUpdateCb: teamUpdateCb}
         })
     }
+
+    // Launch Task Creator Dialog
+    this.taskCreator = function () {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '../views/dialogs/TaskCreator.html',
+            controller: 'TaskCreatorCtrl',
+            clickOutsideToClose: true
+        })
+    }
 })
