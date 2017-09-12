@@ -12,9 +12,9 @@ class TaskService {
         // Create Task Objects from JSONArray
         tasksJson.each {taskJson ->
             // Get Rep, lead and template for the new task
-            User rep = User.findById(taskJson.rep)
-            Lead lead = Lead.findById(taskJson.lead)
-            Form template = Form.findById(taskJson.template)
+            User rep = User.findById(taskJson.rep.id)
+            Lead lead = Lead.findById(taskJson.lead.id)
+            Form template = Form.findById(taskJson.template.id)
 
             // Validate JSON data
             if (!rep || !lead || !template){
