@@ -17,11 +17,13 @@ var ITEM_OPTION_REPORT          = 1
 var ITEM_OPTIONS = [
     {
         id: ITEM_OPTION_MANAGE,
-        name: 'manage'
+        name: 'manage',
+        title: 'Manage'
     },
     {
         id: ITEM_OPTION_REPORT,
-        name: 'report'
+        name: 'report',
+        title: 'Reports'
     }
 ]
 
