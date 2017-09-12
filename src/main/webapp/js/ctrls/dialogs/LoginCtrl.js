@@ -14,7 +14,7 @@ app.controller('LoginCtrl', function ($scope, $mdDialog, $state, $localStorage, 
 
                     // Redirect to dashboard
                     $localStorage.accessToken = response.data.accessToken;
-                    $state.go("dashboard.team.report")
+                    $state.go("dashboard.team-manage")
                 },
                 function (error) {
                     // Login Failure

@@ -36,57 +36,33 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         templateUrl: '../views/dashboard.html',
         controller: 'DashboardCtrl'
     })
-    .state('dashboard.team', {
-        abstract: true,
-        url: '/team',
-        templateUrl: '../views/dashboard/team.html',
-        controller: 'TeamCtrl'
-    })
-    .state('dashboard.team.manage', {
-        url: '/manage',
+    .state('dashboard.team-manage', {
+        url: '/team/manage',
         templateUrl: '../views/dashboard/team/manage.html',
         controller: 'TeamManageCtrl'
     })
-    .state('dashboard.team.report', {
-        url: '/report',
+    .state('dashboard.team-report', {
+        url: '/team/report',
         templateUrl: '../views/dashboard/team/report.html',
         controller: 'TeamReportCtrl'
     })
-    .state('dashboard.leads', {
-        abstract: true,
-        url: '/leads',
-        templateUrl: '../views/dashboard/leads.html',
-        controller: 'LeadCtrl'
-    })
-    .state('dashboard.leads.manage', {
-        url: '/manage',
+    .state('dashboard.leads-manage', {
+        url: '/leads/manage',
         templateUrl: '../views/dashboard/leads/manage.html',
         controller: 'LeadManageCtrl'
     })
-    .state('dashboard.leads.report', {
-        url: '/report',
+    .state('dashboard.leads-report', {
+        url: '/leads/report',
         templateUrl: '../views/dashboard/leads/report.html',
         controller: 'LeadReportCtrl'
     })
-    .state('dashboard.tasks', {
-        abstract: true,
-        url: '/tasks',
-        templateUrl: '../views/dashboard/tasks.html',
-        controller: 'TaskCtrl'
-    })
-    .state('dashboard.tasks.manage', {
-        url: '/manage',
+    .state('dashboard.tasks-manage', {
+        url: '/tasks/manage',
         templateUrl: '../views/dashboard/tasks/manage.html',
         controller: 'TaskManageCtrl'
     })
-    .state('dashboard.forms', {
-        abstract: true,
-        url: '/forms',
-        templateUrl: '../views/dashboard/forms.html',
-        controller: 'FormCtrl'
-    })
-    .state('dashboard.forms.manage', {
-        url: '/manage',
+    .state('dashboard.forms-manage', {
+        url: '/forms/manage',
         templateUrl: '../views/dashboard/forms/manage.html',
         controller: 'FormManageCtrl'
     })

@@ -11,15 +11,11 @@
     background-color: black;
 }
 
-.dashboard-header-content{
-    flex: 1;
-}
-
 .dashboard-header{
-    height: 100px;
+    height: 50px;
     background-color: black;
 }
 
 .dashboard-content{
-    flex: 1;
+    padding: 10px;
 }
