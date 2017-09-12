@@ -19,3 +19,27 @@
 .dashboard-content{
     padding: 10px;
 }
+
+.dashboard-logo {
+    height: 100px;
+    width: 100px;
+    margin: 20px;
+}
+
+/* Dashboard Menu Buttons Styling*/
+.dashboard-menu .button, .dashboard-header .button {
+    color: white;
+    background-color: black;
+    padding: 10px 20px 10px 20px;
+    margin: 0px;
+    border: none;
+    border-collapse: collapse;
+}
+
+.dashboard-menu .button:hover, .dashboard-header .button:hover{
+    background-color: #37bcf2;
+}
+
+.dashboard-menu .is-active, .dashboard-header .is-active {
+    background-color: #37bcf2;
+}

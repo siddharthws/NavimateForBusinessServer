@@ -2,19 +2,34 @@
 
 <div class="dashboard d-flex">
     <div class="dashboard-menu d-flex flex-column">
-        <button ui-sref="dashboard.team-manage">Team</button>
-        <button ui-sref="dashboard.leads-manage">Leads</button>
-        <button ui-sref="dashboard.tasks-manage">Tasks</button>
-        <button ui-sref="dashboard.forms-manage">Forms</button>
+        <img class="dashboard-logo align-self-center" src="../images/logo.png">
+        <button class="button" ng-class="{true: 'is-active'}[selection.item.name == 'team']"
+                ui-sref="dashboard.team-manage">
+            Team
+        </button>
+        <button class="button" ng-class="{true: 'is-active'}[selection.item.name == 'leads']"
+                ui-sref="dashboard.leads-manage">
+            Leads
+        </button>
+        <button class="button" ng-class="{true: 'is-active'}[selection.item.name == 'tasks']"
+                ui-sref="dashboard.tasks-manage">
+            Tasks
+        </button>
+        <button class="button" ng-class="{true: 'is-active'}[selection.item.name == 'forms']"
+                ui-sref="dashboard.forms-manage">
+            Forms
+        </button>
     </div>
 
     <div class="d-flex flex-column full-flex">
         <div class="dashboard-header d-flex">
-            <button class="button" ng-repeat="option in selection.item.options" ng-click="onOptionClick(option)">
-                {{option.name}}
+            <button ng-repeat="option in selection.item.options"
+                    ng-click="onOptionClick(option)"
+                    class="button" ng-class="{true: 'is-active'}[selection.option.id == option.id]">
+                {{option.title}}
             </button>
 
-            <button ng-click="logout()">Logout</button>
+            <button class="button ml-auto" ng-click="logout()">Logout</button>
         </div>
 
         <div class="dashboard-content d-flex flex-column full-flex" ui-view></div>
