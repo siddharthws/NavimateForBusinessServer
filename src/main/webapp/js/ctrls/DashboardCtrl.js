@@ -4,6 +4,12 @@
 
 app.controller('DashboardCtrl', function ($scope, $state, $localStorage, AuthService) {
 
+    /*------------------------------------ INIT --------------------------------*/
+    // Menu Selection Parameters
+    $scope.selection = {}
+
+    /*------------------------------------ APIs --------------------------------*/
+    // Button Click APIs
     $scope.logout = function(){
         AuthService.logout()
             .then(
@@ -15,5 +21,13 @@ app.controller('DashboardCtrl', function ($scope, $state, $localStorage, AuthSer
                     console.log(error)
                 }
             )
+    }
+
+    $scope.onOptionClick = function (option) {
+        // Prepare State URL
+        var state = "dashboard." + $scope.selection.item.name + "-" + option.name
+
+        // Update State to this option
+        $state.go(state)
     }
 })

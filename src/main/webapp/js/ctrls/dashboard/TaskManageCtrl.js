@@ -4,6 +4,10 @@
 
 app.controller("TaskManageCtrl", function ($scope, $http, $localStorage, $state) {
 
+    // Set menu and option
+    $scope.selection.item       = MENU_ITEMS[MENU_ITEM_TASKS]
+    $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
+
     $http({
         method:     'GET',
         url:        '/api/users/task',
