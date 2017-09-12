@@ -1,13 +1,13 @@
 <!-- HTML template for Task Creator Dialog -->
-<md-dialog class="dialog-container dialog-task-creator">
+<md-dialog class="dialog-container dialog-task-creator d-flex flex-column">
     <div class="dialog-header">
         Create Tasks
         <hr>
     </div>
 
-    <div class="dialog-content">
-        <button class="button button-primary" ng-click="add()">Add Task</button>
+    <button class="button button-primary" ng-click="add()">Add Task</button>
 
+    <div class="task-creator-table full-flex d-flex">
         <table class="table table-striped" ng-table="">
             <thead>
             <th>
@@ -21,14 +21,40 @@
             </th>
             </thead>
             <tr ng-repeat="task in tasks">
-                <td class="text-center">
-                    <select ng-model="task.lead.id" ng-options="lead.id as lead.company for lead in leads"/>
+                <td>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" data-toggle="dropdown">
+                            {{task.lead.name}}
+                        </button>
+                        <div class="dropdown-menu task-creator-dropdown">
+                            <input type="text" ng-model="leadFilter.name" placeholder="Search">
+                            <button class="dropdown-item" ng-repeat="lead in leads | filter:leadFilter" ng-click="task.lead = lead">{{lead.name}}</button>
+                        </div>
+                    </div>
                 </td>
-                <td class="text-center">
-                    <select ng-model="task.rep" ng-options="rep.name for rep in team"/>
+
+                <td>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" data-toggle="dropdown">
+                            {{task.rep.name}}
+                        </button>
+                        <div class="dropdown-menu task-creator-dropdown">
+                            <input type="text" ng-model="repFilter.name" placeholder="Search">
+                            <button class="dropdown-item" ng-repeat="rep in team | filter:repFilter" ng-click="task.rep = rep">{{rep.name}}</button>
+                        </div>
+                    </div>
                 </td>
-                <td class="text-center">
-                    <select ng-model="task.template" ng-options="template.name for template in formTemplates"/>
+
+                <td>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" data-toggle="dropdown">
+                            {{task.template.name}}
+                        </button>
+                        <div class="dropdown-menu task-creator-dropdown">
+                            <input type="text" ng-model="formFilter.name" placeholder="Search">
+                            <button class="dropdown-item" ng-repeat="template in formTemplates | filter:formFilter" ng-click="task.template = template">{{template.name}}</button>
+                        </div>
+                    </div>
                 </td>
                 <td>
                     <button ng-click="remove(task)">Remove</button>

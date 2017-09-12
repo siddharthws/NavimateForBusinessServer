@@ -1,4 +1,14 @@
 
 .dialog-task-creator {
-    width: 50%;
+    width: 100%;
+    height: 100%;
+}
+
+.task-creator-table {
+    overflow: auto;
+}
+
+.task-creator-dropdown {
+    height: 300px;
+    overflow: auto;
 }
