@@ -2,7 +2,11 @@
  * Created by Siddharth on 04-09-2017.
  */
 
-app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state, ExcelService, DialogService, NgTableParams) {
+app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state, ExcelService, DialogService) {
+
+    // Set menu and option
+    $scope.selection.item       = MENU_ITEMS[MENU_ITEM_LEADS]
+    $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
 
     // Init Variables
     $scope.leads = []

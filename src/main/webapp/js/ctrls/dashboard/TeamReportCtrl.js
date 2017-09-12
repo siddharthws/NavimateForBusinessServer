@@ -4,6 +4,10 @@
 
 app.controller("TeamReportCtrl", function ($scope, $http, $localStorage, $state, ExcelService) {
 
+    // Set menu and option
+    $scope.selection.item       = MENU_ITEMS[MENU_ITEM_TEAM]
+    $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_REPORT]
+
     // Init Variables
     $scope.report = []
 

@@ -10,8 +10,10 @@
 
     <div class="d-flex flex-column full-flex">
         <div class="dashboard-header d-flex">
-            <button class="button">Manage</button>
-            <button class="button">Report</button>
+            <button class="button" ng-repeat="option in selection.item.options" ng-click="onOptionClick(option)">
+                {{option.name}}
+            </button>
+
             <button ng-click="logout()">Logout</button>
         </div>
 

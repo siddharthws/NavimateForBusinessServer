@@ -4,6 +4,10 @@
 
 app.controller("FormManageCtrl", function ($scope, $http, $localStorage, $state) {
 
+    // Set menu and option
+    $scope.selection.item       = MENU_ITEMS[MENU_ITEM_FORMS]
+    $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
+
     // Get Forms for this user
     $http({
         method:     'GET',
