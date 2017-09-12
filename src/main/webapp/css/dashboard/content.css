@@ -1,16 +1,5 @@
 
-
-.content-options{
-    background-color: black;
-}
-
-.content-container {
-    flex: 1;
-    padding: 10px;
-}
-
 .content-toolbar {
-    padding: 10px;
     background-color: #eeeeee;
     border-radius: 5px;
 }
