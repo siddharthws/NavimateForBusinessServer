@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state, $mdDialog, ToastService) {
+app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state, $mdDialog, ToastService, taskAddedCb) {
 
     /* ----------------------------- INIT --------------------------------*/
     $scope.tasks = [{}]
@@ -93,6 +93,9 @@ app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state
 
                     // Show Toast
                     ToastService.toast("Tasks Created successfully...")
+
+                    // Trigger callback
+                    taskAddedCb()
                 },
                 function (error) {
                     // Show Error Toast
