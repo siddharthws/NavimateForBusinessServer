@@ -60,8 +60,23 @@ md-toast.md-center {
     outline: 0px;
 }
 
+.icon-button {
+    height: 36px;
+    width: 36px;
+    margin: 2px;
+    padding: 3px;
+    border: none;
+    background-color: transparent;
+}
+
+.icon-button:hover {
+    border: 1px solid #888888;
+    border-radius: 2px;
+}
+
 /* Input related styles */
-input {
+input[type='text'],
+input[type='number']{
     background-color: white;
     text-align: center;
     margin: 5px 10px;
@@ -71,7 +86,8 @@ input {
     box-shadow: 0px 0px 5px grey inset;
 }
 
-input.has-error {
+input[type='text'].has-error,
+input[type='number'].has-error {
     border: 1px solid red;
     box-shadow: 0px 0px 5px red inset;
 }
