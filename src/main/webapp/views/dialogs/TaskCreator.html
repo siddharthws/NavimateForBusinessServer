@@ -10,17 +10,23 @@
     <div class="task-creator-table full-flex d-flex">
         <table class="table table-striped" ng-table="">
             <thead>
-            <th>
-                Company
-            </th>
-            <th>
-                Rep
-            </th>
-            <th>
-                Template
-            </th>
+                <th>
+                    #
+                </th>
+                <th>
+                    Company
+                </th>
+                <th>
+                    Rep
+                </th>
+                <th>
+                    Template
+                </th>
             </thead>
             <tr ng-repeat="task in tasks">
+                <td class="text-center">
+                    {{$index + 1}}
+                </td>
                 <td>
                     <div class="dropdown">
                         <button class="dropdown-toggle" data-toggle="dropdown">
