@@ -120,6 +120,9 @@ app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state
     function validate () {
         var bValid = true
 
+        // Reset Error UI
+        $scope.bShowError = false
+
         // Check if any tasks are present
         if ($scope.tasks.length == 0) {
             ToastService.toast("Add some tasks to create...")
@@ -131,6 +134,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state
                 if (!task.lead || !task.rep || !task.template)
                 {
                     bValid = false
+                    $scope.bShowError = true
                 }
             })
 
