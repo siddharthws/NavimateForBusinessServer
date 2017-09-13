@@ -7,27 +7,31 @@
 
     <button class="button button-primary" ng-click="add()">Add Task</button>
 
-    <div class="task-creator-table full-flex d-flex">
-        <table class="table table-striped" ng-table="">
+    <div class="task-creator-table full-flex d-flex col-sm-12">
+        <table class="table table-bordered" ng-table="">
             <thead>
-                <th>
-                    #
-                </th>
-                <th>
-                    Company
-                </th>
-                <th>
-                    Rep
-                </th>
-                <th>
-                    Template
-                </th>
+                <tr class="row">
+                    <th class="col-sm-1">
+                        #
+                    </th>
+                    <th class="col-sm-4">
+                        Company
+                    </th>
+                    <th class="col-sm-3">
+                        Rep
+                    </th>
+                    <th class="col-sm-3">
+                        Template
+                    </th>
+                    <th class="col-sm-1">
+                    </th>
+                </tr>
             </thead>
-            <tr ng-repeat="task in tasks">
-                <td class="text-center">
+            <tr class="row" ng-repeat="task in tasks">
+                <td class="text-center col-sm-1">
                     {{$index + 1}}
                 </td>
-                <td>
+                <td class="col-sm-4" ng-class="{'has-error': !task.lead && bShowError}">
                     <div class="dropdown">
                         <button class="dropdown-toggle" data-toggle="dropdown">
                             {{task.lead.name}}
@@ -39,7 +43,7 @@
                     </div>
                 </td>
 
-                <td>
+                <td class="col-sm-3" ng-class="{'has-error': !task.rep && bShowError}">
                     <div class="dropdown">
                         <button class="dropdown-toggle" data-toggle="dropdown">
                             {{task.rep.name}}
@@ -51,7 +55,7 @@
                     </div>
                 </td>
 
-                <td>
+                <td class="col-sm-3" ng-class="{'has-error': !task.template && bShowError}">
                     <div class="dropdown">
                         <button class="dropdown-toggle" data-toggle="dropdown">
                             {{task.template.name}}
@@ -62,7 +66,7 @@
                         </div>
                     </div>
                 </td>
-                <td>
+                <td class="col-sm-1">
                     <input class="icon-button" type="image" src="../../static/images/icon_delete_red.png" ng-click="remove(task)">
                 </td>
             </tr>
