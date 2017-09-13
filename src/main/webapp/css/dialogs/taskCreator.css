@@ -12,3 +12,17 @@
     height: 300px;
     overflow: auto;
 }
+
+.dropdown-toggle-button {
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+}
+
+.dropdown-toggle-button img{
+    height: 20px;
+    width: 20px;
+    margin: 0;
+    padding: 0;
+}
