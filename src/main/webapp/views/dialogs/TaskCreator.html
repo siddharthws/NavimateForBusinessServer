@@ -32,11 +32,12 @@
                     {{$index + 1}}
                 </td>
                 <td class="col-sm-4" ng-class="{'has-error': !task.lead && bShowError}">
-                    <div class="dropdown">
-                        <button class="dropdown-toggle" data-toggle="dropdown">
-                            {{task.lead.name}}
+                    <div class="dropdown full-width full-height">
+                        <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
+                            <span class="full-flex">{{task.lead.name}}</span>
+                            <img src="../../static/images/icon_dropdown.png"/>
                         </button>
-                        <div class="dropdown-menu task-creator-dropdown">
+                        <div class="dropdown-menu full-width task-creator-dropdown">
                             <input type="text" ng-model="leadFilter.name" placeholder="Search">
                             <button class="dropdown-item" ng-repeat="lead in leads | filter:leadFilter" ng-click="task.lead = lead">{{lead.name}}</button>
                         </div>
@@ -44,11 +45,12 @@
                 </td>
 
                 <td class="col-sm-3" ng-class="{'has-error': !task.rep && bShowError}">
-                    <div class="dropdown">
-                        <button class="dropdown-toggle" data-toggle="dropdown">
-                            {{task.rep.name}}
+                    <div class="dropdown full-width full-height">
+                        <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
+                            <span class="full-flex">{{task.rep.name}}</span>
+                            <img src="../../static/images/icon_dropdown.png"/>
                         </button>
-                        <div class="dropdown-menu task-creator-dropdown">
+                        <div class="dropdown-menu full-width task-creator-dropdown">
                             <input type="text" ng-model="repFilter.name" placeholder="Search">
                             <button class="dropdown-item" ng-repeat="rep in team | filter:repFilter" ng-click="task.rep = rep">{{rep.name}}</button>
                         </div>
@@ -56,11 +58,12 @@
                 </td>
 
                 <td class="col-sm-3" ng-class="{'has-error': !task.template && bShowError}">
-                    <div class="dropdown">
-                        <button class="dropdown-toggle" data-toggle="dropdown">
-                            {{task.template.name}}
+                    <div class="dropdown full-width full-height">
+                        <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
+                            <span class="full-flex">{{task.template.name}}</span>
+                            <img src="../../static/images/icon_dropdown.png"/>
                         </button>
-                        <div class="dropdown-menu task-creator-dropdown">
+                        <div class="dropdown-menu full-width task-creator-dropdown">
                             <input type="text" ng-model="formFilter.name" placeholder="Search">
                             <button class="dropdown-item" ng-repeat="template in formTemplates | filter:formFilter" ng-click="task.template = template">{{template.name}}</button>
                         </div>
