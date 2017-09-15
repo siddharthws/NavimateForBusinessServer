@@ -1,11 +1,11 @@
 <!-- HTML template for Alert Dialog -->
-<md-dialog class="dialog-container dialog-add-rep">
+<md-dialog class="dialog-container w-25">
     <div class="dialog-header">
-        Add Rep
+        <h4><b>Add Rep</b></h4>
         <hr>
     </div>
 
-    <div class="dialog-form d-flex">
+    <div class="container-fluid d-flex">
         <div class="d-flex flex-column justify-content-around">
             <span>Name *</span>
             <span>Phone *</span>
@@ -21,8 +21,8 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-end dialog-buttons">
-        <button class="button button-primary" ng-click="add()">Add</button>
-        <button class="button" ng-click="cancel()">Cancel</button>
+    <div class="container-fluid d-flex justify-content-end">
+        <button class="btn btn-primary" ng-click="add()">Add</button>
+        <button class="btn" ng-click="cancel()">Cancel</button>
     </div>
 </md-dialog>
