@@ -3,12 +3,15 @@
  */
 
 // Controller for Confirm Dialog
-app.controller('ConfirmCtrl', function ($scope, $mdDialog, message) {
+app.controller('ConfirmCtrl', function ($scope, $mdDialog, message, yesCb) {
 
     $scope.message = message
 
     $scope.yes = function () {
         $mdDialog.hide()
+
+        // Trigger Callback
+        yesCb()
     }
 
     $scope.no = function () {

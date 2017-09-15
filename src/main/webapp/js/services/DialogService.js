@@ -15,12 +15,15 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Confirm Dialog
-    this.confirm = function (message) {
+    this.confirm = function (message, yesCb) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '../views/dialogs/Confirm.html',
                             controller: 'ConfirmCtrl',
                             clickOutsideToClose: true,
-                            locals: { message: message }
+                            locals: {
+                                message:    message,
+                                yesCb:      yesCb
+                            }
         })
     }
 

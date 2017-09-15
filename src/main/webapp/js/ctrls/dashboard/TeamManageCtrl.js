@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state, DialogService) {
+app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state, DialogService, ToastService) {
 
     /* ------------------------------- INIT -----------------------------------*/
     // Set menu and option
@@ -69,5 +69,43 @@ app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state,
                 }
             })
         }
+    }
+
+    // List Actions
+    $scope.remove = function() {
+        // Launch Confirm Dialog
+        DialogService.confirm(
+            "Are you sure you want to remove these " + $scope.selection.length + " members from your team ?",
+            removeSelected)
+    }
+
+    // API to remove selected team members from list
+    function removeSelected () {
+        // Make Http call to remove members
+        $http({
+            method:     'POST',
+            url:        '/api/users/team/remove',
+            headers:    {
+                'X-Auth-Token':    $localStorage.accessToken
+            },
+            data: {
+                reps: JSON.stringify($scope.selection)
+            }
+        })
+        .then(
+            function (response) {
+                // Show Toast
+                ToastService.toast("Reps removed...")
+
+                // re-initialize team
+                $scope.init()
+            },
+            function (error) {
+                ToastService.toast("Failed to remove reps!!!")
+
+                // re-initialize team
+                $scope.init()
+            }
+        )
     }
 })
