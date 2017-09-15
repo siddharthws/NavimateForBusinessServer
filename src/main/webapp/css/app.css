@@ -16,7 +16,7 @@ ul {
 }
 
 /* Reset Container padding and margins to 0 */
-[class*="col-"], .row, .container, .container-fluid {
+[class*="col-"], .row, .container {
     padding:    0;
     margin:     0;
 }
