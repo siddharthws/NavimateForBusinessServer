@@ -1,0 +1,20 @@
+
+.lead-edit-box {
+    border: 1px solid #aaaaaa;
+    box-shadow: 0px 0px 10px 0 rgba(0,0,0,0.24);
+}
+
+.lead-editor-map {
+    position: relative;
+}
+
+.lead-editor-map-shadow {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5) inset;
+    pointer-events: none;
+
+}
