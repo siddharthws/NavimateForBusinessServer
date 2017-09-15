@@ -1,0 +1,28 @@
+/* -- Bootstrap button styling -- */
+.btn {
+    padding: 0.5em 1.5em;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #37bcf2;
+}
+
+.btn-primary:hover:enabled {
+    background-color: #31a9d9;
+    transition-duration: 0.4s;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.btn-primary:active:enabled {
+    background-color: #37bcf2;
+}
+
+.btn-primary:focus {
+    background-color: #31a9d9;
+    box-shadow: none;
+}
+
+.btn-primary:disabled {
+    background-color: #aaaaaa;
+}
