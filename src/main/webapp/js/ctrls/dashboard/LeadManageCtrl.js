@@ -29,6 +29,10 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
         }
     )
 
+    $scope.add = function() {
+        DialogService.leadEditor()
+    }
+
     // Excel related APIs
     $scope.excelRead = function (workbook) {
         ExcelService.excelRead(workbook).then(

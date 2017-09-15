@@ -1,0 +1,36 @@
+
+.list-group {
+    overflow: auto;
+    border: 1px solid #aaaaaa;
+    border-radius: 0.25em;
+}
+
+.list-group-item {
+    border: 1px solid #aaaaaa;
+    border-width: 1px 0px;
+    padding: 0.5em;
+}
+
+.list-group-item:first-child {
+    border-radius: 0;
+    border-top: 0;
+}
+.list-group-item:last-child {
+    border-radius: 0;
+    border-bottom: 0;
+}
+
+.list-group-item:hover {
+    color: white;
+    background-color: #31a9d9;
+}
+
+.list-group-item:active {
+    color: white;
+    background-color: #37bcf2;
+}
+
+.list-group-item:focus {
+    color: white;
+    background-color: #37bcf2;
+}
