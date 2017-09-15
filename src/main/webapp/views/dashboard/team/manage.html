@@ -7,7 +7,7 @@
             <span>Actions</span>
         </button>
         <div class="dropdown-menu">
-            <!-- Placeholder for actions -->
+            <button class="dropdown-item" ng-click="remove()">Remove</button>
         </div>
     </div>
 </div>
@@ -24,9 +24,6 @@
             <th>
                 Phone
             </th>
-            <th>
-                Actions
-            </th>
         </thead>
         <tr ng-repeat="rep in team">
             <td class="text-center">
@@ -37,9 +34,6 @@
             </td>
             <td class="text-center">
                 {{rep.phoneNumber}}
-            </td>
-            <td>
-                <button>Delete</button>
             </td>
         </tr>
     </table>
