@@ -1,0 +1,7 @@
+/* -- Image styling -- */
+.img-icon {
+    height: 25px;
+    width: 25px;
+    padding: 5px;
+    background-color: transparent;
+}

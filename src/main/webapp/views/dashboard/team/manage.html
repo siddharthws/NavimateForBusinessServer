@@ -1,10 +1,11 @@
 <!-- Team Manage HTML -->
-<div class="content-toolbar">
-    <button ng-click="add()">+ Add</button>
+<div class="content-toolbar d-flex justify-content-around align-items-center">
+    <button class="btn btn-primary" ng-click="add()">Add Rep</button>
 
     <div class="dropdown">
-        <button class="dropdown-toggle" data-toggle="dropdown" ng-disabled="selection.length == 0">
-            <span>Actions</span>
+        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown" ng-disabled="selection.length == 0">
+            <span>Actions | </span>
+            <img class="img-icon" src="../../static/images/dropdown.png"/>
         </button>
         <div class="dropdown-menu">
             <button class="dropdown-item" ng-click="remove()">Remove</button>
