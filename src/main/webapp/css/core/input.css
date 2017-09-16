@@ -1,4 +1,27 @@
 
+
+/* Input related styles */
+input {
+    margin: 5px 10px;
+    padding: 5px 10px;
+}
+
+input:focus {
+    outline: 0;
+}
+
+/* Remove number input spinner*/
+/* For Firefox */
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+/* Webkit browsers like Safari and Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .input-underlined {
     border-width: 0px 0px 1px 0px;
     border-color: #aaaaaa;
@@ -6,6 +29,10 @@
     border-bottom-right-radius: 5px;
     box-shadow: none;
     text-align: left;
+}
+
+.input-underlined.has-error {
+    border-color: red;
 }
 
 .input-underlined:focus {

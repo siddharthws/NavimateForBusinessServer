@@ -12,12 +12,12 @@
             <span>Email</span>
         </div>
         <div class="d-flex flex-column full-flex">
-            <input ng-class="{'has-error': bNameError}"  ng-model="name" type="text" placeholder="Enter name...">
+            <input class="input-underlined" ng-class="{'has-error': bNameError}"  ng-model="name" type="text" placeholder="Enter name...">
             <div class="d-flex">
-                <input style="width: 50px" ng-model="countryCode" type="number" placeholder="91">
-                <input class="full-flex" ng-class="{'has-error': bPhoneError}" ng-model="phoneNumber" type="number" placeholder="Enter mobile number...">
+                <input class="input-underlined w-25 text-center" ng-model="countryCode" type="number" placeholder="91">
+                <input class="input-underlined w-75" ng-class="{'has-error': bPhoneError}" ng-model="phoneNumber" type="number" placeholder="Enter mobile number...">
             </div>
-            <input ng-model="email" type="text" placeholder="Enter email... (optional)">
+            <input class="input-underlined" ng-model="email" type="text" placeholder="Enter email... (optional)">
         </div>
     </div>
 
