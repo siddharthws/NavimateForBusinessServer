@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LeadEditorCtrl', function ($scope, $mdDialog, ToastService, GoogleApiService, leads) {
+app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, leads, leadUpdateCb) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function () {
@@ -55,6 +55,29 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, ToastService, Goog
         // Validate entered leads
         if (validate()) {
             // Data Validated. Save in database
+            $http({
+                method:     'POST',
+                url:        '/api/users/lead',
+                headers:    {
+                    'X-Auth-Token':    $localStorage.accessToken
+                },
+                data:       {
+                    leads:           JSON.stringify($scope.leads)
+                }
+            })
+            .then(
+                function (response) {
+                    // Hide dialog and show toast
+                    $mdDialog.hide()
+                    ToastService.toast("Leads added succesfully...")
+
+                    // Trigger Callback
+                    leadUpdateCb()
+                },
+                function (error) {
+                    ToastService.toast("Unable to update leads !!!")
+                    console.log(error)
+                })
         }
     }
 

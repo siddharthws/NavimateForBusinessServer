@@ -126,6 +126,49 @@ class UserApiController {
         render resp as JSON
     }
 
+    def editLeads() {
+        def accessToken = request.getHeader("X-Auth-Token")
+        if (!accessToken) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+        def user = authService.getUserFromAccessToken(accessToken)
+
+        def jsonLeads = JSON.parse(request.JSON.leads)
+        jsonLeads.each { jsonLead ->
+            // Validate mandatory lead fields
+            if (!jsonLead.name || !jsonLead.phoneNumber || !jsonLead.latitude || !jsonLead.longitude || !jsonLead.address) {
+                throw new ApiException("Manadaotry lead information missing", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            Lead lead = null
+            if (jsonLead.id) {
+                // Edit Existing lead
+                lead = Lead.findById(jsonLead.id)
+            } else {
+                // Create new lead
+                lead = new Lead(
+                        account: user.account,
+                        manager: user
+                )
+            }
+
+            // Update Information passed from json
+            lead.name       = jsonLead.name
+            lead.phone      = jsonLead.phoneNumber
+            lead.address    = jsonLead.address
+            lead.latitude   = jsonLead.latitude
+            lead.longitude  = jsonLead.longitude
+            lead.company    = jsonLead.company ? jsonLead.company : ""
+            lead.email      = jsonLead.email ? jsonLead.email : ""
+
+            // Save lead
+            lead.save(flush: true, failOnError: true)
+        }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     def getTask() {
         def accessToken = request.getHeader("X-Auth-Token")
         if (!accessToken) {
