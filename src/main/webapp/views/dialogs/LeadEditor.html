@@ -16,8 +16,17 @@
                        ng-model="selectedLead.name" ng-class="{'has-error': bShowError && !selectedLead.name}">
                 <input class="input-underlined" type="text"  placeholder="Enter phone number"
                        ng-model="selectedLead.phoneNumber" ng-class="{'has-error': bShowError && !selectedLead.phoneNumber}">
-                <input class="input-underlined" type="text"  placeholder="Enter address..."
-                       ng-model="selectedLead.address" ng-class="{'has-error': bShowError && !(selectedLead.latitude && selectedLead.longitude && selectedLead.address)}">
+                <div class="dropdown d-flex">
+                    <input class="input-underlined full-flex" type="text"  placeholder="Search address..."
+                           ng-model="selectedLead.address" ng-model-options="{debounce: 500}"
+                           ng-class="{'has-error': bShowError && !(selectedLead.latitude && selectedLead.longitude && selectedLead.address)}"
+                           ng-change="searchAddress()" data-toggle="dropdown">
+                    <div class="dropdown-menu">
+                        <p ng-show="(searchResults.length == 0) && !bSearchWaiting">Nothing to Show</p>
+                        <p ng-show="bSearchWaiting">Waiting for results...</p>
+                        <button class="dropdown-item" ng-repeat="searchResult in searchResults" ng-click="searchResultClick(searchResult)">{{searchResult.address}}</button>
+                    </div>
+                </div>
             </div>
 
             <div class="list-group p-1 mt-2 full-flex">

@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LeadEditorCtrl', function ($scope, $mdDialog, ToastService, leads) {
+app.controller('LeadEditorCtrl', function ($scope, $mdDialog, ToastService, GoogleApiService, leads) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function () {
@@ -11,8 +11,8 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, ToastService, lead
         var lead = {}
         $scope.leads.push(lead)
 
-        // Select the newly added lead
-        $scope.selectedLead = lead
+        // Simulate a click on the new item
+        $scope.listItemClick(lead)
 
         // Scroll to bottom
         scrollList($scope.leads.length)
@@ -20,6 +20,31 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, ToastService, lead
 
     $scope.listItemClick = function (lead) {
         $scope.selectedLead = lead
+        $scope.searchResults = []
+    }
+
+    $scope.searchAddress = function () {
+        // Perform place search only for valid text
+        if ($scope.selectedLead.address) {
+            // Set waiting flag
+            $scope.bSearchWaiting = true
+
+            // Invalidate current results
+            $scope.searchResults = []
+
+            // Get results from Google API
+            GoogleApiService.autoComplete($scope.selectedLead.address, searchResultCb)
+        }
+    }
+
+    $scope.searchResultClick = function (searchResult) {
+        // Update selected lead info
+        $scope.selectedLead.address = searchResult.address
+        $scope.selectedLead.latitude = 0
+        $scope.selectedLead.longitude = 0
+
+        // Get latlng for this place
+        GoogleApiService.addressToLatlng(searchResult.address, latlngReceived)
     }
 
     $scope.upload = function () {
@@ -87,11 +112,27 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, ToastService, lead
         $(list).animate({scrollTop: scrollingOffset})
     }
 
+    function searchResultCb(results) {
+        // Update results
+        $scope.searchResults = results
+
+        // Stop Waiting flag
+        $scope.bSearchWaiting = false
+    }
+
+    function latlngReceived(lat, lng) {
+        $scope.selectedLead.latitude = lat
+        $scope.selectedLead.longitude = lng
+    }
+
     /* ------------------------------- INIT -----------------------------------*/
     // Init objects
     $scope.leads = []
     $scope.selectedLead = {}
     $scope.bShowError = false
+
+    $scope.searchResults = []
+    $scope.bSearchWaiting = false
 
     if (leads) {
         // Assign the passed leads & mark the first one as selected
