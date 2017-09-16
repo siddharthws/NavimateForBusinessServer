@@ -21,9 +21,14 @@ class UrlMappings {
         "/api/users/task"           (controller: "UserApi") {action = [GET: "getTask",      POST: "addTasks"]}
         "/api/users/form"           (controller: "UserApi") {action = [GET: "getForm"]}
 
+        // Google API access
+        "/api/googleapis/autocomplete"      (controller: "GoogleApi") {action = [GET: "autocomplete"]}
+        "/api/googleapis/geocode"           (controller: "GoogleApi") {action = [GET: "geocode"]}
+        "/api/googleapis/geocode/reverse"   (controller: "GoogleApi") {action = [GET: "reverseGeocode"]}
+
         // Report Related APIs
-        "/api/reports/team"     (controller: "ReportApi") {action = {GET: "getTeamReport"}}
-        "/api/reports/lead"     (controller: "ReportApi") {action = {GET: "getLeadReport"}}
+        "/api/reports/team"     (controller: "ReportApi") {action = [GET: "getTeamReport"]}
+        "/api/reports/lead"     (controller: "ReportApi") {action = [GET: "getLeadReport"]}
 
         // Lead Related APIs
         "/api/leads/upload"         (controller: "LeadApi") {action = [POST: "upload"]}
