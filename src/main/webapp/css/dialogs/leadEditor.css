@@ -18,3 +18,7 @@
     pointer-events: none;
 
 }
+
+.lead-edit-box .dropdown-menu {
+    min-width: 100%;
+}
