@@ -13,6 +13,9 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, ToastService, lead
 
         // Select the newly added lead
         $scope.selectedLead = lead
+
+        // Scroll to bottom
+        scrollList($scope.leads.length)
     }
 
     $scope.listItemClick = function (lead) {
@@ -44,11 +47,44 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, ToastService, lead
         $scope.bShowError = false
 
         // Validate leads
-        $scope.leads.forEach(function (lead) {
+        for (var  i = 0; i < $scope.leads.length; i++) {
+            var lead = $scope.leads[i]
+
             if (!$scope.isLeadValid(lead)) {
+                // Assert error flag
                 $scope.bShowError = true
+
+                // Scroll to this item
+                scrollList(i)
+
+                // Show error toast
+                ToastService.toast("Please fill all fields in leads...")
+
+                // Return
+                return false
             }
-        })
+        }
+
+        return true
+    }
+
+    function scrollList(index) {
+        // Get list and list item
+        var list = $('.dialog-container .list-group')[0]
+        var items = $(list).find('.list-group-item')
+        var scrollingOffset = 0
+
+        // Get Scrolling offset depending on index
+        if (index >= items.length) {
+            // Scroll to bottom
+            scrollingOffset = $(document).height()
+        } else if (index > 0) {
+            // get relative position
+            scrollingOffset = $(items[index]).offset().top - $(items[0]).offset().top
+        }
+
+        // Animate the list
+        $(list).animate({scrollTop: scrollingOffset})
     }
 
     /* ------------------------------- INIT -----------------------------------*/
