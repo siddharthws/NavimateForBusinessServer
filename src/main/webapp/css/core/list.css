@@ -25,12 +25,7 @@
     background-color: #31a9d9;
 }
 
-.list-group-item:active {
-    color: white;
-    background-color: #37bcf2;
-}
-
-.list-group-item:focus {
+.list-group-item.active {
     color: white;
     background-color: #37bcf2;
 }
