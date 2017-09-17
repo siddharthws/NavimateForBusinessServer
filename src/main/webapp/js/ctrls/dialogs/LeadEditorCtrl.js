@@ -164,7 +164,7 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
         $scope.listItemClick(lead)
 
         // Scroll list ot place this item on top
-        scrollList(leads.indexOf(lead))
+        scrollList($scope.leads.indexOf(lead))
     }
 
     // Marker drag events

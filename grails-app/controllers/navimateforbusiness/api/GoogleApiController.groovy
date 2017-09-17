@@ -4,12 +4,12 @@ import grails.converters.JSON
 import grails.plugins.rest.client.RestBuilder
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
+import navimateforbusiness.LatLng
 
 class GoogleApiController {
 
-    private final API_KEY = "AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4"
-
     def authService
+    def googleApiService
 
     def autocomplete() {
         // Authenticate user
@@ -19,33 +19,13 @@ class GoogleApiController {
         }
         def user = authService.getUserFromAccessToken(accessToken)
 
+        // Validate params
         if (!params.input) {
             throw new ApiException("No input for autocomplete", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Access Google APIs
-        def urlParams = [
-                key: API_KEY,
-                input: params.input
-        ]
-        def rest = new RestBuilder(connectTimeout:1000, readTimeout:20000)
-        def googleResp = rest.get("https://maps.googleapis.com/maps/api/place/autocomplete/json?key={key}&input={input}") {
-            urlVariables urlParams
-        }
-
-        // Parse google response into results
-        def resp = []
-        if (googleResp.json.status == "OK") {
-            def predictions = googleResp.json.predictions
-            predictions.each { prediction ->
-                def result = [
-                        address: prediction.description,
-                        placeId: prediction.place_id
-                ]
-                resp.push(result)
-            }
-        }
-
+        def resp = googleApiService.autocomplete(params.input)
         render resp as JSON
     }
 
@@ -57,29 +37,17 @@ class GoogleApiController {
         }
         def user = authService.getUserFromAccessToken(accessToken)
 
+        // Validate params
         if (!params.address) {
             throw new ApiException("No address for geocoding", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Access Google APIs
-        def urlParams = [
-                key: API_KEY,
-                address: params.address
-        ]
-        def rest = new RestBuilder(connectTimeout:1000, readTimeout:20000)
-        def googleResp = rest.get("https://maps.googleapis.com/maps/api/geocode/json?key={key}&address={address}") {
-            urlVariables urlParams
-        }
+        String[] addresses = [params.address]
+        def latlngs = googleApiService.geocode(addresses)
 
-        // Parse google response into results
-        def resp = []
-        if ((googleResp.json.status == "OK") && (googleResp.json.results)) {
-            resp = [
-                    latitude: googleResp.json.results[0].geometry.location.lat,
-                    longitude: googleResp.json.results[0].geometry.location.lng
-            ]
-        }
-
+        // Send single response
+        def resp = latlngs[0]
         render resp as JSON
     }
 
@@ -91,28 +59,18 @@ class GoogleApiController {
         }
         def user = authService.getUserFromAccessToken(accessToken)
 
+        // Validate params
         if (!params.latitude || !params.longitude) {
             throw new ApiException("No latlng for reverse geocoding", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Access Google APIs
-        def urlParams = [
-                key:    API_KEY,
-                latlng: params.latitude + "," + params.longitude
-        ]
-        def rest = new RestBuilder(connectTimeout:1000, readTimeout:20000)
-        def googleResp = rest.get("https://maps.googleapis.com/maps/api/geocode/json?key={key}&latlng={latlng}") {
-            urlVariables urlParams
-        }
+        LatLng[] latlngs = [new LatLng( latitude: params.latitude,
+                                        longitude: params.longitude)]
+        def addresses = googleApiService.reverseGeocode(latlngs)
 
-        // Parse google response into results
-        def resp = []
-        if ((googleResp.json.status == "OK") && (googleResp.json.results)) {
-            resp = [
-                    address: googleResp.json.results[0].formatted_address
-            ]
-        }
-
+        // Send single response
+        def resp = addresses[0]
         render resp as JSON
     }
 }
