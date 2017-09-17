@@ -183,6 +183,11 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
         ExcelService.excelRead(workbook).then(
             function (response) {
                 console.log(response.data)
+
+                response.data.forEach(function (lead) {
+                    $scope.leads.push(lead);
+                })
+
             },
             function (error) {
                 // Excel File Parse Error
