@@ -4,9 +4,9 @@
         <div class="w-25 p-2 d-flex flex-column">
             <h4><b>Edit Leads</b></h4>
 
-            <div class="container-fluid d-flex justify-content-around flex-shrink-0">
-                <button class="btn btn-primary full-flex" ng-click="add()">Add New</button>
-                <button class="btn btn-primary full-flex" ng-click="upload()">Upload File</button>
+            <div class="container-fluid d-flex flex-column flex-shrink-0">
+                <button class="btn btn-primary" ng-click="add()">Add New</button>
+                <js-xls onread="excelRead" onError="excelError" />
             </div>
 
             <div class="lead-edit-box flex-shrink-0 p-2 d-flex flex-column">

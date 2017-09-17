@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, leads, leadUpdateCb) {
+app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, ExcelService, leads, leadUpdateCb) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function () {
@@ -72,10 +72,6 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
                     // Recenter map on the selected lead
                     googleMap.panTo(new google.maps.LatLng(lat, lng))
                 })
-    }
-
-    $scope.upload = function () {
-        // Placeholder
     }
 
     $scope.save = function () {
@@ -180,6 +176,23 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
                 // Assign address to lead
                 lead.address = address
             })
+    }
+
+    // Excel related APIs
+    $scope.excelRead = function (workbook) {
+        ExcelService.excelRead(workbook).then(
+            function (response) {
+                console.log(response.data)
+            },
+            function (error) {
+                // Excel File Parse Error
+                console.log(error)
+            }
+        )
+    }
+
+    $scope.excelError = function (e) {
+        console.log("Excel Read Error = " + e)
     }
 
     $scope.cancel = function () {

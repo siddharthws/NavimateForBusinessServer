@@ -38,22 +38,4 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
         DialogService.leadEditor(null, init)
     }
 
-    // Excel related APIs
-    $scope.excelRead = function (workbook) {
-        ExcelService.excelRead(workbook).then(
-            function (response) {
-                // Launch Map Editor Dialod
-                DialogService.mapEditor(response.data)
-            },
-            function (error) {
-                // Excel File Parse Error
-                console.log(error)
-            }
-        )
-    }
-
-    $scope.excelError = function (e) {
-        console.log("Excel Read Error = " + e)
-    }
-
 })
