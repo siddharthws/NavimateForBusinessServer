@@ -111,14 +111,16 @@ environments:
         grails:
             redis:
                 timeout: 2000 # default in milliseconds
-                port: 7777
+                port: 6379
                 host: localhost
     test:
         dataSource:
             url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
     production:
         dataSource:
-            url: jdbc:h2:./prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            url: jdbc:postgresql://localhost:5432/navimate
+            username: navimate
+            password: "${NAVIMATE_DB_PASSWORD}"
             properties:
                 jmxEnabled: true
                 initialSize: 5
