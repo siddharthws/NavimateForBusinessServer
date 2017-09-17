@@ -7,8 +7,12 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function () {
-        // Add empty lead to array
-        var lead = {}
+        // Add a lead to current center of map
+        var lead = {
+            latitude: googleMap.getCenter().lat(),
+            longitude: googleMap.getCenter().lng()
+        }
+
         $scope.leads.push(lead)
 
         // Simulate a click on the new item
@@ -19,8 +23,17 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
     }
 
     $scope.listItemClick = function (lead) {
+        // Select this lead
         $scope.selectedLead = lead
+
+        // Refresh Address Search
         $scope.searchResults = []
+
+        // Center map on this lead
+        if (googleMap){
+            googleMap.panTo(new google.maps.LatLng(lead.latitude, lead.longitude))
+
+        }
     }
 
     $scope.searchAddress = function () {
@@ -33,7 +46,14 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
             $scope.searchResults = []
 
             // Get results from Google API
-            GoogleApiService.autoComplete($scope.selectedLead.address, searchResultCb)
+            GoogleApiService.autoComplete($scope.selectedLead.address,
+                function (results) {
+                    // Update results
+                    $scope.searchResults = results
+
+                    // Stop Waiting flag
+                    $scope.bSearchWaiting = false
+                })
         }
     }
 
@@ -44,7 +64,14 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
         $scope.selectedLead.longitude = 0
 
         // Get latlng for this place
-        GoogleApiService.addressToLatlng(searchResult.address, latlngReceived)
+        GoogleApiService.addressToLatlng(searchResult.address,
+                function (lat, lng) {
+                    $scope.selectedLead.latitude = lat
+                    $scope.selectedLead.longitude = lng
+
+                    // Recenter map on the selected lead
+                    googleMap.panTo(new google.maps.LatLng(lat, lng))
+                })
     }
 
     $scope.upload = function () {
@@ -83,6 +110,76 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
 
     $scope.isLeadValid = function (lead) {
         return (lead.company && lead.name && lead.phoneNumber && lead.latitude && lead.longitude && lead.address)
+    }
+
+    // Map Init Callback from ngMap
+    $scope.mapInitialized = function (map) {
+        // Set map object
+        googleMap = map
+
+        if (!$scope.leads.length) {
+            // Add atleast one lead if leads are empty
+            $scope.add()
+        } else {
+            // Center map on added leads
+            var bounds = new google.maps.LatLngBounds()
+            $scope.leads.forEach(function (lead) {
+                bounds.extend(new google.maps.LatLng(lead.latitude, lead.longitude))
+            })
+            googleMap.fitBounds(bounds)
+        }
+
+        // Run angular digest cycle since this is async callback
+        $scope.$apply()
+    }
+
+    // API to get marker icon based on conditions
+    $scope.getMarkerIcon = function (lead) {
+        // Blue marker for selected lead
+        if ($scope.selectedLead == lead) {
+            return {
+                url: "../../static/images/marker_selected.png",
+                scaledSize: [40, 40]
+            }
+        }
+        // Red marker for error marker lead
+        else if (!$scope.isLeadValid(lead) && $scope.bShowError) {
+            return {
+                url: "../../static/images/marker_error.png",
+                scaledSize: [40, 40]
+            }
+        }
+        // Default green icon
+        else {
+            return {
+                url: "../../static/images/marker_default.png",
+                scaledSize: [40, 40]
+            }
+        }
+    }
+
+    // Marker Click Events
+    $scope.markerClicked = function(e, lead) {
+        // Perform a list item click
+        $scope.listItemClick(lead)
+
+        // Scroll list ot place this item on top
+        scrollList(leads.indexOf(lead))
+    }
+
+    // Marker drag events
+    $scope.markerDragged = function(e, lead) {
+        // Update lead's latitude and longitude
+        lead.latitude   = e.latLng.lat()
+        lead.longitude  = e.latLng.lng()
+
+        // Get address using reverse geocoding
+        GoogleApiService.latlngToAddress(
+            lead.latitude, lead.longitude,
+            function (address) { // Callback
+                // Assign address to lead
+                lead.address = address
+            })
     }
 
     $scope.cancel = function () {
@@ -135,19 +232,6 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
         $(list).animate({scrollTop: scrollingOffset})
     }
 
-    function searchResultCb(results) {
-        // Update results
-        $scope.searchResults = results
-
-        // Stop Waiting flag
-        $scope.bSearchWaiting = false
-    }
-
-    function latlngReceived(lat, lng) {
-        $scope.selectedLead.latitude = lat
-        $scope.selectedLead.longitude = lng
-    }
-
     /* ------------------------------- INIT -----------------------------------*/
     // Init objects
     $scope.leads = []
@@ -157,12 +241,14 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
     $scope.searchResults = []
     $scope.bSearchWaiting = false
 
+    $scope.mapCenter = [21, 79]
+    $scope.mapZoom   = 4
+    var googleMap = null
+    var markerIconDefault, markerIconSelected, markerIconError = null
+
     if (leads) {
         // Assign the passed leads & mark the first one as selected
         $scope.leads = leads
         $scope.selectedLead = $scope.leads[0]
-    } else {
-        // Add new
-        $scope.add()
     }
 })

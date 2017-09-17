@@ -47,7 +47,10 @@
 
         <div class="lead-editor-map ml-2 full-flex" map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
             <ng-map class="full-width full-height"
-                    center="[41, 87]" zoom="4">
+                    center="{{mapCenter}}" zoom="{{mapZoom}}" map-initialized="mapInitialized(map)">
+                <marker ng-repeat="lead in leads" icon="{{getMarkerIcon(lead)}}" title="{{lead.company}}"
+                        position="[{{lead.latitude}}, {{lead.longitude}}]"
+                        draggable="true" on-click="markerClicked(lead)" on-dragend="markerDragged(lead)"/>
             </ng-map>
             <div class="lead-editor-map-shadow"></div>
         </div>
