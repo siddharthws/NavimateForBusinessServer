@@ -6,13 +6,14 @@ import org.grails.web.json.JSONArray
 @Transactional
 class LeadService {
 
+    def googleApiService
     def parseExcel(User manager, JSONArray excelJson) {
         // Parse JSON to Lead Object
         def leads = parseToLeads(manager, excelJson)
 
-        // TODO: Init Lat / Lng from Address using Places API
+        def leadwithlatlng = addressToLatLong(leads)
 
-        return leads
+         leadwithlatlng
     }
 
     def parseToLeads(User manager, JSONArray excelJson){
@@ -73,10 +74,10 @@ class LeadService {
                 }
             }
 
-            if ((latIdx != -1) && (lngIdx != -1))
+            if ((latIdx != -1) && (lngIdx != -1) && row[latIdx] && row[lngIdx] )
             {
-                Double lat = row[latIdx]
-                Double lng = row[lngIdx]
+                Double lat = Double.parseDouble(row[latIdx])
+                Double lng = Double.parseDouble(row[lngIdx])
                 if (lat && lng)
                 {
                     lead.latitude = lat
@@ -89,4 +90,33 @@ class LeadService {
 
         return leads
     }
+
+    def   addressToLatLong(def leads)
+    {
+
+            leads.each { lead ->
+
+                if( !(lead.latitude && lead.longitude)) {
+                    def address = lead.address
+                    String[] addresses = [lead.address]
+
+                    try {
+                        def latlngs = googleApiService.geocode(addresses)
+
+                        lead.latitude = latlngs[0].latitude
+                        lead.longitude = latlngs[0].longitude
+                    }
+                    catch (navimateforbusiness.ApiException e){
+
+                        lead.latitude = 0
+                        lead.longitude = 0
+
+                    }
+                }
+            }
+
+        leads
+    }
+
+
 }
