@@ -45,16 +45,6 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
-    // Launch Map Editor Dialog
-    this.mapEditor = function (leads) {
-        // Show Dialog
-        $mdDialog.show({    templateUrl: '../views/dialogs/MapEditor.html',
-                            controller: 'MapEditorCtrl',
-                            clickOutsideToClose: true,
-                            locals: { leads: leads }
-        })
-    }
-
     // Launch Rep Add Dialog
     this.addRep = function (teamUpdateCb) {
         // Show Dialog
