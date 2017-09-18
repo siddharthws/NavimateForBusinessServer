@@ -182,9 +182,8 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
     $scope.excelRead = function (workbook) {
         ExcelService.excelRead(workbook).then(
             function (response) {
-                console.log(response.data)
-
                 response.data.forEach(function (lead) {
+                    //Adding leads from excel
                     $scope.leads.push(lead);
                 })
 
