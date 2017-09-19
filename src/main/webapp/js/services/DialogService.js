@@ -84,4 +84,14 @@ app.service('DialogService', function($mdDialog) {
                             locals: { leads: leads, leadUpdateCb: leadUpdateCb }
         })
     }
+
+    // Launch Edit Form Dialog
+    this.editForm = function (form, updateCb) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '../views/dialogs/EditForm.html',
+                            controller: 'EditFormCtrl',
+                            clickOutsideToClose: true,
+                            locals: { form: form, updateCb: updateCb }
+        })
+    }
 })
