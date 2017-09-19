@@ -11,6 +11,7 @@ import navimateforbusiness.Task
 import navimateforbusiness.User
 import navimateforbusiness.UserStatus
 import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 
 import javax.xml.bind.Marshaller
 
@@ -216,6 +217,24 @@ class UserApiController {
         forms.each { form ->
             resp.add(navimateforbusiness.Marshaller.serializeForm(form))
         }
+        render resp as JSON
+    }
+
+    def editForm() {
+        def accessToken = request.getHeader("X-Auth-Token")
+        if (!accessToken) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+        def user = authService.getUserFromAccessToken(accessToken)
+
+        // Update Db's Form data
+        def formJson = request.JSON.form
+        Form form = Form.findById(formJson.id)
+        form.data = formJson.data.toString()
+        form.save(flush: true, failOnError: true)
+
+        // return resposne
+        def resp = [success: true]
         render resp as JSON
     }
 }

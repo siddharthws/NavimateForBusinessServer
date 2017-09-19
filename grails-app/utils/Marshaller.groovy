@@ -1,5 +1,6 @@
 package navimateforbusiness
 
+import grails.converters.JSON
 import navimateforbusiness.User
 
 class Marshaller {
@@ -39,7 +40,7 @@ class Marshaller {
         return [
                 id:     form.id,
                 name:   form.name,
-                data:   form.data
+                data:   JSON.parse(form.data)
         ]
     }
 }
