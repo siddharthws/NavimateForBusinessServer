@@ -20,6 +20,11 @@ class AuthService {
                                     account:        account,
                                     role:           navimateforbusiness.Role.ADMIN,
                                     status:         navimateforbusiness.UserStatus.ACTIVE)
+
+        // Add Sales Template By Default
+        manager.addToForms(getSalesTemplate(manager))
+
+        // Save
         manager.save(flush: true, failOnError: true)
 
         // Assign admin to account
@@ -56,5 +61,16 @@ class AuthService {
             throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
         }
         return User.get(sessionData.userId)
+    }
+
+    private def getSalesTemplate(User manager) {
+        Form salesTemplate = new Form(
+                account: manager.account,
+                owner: manager,
+                name: "Sales Template",
+                data: '[ { "title":  "Sales", "type":   "number", "value":  "0" }, { "title":  "Notes", "type":   "text", "value":  "" }, { "title":  "status", "type":   "radioList", "value":  { "options": ["Failed", "Waiting", "Done"], "selection": "Waiting" } }]'
+        )
+
+        salesTemplate
     }
 }
