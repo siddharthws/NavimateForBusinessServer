@@ -6,9 +6,6 @@
             Name
         </th>
         <th>
-            Data
-        </th>
-        <th>
             Actions
         </th>
         </thead>
@@ -16,11 +13,8 @@
             <td class="text-center">
                 {{form.name}}
             </td>
-            <td class="text-center">
-                {{form.data}}
-            </td>
             <td>
-                <button>View</button>
+                <input type="image" class="img-icon" src="../../static/images/edit.png" ng-click="edit(form)" title="Edit">
             </td>
         </tr>
     </table>
