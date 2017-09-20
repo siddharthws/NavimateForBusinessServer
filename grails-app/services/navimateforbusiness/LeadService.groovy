@@ -7,13 +7,14 @@ import org.grails.web.json.JSONArray
 class LeadService {
 
     def googleApiService
+
     def parseExcel(User manager, JSONArray excelJson) {
         // Parse JSON to Lead Object
         def leads = parseToLeads(manager, excelJson)
 
-        def leadwithlatlng = addressToLatLong(leads)
+        leads = addressToLatLng(leads)
 
-         leadwithlatlng
+        leads
     }
 
     def parseToLeads(User manager, JSONArray excelJson){
@@ -91,12 +92,9 @@ class LeadService {
         return leads
     }
 
-    def   addressToLatLong(def leads)
-    {
-
-            leads.each { lead ->
-
-                if( !(lead.latitude && lead.longitude)) {
+    def   addressToLatLng(def leads){
+        leads.each { lead ->
+                if(!(lead.latitude && lead.longitude)) {
                     def address = lead.address
                     String[] addresses = [lead.address]
 
@@ -107,16 +105,11 @@ class LeadService {
                         lead.longitude = latlngs[0].longitude
                     }
                     catch (navimateforbusiness.ApiException e){
-
                         lead.latitude = 0
                         lead.longitude = 0
-
                     }
                 }
             }
-
         leads
     }
-
-
 }
