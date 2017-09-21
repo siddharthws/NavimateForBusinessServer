@@ -63,3 +63,11 @@ md-toast.md-center {
 .button:focus {
     outline: 0px;
 }
+
+/* Hidden element for various cases */
+.hidden-element {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    left: -9999px;
+}
