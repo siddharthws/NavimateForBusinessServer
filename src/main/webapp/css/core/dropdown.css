@@ -1,4 +1,20 @@
 /* -- Bootstrap dropdown styling -- */
+
+
+.dropdown-toggle-button-table {
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+}
+
 .dropdown-menu {
     box-shadow: 5px 5px 10px 0 rgba(0,0,0,0.24);
+    max-height: 300px;
+    overflow: auto;
+}
+
+.dropdown-menu-right {
+    right: 0;
+    left: auto;
 }

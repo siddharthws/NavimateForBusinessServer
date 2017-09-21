@@ -29,6 +29,19 @@ app.controller("TeamReportCtrl", function ($scope, $http, $localStorage, $state,
         }
     )
 
+    // Hack to persist multiselect dropdowns after clicking on dropdown items
+    $('body').on('click', function (e) {
+        if (!$('.dropdown.dropdown-multiselect').is(e.target)
+            && $('.dropdown.dropdown-multiselect').has(e.target).length === 0
+            && $('.show').has(e.target).length === 0) {
+            $('.dropdown.dropdown-multiselect .dropdown-menu').removeClass('show')
+        }
+    })
+
+    $('.dropdown.dropdown-multiselect > button').on('click', function (e) {
+        $($(this).parent()).find('.dropdown-menu').toggleClass('show')
+    })
+
     $scope.export = function () {
         // Get table to export
         var table = $('.team-report-table').get(0)

@@ -24,3 +24,20 @@
 .ib-bin:active, .ib-bin:hover {
     background-image: url("/static/images/icon_bin_active.png");
 }
+
+/* Sort icon image buttons */
+.ib-sort-up {
+    background-image: url("/static/images/icon_sort_up.png");
+}
+
+.ib-sort-up:active, .ib-sort-up:hover {
+    background-image: url("/static/images/icon_sort_up_active.png");
+}
+
+.ib-sort-down {
+    background-image: url("/static/images/icon_sort_down.png");
+}
+
+.ib-sort-down:active, .ib-sort-down:hover {
+    background-image: url("/static/images/icon_sort_down_active.png");
+}
