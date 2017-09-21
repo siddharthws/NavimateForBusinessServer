@@ -135,8 +135,10 @@
                                    ng-class="{'active' : filter.sort.indexOf('-date') != -1}"/>
                         </div>
                         <span>Select:</span>
-                        <md-datepicker ng-model="fromDate" md-placeholder="From Date"></md-datepicker>
-                        <md-datepicker ng-model="toDate" md-placeholder="To Date"></md-datepicker>
+                        <md-datepicker ng-model="fromDate" md-placeholder="From Date"
+                                       ng-change="fromDateUpdate(fromDate)"></md-datepicker>
+                        <md-datepicker ng-model="toDate" md-placeholder="To Date"
+                                       ng-change="toDateUpdate(toDate)"></md-datepicker>
                     </div>
                 </div>
             </th>
