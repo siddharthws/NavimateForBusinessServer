@@ -1,9 +1,8 @@
 <!-- Team Report HTML -->
-<div class="content-toolbar d-flex justify-content-between">
-    <div class="d-flex flex-column justify-content-between">
-        <button ng-click="export()">Export</button>
-        <button>Sync</button>
-    </div>
+<div class="content-toolbar d-flex">
+    <button class="btn btn-primary" ng-click="resetFilters(); applyFilters()">Clear Filters</button>
+    <button class="btn btn-primary" ng-click="export()">Export</button>
+    <button class="btn btn-primary" ng-click="sync()">Sync</button>
 </div>
 
 <div class="content-data full-flex">
