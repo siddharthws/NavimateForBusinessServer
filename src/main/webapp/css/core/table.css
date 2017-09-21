@@ -1,0 +1,13 @@
+
+
+.table-col-sm {
+    min-width: 50px;
+}
+
+.table-col-md {
+    min-width: 100px;
+}
+
+.table-col-lg {
+    min-width: 150px;
+}

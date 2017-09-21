@@ -16,25 +16,49 @@
 <div class="content-data full-flex">
     <table class="team-report-table table table-bordered" ng-table="">
         <thead>
-            <th>
+            <th class="table-col-sm">
+                #
+            </th>
+            <th class="table-col-md">
                 Name
             </th>
-            <th>
+            <th class="table-col-lg">
                 Lead
             </th>
-            <th>
-                Form
+            <th class="table-col-sm">
+                Sales
+            </th>
+            <th class="table-col-sm">
+                Status
+            </th>
+            <th class="table-col-lg">
+                Notes
+            </th>
+            <th class="table-col-md">
+                Date
             </th>
         </thead>
         <tr ng-repeat="row in report">
-            <td>
+            <td class="table-col-sm">
+                {{$index + 1}}
+            </td>
+            <td class="table-col-md">
                 {{row.rep}}
             </td>
-            <td>
+            <td class="table-col-lg">
                 {{row.lead}}
             </td>
-            <td>
-                {{row.form}}
+            <td  class="table-col-sm">
+                {{row.sales}}
+            </td>
+            <td class="table-col-sm">
+                {{row.status}}
+            </td>
+            <td class="table-col-lg">
+                {{row.notes}}
+            </td>
+            <td class="table-col-md">
+                {{row.date}}
             </td>
         </tr>
     </table>
