@@ -1,4 +1,22 @@
 /* -- Bootstrap button styling -- */
+button:focus {
+    outline: 0;
+}
+
+/* -- Nav Buttons -- */
+.nav-btn {
+    color: white;
+    padding: 0.5em 3.0em;
+    margin: 0px;
+    background-color: transparent;
+    border: none;
+}
+
+.nav-btn:hover, .nav-btn.active {
+    background-color: #37bcf2;
+}
+
+/* Bootstrap button overrides */
 .btn {
     padding: 0.5em 1.5em;
     margin: 5px;
