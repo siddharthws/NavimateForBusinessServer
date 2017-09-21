@@ -14,6 +14,15 @@ app.controller("TeamReportCtrl", function ($scope, $http, $localStorage, $state,
 
     // Init Filter
     $scope.filter = {
+        rep: {
+            selection: []
+        },
+        lead: {
+            selection: []
+        },
+        status: {
+            selection: []
+        },
         sort: []
     }
 
@@ -85,6 +94,20 @@ app.controller("TeamReportCtrl", function ($scope, $http, $localStorage, $state,
         $scope.applyFilters()
     }
 
+    $scope.filterSelect = function(property, value) {
+        var idx = $scope.filter[property].selection.indexOf(value)
+        if (idx == -1) {
+            // Add to filter
+            $scope.filter[property].selection.push(value)
+        } else {
+            // Remove from filter
+            $scope.filter[property].selection.splice(idx, 1)
+        }
+
+        // Reapply filters on data
+        $scope.applyFilters()
+    }
+
     // API to apply all filters
     $scope.applyFilters = function () {
         console.log("Filtering")
@@ -93,7 +116,12 @@ app.controller("TeamReportCtrl", function ($scope, $http, $localStorage, $state,
 
         // Apply select filters
         $scope.report.forEach(function (row) {
-            $scope.filteredReport.push(row)
+            if (($scope.filter.rep.selection.indexOf(row.rep) == -1) &&
+                ($scope.filter.lead.selection.indexOf(row.lead) == -1) &&
+                ($scope.filter.status.selection.indexOf(row.status) == -1))
+            {
+                $scope.filteredReport.push(row)
+            }
         })
 
         // Apply sorting

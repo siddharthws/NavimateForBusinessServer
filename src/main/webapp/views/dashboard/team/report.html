@@ -29,7 +29,7 @@
                         <span>Select:</span>
                         <input type="text" ng-model="repFilterSearch" placeholder="Search...">
                         <div ng-repeat="row in report | unique: 'rep' | filter:repFilterSearch">
-                            <input type="checkbox"/> {{row.rep}}
+                            <input type="checkbox" ng-click="filterSelect('rep', row.rep)" ng-checked="filter.rep.selection.indexOf(row.rep) == -1"/> {{row.rep}}
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                         <span>Select:</span>
                         <input type="text" ng-model="leadFilterSearch" placeholder="Search...">
                         <div ng-repeat="row in report | unique: 'lead' | filter:leadFilterSearch">
-                            <input type="checkbox"/> {{row.lead}}
+                            <input type="checkbox" ng-click="filterSelect('lead', row.lead)" ng-checked="filter.lead.selection.indexOf(row.lead) == -1"/> {{row.lead}}
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                         <span>Select:</span>
                         <input type="text" ng-model="statusFilterSearch" placeholder="Search...">
                         <div ng-repeat="row in report | unique: 'status' | filter:statusFilterSearch">
-                            <input type="checkbox"/> {{row.status}}
+                            <input type="checkbox" ng-click="filterSelect('status', row.status)" ng-checked="filter.status.selection.indexOf(row.status) == -1"/> {{row.status}}
                         </div>
                     </div>
                 </div>
