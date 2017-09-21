@@ -46,24 +46,6 @@ md-toast.md-center {
     transform: translate3d(-50%, 0, 0);
 }
 
-/* General Button Styling*/
-.button {
-    margin: 5px;
-    padding: 5px 20px 5px 20px;
-}
-
-.button:hover {
-    transition-duration: 0.4s;
-}
-
-.button:active {
-    transition-duration: 0s;
-}
-
-.button:focus {
-    outline: 0px;
-}
-
 /* Hidden element for various cases */
 .hidden-element {
     width: 1px;
