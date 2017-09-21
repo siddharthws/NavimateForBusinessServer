@@ -1,12 +1,5 @@
 <!-- Team Report HTML -->
 <div class="content-toolbar d-flex justify-content-between">
-    <div class="align-self-center" ng-dropdown-multiselect=""></div>
-
-    <div class="d-flex flex-column justify-content-between">
-        <md-datepicker ng-model="fromDate">From : </md-datepicker>
-        <md-datepicker ng-model="toDate">To : </md-datepicker>
-    </div>
-
     <div class="d-flex flex-column justify-content-between">
         <button ng-click="export()">Export</button>
         <button>Sync</button>
@@ -20,22 +13,115 @@
                 #
             </th>
             <th class="table-col-md">
-                Name
+                <div class="dropdown dropdown-multiselect">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Name</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                    </button>
+                    <div class="dropdown-menu p-2">
+                        <span>Sort:</span>
+                        <div class="d-flex justify-content-center">
+                            <input type="button" value="" class="image-button ib-sort-down"/>
+                            <input type="button" value="" class="image-button ib-sort-up"/>
+                        </div>
+                        <span>Select:</span>
+                        <input type="text" ng-model="repFilterSearch" placeholder="Search...">
+                        <div ng-repeat="row in report | unique: 'rep' | filter:repFilterSearch">
+                            <input type="checkbox"/> {{row.rep}}
+                        </div>
+                    </div>
+                </div>
             </th>
             <th class="table-col-lg">
-                Lead
+                <div class="dropdown dropdown-multiselect">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Lead</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                    </button>
+                    <div class="dropdown-menu p-2">
+                        <span>Sort:</span>
+                        <div class="d-flex justify-content-center">
+                            <input type="button" value="" class="image-button ib-sort-down"/>
+                            <input type="button" value="" class="image-button ib-sort-up"/>
+                        </div>
+                        <span>Select:</span>
+                        <input type="text" ng-model="leadFilterSearch" placeholder="Search...">
+                        <div ng-repeat="row in report | unique: 'lead' | filter:leadFilterSearch">
+                            <input type="checkbox"/> {{row.lead}}
+                        </div>
+                    </div>
+                </div>
             </th>
             <th class="table-col-sm">
-                Sales
+                <div class="dropdown dropdown-multiselect w-100">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Sales</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                    </button>
+                    <div class="dropdown-menu p-2">
+                        <span>Sort:</span>
+                        <div class="d-flex justify-content-center">
+                            <input type="button" value="" class="image-button ib-sort-down"/>
+                            <input type="button" value="" class="image-button ib-sort-up"/>
+                        </div>
+                        <span>Select:</span>
+                        <div class="d-flex align-items-center">
+                            <span> <= </span><input type="number" placeholder="Less than" ng-model-options="{debounce: 500}">
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span> >= </span><input type="number" placeholder="Greater than" ng-model-options="{debounce: 500}">
+                        </div>
+                    </div>
+                </div>
             </th>
             <th class="table-col-sm">
-                Status
+                <div class="dropdown dropdown-multiselect">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Status</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                    </button>
+                    <div class="dropdown-menu p-2">
+                        <span>Sort:</span>
+                        <div class="d-flex justify-content-center">
+                            <input type="button" value="" class="image-button ib-sort-down"/>
+                            <input type="button" value="" class="image-button ib-sort-up"/>
+                        </div>
+                        <span>Select:</span>
+                        <input type="text" ng-model="statusFilterSearch" placeholder="Search...">
+                        <div ng-repeat="row in report | unique: 'status' | filter:statusFilterSearch">
+                            <input type="checkbox"/> {{row.status}}
+                        </div>
+                    </div>
+                </div>
             </th>
             <th class="table-col-lg">
-                Notes
+                <div class="dropdown dropdown-multiselect w-100">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Notes</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                    </button>
+                    <div class="dropdown-menu p-2">
+                        <input type="text" placeholder="Search Notes..." ng-model-options="{debounce: 500}">
+                    </div>
+                </div>
             </th>
             <th class="table-col-md">
-                Date
+                <div class="dropdown dropdown-multiselect w-100">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Date</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right p-2">
+                        <span>Sort:</span>
+                        <div class="d-flex justify-content-center">
+                            <input type="button" value="" class="image-button ib-sort-down"/>
+                            <input type="button" value="" class="image-button ib-sort-up"/>
+                        </div>
+                        <span>Select:</span>
+                        <md-datepicker ng-model="fromDate" md-placeholder="From Date"></md-datepicker>
+                        <md-datepicker ng-model="toDate" md-placeholder="To Date"></md-datepicker>
+                    </div>
+                </div>
             </th>
         </thead>
         <tr ng-repeat="row in report">
