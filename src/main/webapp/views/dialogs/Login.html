@@ -5,16 +5,14 @@
         <hr>
     </div>
 
-    <div class="d-flex flex-column">
+    <form class="d-flex flex-column" ng-submit="login()">
         <a href class="align-self-end" ng-click="register()">Register Now</a>
-        <form ng-submit="login()">
-            <input class="input-underlined w-100" ng-model="phoneNumber" type="text" placeholder="Enter mobile number..."
-                   ng-class="{'has-error': bShowError && !phoneNumber}">
-            <input class="input-underlined w-100" ng-model="password" type="password" placeholder="Enter password..."
-                   ng-class="{'has-error': bShowError && !password}">
-            <input type="submit" class="hidden-element"/>
-        </form>
-    </div>
+        <input class="input-underlined" ng-model="phoneNumber" type="text" placeholder="Enter mobile number..."
+               ng-class="{'has-error': bShowError && !phoneNumber}">
+        <input class="input-underlined" ng-model="password" type="password" placeholder="Enter password..."
+               ng-class="{'has-error': bShowError && !password}">
+        <input type="submit" class="hidden-element"/>
+    </form>
 
     <div class="container-fluid d-flex justify-content-end">
         <button class="btn btn-primary" ng-click="login()">Login</button>
