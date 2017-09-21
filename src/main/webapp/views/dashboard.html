@@ -1,7 +1,7 @@
 <!-- Dahsboard -->
 
-<div class="dashboard d-flex">
-    <div class="dashboard-menu d-flex flex-column">
+<div class="dashboard row">
+    <div class="col-md-2 dashboard-menu d-flex flex-column">
         <img class="dashboard-logo align-self-center" src="../images/logo.png">
         <button class="button" ng-class="{true: 'is-active'}[selection.item.name == 'team']"
                 ui-sref="dashboard.team-manage">
@@ -21,7 +21,7 @@
         </button>
     </div>
 
-    <div class="d-flex flex-column full-flex">
+    <div class="col-md-10 d-flex flex-column full-flex">
         <div class="dashboard-header d-flex">
             <button ng-repeat="option in selection.item.options"
                     ng-click="onOptionClick(option)"
