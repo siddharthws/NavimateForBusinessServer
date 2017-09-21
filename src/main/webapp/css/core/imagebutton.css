@@ -11,8 +11,11 @@
     border-radius: 5px;
 }
 
-.image-button:hover, .image-button:active {
+.image-button:hover, .image-button.active {
     background-color: #37bcf2;
+}
+
+.image-button:hover {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
 }
 
@@ -21,7 +24,7 @@
     background-image: url("/static/images/icon_bin.png");
 }
 
-.ib-bin:active, .ib-bin:hover {
+.ib-bin.active, .ib-bin:hover {
     background-image: url("/static/images/icon_bin_active.png");
 }
 
@@ -30,7 +33,7 @@
     background-image: url("/static/images/icon_sort_up.png");
 }
 
-.ib-sort-up:active, .ib-sort-up:hover {
+.ib-sort-up.active, .ib-sort-up:hover {
     background-image: url("/static/images/icon_sort_up_active.png");
 }
 
@@ -38,6 +41,6 @@
     background-image: url("/static/images/icon_sort_down.png");
 }
 
-.ib-sort-down:active, .ib-sort-down:hover {
+.ib-sort-down.active, .ib-sort-down:hover {
     background-image: url("/static/images/icon_sort_down_active.png");
 }
