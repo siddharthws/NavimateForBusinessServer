@@ -1,0 +1,26 @@
+
+/* General Image button properties */
+.image-button {
+    height: 40px;
+    width: 40px;
+    padding: 0.5em 1.5em;
+    margin: 5px;
+    background: white no-repeat center;
+    background-size: 75%;
+    border: none;
+    border-radius: 5px;
+}
+
+.image-button:hover, .image-button:active {
+    background-color: #37bcf2;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+/* Bin icon image button */
+.ib-bin {
+    background-image: url("/static/images/icon_bin.png");
+}
+
+.ib-bin:active, .ib-bin:hover {
+    background-image: url("/static/images/icon_bin_active.png");
+}
