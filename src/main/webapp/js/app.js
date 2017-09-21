@@ -6,7 +6,8 @@ var app = angular.module("navimate", [
   'ngMap',
   'ngTable',
   'angularjs-dropdown-multiselect',
-  'ngFileSaver'
+  'ngFileSaver',
+  'angular.filter'
 ]);
 
 app.config(['$locationProvider', function ($locationProvider) {
