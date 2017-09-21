@@ -1,6 +1,8 @@
 package navimateforbusiness
 
+import grails.converters.JSON
 import grails.gorm.transactions.Transactional
+import org.grails.web.json.JSONArray
 
 @Transactional
 class ReportService {
@@ -16,21 +18,41 @@ class ReportService {
             tasks.each {task ->
                 // Add an entry in report for each form in this task
                 task.forms.each {form ->
+                    JSONArray data = JSON.parse(form.data)
+
                     def row = [ rep: task.rep.name,
                                 lead: task.lead.company,
-                                form: form.data]
+                                date:  form.dateCreated.format("yyyy-MM-dd"),
+                                sales: data.get(0).value,
+                                notes: data.get(1).value,
+                                status: data.get(2).value.selection]
 
                     report.push(row)
                 }
 
                 // If no forms in this task, add single entry with empty form
-                if (task?.forms) {
+                if (!task?.forms) {
                     def row = [ rep: task.rep.name,
                                 lead: task.lead.company,
-                                form: ""]
+                                sales: 0,
+                                status: "NA",
+                                notes: "NA",
+                                date:  task.dateCreated.format("yyyy-MM-dd")]
 
                     report.push(row)
                 }
+            }
+
+            // If no tasks for this rep, add single entry with empty data
+            if (!tasks) {
+                def row = [ rep: member.name,
+                            lead: "NA",
+                            sales: 0,
+                            status: "NA",
+                            notes: "NA",
+                            date:  member.lastUpdated.format("yyyy-MM-dd")]
+
+                report.push(row)
             }
         }
 
