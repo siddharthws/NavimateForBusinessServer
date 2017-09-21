@@ -6,8 +6,8 @@
 }
 
 .content-data {
-    flex: 1;
     margin-top: 10px;
+    overflow: auto;
 }
 
 .content-list-item {
