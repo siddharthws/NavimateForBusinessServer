@@ -8,12 +8,15 @@
     height: 70px;
     background-color: black;
 }
-
-.home-content{
-    flex: 1;
+.home-header-logo{
+    height: 50px;
+    width: auto;
 }
 
 .home-footer{
     height: 100px;
     background-color: black;
 }
+
+
+
