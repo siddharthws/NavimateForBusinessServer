@@ -1,16 +1,19 @@
 <!-- HomePage -->
 
-<div class="home full-height full-width d-flex flex-column">
-    <div class="home-header">
-        <button ng-click="register()" >Register</button>
-        <button ng-click="login()">Login</button>
+<div class="home d-flex flex-column">
+    <div class="d-flex justify-content-end home-header navbar-fixed-top">
+            <a class="a-white mr-auto" href="#">
+                <img class="home-header-logo m-2 align-self-center" src="../images/logo.png">Navimate
+            </a>
+            <button class="nav-btn" ng-click="register()">Register</button>
+            <button class="nav-btn" ng-click="login()">Login</button>
     </div>
 
-    <div class="home-content">
+    <div class="home-content full-flex">
         Feature List Goes Here
     </div>
 
-    <div class="home-footer">
-        <a href="#">Download</a>
+    <div class="d-flex justify-content-around align-items-center home-footer">
+        <a class="a-white" href="#">Download</a>
     </div>
 </div>
