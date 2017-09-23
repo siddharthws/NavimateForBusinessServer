@@ -23,6 +23,7 @@ class Lead {
     ]
 
     static constraints = {
+        manager         nullable: true
         company         nullable: true
         email           nullable: true
         latitude        nullable: true
