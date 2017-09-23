@@ -8,6 +8,7 @@ import navimateforbusiness.Lead
 import navimateforbusiness.Role
 import navimateforbusiness.SmsHelper
 import navimateforbusiness.Task
+import navimateforbusiness.TaskStatus
 import navimateforbusiness.User
 import navimateforbusiness.UserStatus
 import org.grails.web.json.JSONArray
@@ -223,6 +224,30 @@ class UserApiController {
         taskService.addTasks(user, tasksJson)
 
         // return resposne
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def closeTasks() {
+        def accessToken = request.getHeader("X-Auth-Token")
+        if (!accessToken) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+        def user = authService.getUserFromAccessToken(accessToken)
+
+        // Get Reps from JSON
+        JSONArray tasksJson = request.JSON.tasks
+        tasksJson.each {taskJson ->
+            Task task = Task.findById(taskJson.id)
+            if (!task) {
+                throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Update Task Status
+            task.status = TaskStatus.CLOSED
+            task.save(flush: true, failOnError: true)
+        }
+
         def resp = [success: true]
         render resp as JSON
     }
