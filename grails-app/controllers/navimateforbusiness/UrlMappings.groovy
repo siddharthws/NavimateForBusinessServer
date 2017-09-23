@@ -20,6 +20,7 @@ class UrlMappings {
         "/api/users/lead"           (controller: "UserApi") {action = [GET: "getLead",      POST: "editLeads"]}
         "/api/users/lead/remove"    (controller: "UserApi") {action = [POST: "removeLeads"]}
         "/api/users/task"           (controller: "UserApi") {action = [GET: "getTask",      POST: "addTasks"]}
+        "/api/users/task/close"     (controller: "UserApi") {action = [POST: "closeTasks"]}
         "/api/users/form"           (controller: "UserApi") {action = [GET: "getForm",      POST: "editForm"]}
 
         // Google API access
