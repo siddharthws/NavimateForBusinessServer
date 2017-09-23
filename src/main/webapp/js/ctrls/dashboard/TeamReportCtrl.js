@@ -142,8 +142,8 @@ app.controller("TeamReportCtrl", function ($scope, $http, $localStorage, $state,
                 $scope.filteredReport = $scope.report
             },
             function (error) {
-                console.log(error)
-                $state.go('home')
+                // Show Error Toast
+                ToastService.toast("Unable to load report !!!")
             }
         )
 
