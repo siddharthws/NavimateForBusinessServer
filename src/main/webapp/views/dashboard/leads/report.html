@@ -1,40 +1,56 @@
 <!-- Lead Report HTML -->
-<div class="content-toolbar d-flex justify-content-between">
-    <div class="align-self-center" ng-dropdown-multiselect=""></div>
-
-    <div class="d-flex flex-column justify-content-between">
-        <md-datepicker ng-model="fromDate">From : </md-datepicker>
-        <md-datepicker ng-model="toDate">To : </md-datepicker>
-    </div>
-
-    <div class="d-flex flex-column justify-content-between">
-        <button ng-click="export()">Export</button>
-        <button>Sync</button>
-    </div>
+<div class="content-toolbar d-flex">
+    <button class="btn btn-primary">Clear Filters</button>
+    <button class="btn btn-primary" ng-click="export()">Export</button>
+    <button class="btn btn-primary">Sync</button>
 </div>
 
 <div class="content-data full-flex">
     <table class="lead-report-table table table-bordered" ng-table="">
         <thead>
-        <th>
-            Lead
-        </th>
-        <th>
-            Rep
-        </th>
-        <th>
-            Form
-        </th>
+            <th class="table-col-sm">
+                #
+            </th>
+            <th class="table-col-md">
+                Lead
+            </th>
+            <th class="table-col-lg">
+                Rep
+            </th>
+            <th class="table-col-sm">
+                Sales
+            </th>
+            <th class="table-col-sm">
+                Status
+            </th>
+            <th class="table-col-lg">
+                Notes
+            </th>
+            <th class="table-col-md">
+                Date
+            </th>
         </thead>
-        <tr ng-repeat="row in report">
-            <td>
+        <tr ng-repeat="row in filteredReport">
+            <td class="table-col-sm">
+                {{$index + 1}}
+            </td>
+            <td class="table-col-md">
                 {{row.lead}}
             </td>
-            <td>
+            <td class="table-col-lg">
                 {{row.rep}}
             </td>
-            <td>
-                {{row.form}}
+            <td  class="table-col-sm">
+                {{row.sales}}
+            </td>
+            <td class="table-col-sm">
+                {{row.status}}
+            </td>
+            <td class="table-col-lg">
+                {{row.notes}}
+            </td>
+            <td class="table-col-md">
+                {{row.date}}
             </td>
         </tr>
     </table>
