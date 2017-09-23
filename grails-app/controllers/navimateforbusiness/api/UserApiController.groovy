@@ -170,6 +170,30 @@ class UserApiController {
         render resp as JSON
     }
 
+    def removeLeads() {
+        def accessToken = request.getHeader("X-Auth-Token")
+        if (!accessToken) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+        def user = authService.getUserFromAccessToken(accessToken)
+
+        // Get Reps from JSON
+        JSONArray leadsJson = request.JSON.leads
+        leadsJson.each {leadJson ->
+            Lead lead = Lead.findById(leadJson.id)
+            if (!lead) {
+                throw new ApiException("Lead not found", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Remove Lead's Manager
+            lead.manager = null
+            lead.save(flush: true, failOnError: true)
+        }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     def getTask() {
         def accessToken = request.getHeader("X-Auth-Token")
         if (!accessToken) {
