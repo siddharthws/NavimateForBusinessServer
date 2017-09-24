@@ -3,6 +3,7 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
+import navimateforbusiness.Form
 import navimateforbusiness.Role
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
@@ -41,6 +42,38 @@ class RepApiController {
                 resp.add(navimateforbusiness.Marshaller.serializeTaskForRep(task))
             }
         }
+        render resp as JSON
+    }
+
+    def submitForm() {
+        def id = request.getHeader("id")
+        User rep = User.findById(id)
+        if (!rep) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Validate Task
+        def task = Task.findById(request.JSON.taskId)
+        if (!task) {
+            throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Add form to DB
+        def data = request.JSON.data.toString()
+        Form form = new Form(   name:       task.template.name,
+                                task:       task,
+                                account:    rep.account,
+                                data:       data,
+                                owner:      rep)
+        form.save(flush: true, failOnErorr: true)
+
+        // Update task status if required
+        if (request.JSON.closeTask) {
+            task.status = TaskStatus.CLOSED
+            task.save(flush: true, failOnErorr: true)
+        }
+
+        def resp = [success: true]
         render resp as JSON
     }
 }
