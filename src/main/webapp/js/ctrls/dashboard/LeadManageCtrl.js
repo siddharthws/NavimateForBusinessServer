@@ -14,6 +14,11 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
 
     // Send request to get list of leads
     function init() {
+
+        // Re-initialize selection to empty
+        $scope.selection = []
+
+        //Get Leads Data
         $http({
             method:     'GET',
             url:        '/api/users/lead',
@@ -36,6 +41,36 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function() {
         DialogService.leadEditor(null, init)
+    }
+
+    // Single List Item Selection Toggle
+    $scope.toggleSelection = function (rep) {
+        var idx = $scope.selection.indexOf(rep)
+
+        // Check if rep is present in selection
+        if (idx != -1) {
+            // Remove from selection
+            $scope.selection.splice(idx, 1)
+        } else {
+            // Add in selection
+            $scope.selection.push(rep)
+        }
+    }
+
+    // Full List Selection Toggling
+    $scope.toggleAll = function () {
+        // Check if all are selected
+        if ($scope.selection.length == $scope.leads.length) {
+            // Remove All
+            $scope.selection.splice(0, $scope.selection.length)
+        } else {
+            // Add All
+            $scope.leads.forEach(function (rep) {
+                if ($scope.selection.indexOf(rep) == -1) {
+                    $scope.selection.push(rep)
+                }
+            })
+        }
     }
 
 })

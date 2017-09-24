@@ -1,11 +1,25 @@
 <!-- Lead Manage HTML -->
-<div class="content-toolbar">
+<div class="content-toolbar d-flex justify-content-around align-items-center">
     <button class="btn btn-primary" ng-click="add()">Add Leads</button>
+
+    <div class="dropdown">
+        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown" ng-disabled="selection.length == 0">
+            <span>Actions | </span>
+            <img class="img-icon" src="../../static/images/dropdown.png"/>
+        </button>
+        <div class="dropdown-menu">
+            <button class="dropdown-item" ng-click="edit()">Edit</button>
+            <button class="dropdown-item" ng-click="remove()">Remove</button>
+        </div>
+    </div>
 </div>
 
 <div class="content-data full-flex">
     <table class="table table-striped" ng-table="">
         <thead>
+        <th>
+            <input type="checkbox" ng-click="toggleAll()" ng-checked="selection.length == leads.length">
+        </th>
         <th>
             Company
         </th>
@@ -17,6 +31,9 @@
         </th>
         </thead>
         <tr ng-repeat="lead in leads">
+            <td class="text-center">
+                <input type="checkbox" ng-click="toggleSelection(lead)" ng-checked="selection.indexOf(lead) != -1">
+            </td>
             <td class="text-center">
                 {{lead.company}}
             </td>
