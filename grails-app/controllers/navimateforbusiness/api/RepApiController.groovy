@@ -76,4 +76,19 @@ class RepApiController {
         def resp = [success: true]
         render resp as JSON
     }
+
+    def updateFcm() {
+        def id = request.getHeader("id")
+        User rep = User.findById(id)
+        if (!rep) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Update User FCM
+        rep.fcmId = request.JSON.fcmId
+        rep.save(flush: true, failOnErorr: true)
+
+        def resp = [success: true]
+        render resp as JSON
+    }
 }
