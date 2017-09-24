@@ -25,6 +25,7 @@ class UrlMappings {
 
         // Rep APIs
         "/api/reps/me"              (controller: "RepApi") {action = [GET: "getMyProfile"]}
+        "/api/reps/task"            (controller: "RepApi") {action = [GET: "getTasks"]}
 
         // Google API access
         "/api/googleapis/autocomplete"      (controller: "GoogleApi") {action = [GET: "autocomplete"]}
