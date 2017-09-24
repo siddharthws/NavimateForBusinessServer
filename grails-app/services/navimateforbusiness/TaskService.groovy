@@ -6,8 +6,11 @@ import org.grails.web.json.JSONArray
 @Transactional
 class TaskService {
 
+    def fcmService
+
     def addTasks(User manager, JSONArray tasksJson) {
         def tasks = []
+        def fcms = []
 
         // Create Task Objects from JSONArray
         tasksJson.each {taskJson ->
@@ -31,6 +34,16 @@ class TaskService {
                     status:     navimateforbusiness.TaskStatus.OPEN
             )
             tasks.push(task)
+
+            // Collect FCM IDs to which notification needs to be sent
+            if (!fcms.contains(rep.fcmId)) {
+                fcms.add(rep.fcmId)
+            }
+        }
+
+        // Send notifications to all reps
+        fcms.each {fcm ->
+            fcmService.notifyApp(fcm)
         }
 
         // Save Task Objects in database
