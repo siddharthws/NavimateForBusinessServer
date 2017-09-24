@@ -9,9 +9,9 @@ class UrlMappings {
             }
         }
 
-        "/api/auth/register" (controller: "AuthApi") { action = [POST: "register"] }
-        "/api/auth/login" (controller: "AuthApi") { action = [POST: "login"] }
-        "/api/auth/logout" (controller: "AuthApi") { action = [GET: "logout"] }
+        "/api/auth/register"        (controller: "AuthApi") { action = [POST: "register"] }
+        "/api/auth/login"           (controller: "AuthApi") { action = [POST: "login"] }
+        "/api/auth/logout"          (controller: "AuthApi") { action = [GET: "logout"] }
 
         // User Info APIs
         "/api/users/me"             (controller: "UserApi") {action = [GET: "getMyProfile", POST: "updateMyProfile"]}
@@ -22,6 +22,9 @@ class UrlMappings {
         "/api/users/task"           (controller: "UserApi") {action = [GET: "getTask",      POST: "addTasks"]}
         "/api/users/task/close"     (controller: "UserApi") {action = [POST: "closeTasks"]}
         "/api/users/form"           (controller: "UserApi") {action = [GET: "getForm",      POST: "editForm"]}
+
+        // Rep APIs
+        "/api/reps/me"              (controller: "RepApi") {action = [GET: "getMyProfile"]}
 
         // Google API access
         "/api/googleapis/autocomplete"      (controller: "GoogleApi") {action = [GET: "autocomplete"]}
