@@ -24,7 +24,7 @@ class UrlMappings {
         "/api/users/form"           (controller: "UserApi") {action = [GET: "getForm",      POST: "editForm"]}
 
         // Rep APIs
-        "/api/reps/me"              (controller: "RepApi") {action = [GET: "getMyProfile"]}
+        "/api/reps/profile"         (controller: "RepApi") {action = [POST: "getMyProfile"]}
         "/api/reps/task"            (controller: "RepApi") {action = [GET: "getTasks", POST: "submitForm"]}
         "/api/reps/fcm"             (controller: "RepApi") {action = [POST: "updateFcm"]}
 
