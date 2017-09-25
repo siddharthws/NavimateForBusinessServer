@@ -11,23 +11,106 @@
             <th class="table-col-sm">
                 #
             </th>
-            <th class="table-col-md">
-                Lead
+            <th class="table-col-md"> <div class="dropdown dropdown-multiselect">
+                <button class="dropdown-toggle-button-table d-flex w-100">
+                    <span class="full-flex">Lead</span>
+                    <img class="img-icon" src="../../static/images/icon_filter.png"
+                         ng-show="  !filter.rep.selection.length &&
+                                        ((filter.sort.indexOf('rep') == -1) &&
+                                        (filter.sort.indexOf('-rep') == -1))"/>
+                    <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                         ng-show="  filter.rep.selection.length ||
+                                        ((filter.sort.indexOf('rep') != -1) ||
+                                        (filter.sort.indexOf('-rep') != -1))"/>
+                </button>
+                <div class="dropdown-menu p-2">
+                </div>
+            </div>
             </th>
             <th class="table-col-lg">
-                Rep
+                <div class="dropdown dropdown-multiselect">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Rep</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.rep.selection.length &&
+                                        ((filter.sort.indexOf('rep') == -1) &&
+                                        (filter.sort.indexOf('-rep') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.rep.selection.length ||
+                                        ((filter.sort.indexOf('rep') != -1) ||
+                                        (filter.sort.indexOf('-rep') != -1))"/>
+                    </button>
+                    <div class="dropdown-menu p-2">
+                    </div>
+                </div>
             </th>
             <th class="table-col-sm">
-                Sales
+                <div class="dropdown dropdown-multiselect">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Sales</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.rep.selection.length &&
+                                        ((filter.sort.indexOf('rep') == -1) &&
+                                        (filter.sort.indexOf('-rep') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.rep.selection.length ||
+                                        ((filter.sort.indexOf('rep') != -1) ||
+                                        (filter.sort.indexOf('-rep') != -1))"/>
+                    </button>
+                    <div class="dropdown-menu p-2">
+                    </div>
+                </div>
             </th>
             <th class="table-col-sm">
-                Status
+                <div class="dropdown dropdown-multiselect">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Sales</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.rep.selection.length &&
+                                        ((filter.sort.indexOf('rep') == -1) &&
+                                        (filter.sort.indexOf('-rep') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.rep.selection.length ||
+                                        ((filter.sort.indexOf('rep') != -1) ||
+                                        (filter.sort.indexOf('-rep') != -1))"/>
+                    </button>
+                    <div class="dropdown-menu p-2">
+                    </div>
+                </div>
             </th>
             <th class="table-col-lg">
-                Notes
+                <div class="dropdown dropdown-multiselect">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Notes</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.rep.selection.length &&
+                                        ((filter.sort.indexOf('rep') == -1) &&
+                                        (filter.sort.indexOf('-rep') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.rep.selection.length ||
+                                        ((filter.sort.indexOf('rep') != -1) ||
+                                        (filter.sort.indexOf('-rep') != -1))"/>
+                    </button>
+                    <div class="dropdown-menu p-2">
+                    </div>
+                </div>
             </th>
             <th class="table-col-md">
-                Date
+                <div class="dropdown dropdown-multiselect">
+                    <button class="dropdown-toggle-button-table d-flex w-100">
+                        <span class="full-flex">Date</span>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.rep.selection.length &&
+                                        ((filter.sort.indexOf('rep') == -1) &&
+                                        (filter.sort.indexOf('-rep') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.rep.selection.length ||
+                                        ((filter.sort.indexOf('rep') != -1) ||
+                                        (filter.sort.indexOf('-rep') != -1))"/>
+                    </button>
+                    <div class="dropdown-menu p-2">
+                    </div>
+                </div>
             </th>
         </thead>
         <tr ng-repeat="row in filteredReport">
