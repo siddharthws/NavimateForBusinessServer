@@ -27,6 +27,7 @@ class UrlMappings {
         "/api/reps/profile"         (controller: "RepApi") {action = [POST: "getMyProfile"]}
         "/api/reps/task"            (controller: "RepApi") {action = [GET: "getTasks", POST: "submitForm"]}
         "/api/reps/fcm"             (controller: "RepApi") {action = [POST: "updateFcm"]}
+        "/api/reps/otp"             (controller: "RepApi") {action = [POST: "sendOtpSms"]}
 
         // Google API access
         "/api/googleapis/autocomplete"      (controller: "GoogleApi") {action = [GET: "autocomplete"]}

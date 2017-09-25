@@ -5,6 +5,7 @@ import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
 import navimateforbusiness.Form
 import navimateforbusiness.Role
+import navimateforbusiness.SmsHelper
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
 import navimateforbusiness.User
@@ -85,6 +86,16 @@ class RepApiController {
         // Update User FCM
         rep.fcmId = request.JSON.fcmId
         rep.save(flush: true, failOnErorr: true)
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def sendOtpSms() {
+        SmsHelper smsHelper = new SmsHelper()
+        if (!smsHelper.SendSms(request.JSON.phoneNumber, request.JSON.message)) {
+            throw new ApiException("Unable to send OTP SMS")
+        }
 
         def resp = [success: true]
         render resp as JSON
