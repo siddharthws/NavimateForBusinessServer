@@ -14,7 +14,6 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
 
     // Send request to get list of leads
     function init() {
-
         // Re-initialize selection to empty
         $scope.selection = []
 
@@ -44,8 +43,8 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
     }
 
     // Single List Item Selection Toggle
-    $scope.toggleSelection = function (rep) {
-        var idx = $scope.selection.indexOf(rep)
+    $scope.toggleSelection = function (lead) {
+        var idx = $scope.selection.indexOf(lead)
 
         // Check if rep is present in selection
         if (idx != -1) {
@@ -53,7 +52,7 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
             $scope.selection.splice(idx, 1)
         } else {
             // Add in selection
-            $scope.selection.push(rep)
+            $scope.selection.push(lead)
         }
     }
 
@@ -65,12 +64,11 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
             $scope.selection.splice(0, $scope.selection.length)
         } else {
             // Add All
-            $scope.leads.forEach(function (rep) {
-                if ($scope.selection.indexOf(rep) == -1) {
-                    $scope.selection.push(rep)
+            $scope.leads.forEach(function (lead) {
+                if ($scope.selection.indexOf(lead) == -1) {
+                    $scope.selection.push(lead)
                 }
             })
         }
     }
-
 })
