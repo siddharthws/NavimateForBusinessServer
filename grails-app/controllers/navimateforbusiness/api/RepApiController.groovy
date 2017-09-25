@@ -13,10 +13,8 @@ import org.grails.web.json.JSONArray
 class RepApiController {
 
     def getMyProfile() {
-        def phoneNumber = request.getHeader("phoneNumber")
-
         // Check if the rep is registered. (Rep is registered from the dashboard)
-        User rep = User.findByPhoneNumberAndRole(phoneNumber, Role.REP)
+        User rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
         if (!rep) {
             throw new ApiException("Rep not registered", Constants.HttpCodes.BAD_REQUEST)
         }
