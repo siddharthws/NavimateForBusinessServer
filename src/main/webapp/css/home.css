@@ -13,9 +13,13 @@
     width: auto;
 }
 
-.home-footer{
-    height: 100px;
+.home-footer-first{
+    height: auto;
     background-color: black;
+}
+.home-footer-second{
+    height: auto;
+    background-color: #17253d;
 }
 
 
