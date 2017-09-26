@@ -20,8 +20,10 @@
                     <div class="dropdown-menu p-2">
                         <span>Sort:</span>
                         <div class="d-flex justify-content-center">
-                            <input type="button" value="" class="image-button ib-sort-down"/>
-                            <input type="button" value="" class="image-button ib-sort-up"/>
+                            <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort('lead', false)"
+                                   ng-class="{'active' : filter.sort.indexOf('lead') != -1}"/>
+                            <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('lead', true)"
+                                   ng-class="{'active' : filter.sort.indexOf('-lead') != -1}"/>
                         </div>
                     </div>
                 </div>
@@ -35,8 +37,10 @@
                     <div class="dropdown-menu p-2">
                         <span>Sort:</span>
                         <div class="d-flex justify-content-center">
-                            <input type="button" value="" class="image-button ib-sort-down"/>
-                            <input type="button" value="" class="image-button ib-sort-up"/>
+                            <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort('rep', false)"
+                                   ng-class="{'active' : filter.sort.indexOf('rep') != -1}"/>
+                            <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('rep', true)"
+                                   ng-class="{'active' : filter.sort.indexOf('-rep') != -1}"/>
                         </div>
                     </div>
                 </div>
@@ -50,8 +54,10 @@
                     <div class="dropdown-menu p-2">
                         <span>Sort:</span>
                         <div class="d-flex justify-content-center">
-                            <input type="button" value="" class="image-button ib-sort-down"/>
-                            <input type="button" value="" class="image-button ib-sort-up"/>
+                            <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort('sales', false)"
+                                   ng-class="{'active' : filter.sort.indexOf('sales') != -1}"/>
+                            <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('sales', true)"
+                                   ng-class="{'active' : filter.sort.indexOf('-sales') != -1}"/>
                         </div>
                     </div>
                 </div>
@@ -65,8 +71,10 @@
                     <div class="dropdown-menu p-2">
                         <span>Sort:</span>
                         <div class="d-flex justify-content-center">
-                            <input type="button" value="" class="image-button ib-sort-down"/>
-                            <input type="button" value="" class="image-button ib-sort-up"/>
+                            <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort('status', false)"
+                                   ng-class="{'active' : filter.sort.indexOf('status') != -1}"/>
+                            <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('status', true)"
+                                   ng-class="{'active' : filter.sort.indexOf('-status') != -1}"/>
                         </div>
                     </div>
                 </div>
@@ -90,8 +98,10 @@
                     <div class="dropdown-menu p-2">
                         <span>Sort:</span>
                         <div class="d-flex justify-content-center">
-                            <input type="button" value="" class="image-button ib-sort-down"/>
-                            <input type="button" value="" class="image-button ib-sort-up"/>
+                            <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort('date', false)"
+                                   ng-class="{'active' : filter.sort.indexOf('date') != -1}"/>
+                            <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('date', true)"
+                                   ng-class="{'active' : filter.sort.indexOf('-date') != -1}"/>
                         </div>
                     </div>
                 </div>

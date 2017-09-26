@@ -29,6 +29,11 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
     $scope.report           = []
     $scope.filteredReport   = []
 
+    // Init Filter
+    $scope.filter = {
+        sort: []
+    }
+
     // Get team report
     $http({
         method:     'GET',
@@ -60,4 +65,45 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
     $('.dropdown.dropdown-multiselect > button').on('click', function (e) {
         $($(this).parent()).find('.dropdown-menu').toggleClass('show')
     })
+
+    // Filter Related APIs
+    $scope.filterSort = function(property, bReverse) {
+        if (bReverse) {
+            // Remove forward if present
+            if ($scope.filter.sort.indexOf(property) != -1) {
+                $scope.filter.sort.splice($scope.filter.sort.indexOf(property), 1)
+            }
+
+            property = '-' + property
+        } else {
+            // Remove reverse if present
+            if ($scope.filter.sort.indexOf('-' + property) != -1) {
+                $scope.filter.sort.splice($scope.filter.sort.indexOf('-' + property), 1)
+            }
+        }
+
+        // Add / remove property
+        if ($scope.filter.sort.indexOf(property) != -1) {
+            $scope.filter.sort.splice($scope.filter.sort.indexOf(property), 1)
+        } else {
+            $scope.filter.sort.push(property)
+        }
+
+        // Re-apply filters
+        $scope.applyFilters()
+    }
+
+    // API to apply all filters
+    $scope.applyFilters = function () {
+        // Reset Report
+        $scope.filteredReport = []
+
+        // Apply select filters
+        $scope.report.forEach(function (row) {
+            $scope.filteredReport.push(row)
+        })
+
+        // Apply sorting
+        $scope.filteredReport = $filter('orderBy')($scope.filteredReport, $scope.filter.sort)
+    }
 })
