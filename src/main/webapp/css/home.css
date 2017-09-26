@@ -8,14 +8,18 @@
     height: 70px;
     background-color: black;
 }
+
 .home-header-logo{
     height: 50px;
     width: auto;
 }
 
 .home-footer{
-    height: 100px;
     background-color: black;
+}
+
+.copyright-notice{
+    background-color: #17253d;
 }
 
 
