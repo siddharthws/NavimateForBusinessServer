@@ -101,6 +101,8 @@
                         <img class="img-icon" src="../../static/images/icon_filter.png"/>
                     </button>
                     <div class="dropdown-menu p-2">
+                        <input type="text" placeholder="Search Notes..." ng-model-options="{debounce: 500}"
+                               ng-model="filter.notes.search" ng-change="applyFilters()">
                     </div>
                 </div>
             </th>
