@@ -25,6 +25,11 @@
                             <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('lead', true)"
                                    ng-class="{'active' : filter.sort.indexOf('-lead') != -1}"/>
                         </div>
+                        <span>Select:</span>
+                        <input type="text" ng-model="leadFilterSearch" placeholder="Search...">
+                        <div ng-repeat="row in report | unique: 'lead' | filter:leadFilterSearch">
+                            <input type="checkbox" ng-click="filterSelect('lead', row.lead)" ng-checked="filter.lead.selection.indexOf(row.lead) == -1"/> {{row.lead}}
+                        </div>
                     </div>
                 </div>
             </th>
@@ -41,6 +46,11 @@
                                    ng-class="{'active' : filter.sort.indexOf('rep') != -1}"/>
                             <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('rep', true)"
                                    ng-class="{'active' : filter.sort.indexOf('-rep') != -1}"/>
+                        </div>
+                        <span>Select:</span>
+                        <input type="text" ng-model="repFilterSearch" placeholder="Search...">
+                        <div ng-repeat="row in report | unique: 'rep' | filter:repFilterSearch">
+                            <input type="checkbox" ng-click="filterSelect('rep', row.rep)" ng-checked="filter.rep.selection.indexOf(row.rep) == -1"/> {{row.rep}}
                         </div>
                     </div>
                 </div>
@@ -75,6 +85,11 @@
                                    ng-class="{'active' : filter.sort.indexOf('status') != -1}"/>
                             <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('status', true)"
                                    ng-class="{'active' : filter.sort.indexOf('-status') != -1}"/>
+                        </div>
+                        <span>Select:</span>
+                        <input type="text" ng-model="statusFilterSearch" placeholder="Search...">
+                        <div ng-repeat="row in report | unique: 'status' | filter:statusFilterSearch">
+                            <input type="checkbox" ng-click="filterSelect('status', row.status)" ng-checked="filter.status.selection.indexOf(row.status) == -1"/> {{row.status}}
                         </div>
                     </div>
                 </div>
