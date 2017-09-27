@@ -47,6 +47,10 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
         notes: {
             search: ''
         },
+        date: {
+            from:   '',
+            to:     ''
+        },
         sort: []
     }
 
@@ -123,6 +127,16 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
         $scope.applyFilters()
     }
 
+    $scope.fromDateUpdate = function (fromDate) {
+        $scope.filter.date.from = $filter('date')(fromDate, 'yyyy-MM-dd')
+        $scope.applyFilters()
+    }
+
+    $scope.toDateUpdate = function (toDate) {
+        $scope.filter.date.to = $filter('date')(toDate, 'yyyy-MM-dd')
+        $scope.applyFilters()
+    }
+
     // API to apply all filters
     $scope.applyFilters = function () {
         // Reset Report
@@ -135,7 +149,9 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
                 ($scope.filter.status.selection.indexOf(row.status) == -1)&&
                 (row.notes.toLowerCase().search($scope.filter.notes.search.toLowerCase()) != -1)&&
                 (!$scope.filter.sales.lesserThan || (row.sales <= $scope.filter.sales.lesserThan))&&
-                (!$scope.filter.sales.greaterThan || (row.sales >= $scope.filter.sales.greaterThan)))
+                (!$scope.filter.sales.greaterThan || (row.sales >= $scope.filter.sales.greaterThan))&&
+                (!$scope.filter.date.from   || (row.date >= $scope.filter.date.from)) &&
+                (!$scope.filter.date.to     || (row.date <= $scope.filter.date.to)))
             {
                 $scope.filteredReport.push(row)
             }
