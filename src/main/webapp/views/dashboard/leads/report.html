@@ -69,6 +69,19 @@
                             <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('sales', true)"
                                    ng-class="{'active' : filter.sort.indexOf('-sales') != -1}"/>
                         </div>
+                        <span>Range:</span>
+                        <div class="d-flex align-items-center">
+                            <span> <= </span>
+                            <input type="number" placeholder="Less than"
+                                   ng-model="filter.sales.lesserThan" ng-model-options="{debounce: 500}"
+                                   ng-change="applyFilters()" >
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span> >= </span>
+                            <input type="number" placeholder="Greater than"
+                                   ng-model="filter.sales.greaterThan" ng-model-options="{debounce: 500}"
+                                   ng-change="applyFilters()" >
+                        </div>
                     </div>
                 </div>
             </th>
