@@ -40,6 +40,9 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
         status: {
             selection: []
         },
+        notes: {
+            search: ''
+        },
         sort: []
     }
 
@@ -125,7 +128,8 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
         $scope.report.forEach(function (row) {
             if (($scope.filter.lead.selection.indexOf(row.lead) == -1) &&
                 ($scope.filter.rep.selection.indexOf(row.rep) == -1) &&
-                ($scope.filter.status.selection.indexOf(row.status) == -1))
+                ($scope.filter.status.selection.indexOf(row.status) == -1)&&
+                (row.notes.toLowerCase().search($scope.filter.notes.search.toLowerCase()) != -1))
             {
                 $scope.filteredReport.push(row)
             }
