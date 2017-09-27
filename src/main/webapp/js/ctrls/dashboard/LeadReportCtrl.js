@@ -105,7 +105,7 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
     $scope.filterSelect = function(property, value) {
         var idx = $scope.filter[property].selection.indexOf(value)
         if (idx == -1) {
-            // Add to filter
+            // Add to filter.
             $scope.filter[property].selection.push(value)
         } else {
             // Remove from filter
