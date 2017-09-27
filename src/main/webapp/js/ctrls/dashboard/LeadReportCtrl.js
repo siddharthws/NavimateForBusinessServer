@@ -2,7 +2,7 @@
  * Created by Siddharth on 04-09-2017.
  */
 
-app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state, ExcelService, ToastService) {
+app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state, $filter, ExcelService, ToastService) {
 
     /*-------------------------------------- Scope APIs ---------------------------------------*/
     $scope.export = function () {
@@ -31,6 +31,15 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
 
     // Init Filter
     $scope.filter = {
+        rep: {
+            selection: []
+        },
+        lead: {
+            selection: []
+        },
+        status: {
+            selection: []
+        },
         sort: []
     }
 
@@ -93,6 +102,20 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
         $scope.applyFilters()
     }
 
+    $scope.filterSelect = function(property, value) {
+        var idx = $scope.filter[property].selection.indexOf(value)
+        if (idx == -1) {
+            // Add to filter
+            $scope.filter[property].selection.push(value)
+        } else {
+            // Remove from filter
+            $scope.filter[property].selection.splice(idx, 1)
+        }
+
+        // Reapply filters on data
+        $scope.applyFilters()
+    }
+
     // API to apply all filters
     $scope.applyFilters = function () {
         // Reset Report
@@ -100,7 +123,12 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
 
         // Apply select filters
         $scope.report.forEach(function (row) {
-            $scope.filteredReport.push(row)
+            if (($scope.filter.lead.selection.indexOf(row.lead) == -1) &&
+                ($scope.filter.rep.selection.indexOf(row.rep) == -1) &&
+                ($scope.filter.status.selection.indexOf(row.status) == -1))
+            {
+                $scope.filteredReport.push(row)
+            }
         })
 
         // Apply sorting
