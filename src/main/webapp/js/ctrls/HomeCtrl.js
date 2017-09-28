@@ -11,5 +11,14 @@ app.controller('HomeCtrl', function ($scope, DialogService) {
     $scope.register = function () {
         DialogService.register()
     }
-
+    
+    $scope.explore=function () {
+        if ($("#div_feature").is(':hidden')) {
+            $("#div_feature").show(2000);
+            $("#explore_btn").text("Hide Features");
+        } else {
+            $("#div_feature").slideUp(2000);
+            $("#explore_btn").text("Explore Features");
+        }
+    }
 })
