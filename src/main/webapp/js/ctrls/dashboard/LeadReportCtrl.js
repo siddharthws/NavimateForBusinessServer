@@ -29,30 +29,36 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
     $scope.report           = []
     $scope.filteredReport   = []
 
-    // Init Filter
-    $scope.filter = {
-        rep: {
-            selection: []
-        },
-        lead: {
-            selection: []
-        },
-        sales: {
-            lesserThan: '',
-            greaterThan: ''
-        },
-        status: {
-            selection: []
-        },
-        notes: {
-            search: ''
-        },
-        date: {
-            from:   '',
-            to:     ''
-        },
-        sort: []
-    }
+    // Init filter
+    $scope.resetFilters()
+
+    // Filter Related APIs
+    $scope.resetFilters = function () {
+        // Init Blank Filter
+     $scope.filter = {
+          rep: {
+              selection: []
+          },
+          lead: {
+              selection: []
+          },
+          sales: {
+              lesserThan: '',
+              greaterThan: ''
+          },
+          status: {
+              selection: []
+          },
+          notes: {
+              search: ''
+          },
+          date: {
+              from:   '',
+              to:     ''
+          },
+          sort: []
+        }
+     }
 
     // Get team report
     $http({
