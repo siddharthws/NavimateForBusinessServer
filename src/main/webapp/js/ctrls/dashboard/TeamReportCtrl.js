@@ -6,11 +6,17 @@ app.controller("TeamReportCtrl", function ($scope, $http, $localStorage, $state,
 
     /*-------------------------------------- Scope APIs ---------------------------------------*/
     $scope.export = function () {
-        // Get table to export
-        var table = $('.team-report-table').get(0)
+        // Export only if some valid data is being displayed
+        if ($scope.filteredReport.length) {
+            // Get table to export
+            var table = $('.team-report-table').get(0)
 
-        // Call Excel Service
-        ExcelService.export(table, "Team-Report")
+            // Call Excel Service
+            ExcelService.export(table, "Team-Report")
+        } else {
+            // Error toast
+            ToastService.toast("Nothing to export !!!")
+        }
     }
 
     // Filter Related APIs
