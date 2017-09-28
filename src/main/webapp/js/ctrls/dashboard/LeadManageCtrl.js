@@ -46,7 +46,7 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
     $scope.toggleSelection = function (lead) {
         var idx = $scope.selection.indexOf(lead)
 
-        // Check if rep is present in selection
+        // Check if lead is present in selection
         if (idx != -1) {
             // Remove from selection
             $scope.selection.splice(idx, 1)
