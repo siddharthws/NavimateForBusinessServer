@@ -27,6 +27,18 @@ button:focus {
     background-color: #37bcf2;
 }
 
+.btn-outline{
+    color:black;
+    border:4px solid black;
+    background: transparent;
+    border-radius: 40px;
+}
+
+.btn-outline:hover{
+    color:white;
+    border:4px solid #00aae5;
+}
+
 .btn-primary:hover:enabled, .btn:hover:enabled {
     color: white;
     background-color: #31a9d9;

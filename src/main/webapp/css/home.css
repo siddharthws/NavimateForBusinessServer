@@ -14,6 +14,11 @@
     width: auto;
 }
 
+.home-content{
+    flex: 1;
+    background: orange;
+}
+
 .home-footer{
     background-color: black;
 }
@@ -22,5 +27,30 @@
     background-color: #17253d;
 }
 
+.small-logo{
+    height:30px;
+    width:auto;
+}
+.home-image{
+    height:650px;
+    width: auto;
+}
 
+.box-green{
+    min-width: 45%;
+    line-height: 15px;
+    border-radius: 30px;
+    background: #1cb39b;
+}
+
+.box-white{
+    min-width: 45%;
+    line-height: 15px;
+    border-radius: 30px;
+    background: #d0e9ea;
+}
+
+.features{
+
+}
 
