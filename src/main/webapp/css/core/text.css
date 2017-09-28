@@ -2,3 +2,10 @@
 .text-pre-wrap {
     white-space: pre-wrap;
 }
+
+.text-white{
+    color: white;
+}
+.text-black{
+    color: black;
+}
