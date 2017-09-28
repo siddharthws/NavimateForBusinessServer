@@ -80,9 +80,9 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
             removeSelected)
     }
 
-    // API to remove selected team members from list
+    // API to remove selected leads from list
     function removeSelected () {
-        // Make Http call to remove members
+        // Make Http call to remove leads
         $http({
             method: 'POST',
             url: '/api/users/lead/remove',
@@ -106,5 +106,10 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
                 // re-initialize leads
                 init()
             })
+    }
+    
+    $scope.edit = function () {
+        //Launch Leads-Editor dialog
+        DialogService.leadEditor($scope.selection)
     }
 })
