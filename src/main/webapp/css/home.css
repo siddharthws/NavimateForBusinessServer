@@ -14,6 +14,10 @@
     width: auto;
 }
 
+.home-content{
+    background: #37bcf2;
+}
+
 .home-footer{
     background-color: black;
 }
@@ -22,5 +26,34 @@
     background-color: #17253d;
 }
 
+.small-logo{
+    height:30px;
+    width:auto;
+}
+.home-image{
+    height:650px;
+    width: auto;
+}
 
+.ft-box{
+    display: flex;
+    flex: 1;
+    margin: 15px;
+    padding: 15px;
+    align-items: center;
+    line-height: 15px;
+    border-radius: 30px;
+}
+
+.ft-box-grey-blue{
+    background: #485c7c;
+}
+
+.ft-box-white{
+    background: #d0e9ea;
+}
+
+.features{
+    display: none;
+}
 
