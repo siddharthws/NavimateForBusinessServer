@@ -20,79 +20,35 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
     }
 
     /*-------------------------------------- Local APIs ---------------------------------------*/
-    /*-------------------------------------- INIT ---------------------------------------------*/
-    // Set menu and option
-    $scope.selection.item       = MENU_ITEMS[MENU_ITEM_LEADS]
-    $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_REPORT]
-
-    // Init Report Variables
-    $scope.report           = []
-    $scope.filteredReport   = []
-
-    // Init filter
-    $scope.resetFilters()
 
     // Filter Related APIs
     $scope.resetFilters = function () {
         // Init Blank Filter
-     $scope.filter = {
-          rep: {
-              selection: []
-          },
-          lead: {
-              selection: []
-          },
-          sales: {
-              lesserThan: '',
-              greaterThan: ''
-          },
-          status: {
-              selection: []
-          },
-          notes: {
-              search: ''
-          },
-          date: {
-              from:   '',
-              to:     ''
-          },
-          sort: []
+        $scope.filter = {
+            rep: {
+                selection: []
+            },
+            lead: {
+                selection: []
+            },
+            sales: {
+                lesserThan: '',
+                greaterThan: ''
+            },
+            status: {
+                selection: []
+            },
+            notes: {
+                search: ''
+            },
+            date: {
+                from:   '',
+                to:     ''
+            },
+            sort: []
         }
-     }
+    }
 
-    // Get team report
-    $http({
-        method:     'GET',
-        url:        '/api/reports/lead',
-        headers:    {
-            'X-Auth-Token':    $localStorage.accessToken
-        }
-    })
-    .then(
-        function (response) {
-            $scope.report = response.data
-            $scope.filteredReport = $scope.report
-        },
-        function (error) {
-            // Show Error Toast
-            ToastService.toast("Unable to load report !!!")
-        }
-    )
-
-    // Hack to persist multiselect dropdowns after clicking on dropdown items
-    $('body').on('click', function (e) {
-        if (!$('.dropdown.dropdown-multiselect').is(e.target)
-            && $('.dropdown.dropdown-multiselect').has(e.target).length === 0
-            && $('.show').has(e.target).length === 0) {
-            $('.dropdown.dropdown-multiselect .dropdown-menu').removeClass('show')
-        }
-    })
-
-    $('.dropdown.dropdown-multiselect > button').on('click', function (e) {
-        $($(this).parent()).find('.dropdown-menu').toggleClass('show')
-    })
-
-    // Filter Related APIs
     $scope.filterSort = function(property, bReverse) {
         if (bReverse) {
             // Remove forward if present
@@ -166,4 +122,49 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
         // Apply sorting
         $scope.filteredReport = $filter('orderBy')($scope.filteredReport, $scope.filter.sort)
     }
+
+    /*-------------------------------------- INIT ---------------------------------------------*/
+    // Set menu and option
+    $scope.selection.item       = MENU_ITEMS[MENU_ITEM_LEADS]
+    $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_REPORT]
+
+    // Init Report Variables
+    $scope.report           = []
+    $scope.filteredReport   = []
+
+    // Init filter
+    $scope.resetFilters()
+
+    // Get team report
+    $http({
+        method:     'GET',
+        url:        '/api/reports/lead',
+        headers:    {
+            'X-Auth-Token':    $localStorage.accessToken
+        }
+    })
+        .then(
+            function (response) {
+                $scope.report = response.data
+                $scope.filteredReport = $scope.report
+            },
+            function (error) {
+                // Show Error Toast
+                ToastService.toast("Unable to load report !!!")
+            }
+        )
+
+    // Hack to persist multiselect dropdowns after clicking on dropdown items
+    $('body').on('click', function (e) {
+        if (!$('.dropdown.dropdown-multiselect').is(e.target)
+            && $('.dropdown.dropdown-multiselect').has(e.target).length === 0
+            && $('.show').has(e.target).length === 0) {
+            $('.dropdown.dropdown-multiselect .dropdown-menu').removeClass('show')
+        }
+    })
+
+    $('.dropdown.dropdown-multiselect > button').on('click', function (e) {
+        $($(this).parent()).find('.dropdown-menu').toggleClass('show')
+    })
+
 })

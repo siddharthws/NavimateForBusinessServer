@@ -1,8 +1,8 @@
 <!-- Lead Report HTML -->
 <div class="content-toolbar d-flex">
-    <button class="btn btn-primary">Clear Filters</button>
     <button class="btn btn-primary" ng-click="resetFilters(); applyFilters()">Clear Filters</button>
-    <button class="btn btn-primary">Sync</button>
+    <button class="btn btn-primary" ng-click="export()">Export</button>
+    <button class="btn btn-primary" ng-click="sync()">Sync</button>
 </div>
 
 <div class="content-data full-flex">
@@ -15,7 +15,14 @@
                 <div class="dropdown dropdown-multiselect">
                     <button class="dropdown-toggle-button-table d-flex w-100">
                         <span class="full-flex">Lead</span>
-                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.lead.selection.length &&
+                                        ((filter.sort.indexOf('lead') == -1) &&
+                                        (filter.sort.indexOf('-lead') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.lead.selection.length ||
+                                        ((filter.sort.indexOf('lead') != -1) ||
+                                        (filter.sort.indexOf('-lead') != -1))"/>
                     </button>
                     <div class="dropdown-menu p-2">
                         <span>Sort:</span>
@@ -37,7 +44,14 @@
                 <div class="dropdown dropdown-multiselect">
                     <button class="dropdown-toggle-button-table d-flex w-100">
                         <span class="full-flex">Rep</span>
-                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.rep.selection.length &&
+                                        ((filter.sort.indexOf('rep') == -1) &&
+                                        (filter.sort.indexOf('-rep') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.rep.selection.length ||
+                                        ((filter.sort.indexOf('rep') != -1) ||
+                                        (filter.sort.indexOf('-rep') != -1))"/>
                     </button>
                     <div class="dropdown-menu p-2">
                         <span>Sort:</span>
@@ -59,7 +73,14 @@
                 <div class="dropdown dropdown-multiselect">
                     <button class="dropdown-toggle-button-table d-flex w-100">
                         <span class="full-flex">Sales</span>
-                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.sales.greaterThan && !filter.sales.lesserThan &&
+                                        ((filter.sort.indexOf('sales') == -1) &&
+                                        (filter.sort.indexOf('-sales') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.sales.greaterThan || filter.sales.lesserThan ||
+                                        ((filter.sort.indexOf('sales') != -1) ||
+                                        (filter.sort.indexOf('-sales') != -1))"/>
                     </button>
                     <div class="dropdown-menu p-2">
                         <span>Sort:</span>
@@ -89,7 +110,14 @@
                 <div class="dropdown dropdown-multiselect">
                     <button class="dropdown-toggle-button-table d-flex w-100">
                         <span class="full-flex">Status</span>
-                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.status.selection.length &&
+                                        ((filter.sort.indexOf('status') == -1) &&
+                                        (filter.sort.indexOf('-status') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.status.selection.length ||
+                                        ((filter.sort.indexOf('status') != -1) ||
+                                        (filter.sort.indexOf('-status') != -1))"/>
                     </button>
                     <div class="dropdown-menu p-2">
                         <span>Sort:</span>
@@ -111,7 +139,14 @@
                 <div class="dropdown dropdown-multiselect">
                     <button class="dropdown-toggle-button-table d-flex w-100">
                         <span class="full-flex">Notes</span>
-                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.notes.search &&
+                                        ((filter.sort.indexOf('notes') == -1) &&
+                                        (filter.sort.indexOf('-notes') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.notes.search ||
+                                        ((filter.sort.indexOf('notes') != -1) ||
+                                        (filter.sort.indexOf('-notes') != -1))"/>
                     </button>
                     <div class="dropdown-menu p-2">
                         <input type="text" placeholder="Search Notes..." ng-model-options="{debounce: 500}"
@@ -123,7 +158,14 @@
                 <div class="dropdown dropdown-multiselect">
                     <button class="dropdown-toggle-button-table d-flex w-100">
                         <span class="full-flex">Date</span>
-                        <img class="img-icon" src="../../static/images/icon_filter.png"/>
+                        <img class="img-icon" src="../../static/images/icon_filter.png"
+                             ng-show="  !filter.date.from && !filter.date.to &&
+                                        ((filter.sort.indexOf('date') == -1) &&
+                                        (filter.sort.indexOf('-date') == -1))"/>
+                        <img class="img-icon" src="../../static/images/icon_filter_active.png"
+                             ng-show="  filter.date.from || filter.date.to ||
+                                        ((filter.sort.indexOf('date') != -1) ||
+                                        (filter.sort.indexOf('-date') != -1))"/>
                     </button>
                     <div class="dropdown-menu p-2">
                         <span>Sort:</span>
