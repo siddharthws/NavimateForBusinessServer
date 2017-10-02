@@ -21,7 +21,7 @@ class ReportService {
                     JSONArray data = JSON.parse(form.data)
 
                     def row = [ rep: task.rep.name,
-                                lead: task.lead.company,
+                                lead: task.lead.title,
                                 date:  form.dateCreated.format("yyyy-MM-dd"),
                                 sales: data.get(0).value,
                                 notes: data.get(1).value,
@@ -33,7 +33,7 @@ class ReportService {
                 // If no forms in this task, add single entry with empty form
                 if (!task?.forms) {
                     def row = [ rep: task.rep.name,
-                                lead: task.lead.company,
+                                lead: task.lead.title,
                                 sales: 0,
                                 status: "NA",
                                 notes: "NA",
@@ -72,7 +72,7 @@ class ReportService {
                 task.forms.each {form ->
                     JSONArray data = JSON.parse(form.data)
 
-                    def row = [ lead: task.lead.company,
+                    def row = [ lead: task.lead.title,
                                 rep: task.rep.name,
                                 date:  form.dateCreated.format("yyyy-MM-dd"),
                                 sales: data.get(0).value,
@@ -84,7 +84,7 @@ class ReportService {
 
                 // If no forms in this task, add single entry with empty form
                 if (!task?.forms) {
-                    def row = [ lead: task.lead.company,
+                    def row = [ lead: task.lead.title,
                                 rep: task.rep.name,
                                 sales: 0,
                                 status: "NA",
@@ -97,7 +97,7 @@ class ReportService {
 
             // If no tasks for this rep, add single entry with empty data
             if (!tasks) {
-                def row = [ lead: lead.company,
+                def row = [ lead: lead.title,
                             rep: "NA",
                             sales: 0,
                             status: "NA",

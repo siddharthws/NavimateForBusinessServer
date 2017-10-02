@@ -24,33 +24,33 @@ class LeadService {
         def columns = excelJson[0]
 
         // Get indexes of columns
-        int nameIdx = columns.indexOf("Name")
+        int titleIdx = columns.indexOf("Title")
+        int descIdx = columns.indexOf("Description")
         int phoneIdx = columns.indexOf("Phone")
         int addressIdx = columns.indexOf("Address")
-        int companyIdx = columns.indexOf("Company")
         int emailIdx = columns.indexOf("Email")
         int latIdx = columns.indexOf("Latitude")
         int lngIdx = columns.indexOf("Longitude")
 
         // Ensure Mandatory Columns are present
-        if ((nameIdx == -1) || (phoneIdx == -1) || (addressIdx == -1)){
+        if ((titleIdx == -1) || (phoneIdx == -1) || (addressIdx == -1)){
             throw new navimateforbusiness.ApiException("Mandatory columns missing", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Create Lead Objects
         for (int i = 1; i < excelJson.length(); i++){
             def row = excelJson[i]
-            String name = row[nameIdx]
+            String title = row[titleIdx]
             String phone = row[phoneIdx]
             String address = row[addressIdx]
 
             // Ensure data is present for mandatory columns
-            if (!name || !phone || !address){
+            if (!title || !phone || !address){
                 throw new navimateforbusiness.ApiException("Data in mandatory columns missing", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Create Lead Objects
-            Lead lead = new Lead(   name: name,
+            Lead lead = new Lead(   title: title,
                                     phone: phone,
                                     address: address,
                                     manager: manager,
@@ -66,12 +66,12 @@ class LeadService {
                 }
             }
 
-            if (companyIdx != -1)
+            if (descIdx != -1)
             {
-                String company = row[companyIdx]
-                if (company)
+                String desc = row[descIdx]
+                if (desc)
                 {
-                    lead.company = company
+                    lead.description = desc
                 }
             }
 

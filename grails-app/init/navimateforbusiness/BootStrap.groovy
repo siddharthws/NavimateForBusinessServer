@@ -33,8 +33,8 @@ class BootStrap {
 
 
         // Init Fake Lead
-        Lead lead = new Lead(       company:    'Fake Lead Company 1',
-                                    name:       'Fake Lead 1',
+        Lead lead = new Lead(       title:    'Fake Lead Company 1',
+                                    description:       'Fake Lead 1',
                                     phone:      '+919999995555',
                                     account:    account,
                                     manager:    manUser,

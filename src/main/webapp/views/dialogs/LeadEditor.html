@@ -10,10 +10,10 @@
             </div>
 
             <div class="lead-edit-box flex-shrink-0 p-2 d-flex flex-column">
-                <input class="input-underlined" type="text"  placeholder="Enter Company..."
-                       ng-model="selectedLead.company" ng-class="{'has-error': bShowError && !selectedLead.company}">
-                <input class="input-underlined" type="text"  placeholder="Enter Name..."
-                       ng-model="selectedLead.name" ng-class="{'has-error': bShowError && !selectedLead.name}">
+                <input class="input-underlined" type="text"  placeholder="Enter Title..."
+                       ng-model="selectedLead.title" ng-class="{'has-error': bShowError && !selectedLead.title}">
+                <input class="input-underlined" type="text"  placeholder="Enter Description..."
+                       ng-model="selectedLead.description">
                 <input class="input-underlined" type="text"  placeholder="Enter phone number"
                        ng-model="selectedLead.phoneNumber" ng-class="{'has-error': bShowError && !selectedLead.phoneNumber}">
                 <div class="dropdown d-flex">
@@ -35,7 +35,7 @@
                    ng-class="{'list-group-item-danger': bShowError && !isLeadValid(lead),
                               'active': selectedLead == lead}"
                    ng-click="listItemClick(lead)">
-                    {{($index + 1) + ". " + lead.company}}
+                    {{($index + 1) + ". " + lead.title}}
                 </a>
             </div>
 
@@ -48,7 +48,7 @@
         <div class="lead-editor-map ml-2 full-flex" map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
             <ng-map class="full-width full-height"
                     center="{{mapCenter}}" zoom="{{mapZoom}}" map-initialized="mapInitialized(map)">
-                <marker ng-repeat="lead in leads" icon="{{getMarkerIcon(lead)}}" title="{{lead.company}}"
+                <marker ng-repeat="lead in leads" icon="{{getMarkerIcon(lead)}}" title="{{lead.title}}"
                         position="[{{lead.latitude}}, {{lead.longitude}}]"
                         draggable="true" on-click="markerClicked(lead)" on-dragend="markerDragged(lead)"/>
             </ng-map>

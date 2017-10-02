@@ -17,8 +17,8 @@ class Marshaller {
     static def serializeLead(Lead lead){
         return [
                 id:             lead.id,
-                company:        lead.company,
-                name:           lead.name,
+                title:          lead.title,
+                description:    lead.description,
                 phoneNumber:    lead.phone,
                 email:          lead.email,
                 address:        lead.address,
@@ -30,7 +30,7 @@ class Marshaller {
     static def serializeTask(Task task) {
         return [
                 id:         task.id,
-                lead:       task.lead.company,
+                lead:       task.lead.title,
                 rep:        task.rep.name,
                 status:     task.status.name()
         ]
