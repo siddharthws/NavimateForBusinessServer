@@ -7,8 +7,8 @@ class Lead {
     Date lastUpdated
 
     // Contact Info
-    String company
-    String name
+    String title
+    String description
     String phone
     String email
 
@@ -24,7 +24,7 @@ class Lead {
 
     static constraints = {
         manager         nullable: true
-        company         nullable: true
+        title           nullable: true
         email           nullable: true
         latitude        nullable: true
         longitude       nullable: true

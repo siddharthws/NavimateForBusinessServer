@@ -21,10 +21,10 @@
             <input type="checkbox" ng-click="toggleAll()" ng-checked="selection.length == leads.length">
         </th>
         <th>
-            Company
+            Title
         </th>
         <th>
-            Name
+            Description
         </th>
         <th>
             Phone
@@ -35,10 +35,10 @@
                 <input type="checkbox" ng-click="toggleSelection(lead)" ng-checked="selection.indexOf(lead) != -1">
             </td>
             <td class="text-center">
-                {{lead.company}}
+                {{lead.title}}
             </td>
             <td class="text-center">
-                {{lead.name}}
+                {{lead.description}}
             </td>
             <td class="text-center">
                 {{lead.phoneNumber}}

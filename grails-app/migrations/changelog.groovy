@@ -6,4 +6,5 @@ databaseChangeLog = {
     include file: 'update-account-admin-relationship.groovy'
     include file: 'update-form-task-nullable.groovy'
     include file: 'update-lead-manager-nullable.groovy'
+    include file: 'update-lead-title-desc.groovy'
 }

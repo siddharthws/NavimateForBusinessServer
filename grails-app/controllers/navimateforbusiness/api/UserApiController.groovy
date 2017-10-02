@@ -138,7 +138,7 @@ class UserApiController {
         def jsonLeads = JSON.parse(request.JSON.leads)
         jsonLeads.each { jsonLead ->
             // Validate mandatory lead fields
-            if (!jsonLead.name || !jsonLead.phoneNumber || !jsonLead.latitude || !jsonLead.longitude || !jsonLead.address) {
+            if (!jsonLead.title || !jsonLead.phoneNumber || !jsonLead.latitude || !jsonLead.longitude || !jsonLead.address) {
                 throw new ApiException("Manadaotry lead information missing", Constants.HttpCodes.BAD_REQUEST)
             }
 
@@ -155,12 +155,12 @@ class UserApiController {
             }
 
             // Update Information passed from json
-            lead.name       = jsonLead.name
+            lead.title       = jsonLead.title
             lead.phone      = jsonLead.phoneNumber
             lead.address    = jsonLead.address
             lead.latitude   = jsonLead.latitude
             lead.longitude  = jsonLead.longitude
-            lead.company    = jsonLead.company ? jsonLead.company : ""
+            lead.description  = jsonLead.description ? jsonLead.description : ""
             lead.email      = jsonLead.email ? jsonLead.email : ""
 
             // Save lead

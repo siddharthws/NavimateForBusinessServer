@@ -105,7 +105,7 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
     }
 
     $scope.isLeadValid = function (lead) {
-        return (lead.company && lead.name && lead.phoneNumber && lead.latitude && lead.longitude && lead.address)
+        return (lead.title && lead.phoneNumber && lead.latitude && lead.longitude && lead.address)
     }
 
     // Map Init Callback from ngMap

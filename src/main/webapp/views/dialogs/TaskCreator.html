@@ -34,12 +34,12 @@
                 <td class="col-sm-4" ng-class="{'has-error': !task.lead && bShowError}">
                     <div class="dropdown full-width full-height">
                         <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
-                            <span class="full-flex">{{task.lead.name}}</span>
+                            <span class="full-flex">{{task.lead.title}}</span>
                             <img src="../../static/images/icon_dropdown.png"/>
                         </button>
                         <div class="dropdown-menu full-width">
-                            <input type="text" ng-model="leadFilter.name" placeholder="Search">
-                            <button class="dropdown-item" ng-repeat="lead in leads | filter:leadFilter" ng-click="task.lead = lead">{{lead.name}}</button>
+                            <input type="text" ng-model="leadFilter.title" placeholder="Search">
+                            <button class="dropdown-item" ng-repeat="lead in leads | filter:leadFilter" ng-click="task.lead = lead">{{lead.title}}</button>
                         </div>
                     </div>
                 </td>
