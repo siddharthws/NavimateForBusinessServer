@@ -35,12 +35,16 @@ class RepApiController {
         // Get Task List
         List<Task> tasks = Task.findAllByRep(rep)
 
-        def resp = new JSONArray()
+        def tasksJson = new JSONArray()
         tasks.each { task ->
             if (task.status == TaskStatus.OPEN) {
-                resp.add(navimateforbusiness.Marshaller.serializeTaskForRep(task))
+                tasksJson.add(navimateforbusiness.Marshaller.serializeTaskForRep(task))
             }
         }
+
+        def resp = [
+                "tasks" : tasksJson
+        ]
         render resp as JSON
     }
 
