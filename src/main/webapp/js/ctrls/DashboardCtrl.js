@@ -7,6 +7,7 @@ app.controller('DashboardCtrl', function ($scope, $state, $localStorage, AuthSer
     /*------------------------------------ INIT --------------------------------*/
     // Menu Selection Parameters
     $scope.selection = {}
+    $scope.name = $localStorage.name
 
     /*------------------------------------ APIs --------------------------------*/
     // Button Click APIs

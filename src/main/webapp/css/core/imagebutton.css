@@ -3,9 +3,8 @@
 .image-button {
     height: 40px;
     width: 40px;
-    padding: 0.5em 1.5em;
     margin: 5px;
-    background: white no-repeat center;
+    background: transparent no-repeat center;
     background-size: 75%;
     border: none;
     border-radius: 5px;
@@ -17,6 +16,11 @@
 
 .image-button:hover {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.ib-small {
+    height: 30px;
+    width: 30px;
 }
 
 /* Bin icon image button */
@@ -43,4 +47,20 @@
 
 .ib-sort-down.active, .ib-sort-down:hover {
     background-image: url("/static/images/icon_sort_down_active.png");
+}
+
+.ib-edit {
+    background-image: url("/static/images/icon_edit.png");
+}
+
+.ib-edit.active, .ib-edit:hover {
+    background-image: url("/static/images/icon_edit_active.png");
+}
+
+.ib-cross {
+    background-image: url("/static/images/icon_cross.png");
+}
+
+.ib-cross.active, .ib-cross:hover {
+    background-image: url("/static/images/icon_cross_active.png");
 }

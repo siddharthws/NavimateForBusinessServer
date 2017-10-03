@@ -22,14 +22,15 @@
     </div>
 
     <div class="col-md-10 d-flex flex-column full-flex">
-        <div class="dashboard-header d-flex">
+        <div class="dashboard-header d-flex align-items-center">
             <button ng-repeat="option in selection.item.options"
                     ng-click="onOptionClick(option)"
                     class="nav-btn" ng-class="{true: 'active'}[selection.option.id == option.id]">
                 {{option.title}}
             </button>
 
-            <button class="nav-btn ml-auto" ng-click="logout()">Logout</button>
+            <span class="ml-auto text-white">Welcome, {{name}}</span>
+            <button class="nav-btn" ng-click="logout()">Logout</button>
         </div>
 
         <div class="dashboard-content d-flex flex-column full-flex" ui-view></div>
