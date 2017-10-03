@@ -7,8 +7,8 @@
 
     <form class="d-flex flex-column" ng-submit="login()">
         <a href class="align-self-end" ng-click="register()">Register Now</a>
-        <input class="input-underlined" ng-model="phoneNumber" type="text" placeholder="Enter mobile number..."
-               ng-class="{'has-error': bShowError && !phoneNumber}">
+        <input class="input-underlined" ng-model="email" type="text" placeholder="Enter your email..."
+               ng-class="{'has-error': bShowError && !email}">
         <input class="input-underlined" ng-model="password" type="password" placeholder="Enter password..."
                ng-class="{'has-error': bShowError && !password}">
         <input type="submit" class="hidden-element"/>

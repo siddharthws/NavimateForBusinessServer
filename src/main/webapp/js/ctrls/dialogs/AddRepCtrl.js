@@ -10,10 +10,10 @@ app.controller('AddRepCtrl', function ($scope, $http, $localStorage, $mdDialog, 
             // Get Phone Number with country code
             var phone
             if ($scope.countryCode) {
-                phone = $scope.countryCode + $scope.phoneNumber
+                phone = '+' + $scope.countryCode + $scope.phoneNumber
             }
             else {
-                phone = "91" + $scope.phoneNumber
+                phone = "+91" + $scope.phoneNumber
             }
 
             // Get Email

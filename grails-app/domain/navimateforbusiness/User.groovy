@@ -34,6 +34,7 @@ class User {
     static constraints = {
         password        nullable: true
         email           nullable: true
+        phoneNumber     nullable: true
         fcmId           nullable: true
         manager         nullable: true
     }

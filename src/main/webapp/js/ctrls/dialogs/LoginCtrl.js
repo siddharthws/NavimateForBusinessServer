@@ -10,7 +10,7 @@ app.controller('LoginCtrl', function ($scope, $mdDialog, $state, $localStorage, 
 
         // Validate credentials
         if (validate()) {
-            AuthService.login($scope.phoneNumber, $scope.password)
+            AuthService.login($scope.email, $scope.password)
                 .then(
                     function (response) {
                         // Hide Dialog
@@ -40,7 +40,7 @@ app.controller('LoginCtrl', function ($scope, $mdDialog, $state, $localStorage, 
 
     /* ------------------------------- Local APIs -----------------------------------*/
     function validate() {
-        if (!$scope.phoneNumber || !$scope.password) {
+        if (!$scope.email || !$scope.password) {
             // Raise error flag
             $scope.bShowError = true
 
