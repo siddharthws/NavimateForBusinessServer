@@ -10,7 +10,7 @@ app.controller('RegisterCtrl', function ($scope, $mdDialog, AuthService, DialogS
 
         // Validate credentials
         if (validate()) {
-            AuthService.register($scope.name, $scope.phoneNumber, $scope.password)
+            AuthService.register($scope.name, $scope.email, $scope.password)
                 .then(
                     function (response) {
                         // Close this dialog
@@ -33,13 +33,20 @@ app.controller('RegisterCtrl', function ($scope, $mdDialog, AuthService, DialogS
 
     /* ------------------------------- Local APIs -----------------------------------*/
     function validate() {
-        if (!$scope.phoneNumber || !$scope.password || !$scope.name) {
+        if (!$scope.email || !$scope.password || !$scope.name) {
             // Raise error flag
             $scope.bShowError = true
 
             // Show error toast
             ToastService.toast("Please fill all fields !!!")
 
+            return false
+        }
+
+        // Validate Email
+        if (($scope.email.indexOf('@') == -1) ||
+            ($scope.email.indexOf('.') == -1)) {
+            ToastService.toast("Invalid Email")
             return false
         }
 

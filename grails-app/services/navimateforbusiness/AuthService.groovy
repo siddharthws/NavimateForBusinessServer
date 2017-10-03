@@ -15,7 +15,7 @@ class AuthService {
 
         // Create and save a new Admin user
         User manager = new User(    name:           input.name,
-                                    phoneNumber:    input.phoneNumber,
+                                    email:          input.email,
                                     password:       input.password,
                                     account:        account,
                                     role:           navimateforbusiness.Role.ADMIN,

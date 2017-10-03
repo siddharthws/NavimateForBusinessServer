@@ -60,7 +60,7 @@ class UserApiController {
         def user = authService.getUserFromAccessToken(accessToken)
 
         // Check if rep is already registered in this manager's team
-        User rep = User.findByPhoneNumberAndManager(request.JSON.phoneNumber, user)
+        User rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
         if (rep) {
             rep.name = request.JSON.name
             rep.email = request.JSON.email

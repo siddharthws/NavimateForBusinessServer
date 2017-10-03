@@ -4,26 +4,26 @@
 
 app.service('AuthService', function($http, $localStorage) {
 
-    this.register = function (name, phoneNumber, password)
+    this.register = function (name, email, password)
     {
         return $http({
             method:     'POST',
             url:        '/api/auth/register',
             data:       {
                 name:           name,
-                phoneNumber:    phoneNumber,
+                email:          email,
                 password:       password
             }
         })
     }
 
-    this.login = function (phoneNumber, password)
+    this.login = function (email, password)
     {
         return $http({
             method:     'POST',
             url:        '/api/auth/login',
             data:       {
-                phoneNumber:    phoneNumber,
+                email:          email,
                 password:       password
             }
         })

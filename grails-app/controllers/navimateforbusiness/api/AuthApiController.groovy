@@ -15,12 +15,12 @@ class AuthApiController {
         def input = request.JSON
 
         // Validate User
-        if (!input.name || !input.phoneNumber || !input.password) {
+        if (!input.name || !input.email || !input.password) {
             throw new ApiException("Please check input", Constants.HttpCodes.BAD_REQUEST)
         }
-        def existingUser = User.findByPhoneNumber(input.phoneNumber)
+        def existingUser = User.findByEmailAndRole(input.email, Role.ADMIN)
         if (existingUser) {
-            throw new ApiException("User with phone umber already exists", Constants.HttpCodes.CONFLICT)
+            throw new ApiException("Admin with email already exists", Constants.HttpCodes.CONFLICT)
         }
 
         // Register User
@@ -33,9 +33,9 @@ class AuthApiController {
 
     def login() {
         def input = request.JSON
-        User user = User.findByPhoneNumberAndPassword(input.phoneNumber, input.password)
+        User user = User.findByEmailAndPassword(input.email, input.password)
         if (!user) {
-            throw new ApiException("Invalid phone number or password", Constants.HttpCodes.UNAUTHORIZED)
+            throw new ApiException("Invalid email or password", Constants.HttpCodes.UNAUTHORIZED)
         }
         // log the user in
         def accessToken = authService.login(user.id)
