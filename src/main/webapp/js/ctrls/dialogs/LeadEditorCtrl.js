@@ -36,6 +36,14 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
         }
     }
 
+    $scope.remove = function(lead) {
+        var idx = $scope.leads.indexOf(lead)
+
+        if (idx >= 0) {
+            $scope.leads.splice(idx, 1)
+        }
+    }
+
     $scope.searchAddress = function () {
         // Perform place search only for valid text
         if ($scope.selectedLead.address) {

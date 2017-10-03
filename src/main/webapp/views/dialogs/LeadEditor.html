@@ -17,7 +17,7 @@
                 <input class="input-underlined" type="text"  placeholder="Enter phone number"
                        ng-model="selectedLead.phoneNumber" ng-class="{'has-error': bShowError && !selectedLead.phoneNumber}">
                 <div class="dropdown d-flex">
-                    <input class="input-underlined full-flex" type="text"  placeholder="Search address..."
+                    <input class="input-underlined w-100" type="text"  placeholder="Search address..."
                            ng-model="selectedLead.address" ng-model-options="{debounce: 500}"
                            ng-class="{'has-error': bShowError && !(selectedLead.latitude && selectedLead.longitude && selectedLead.address)}"
                            ng-change="searchAddress()" data-toggle="dropdown">
@@ -30,13 +30,20 @@
             </div>
 
             <div class="list-group p-1 mt-2 full-flex">
-                <a href ng-repeat="lead in leads"
-                   class="list-group-item list-group-item-action"
-                   ng-class="{'list-group-item-danger': bShowError && !isLeadValid(lead),
+                <div href ng-repeat="lead in leads"
+                     class="list-group-item list-group-item-action"
+                     ng-class="{'list-group-item-danger': bShowError && !isLeadValid(lead),
                               'active': selectedLead == lead}"
-                   ng-click="listItemClick(lead)">
-                    {{($index + 1) + ". " + lead.title}}
-                </a>
+                     ng-click="listItemClick(lead)">
+
+                    <div class="d-flex align-items-center">
+                        <span class="full-flex">
+                            {{($index + 1) + ". " + lead.title}}
+                        </span>
+
+                        <input type="button" value="" class="image-button ib-small ib-cross" ng-click="remove(lead)"/>
+                    </div>
+                </div>
             </div>
 
             <div class="container-fluid d-flex justify-content-around flex-shrink-0">
