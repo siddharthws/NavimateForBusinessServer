@@ -2,7 +2,7 @@
  * Created by Siddharth on 01-09-2017.
  */
 
-app.controller('RegisterCtrl', function ($scope, $mdDialog, AuthService, DialogService, ToastService) {
+app.controller('RegisterCtrl', function ($scope, $rootScope, $mdDialog, AuthService, DialogService, ToastService) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     // Button Click APIs
@@ -10,9 +10,13 @@ app.controller('RegisterCtrl', function ($scope, $mdDialog, AuthService, DialogS
 
         // Validate credentials
         if (validate()) {
+            $rootScope.showWaitingDialog("Please wait while you are being registered...")
+
             AuthService.register($scope.name, $scope.email, $scope.password)
                 .then(
                     function (response) {
+                        $rootScope.hideWaitingDialog()
+
                         // Close this dialog
                         $mdDialog.hide()
 
@@ -20,6 +24,8 @@ app.controller('RegisterCtrl', function ($scope, $mdDialog, AuthService, DialogS
                         DialogService.login()
                     },
                     function (error) {
+                        $rootScope.hideWaitingDialog()
+
                         // Show error toast
                         ToastService.toast("Unable to register...")
                     }
