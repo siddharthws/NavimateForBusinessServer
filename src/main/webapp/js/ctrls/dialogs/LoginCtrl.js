@@ -2,7 +2,7 @@
  * Created by Siddharth on 01-09-2017.
  */
 
-app.controller('LoginCtrl', function ($scope, $mdDialog, $state, $localStorage, AuthService, DialogService, ToastService) {
+app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $localStorage, AuthService, DialogService, ToastService) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     // Button Click APIs
@@ -10,10 +10,15 @@ app.controller('LoginCtrl', function ($scope, $mdDialog, $state, $localStorage, 
 
         // Validate credentials
         if (validate()) {
+            $rootScope.showWaitingDialog("Please wait while we log you in...")
+
             AuthService.login($scope.email, $scope.password)
                 .then(
                     function (response) {
-                        // Hide Dialog
+                        // Hide waiting dialog
+                        $rootScope.hideWaitingDialog()
+
+                        // Hide Login Dialog
                         $mdDialog.hide()
 
                         // Redirect to dashboard
@@ -22,6 +27,8 @@ app.controller('LoginCtrl', function ($scope, $mdDialog, $state, $localStorage, 
                         $state.go("dashboard.team-manage")
                     },
                     function (error) {
+                        $rootScope.hideWaitingDialog()
+
                         // Show error toast
                         ToastService.toast("Invalid Credentials...")
                     }
