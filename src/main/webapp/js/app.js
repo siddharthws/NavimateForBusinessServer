@@ -30,6 +30,10 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         templateUrl: '../views/home.html',
         controller: 'HomeCtrl'
     })
+    .state('legal', {
+        url: '/legal',
+        templateUrl: '../views/legal.html'
+    })
       // Dashboard mappings
     .state('dashboard', {
         abstract: true,
