@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, ExcelService, leads, leadUpdateCb) {
+app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, ExcelService, leads, leadUpdateCb) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function () {
@@ -85,6 +85,7 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
     $scope.save = function () {
         // Validate entered leads
         if (validate()) {
+            $rootScope.showWaitingDialog("Please wait while leads are added...")
             // Data Validated. Save in database
             $http({
                 method:     'POST',
@@ -98,6 +99,7 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
             })
             .then(
                 function (response) {
+                    $rootScope.hideWaitingDialog()
                     // Hide dialog and show toast
                     $mdDialog.hide()
                     ToastService.toast("Leads added succesfully...")
@@ -106,6 +108,7 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
                     leadUpdateCb()
                 },
                 function (error) {
+                    $rootScope.hideWaitingDialog()
                     ToastService.toast("Unable to update leads !!!")
                     console.log(error)
                 })
@@ -188,8 +191,10 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
 
     // Excel related APIs
     $scope.excelRead = function (workbook) {
+        $rootScope.showWaitingDialog("Please wait while we are reading from excel file...")
         ExcelService.excelRead(workbook).then(
             function (response) {
+                $rootScope.hideWaitingDialog()
                 response.data.forEach(function (lead) {
                     //Adding leads from excel
                     $scope.leads.push(lead);
@@ -197,6 +202,7 @@ app.controller('LeadEditorCtrl', function ($scope, $mdDialog, $http, $localStora
 
             },
             function (error) {
+                $rootScope.hideWaitingDialog()
                 // Excel File Parse Error
                 console.log(error)
             }

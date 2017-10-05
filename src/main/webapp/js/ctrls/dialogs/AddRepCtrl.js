@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('AddRepCtrl', function ($scope, $http, $localStorage, $mdDialog, ToastService, teamUpdateCb) {
+app.controller('AddRepCtrl', function ($scope, $rootScope, $http, $localStorage, $mdDialog, ToastService, teamUpdateCb) {
 
     $scope.add = function () {
         if (validate()) {
@@ -19,6 +19,7 @@ app.controller('AddRepCtrl', function ($scope, $http, $localStorage, $mdDialog, 
             // Get Email
             var email = $scope.email ? $scope.email : "";
 
+            $rootScope.showWaitingDialog("Please wait while we are adding rep...")
             // Send Register Request
             $http({
                 method:     'POST',
@@ -34,6 +35,7 @@ app.controller('AddRepCtrl', function ($scope, $http, $localStorage, $mdDialog, 
             })
             .then(
                 function (response) {
+                    $rootScope.hideWaitingDialog()
                     // Hide dialog and show toast
                     $mdDialog.hide()
                     ToastService.toast("Rep Added")
@@ -42,6 +44,7 @@ app.controller('AddRepCtrl', function ($scope, $http, $localStorage, $mdDialog, 
                     teamUpdateCb()
                 },
                 function (error) {
+                    $rootScope.hideWaitingDialog()
                     ToastService.toast("Unable to add rep")
                     console.log(error)
                 })

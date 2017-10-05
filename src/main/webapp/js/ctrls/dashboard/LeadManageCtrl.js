@@ -2,7 +2,7 @@
  * Created by Siddharth on 04-09-2017.
  */
 
-app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state, ExcelService, DialogService, ToastService) {
+app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, ExcelService, DialogService, ToastService) {
 
     /* ------------------------------- INIT -----------------------------------*/
     // Set menu and option
@@ -17,6 +17,7 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
         // Re-initialize selection to empty
         $scope.selection = []
 
+        $rootScope.showWaitingDialog("Please wait while we are fetching leads data...")
         //Get Leads Data
         $http({
             method:     'GET',
@@ -27,9 +28,11 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
         })
         .then(
             function (response) {
+                $rootScope.hideWaitingDialog()
                 $scope.leads = response.data
             },
             function (error) {
+                $rootScope.hideWaitingDialog()
                 console.log(error)
                 $state.go('home')
             }
@@ -82,6 +85,7 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
 
     // API to remove selected leads from list
     function removeSelected () {
+        $rootScope.showWaitingDialog("Please wait while we are removing leads...")
         // Make Http call to remove leads
         $http({
             method: 'POST',
@@ -94,6 +98,7 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
             }
         }).then(
             function (response) {
+                $rootScope.hideWaitingDialog()
                 // Show Toast
                 ToastService.toast("leads removed...")
 
@@ -101,6 +106,7 @@ app.controller("LeadManageCtrl", function ($scope, $http, $localStorage, $state,
                 init()
             },
             function (error) {
+                $rootScope.hideWaitingDialog()
                 ToastService.toast("Failed to remove leads!!!")
 
                 // re-initialize leads

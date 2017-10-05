@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("FormManageCtrl", function ($scope, $http, $localStorage, $state, DialogService) {
+app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService) {
 
     /*------------------------------- INIT -------------------------------*/
     // Set menu and option
@@ -20,6 +20,7 @@ app.controller("FormManageCtrl", function ($scope, $http, $localStorage, $state,
     /*------------------------------- Other APIs -------------------------------*/
 
     function getForms() {
+        $rootScope.showWaitingDialog("Please wait while we are fetching forms...")
         $http({
             method:     'GET',
             url:        '/api/users/form',
@@ -29,9 +30,11 @@ app.controller("FormManageCtrl", function ($scope, $http, $localStorage, $state,
         })
         .then(
             function (response) {
+                $rootScope.hideWaitingDialog()
                 $scope.forms = response.data
             },
             function (error) {
+                $rootScope.hideWaitingDialog()
                 console.log(error)
                 $state.go('home')
             }
