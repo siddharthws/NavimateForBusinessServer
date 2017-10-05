@@ -14,7 +14,6 @@ class UrlMappings {
         "/api/auth/logout"          (controller: "AuthApi") { action = [GET: "logout"] }
 
         // User Info APIs
-        "/api/users/me"             (controller: "UserApi") {action = [GET: "getMyProfile", POST: "updateMyProfile"]}
         "/api/users/team"           (controller: "UserApi") {action = [GET: "getTeam",      POST: "addRep"]}
         "/api/users/team/remove"    (controller: "UserApi") {action = [POST: "removeReps"]}
         "/api/users/lead"           (controller: "UserApi") {action = [GET: "getLead",      POST: "editLeads"]}

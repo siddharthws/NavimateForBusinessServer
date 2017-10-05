@@ -20,20 +20,7 @@ class UserApiController {
 
     def authService
     def taskService
-
-    def getMyProfile() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
-        render navimateforbusiness.Marshaller.serializeUser(user) as JSON
-    }
-
-    def updateMyProfile() {
-        def input = request.JSON
-        //TODO:
-    }
+    def fcmService
 
     def getTeam() {
         def accessToken = request.getHeader("X-Auth-Token")
@@ -104,6 +91,7 @@ class UserApiController {
 
             // Remove Rep's Manager
             rep.manager = null
+            rep.account = null;
             rep.save(flush: true, failOnError: true)
         }
 
@@ -136,6 +124,7 @@ class UserApiController {
         def user = authService.getUserFromAccessToken(accessToken)
 
         def jsonLeads = JSON.parse(request.JSON.leads)
+        def fcms = []
         jsonLeads.each { jsonLead ->
             // Validate mandatory lead fields
             if (!jsonLead.title || !jsonLead.phoneNumber || !jsonLead.latitude || !jsonLead.longitude || !jsonLead.address) {
@@ -165,6 +154,22 @@ class UserApiController {
 
             // Save lead
             lead.save(flush: true, failOnError: true)
+
+            // Check if the lead has any tasks
+            def tasks = Task.findAllByLead(lead)
+            tasks.each {task ->
+                // Send FCM notification only if task is OPEN
+                if (task.status == TaskStatus.OPEN) {
+                    if (!fcms.contains(task.rep.fcmId)) {
+                        fcms.push(task.rep.fcmId)
+                    }
+                }
+            }
+        }
+
+        // Send notifications to all reps
+        fcms.each {fcm ->
+            fcmService.notifyApp(fcm)
         }
 
         def resp = [success: true]
@@ -178,7 +183,8 @@ class UserApiController {
         }
         def user = authService.getUserFromAccessToken(accessToken)
 
-        // Get Reps from JSON
+        // Get Leads from JSON
+        def fcms = []
         JSONArray leadsJson = request.JSON.leads
         leadsJson.each {leadJson ->
             Lead lead = Lead.findById(leadJson.id)
@@ -188,7 +194,24 @@ class UserApiController {
 
             // Remove Lead's Manager
             lead.manager = null
+            lead.account = null
             lead.save(flush: true, failOnError: true)
+
+            // Check if the lead has any tasks
+            def tasks = Task.findAllByLead(lead)
+            tasks.each {task ->
+                // Send FCM notification only if task is OPEN
+                if (task.status == TaskStatus.OPEN) {
+                    if (!fcms.contains(task.rep.fcmId)) {
+                        fcms.push(task.rep.fcmId)
+                    }
+                }
+            }
+        }
+
+        // Send notifications to all reps
+        fcms.each {fcm ->
+            fcmService.notifyApp(fcm)
         }
 
         def resp = [success: true]
@@ -236,6 +259,7 @@ class UserApiController {
         def user = authService.getUserFromAccessToken(accessToken)
 
         // Get Reps from JSON
+        def fcms = []
         JSONArray tasksJson = request.JSON.tasks
         tasksJson.each {taskJson ->
             Task task = Task.findById(taskJson.id)
@@ -243,9 +267,21 @@ class UserApiController {
                 throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
             }
 
-            // Update Task Status
-            task.status = TaskStatus.CLOSED
-            task.save(flush: true, failOnError: true)
+            if (task.status != TaskStatus.CLOSED) {
+                // Collect FCM ID to notify the app
+                if (!fcms.contains(task.rep.fcmId)) {
+                    fcms.push(task.rep.fcmId)
+                }
+
+                // Update Task Status
+                task.status = TaskStatus.CLOSED
+                task.save(flush: true, failOnError: true)
+            }
+        }
+
+        // Send notifications to all reps
+        fcms.each {fcm ->
+            fcmService.notifyApp(fcm)
         }
 
         def resp = [success: true]
