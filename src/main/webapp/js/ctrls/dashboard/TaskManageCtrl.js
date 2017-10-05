@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TaskManageCtrl", function ($scope, $http, $localStorage, $state, DialogService, ToastService) {
+app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService) {
 
     /*-------------------------------- INIT --------------------------------*/
         // Set menu and option
@@ -13,6 +13,7 @@ app.controller("TaskManageCtrl", function ($scope, $http, $localStorage, $state,
     $scope.selection = []
 
     function initTasks () {
+        $rootScope.showWaitingDialog("Please wait while we are fetching tasks...")
         $http({
             method:     'GET',
             url:        '/api/users/task',
@@ -22,9 +23,11 @@ app.controller("TaskManageCtrl", function ($scope, $http, $localStorage, $state,
         })
         .then(
             function (response) {
+                $rootScope.hideWaitingDialog()
                 $scope.tasks = response.data
             },
             function (error) {
+                $rootScope.hideWaitingDialog()
                 console.log(error)
                 $state.go('home')
             }
@@ -76,6 +79,7 @@ app.controller("TaskManageCtrl", function ($scope, $http, $localStorage, $state,
 
     function closeSelected() {
         //http call to close tasks
+        $rootScope.showWaitingDialog("Closing Tasks...")
         $http({
             method: 'POST',
             url:    '/api/users/task/close',
@@ -87,6 +91,7 @@ app.controller("TaskManageCtrl", function ($scope, $http, $localStorage, $state,
             }
         }).then(
             function (response) {
+                $rootScope.hideWaitingDialog()
                 // Show Toast
                 ToastService.toast("tasks closed...")
 
@@ -94,6 +99,7 @@ app.controller("TaskManageCtrl", function ($scope, $http, $localStorage, $state,
                 initTasks()
             },
             function (error) {
+                $rootScope.hideWaitingDialog()
                 ToastService.toast("Failed to close tasks!!!")
 
                 // re-initialize tasks

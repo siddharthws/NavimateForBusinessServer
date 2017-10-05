@@ -2,7 +2,7 @@
  * Created by Siddharth on 04-09-2017.
  */
 
-app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state, $filter, ExcelService, ToastService) {
+app.controller("LeadReportCtrl", function ($scope, $rootScope, $http, $localStorage, $state, $filter, ExcelService, ToastService) {
 
     /*-------------------------------------- Scope APIs ---------------------------------------*/
     $scope.export = function () {
@@ -135,6 +135,7 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
     // Init filter
     $scope.resetFilters()
 
+    $rootScope.showWaitingDialog("Please wait while we are fetching lead report...")
     // Get team report
     $http({
         method:     'GET',
@@ -145,10 +146,12 @@ app.controller("LeadReportCtrl", function ($scope, $http, $localStorage, $state,
     })
         .then(
             function (response) {
+                $rootScope.hideWaitingDialog()
                 $scope.report = response.data
                 $scope.filteredReport = $scope.report
             },
             function (error) {
+                $rootScope.hideWaitingDialog()
                 // Show Error Toast
                 ToastService.toast("Unable to load report !!!")
             }

@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state, $mdDialog, ToastService, taskAddedCb) {
+app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, taskAddedCb) {
 
     /* ----------------------------- INIT --------------------------------*/
     $scope.tasks = [{}]
@@ -11,6 +11,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state
     $scope.team = []
     $scope.formTemplates = []
 
+    $rootScope.showWaitingDialog("Please wait while we are fetching information..")
     // Get all leads
     $http({
         method:     'GET',
@@ -21,9 +22,11 @@ app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state
     })
     .then(
         function (response) {
+            $rootScope.hideWaitingDialog()
             $scope.leads = response.data
         },
         function (error) {
+            $rootScope.hideWaitingDialog()
             console.log(error)
             $state.go('home')
         }
@@ -75,6 +78,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state
     $scope.create = function () {
         // Validate Entered Data
         if (validate()) {
+            $rootScope.showWaitingDialog("Please wait while task is created...")
             // Send to server for saving
             $http({
                 method:     'POST',
@@ -88,6 +92,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state
             })
             .then(
                 function (response) {
+                    $rootScope.hideWaitingDialog()
                     // Dismiss Dialog
                     $mdDialog.hide()
 
@@ -98,6 +103,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $http, $localStorage, $state
                     taskAddedCb()
                 },
                 function (error) {
+                    $rootScope.hideWaitingDialog()
                     // Show Error Toast
                     ToastService.toast("Unable to create tasks...")
                 }

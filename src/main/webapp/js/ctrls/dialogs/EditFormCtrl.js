@@ -3,11 +3,12 @@
  */
 
 // Controller for Alert Dialog
-app.controller('EditFormCtrl', function ($scope, $http, $localStorage, $mdDialog, ToastService, form, updateCb) {
+app.controller('EditFormCtrl', function ($scope, $rootScope, $http, $localStorage, $mdDialog, ToastService, form, updateCb) {
 
     $scope.form = form;
 
     $scope.save = function () {
+        $rootScope.showWaitingDialog("Please wait while form is being updated...")
         $http({
             method:     'POST',
             url:        '/api/users/form',
@@ -20,6 +21,7 @@ app.controller('EditFormCtrl', function ($scope, $http, $localStorage, $mdDialog
         })
         .then(
             function (response) {
+                $rootScope.hideWaitingDialog()
                 // Hide dialog and show toast
                 $mdDialog.hide()
                 ToastService.toast("Form updated successfully...")
@@ -28,6 +30,7 @@ app.controller('EditFormCtrl', function ($scope, $http, $localStorage, $mdDialog
                 updateCb()
             },
             function (error) {
+                $rootScope.hideWaitingDialog()
                 console.log(error)
                 ToastService.toast("Could not update form...")
             }

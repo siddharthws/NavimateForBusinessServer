@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state, DialogService, ToastService) {
+app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService) {
 
     /* ------------------------------- INIT -----------------------------------*/
     // Set menu and option
@@ -14,6 +14,7 @@ app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state,
         // Re-initialize selection to empty
         $scope.selection = []
 
+        $rootScope.showWaitingDialog("Please wait while we are fetching team details...")
         // Get Team Data
         $http({
             method:     'GET',
@@ -24,9 +25,11 @@ app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state,
         })
         .then(
             function (response) {
+                $rootScope.hideWaitingDialog()
                 $scope.team = response.data
             },
             function (error) {
+                $rootScope.hideWaitingDialog()
                 console.log(error)
                 $state.go('home')
             }
@@ -81,6 +84,7 @@ app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state,
 
     // API to remove selected team members from list
     function removeSelected () {
+        $rootScope.showWaitingDialog("Please wait while we are removing members...")
         // Make Http call to remove members
         $http({
             method:     'POST',
@@ -94,6 +98,7 @@ app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state,
         })
         .then(
             function (response) {
+                $rootScope.hideWaitingDialog()
                 // Show Toast
                 ToastService.toast("Reps removed...")
 
@@ -101,6 +106,7 @@ app.controller("TeamManageCtrl", function ($scope, $http, $localStorage, $state,
                 $scope.init()
             },
             function (error) {
+                $rootScope.hideWaitingDialog()
                 ToastService.toast("Failed to remove reps!!!")
 
                 // re-initialize team

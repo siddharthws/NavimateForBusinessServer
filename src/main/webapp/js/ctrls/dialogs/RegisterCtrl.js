@@ -19,7 +19,7 @@ app.controller('RegisterCtrl', function ($scope, $rootScope, $mdDialog, AuthServ
 
                         // Close this dialog
                         $mdDialog.hide()
-
+                        ToastService.toast("Registered successfully...")
                         // Open Login Dialog
                         DialogService.login()
                     },
