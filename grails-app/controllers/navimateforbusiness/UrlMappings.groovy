@@ -42,5 +42,7 @@ class UrlMappings {
 
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
+
+        "/"(uri: '/static/index.html')
     }
 }

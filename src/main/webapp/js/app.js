@@ -27,48 +27,48 @@ app.config(function ($stateProvider, $urlRouterProvider) {
       // Homepage Mappings
     .state('home', {
         url: '/',
-        templateUrl: '../views/home.html',
+        templateUrl: '/static/views/home.html',
         controller: 'HomeCtrl'
     })
     .state('legal', {
         url: '/legal',
-        templateUrl: '../views/legal.html'
+        templateUrl: '/static/views/legal.html'
     })
       // Dashboard mappings
     .state('dashboard', {
         abstract: true,
         url: '/dashboard',
-        templateUrl: '../views/dashboard.html',
+        templateUrl: '/static/views/dashboard.html',
         controller: 'DashboardCtrl'
     })
     .state('dashboard.team-manage', {
         url: '/team/manage',
-        templateUrl: '../views/dashboard/team/manage.html',
+        templateUrl: '/static/views/dashboard/team/manage.html',
         controller: 'TeamManageCtrl'
     })
     .state('dashboard.team-report', {
         url: '/team/report',
-        templateUrl: '../views/dashboard/team/report.html',
+        templateUrl: '/static/views/dashboard/team/report.html',
         controller: 'TeamReportCtrl'
     })
     .state('dashboard.leads-manage', {
         url: '/leads/manage',
-        templateUrl: '../views/dashboard/leads/manage.html',
+        templateUrl: '/static/views/dashboard/leads/manage.html',
         controller: 'LeadManageCtrl'
     })
     .state('dashboard.leads-report', {
         url: '/leads/report',
-        templateUrl: '../views/dashboard/leads/report.html',
+        templateUrl: '/static/views/dashboard/leads/report.html',
         controller: 'LeadReportCtrl'
     })
     .state('dashboard.tasks-manage', {
         url: '/tasks/manage',
-        templateUrl: '../views/dashboard/tasks/manage.html',
+        templateUrl: '/static/views/dashboard/tasks/manage.html',
         controller: 'TaskManageCtrl'
     })
     .state('dashboard.forms-manage', {
         url: '/forms/manage',
-        templateUrl: '../views/dashboard/forms/manage.html',
+        templateUrl: '/static/views/dashboard/forms/manage.html',
         controller: 'FormManageCtrl'
     })
 });
