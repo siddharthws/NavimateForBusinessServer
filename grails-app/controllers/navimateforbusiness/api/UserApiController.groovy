@@ -91,7 +91,6 @@ class UserApiController {
 
             // Remove Rep's Manager
             rep.manager = null
-            rep.account = null;
             rep.save(flush: true, failOnError: true)
         }
 
@@ -194,7 +193,6 @@ class UserApiController {
 
             // Remove Lead's Manager
             lead.manager = null
-            lead.account = null
             lead.save(flush: true, failOnError: true)
 
             // Check if the lead has any tasks
