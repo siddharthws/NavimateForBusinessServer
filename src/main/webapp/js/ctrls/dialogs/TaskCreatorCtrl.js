@@ -28,7 +28,6 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         function (error) {
             $rootScope.hideWaitingDialog()
             console.log(error)
-            $state.go('home')
         }
     )
 
@@ -46,7 +45,6 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         },
         function (error) {
             console.log(error)
-            $state.go('home')
         }
     )
 
@@ -64,7 +62,6 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         },
         function (error) {
             console.log(error)
-            $state.go('home')
         }
     )
 

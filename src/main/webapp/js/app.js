@@ -10,11 +10,35 @@ var app = angular.module("navimate", [
   'angular.filter'
 ]);
 
+// Http Response interceptor to parse certain types of error codes
+app.factory('httpResponseInterceptor', ['$q', '$injector',
+    function($q, $injector) {
+        return {
+            response: function(responseData) {
+                return responseData;
+            },
+            responseError: function error(response) {
+                switch (response.status) {
+                    case 401:
+                        $injector.get('$state').go('login')
+                        break;
+                    default:
+                        console.log("Unknown error from server : " + response.status)
+                }
+
+                return $q.reject(response);
+            }
+        };
+    }
+]);
+
 app.config(['$locationProvider', function ($locationProvider) {
     $locationProvider.hashPrefix('');
 }]);
 
-app.config(function ($stateProvider, $urlRouterProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
+    // Configure Http Response Interceptor
+    $httpProvider.interceptors.push('httpResponseInterceptor');
 
     // Configure URL mapping for non existent URLs
   $urlRouterProvider.when('', '/')
@@ -29,6 +53,14 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         url: '/',
         templateUrl: '/static/views/home.html',
         controller: 'HomeCtrl'
+    })
+    .state('login', {
+        url: '/',
+        templateUrl: '/static/views/home.html',
+        controller: 'HomeCtrl',
+        params: {
+            login: true
+        }
     })
     .state('legal', {
         url: '/legal',
