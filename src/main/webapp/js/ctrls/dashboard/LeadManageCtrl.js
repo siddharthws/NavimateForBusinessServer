@@ -34,7 +34,6 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
             function (error) {
                 $rootScope.hideWaitingDialog()
                 console.log(error)
-                $state.go('home')
             }
         )
     }
