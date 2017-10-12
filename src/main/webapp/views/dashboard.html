@@ -2,7 +2,9 @@
 
 <div class="dashboard row">
     <div class="col-md-2 dashboard-menu d-flex flex-column">
-        <img class="dashboard-logo align-self-center" src="/static/images/logo.png">
+        <div class="logo-container align-self-center">
+            <img class="logo-1 align-self-center" src="/static/images/logo.png">
+        </div>
         <button class="nav-btn" ng-class="{true: 'active'}[selection.item.name == 'team']"
                 ui-sref="dashboard.team-manage">
             Team
@@ -25,11 +27,11 @@
         <div class="dashboard-header d-flex align-items-center">
             <button ng-repeat="option in selection.item.options"
                     ng-click="onOptionClick(option)"
-                    class="nav-btn" ng-class="{true: 'active'}[selection.option.id == option.id]">
+                    class="nav-btn h-50 align-self-end" ng-class="{true: 'active'}[selection.option.id == option.id]">
                 {{option.title}}
             </button>
 
-            <span class="ml-auto text-white">Welcome, {{name}}</span>
+            <span class="ml-auto text-white p-2">Welcome, {{name}}</span>
             <button class="nav-btn" ng-click="logout()">Logout</button>
         </div>
 
