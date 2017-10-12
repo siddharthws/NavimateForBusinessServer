@@ -21,6 +21,9 @@ class UrlMappings {
         "/api/users/task"           (controller: "UserApi") {action = [GET: "getTask",      POST: "addTasks"]}
         "/api/users/task/close"     (controller: "UserApi") {action = [POST: "closeTasks"]}
         "/api/users/form"           (controller: "UserApi") {action = [GET: "getForm",      POST: "editForm"]}
+        "/api/reports/team"         (controller: "UserApi") {action = [GET: "getTeamReport"]}
+        "/api/reports/lead"         (controller: "UserApi") {action = [GET: "getLeadReport"]}
+        "/api/leads/upload"         (controller: "UserApi") {action = [POST: "uploadLeads"]}
 
         // Rep APIs
         "/api/reps/profile"         (controller: "RepApi") {action = [POST: "getMyProfile"]}
@@ -32,13 +35,6 @@ class UrlMappings {
         "/api/googleapis/autocomplete"      (controller: "GoogleApi") {action = [GET: "autocomplete"]}
         "/api/googleapis/geocode"           (controller: "GoogleApi") {action = [GET: "geocode"]}
         "/api/googleapis/geocode/reverse"   (controller: "GoogleApi") {action = [GET: "reverseGeocode"]}
-
-        // Report Related APIs
-        "/api/reports/team"     (controller: "ReportApi") {action = [GET: "getTeamReport"]}
-        "/api/reports/lead"     (controller: "ReportApi") {action = [GET: "getLeadReport"]}
-
-        // Lead Related APIs
-        "/api/leads/upload"         (controller: "LeadApi") {action = [POST: "upload"]}
 
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
