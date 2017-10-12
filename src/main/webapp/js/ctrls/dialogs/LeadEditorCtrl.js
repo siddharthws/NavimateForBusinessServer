@@ -136,6 +136,9 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
             googleMap.fitBounds(bounds)
         }
 
+        // Trigger resize event (Hack since map is not loaded correctly second time)
+        google.maps.event.trigger(googleMap, 'resize')
+
         // Run angular digest cycle since this is async callback
         $scope.$apply()
     }
