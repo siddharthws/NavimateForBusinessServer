@@ -5,8 +5,12 @@ import grails.converters.JSON
 class UtilsController {
 
     def handleError() {
-        def cause = request.exception?.cause?.cause
-        if (cause instanceof navimateforbusiness.ApiException) {
+        def cause = request.exception?.cause
+        while ((cause) && !(cause instanceof navimateforbusiness.ApiException)) {
+            cause = cause.cause
+        }
+
+        if (cause) {
             response.status = cause.responseCode
             def resp = [error: cause.message]
             render resp as JSON

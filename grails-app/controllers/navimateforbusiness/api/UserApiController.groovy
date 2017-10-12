@@ -21,13 +21,11 @@ class UserApiController {
     def authService
     def taskService
     def fcmService
+    def reportService
+    def leadService
 
     def getTeam() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get Team List
         List<User> team = User.findAllByManager(user)
@@ -40,11 +38,7 @@ class UserApiController {
     }
 
     def addRep() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Check if rep is already registered in this manager's team
         User rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
@@ -75,12 +69,6 @@ class UserApiController {
     }
 
     def removeReps() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
-
         // Get Reps from JSON
         JSONArray repsJson = JSON.parse(request.JSON.reps)
         repsJson.each {repJson ->
@@ -99,11 +87,7 @@ class UserApiController {
     }
 
     def getLead() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get Lead List
         List<Lead> leads = Lead.findAllByManager(user)
@@ -116,11 +100,7 @@ class UserApiController {
     }
 
     def editLeads() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         def jsonLeads = JSON.parse(request.JSON.leads)
         def fcms = []
@@ -176,12 +156,6 @@ class UserApiController {
     }
 
     def removeLeads() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
-
         // Get Leads from JSON
         def fcms = []
         JSONArray leadsJson = request.JSON.leads
@@ -217,11 +191,7 @@ class UserApiController {
     }
 
     def getTask() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get Form List
         List<Task> tasks = Task.findAllByManager(user)
@@ -234,11 +204,7 @@ class UserApiController {
     }
 
     def addTasks() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Update tasks using service
         JSONArray tasksJson = JSON.parse(request.JSON.tasks)
@@ -250,12 +216,6 @@ class UserApiController {
     }
 
     def closeTasks() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
-
         // Get Reps from JSON
         def fcms = []
         JSONArray tasksJson = request.JSON.tasks
@@ -287,11 +247,7 @@ class UserApiController {
     }
 
     def getForm() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get Form List
         List<Form> forms = Form.findAllByOwner(user)
@@ -304,12 +260,6 @@ class UserApiController {
     }
 
     def editForm() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
-
         // Update Db's Form data
         def formJson = request.JSON.form
         Form form = Form.findById(formJson.id)
@@ -318,6 +268,41 @@ class UserApiController {
 
         // return resposne
         def resp = [success: true]
+        render resp as JSON
+    }
+
+    def getTeamReport() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get Report
+        def resp = reportService.getTeamReport(user)
+
+        // Send response
+        render resp as JSON
+    }
+
+    def getLeadReport() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get Report
+        def resp = reportService.getLeadReport(user)
+
+        // Send response
+        render resp as JSON
+    }
+
+    def uploadLeads() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Parse Input
+        JSONArray excelJson = JSON.parse(request.JSON.excelData)
+        ArrayList<Lead> leads = leadService.parseExcel(user, excelJson)
+
+        // Send response
+        def resp = new JSONArray();
+        leads.each { lead ->
+            resp.add(navimateforbusiness.Marshaller.serializeLead(lead))
+        }
         render resp as JSON
     }
 }

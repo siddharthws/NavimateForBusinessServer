@@ -12,13 +12,6 @@ class GoogleApiController {
     def googleApiService
 
     def autocomplete() {
-        // Authenticate user
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
-
         // Validate params
         if (!params.input) {
             throw new ApiException("No input for autocomplete", Constants.HttpCodes.BAD_REQUEST)
@@ -30,13 +23,6 @@ class GoogleApiController {
     }
 
     def geocode() {
-        // Authenticate user
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
-
         // Validate params
         if (!params.address) {
             throw new ApiException("No address for geocoding", Constants.HttpCodes.BAD_REQUEST)
@@ -52,13 +38,6 @@ class GoogleApiController {
     }
 
     def reverseGeocode() {
-        // Authenticate user
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
-
         // Validate params
         if (!params.latitude || !params.longitude) {
             throw new ApiException("No latlng for reverse geocoding", Constants.HttpCodes.BAD_REQUEST)
