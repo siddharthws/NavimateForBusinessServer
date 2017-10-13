@@ -215,6 +215,10 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
     $scope.excelError = function (e) {
         console.log("Excel Read Error = " + e)
     }
+    
+    $scope.uploadTemplate = function () {
+        ExcelService.leadUploadTemplate()
+    }
 
     $scope.cancel = function () {
         $mdDialog.hide()
