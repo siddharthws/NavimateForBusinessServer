@@ -60,6 +60,35 @@ app.service("ExcelService", function ($http, $localStorage, $filter, FileSaver, 
         }
     }
 
+    // API to save lead upload template in excel file
+    this.leadUploadTemplate = function (){
+        // Create worksheet from JSON
+        var json = [{
+            "Title":        "",
+            "Description":  "",
+            "Phone":        "",
+            "Address":      "",
+            "Email":        "",
+            "Latitude":     0,
+            "Longitude":    0,
+        }]
+        var ws = XLSX.utils.json_to_sheet(json)
+
+        // Create workbook
+        const wb = { SheetNames: [], Sheets: {} }
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet 1")
+
+        // Save workbook
+        var wbOut = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'})
+        var blob  = new Blob([s2ab(wbOut)],{type:"application/octet-stream"})
+
+        try {
+            FileSaver.saveAs(blob, "Leads_Template.xlsx")
+        } catch(e) {
+            console.log(e, wbOut)
+        }
+    }
+
     function getFileSuffix(){
         var timestamp = new Date()
         timestamp = $filter('date')(timestamp, "-dd-MM-yy-HHmm")
