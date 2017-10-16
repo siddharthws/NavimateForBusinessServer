@@ -1,29 +1,16 @@
 package navimateforbusiness.api
 
-import navimateforbusiness.ApiException
-import navimateforbusiness.Constants
-
-
 class UserApiInterceptor {
 
     def authService
 
     boolean before() {
-        auth()
-        true
+        return authService.authenticate(request.getHeader("X-Auth-Token"))
     }
 
     boolean after() { true }
 
     void afterView() {
         // no-op
-    }
-
-    private void auth() {
-        def accessToken = request.getHeader("X-Auth-Token")
-        if (!accessToken) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-        def user = authService.getUserFromAccessToken(accessToken)
     }
 }

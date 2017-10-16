@@ -41,7 +41,7 @@ class AuthService {
         // Login user
         redisService.set("accessToken:$accessToken", ([
                 userId   : id,
-                loginTime: new Date()
+                accessTime: System.currentTimeMillis()
         ] as JSON).toString())
 
         return accessToken
@@ -53,14 +53,48 @@ class AuthService {
 
     def getUserFromAccessToken(String accessToken) {
         def sessionDataStr = redisService.get("accessToken:$accessToken")
-        def sessionData
-        if (sessionDataStr) {
-            sessionData = JSON.parse(sessionDataStr)
-        }
-        if (!sessionData) {
+        def sessionData = JSON.parse(sessionDataStr)
+        def user = User.get(sessionData.userId)
+
+        user
+    }
+
+    boolean authenticate(String accessToken) {
+        // Validate Token
+        if (!accessToken) {
             throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
         }
-        return User.get(sessionData.userId)
+
+        // Check if access token is logged in
+        def sessionDataStr = redisService.get("accessToken:$accessToken")
+        def sessionData
+        if (!sessionDataStr) {
+            throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
+        } else {
+            sessionData = JSON.parse(sessionDataStr)
+            if (!sessionData) {
+                throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
+            }
+        }
+
+        // Check if user is valid
+        def user = User.get(sessionData.userId)
+        if (!user) {
+            throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Check if token is expired
+        def currentTime = System.currentTimeMillis()
+        def elapsedTime = currentTime - sessionData.accessTime
+        if (elapsedTime > (60 * 60 * 1000)) {
+            throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Update token access time
+        sessionData.accessTime = currentTime
+        redisService.set("accessToken:$accessToken", sessionData.toString())
+
+        true
     }
 
     private def getSalesTemplate(User manager) {
