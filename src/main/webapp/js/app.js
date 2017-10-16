@@ -66,6 +66,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         url: '/legal',
         templateUrl: '/static/views/legal.html'
     })
+    .state('help',{
+        url: '/help',
+        templateUrl: '/static/views/help.html',
+        controller: 'HelpCtrl'
+    })
       // Dashboard mappings
     .state('dashboard', {
         abstract: true,
