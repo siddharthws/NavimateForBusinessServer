@@ -17,6 +17,7 @@ class Task {
     Lead lead
     navimateforbusiness.TaskStatus status = TaskStatus.OPEN
     Form template
+    int period
     static hasMany = [
             forms:      Form,
             visits:     Visit
@@ -31,5 +32,6 @@ class Task {
     }
 
     static mapping = {
+        period defaultValue: 0
     }
 }

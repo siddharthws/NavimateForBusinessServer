@@ -32,6 +32,7 @@ class Marshaller {
                 id:         task.id,
                 lead:       task.lead.title,
                 rep:        task.rep.name,
+                period:     task.period,
                 status:     task.status.name()
         ]
     }

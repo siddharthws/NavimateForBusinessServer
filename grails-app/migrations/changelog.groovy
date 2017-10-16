@@ -8,4 +8,5 @@ databaseChangeLog = {
     include file: 'update-lead-manager-nullable.groovy'
     include file: 'update-lead-title-desc.groovy'
     include file: 'update-user-phone-nullable.groovy'
+    include file: 'add-column-task-period.groovy'
 }
