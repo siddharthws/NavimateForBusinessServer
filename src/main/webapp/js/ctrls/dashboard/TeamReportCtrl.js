@@ -134,15 +134,17 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
     // Init filter
     $scope.resetFilters()
 
-    $rootScope.showWaitingDialog("Please wait while we are fetching team report...")
-    // Get team report
-    $http({
-        method:     'GET',
-        url:        '/api/reports/team',
-        headers:    {
-            'X-Auth-Token':    $localStorage.accessToken
-        }
-    })
+    // Get Team report
+    $scope.init = function () {
+        $rootScope.showWaitingDialog("Please wait while we are fetching team report...")
+
+        $http({
+            method:     'GET',
+            url:        '/api/reports/team',
+            headers:    {
+                'X-Auth-Token':    $localStorage.accessToken
+            }
+        })
         .then(
             function (response) {
                 $rootScope.hideWaitingDialog()
@@ -155,6 +157,10 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
                 ToastService.toast("Unable to load report !!!")
             }
         )
+    }
+
+    $scope.init()
+
 
     // Hack to persist multiselect dropdowns after clicking on dropdown items
     $('body').on('click', function (e) {
