@@ -1,4 +1,4 @@
 
-app.controller('HelpCtrl', function($scope, $window, $state, DialogService){
+app.controller('HelpCtrl', function($scope){
 
-})
+});
