@@ -1,0 +1,19 @@
+<!-- HTML template for Live Tracking Dialog -->
+<md-dialog class="dialog-container h-100 w-100">
+    <div class="d-flex w-100 h-100">
+        <div class="w-25 d-flex flex-column">
+            <h4><b>Live Tracking</b></h4>
+            <div class="list-group p-1 mt-2 full-flex">
+            </div>
+            <div class="container-fluid d-flex justify-content-around flex-shrink-0">
+                <button class="btn full-flex" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+
+        <div class="map-box ml-2 full-flex" map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
+            <ng-map class="full-width full-height">
+            </ng-map>
+            <div class="map-box-shadow"></div>
+        </div>
+    </div>
+</md-dialog>

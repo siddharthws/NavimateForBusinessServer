@@ -84,4 +84,13 @@ app.service('DialogService', function($mdDialog) {
                             locals: { form: form, updateCb: updateCb }
         })
     }
+
+    // Launch Live Tracking Dialog
+    this.liveTracking = function () {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/LiveTracking.html',
+                            controller: 'LiveTrackingCtrl',
+                            clickOutsideToClose: true
+        })
+    }
 })
