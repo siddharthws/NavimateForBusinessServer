@@ -136,25 +136,48 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
 
     $rootScope.showWaitingDialog("Please wait while we are fetching team report...")
     // Get team report
-    $http({
-        method:     'GET',
-        url:        '/api/reports/team',
-        headers:    {
-            'X-Auth-Token':    $localStorage.accessToken
-        }
-    })
-        .then(
-            function (response) {
-                $rootScope.hideWaitingDialog()
-                $scope.report = response.data
-                $scope.filteredReport = $scope.report
-            },
-            function (error) {
-                $rootScope.hideWaitingDialog()
-                // Show Error Toast
-                ToastService.toast("Unable to load report !!!")
+        $http({
+            method:     'GET',
+            url:        '/api/reports/team',
+            headers:    {
+                'X-Auth-Token':    $localStorage.accessToken
             }
-        )
+        })
+            .then(
+                function (response) {
+                    $rootScope.hideWaitingDialog()
+                    $scope.report = response.data
+                    $scope.filteredReport = $scope.report
+                },
+                function (error) {
+                    $rootScope.hideWaitingDialog()
+                    // Show Error Toast
+                    ToastService.toast("Unable to load report !!!")
+                }
+            )
+    //Sync Team Report Code
+    $scope.init = function () {
+        $http({
+            method:     'GET',
+            url:        '/api/reports/team',
+            headers:    {
+                'X-Auth-Token':    $localStorage.accessToken
+            }
+        })
+            .then(
+                function (response) {
+                    $rootScope.hideWaitingDialog()
+                    $scope.report = response.data
+                    $scope.filteredReport = $scope.report
+                },
+                function (error) {
+                    $rootScope.hideWaitingDialog()
+                    // Show Error Toast
+                    ToastService.toast("Unable to load report !!!")
+                }
+            )
+    }
+
 
     // Hack to persist multiselect dropdowns after clicking on dropdown items
     $('body').on('click', function (e) {
