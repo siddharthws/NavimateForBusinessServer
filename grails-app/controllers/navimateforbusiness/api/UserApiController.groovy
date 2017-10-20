@@ -215,6 +215,26 @@ class UserApiController {
         render resp as JSON
     }
 
+    def stopTaskRenewal() {
+        // Get Tasks from JSON
+        JSONArray tasksJson = request.JSON.tasks
+        tasksJson.each {taskJson ->
+            // Validate Task
+            Task task = Task.findById(taskJson.id)
+            if (!task) {
+                throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Update Task Period to 0
+            task.period = 0
+            task.save(flush: true, failOnError: true)
+        }
+
+        // Send back response
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     def closeTasks() {
         // Get Reps from JSON
         def fcms = []
