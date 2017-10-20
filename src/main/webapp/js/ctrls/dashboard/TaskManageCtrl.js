@@ -88,7 +88,8 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
             data: {
                 tasks : $scope.selection
             }
-        }).then(
+        })
+        .then(
             function (response) {
                 $rootScope.hideWaitingDialog()
                 // Show Toast
@@ -105,5 +106,42 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                 initTasks()
             })
 
+    }
+    
+    $scope.stopRenewal = function () {
+        //Launch confirm Dialog box
+        DialogService.confirm("Are you sure you want to stop renewal for " + $scope.selection.length + " tasks ?",
+            stopRenewalCb)
+    }
+
+    function stopRenewalCb() {
+        //http call to stop task renewal
+        $rootScope.showWaitingDialog("Stopping renewal period...")
+        $http({
+            method: 'POST',
+            url:    '/api/users/task/stoprenew',
+            headers: {
+                'X-Auth-Token': $localStorage.accessToken
+            },
+            data: {
+                tasks : $scope.selection
+            }
+        })
+        .then(
+            function (response) {
+                $rootScope.hideWaitingDialog()
+                // Show Toast
+                ToastService.toast("renewal period stopped...")
+
+                // re-initialize tasks
+                initTasks()
+            },
+            function (error) {
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Failed to stop renewal!!!")
+
+                // re-initialize tasks
+                initTasks()
+            })
     }
 })
