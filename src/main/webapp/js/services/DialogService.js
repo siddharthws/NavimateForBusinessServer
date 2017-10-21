@@ -90,7 +90,7 @@ app.service('DialogService', function($mdDialog) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/LiveTracking.html',
                             controller: 'LiveTrackingCtrl',
-                            clickOutsideToClose: true
+                            clickOutsideToClose: false
         })
     }
 })
