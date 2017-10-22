@@ -39,7 +39,12 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
         $scope.cancel = function () {
         $mdDialog.hide()
     }
+
     /* ------------------------------- Local APIs -----------------------------------*/
+    function generateOtp(){
+        otp_gen= Math.floor(100000 + Math.random() * 900000)
+    }
+
     function validateOtp() {
         if (!$scope.otp) {
             // Raise error flag
@@ -51,10 +56,22 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
             return false
         }
 
+        //Check if OTP matched or not
+        if ($scope.otp!=otp_gen) {
+            // Raise error flag
+            $scope.bShowError = true
+
+            // Show error toast
+            ToastService.toast("Invalid OTP Entered")
+
+            return false
+        }
+
         return true
     }
 
     /* ------------------------------- INIT -----------------------------------*/
     $scope.bShowError = false;
-
+    var otp_gen
+    generateOtp()
 })

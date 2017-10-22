@@ -6,7 +6,7 @@
     </div>
 
     <form class="d-flex flex-column" ng-submit="emailVerify()">
-        <input class="input-underlined" ng-model="otp" type="number" placeholder="Enter OTP Sent to Email ID..."
+        <input class="input-underlined" ng-model="otp" type="number" maxlength="6" placeholder="Enter OTP"
                ng-class="{'has-error': bShowError && !otp}">
         <input type="submit" class="hidden-element"/>
     </form>
