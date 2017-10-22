@@ -3,6 +3,15 @@
     color: #ffffff;
 }
 
+.a-orange{
+    text-decoration: none !important;
+    color: orange;
+}
+
+.a-orange:hover{
+    color: #37bcf2;
+}
+
 .a-white:hover
 {
     color:orange;

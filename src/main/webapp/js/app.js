@@ -106,17 +106,9 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         url: '/lead-about',
         templateUrl: '/static/views/help/lead/about.html',
     })
-    .state('help.lead-add',{
-        url: '/lead-add',
-        templateUrl: '/static/views/help/lead/add.html',
-    })
-    .state('help.lead-edit',{
-        url: '/lead-edit',
-        templateUrl: '/static/views/help/lead/edit.html',
-    })
-    .state('help.lead-remove',{
-        url: '/lead-remove',
-        templateUrl: '/static/views/help/lead/remove.html',
+    .state('help.lead-manage',{
+        url: '/lead-manage',
+        templateUrl: '/static/views/help/lead/manage.html',
     })
     .state('help.register-fieldrep',{
         url: '/register-fieldrep',
@@ -150,25 +142,17 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         url: '/task-about',
         templateUrl: '/static/views/help/task/about.html',
     })
-    .state('help.task-close',{
-        url: '/task-close',
-        templateUrl: '/static/views/help/task/close.html',
-    })
-    .state('help.task-create',{
-        url: '/task-create',
-        templateUrl: '/static/views/help/task/create.html',
+    .state('help.task-manage',{
+        url: '/task-manage',
+        templateUrl: '/static/views/help/task/manage.html',
     })
     .state('help.team-about',{
         url: '/team-about',
         templateUrl: '/static/views/help/team/about.html',
     })
-    .state('help.team-add',{
-        url: '/team-add',
-        templateUrl: '/static/views/help/team/add.html',
-    })
-    .state('help.team-remove',{
-        url: '/team-remove',
-        templateUrl: '/static/views/help/team/remove.html',
+    .state('help.team-manage',{
+        url: '/team-manage',
+        templateUrl: '/static/views/help/team/manage.html',
     })
       // Dashboard mappings
     .state('dashboard', {
