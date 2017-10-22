@@ -8,7 +8,7 @@
                      class="list-group-item list-group-item-action">
                     <div class="d-flex align-items-center">
                         <img src="" class=" live-status-default m-2"
-                             ng-class="{'live-status-active':rep.trackData.status}" >
+                             ng-class="{'live-status-active':rep.trackData.status}">
                         <span class="full-flex">
                             {{rep.name}}
                         </span>
@@ -21,7 +21,10 @@
         </div>
 
         <div class="map-box ml-2 full-flex" map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
-            <ng-map class="full-width full-height">
+            <ng-map class="full-width full-height"
+                    center="{{mapCenter}}" zoom="{{mapZoom}}" map-initialized="mapInitialized(map)">
+                <marker ng-repeat="rep in team" icon="{{getMarkerIcon(rep)}}" title="{{rep.name}}"
+                        position="[{{rep.trackData.location.lat}}, {{rep.trackData.location.lng}}]"/>
             </ng-map>
             <div class="map-box-shadow"></div>
         </div>

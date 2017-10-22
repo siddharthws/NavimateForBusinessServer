@@ -3,13 +3,11 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, team) {
+app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, $interval, team) {
 
-    var liveTrack
-    $scope.team =  team
     $scope.cancel = function () {
         $mdDialog.hide()
-        clearInterval(liveTrack)
+        $interval.cancel(liveTrack)
     }
 
     $scope.temp = function () {
@@ -19,23 +17,18 @@ app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, team) {
                 fakeData = function(){
                     $scope.team[0].trackData.location.lat  +=0.2
                     $scope.team[0].trackData.location.lng  +=0.2
-                if ($scope.team[0].trackData.location.lat == 25 || $scope.team[0].trackData.location.lng == 80)
-                {
-                    $scope.team[0].trackData.location.lat =20 ,$scope.team[0].trackData.location.lng=75;
-                }
-                else
-                {
+                    $scope.team[1].trackData.location.lat  +=0.2
+                    $scope.team[1].trackData.location.lng  +=0.2
+
                     console.log($scope.team);
-                }
-
-
             };
-            liveTrack =  setInterval(fakeData, 1000);
+            liveTrack =  $interval(fakeData, 1000);
             fakeData();
     }
 
     function initTrackData(){
-        var trackData= {
+        for(var i = 0; i<$scope.team.length ;i++){
+            var trackData= {
             status: false,
             location: {
                 lat: 20.0,
@@ -44,11 +37,39 @@ app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, team) {
             speed: 0,
             lastUpdated : 0
         }
-
-        for(var i = 0; i<$scope.team.length ;i++){
             $scope.team[i].trackData = trackData
         }
     }
 
+    // Map Init Callback from ngMap
+    $scope.mapInitialized = function (map) {
+        // Set map object
+        googleMap = map
+
+        // Trigger resize event (Hack since map is not loaded correctly second time)
+        google.maps.event.trigger(googleMap, 'resize')
+
+        // Run angular digest cycle since this is async callback
+        $scope.$apply()
+    }
+
+    // API to get marker icon
+    $scope.getMarkerIcon = function (rep) {
+        // Blue marker for selected rep
+            return {
+                url: "/static/images/marker_selected.png",
+                scaledSize: [40, 40]
+            }
+    }
+    /* ------------------------------- INIT -----------------------------------*/
+    // Init objects
+    var liveTrack
+    $scope.selectedRep = {}
+    $scope.team =  team
+    $scope.mapCenter = [21, 75]
+    $scope.mapZoom   = 4
+    var googleMap = null
+
+    // start intializing fakedata
     $scope.temp()
 })
