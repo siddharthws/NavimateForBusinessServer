@@ -13,28 +13,44 @@ app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, team) {
     }
 
     $scope.temp = function () {
-            var repData= {
-                status: 'false',
-                location: {
-                    lat: 20.0,
-                    lng: 75.0
-                },
-                speed: 0,
-                lastUpdated : 0
-            }
+
+               var team = addTrackData()
+
                 fakeData = function(){
-                repData.location.lat  +=0.2
-                repData.location.lng  +=0.2
-                if (repData.location.lat == 25 || repData.location.lng == 80)
+                team[0].trackData.location.lat  +=0.2
+                team[0].trackData.location.lng  +=0.2
+                if (team[0].trackData.location.lat == 25 || team[0].trackData.location.lng == 80)
                 {
-                    repData.location.lat =20 ,repData.location.lng=75;
+                    team[0].trackData.location.lat =20 ,team[0].trackData.location.lng=75;
                 }
                 else
                 {
-                    console.log(repData);
+                    console.log(team);
                 }
+
+
             };
             liveTrack =  setInterval(fakeData, 1000);
             fakeData();
     }
+
+    function addTrackData(){
+        var trackData= {
+            status: 'false',
+            location: {
+                lat: 20.0,
+                lng: 75.0
+            },
+            speed: 0,
+            lastUpdated : 0
+        }
+
+        for(var i = 0; i<team.length ;i++){
+            team[i].trackData = trackData
+        }
+
+        return team
+
+    }
+
 })
