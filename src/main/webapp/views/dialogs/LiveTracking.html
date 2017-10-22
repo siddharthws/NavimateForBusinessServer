@@ -4,10 +4,19 @@
         <div class="w-25 d-flex flex-column">
             <h4><b>Live Tracking</b></h4>
             <div class="list-group p-1 mt-2 full-flex">
+                <div href ng-repeat="rep in team"
+                     class="list-group-item list-group-item-action">
+                    <div class="d-flex align-items-center">
+                        <img src="" class=" live-status-default m-2"
+                             ng-class="{'live-status-active':rep.trackData.status}" >
+                        <span class="full-flex">
+                            {{rep.name}}
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="container-fluid d-flex justify-content-around flex-shrink-0">
                 <button class="btn full-flex" ng-click="cancel()">Cancel</button>
-                <button class="btn full-flex" ng-click="temp()">Fake Data</button>
             </div>
         </div>
 

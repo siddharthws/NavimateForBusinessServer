@@ -14,18 +14,18 @@ app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, team) {
 
     $scope.temp = function () {
 
-               var team = addTrackData()
+                 initTrackData()
 
                 fakeData = function(){
-                team[0].trackData.location.lat  +=0.2
-                team[0].trackData.location.lng  +=0.2
-                if (team[0].trackData.location.lat == 25 || team[0].trackData.location.lng == 80)
+                    $scope.team[0].trackData.location.lat  +=0.2
+                    $scope.team[0].trackData.location.lng  +=0.2
+                if ($scope.team[0].trackData.location.lat == 25 || $scope.team[0].trackData.location.lng == 80)
                 {
-                    team[0].trackData.location.lat =20 ,team[0].trackData.location.lng=75;
+                    $scope.team[0].trackData.location.lat =20 ,$scope.team[0].trackData.location.lng=75;
                 }
                 else
                 {
-                    console.log(team);
+                    console.log($scope.team);
                 }
 
 
@@ -34,9 +34,9 @@ app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, team) {
             fakeData();
     }
 
-    function addTrackData(){
+    function initTrackData(){
         var trackData= {
-            status: 'false',
+            status: false,
             location: {
                 lat: 20.0,
                 lng: 75.0
@@ -45,12 +45,10 @@ app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, team) {
             lastUpdated : 0
         }
 
-        for(var i = 0; i<team.length ;i++){
-            team[i].trackData = trackData
+        for(var i = 0; i<$scope.team.length ;i++){
+            $scope.team[i].trackData = trackData
         }
-
-        return team
-
     }
 
+    $scope.temp()
 })
