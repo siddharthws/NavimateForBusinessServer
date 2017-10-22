@@ -10,3 +10,14 @@
     height: 70px;
     width: auto;
 }
+
+.live-status-default {
+    height: 16px;
+    width: 16px;
+    background-image: url("/static/images/red.png");
+    background-repeat: no-repeat;
+}
+
+.live-status-active{
+    background-image: url("/static/images/green.png");
+}
