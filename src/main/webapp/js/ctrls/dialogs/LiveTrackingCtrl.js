@@ -15,10 +15,10 @@ app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, $interval, team)
                  initTrackData()
 
                 fakeData = function(){
-                    $scope.team[0].trackData.location.lat  +=0.2
-                    $scope.team[0].trackData.location.lng  +=0.2
-                    $scope.team[1].trackData.location.lat  +=0.2
-                    $scope.team[1].trackData.location.lng  +=0.2
+                    $scope.team[0].trackData.location.lat  +=0.002
+                    $scope.team[0].trackData.location.lng  +=0.002
+                    $scope.team[1].trackData.location.lat  +=0.002
+                    $scope.team[1].trackData.location.lng  +=0.002
 
                     console.log($scope.team);
             };
@@ -46,7 +46,13 @@ app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, $interval, team)
         // Set map object
         googleMap = map
 
-        // Trigger resize event (Hack since map is not loaded correctly second time)
+        // Center map on added leads
+        var bounds = new google.maps.LatLngBounds()
+        $scope.team.forEach(function (rep) {
+            bounds.extend(new google.maps.LatLng(rep.trackData.location.lat,rep.trackData.location.lng))
+        })
+        googleMap.fitBounds(bounds)
+    // Trigger resize event (Hack since map is not loaded correctly second time)
         google.maps.event.trigger(googleMap, 'resize')
 
         // Run angular digest cycle since this is async callback
