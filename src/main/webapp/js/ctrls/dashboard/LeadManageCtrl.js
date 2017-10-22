@@ -44,10 +44,6 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
         DialogService.leadEditor(null, init)
     }
 
-    $scope.track = function() {
-        DialogService.liveTracking(null, init)
-    }
-
     // Single List Item Selection Toggle
     $scope.toggleSelection = function (lead) {
         var idx = $scope.selection.indexOf(lead)

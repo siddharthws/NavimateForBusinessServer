@@ -86,11 +86,12 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Live Tracking Dialog
-    this.liveTracking = function () {
+    this.liveTracking = function (team) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/LiveTracking.html',
                             controller: 'LiveTrackingCtrl',
-                            clickOutsideToClose: false
+                            clickOutsideToClose: false,
+                            locals: { team: team }
         })
     }
 })

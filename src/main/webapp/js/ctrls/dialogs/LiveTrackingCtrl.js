@@ -3,17 +3,17 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LiveTrackingCtrl', function ($scope , $mdDialog) {
+app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, team) {
 
     var liveTrack
-
+    $scope.team =  team
     $scope.cancel = function () {
         $mdDialog.hide()
         clearInterval(liveTrack)
     }
 
-    $scope.lead = function () {
-            var leadData= {
+    $scope.temp = function () {
+            var repData= {
                 status: 'false',
                 location: {
                     lat: 20.0,
@@ -23,15 +23,15 @@ app.controller('LiveTrackingCtrl', function ($scope , $mdDialog) {
                 lastUpdated : 0
             }
                 fakeData = function(){
-                leadData.location.lat  +=0.2
-                leadData.location.lng  +=0.2
-                if (leadData.location.lat == 25 || leadData.location.lng == 80)
+                repData.location.lat  +=0.2
+                repData.location.lng  +=0.2
+                if (repData.location.lat == 25 || repData.location.lng == 80)
                 {
-                    leadData.location.lat =20 ,leadData.location.lng=75;
+                    repData.location.lat =20 ,repData.location.lng=75;
                 }
                 else
                 {
-                    console.log(leadData);
+                    console.log(repData);
                 }
             };
             liveTrack =  setInterval(fakeData, 1000);

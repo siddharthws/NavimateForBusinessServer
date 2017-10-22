@@ -8,6 +8,7 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     // Set menu and option
     $scope.selection.item       = MENU_ITEMS[MENU_ITEM_TEAM]
     $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
+    $scope.team = []
 
     $scope.init = function ()
     {
@@ -41,6 +42,10 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     /* ------------------------------- APIs -----------------------------------*/
     $scope.add = function () {
         DialogService.addRep($scope.init)
+    }
+
+    $scope.track = function() {
+        DialogService.liveTracking($scope.team, $scope.init)
     }
 
     // Single List Item Selection Toggle
