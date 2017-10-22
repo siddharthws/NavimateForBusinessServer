@@ -94,4 +94,13 @@ app.service('DialogService', function($mdDialog) {
                             locals: { team: team }
         })
     }
+
+    // Launch Email Verify Dialog
+    this.emailVerify = function () {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/EmailVerify.html',
+                            controller: 'EmailVerifyCtrl',
+                            clickOutsideToClose: false
+        })
+    }
 })

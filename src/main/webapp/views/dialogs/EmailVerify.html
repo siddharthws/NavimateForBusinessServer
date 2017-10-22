@@ -1,0 +1,18 @@
+<!-- HTML template for Register Dialog -->
+<md-dialog class="dialog-container w-25">
+    <div class="container-fluid">
+        <h4><b>Email Verify</b></h4>
+        <hr>
+    </div>
+
+    <form class="d-flex flex-column" ng-submit="emailVerify()">
+        <input class="input-underlined" ng-model="otp" type="number" placeholder="Enter OTP Sent to Email ID..."
+               ng-class="{'has-error': bShowError && !otp}">
+        <input type="submit" class="hidden-element"/>
+    </form>
+
+    <div class="container-fluid d-flex justify-content-end">
+        <button class="btn btn-primary" ng-click="emailVerify()">Submit</button>
+        <button class="btn" ng-click="cancel()">Cancel</button>
+    </div>
+</md-dialog>
