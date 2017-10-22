@@ -12,6 +12,7 @@ class UrlMappings {
         "/api/auth/register"        (controller: "AuthApi") { action = [POST: "register"] }
         "/api/auth/login"           (controller: "AuthApi") { action = [POST: "login"] }
         "/api/auth/logout"          (controller: "AuthApi") { action = [GET: "logout"] }
+        "/api/auth/email"           (controller: "AuthApi") { action = [POST: "email"] }
 
         // User Info APIs
         "/api/users/team"           (controller: "UserApi") {action = [GET: "getTeam",      POST: "addRep"]}

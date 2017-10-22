@@ -56,4 +56,13 @@ class AuthApiController {
         def resp = [success: true]
         render resp as JSON
     }
+
+    def email() {
+        def otp = request.JSON.otp
+
+        //throw new ApiException("Test Failure", Constants.HttpCodes.BAD_REQUEST)
+
+        def resp = [success: true]
+        render resp as JSON
+    }
 }
