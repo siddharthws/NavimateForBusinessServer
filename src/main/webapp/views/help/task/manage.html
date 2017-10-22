@@ -1,1 +1,36 @@
-<div>task management close task</div>
+<div class="d-flex flex-column">
+    <div class="w-75 m-auto">
+        <h2 class="text-center topic p-3 m-3">Managing Tasks</h2>
+        <ul class="text-left m-3">
+            <li>You can create new tasks, close old tasks and track the status of task using Navimate dashboard.</li>
+            <li>To create a task
+                <ul class="text-left m-3">
+                    <li>Go to
+                        <a class="a-orange" ui-sref="dashboard.tasks-manage">
+                            <strong>Task Management</strong>
+                        </a>
+                    </li>
+                    <li>Click on Create Button</li>
+                    <div class="help-box d-flex m-3">
+                        <button class="btn btn-primary" ui-sref="dashboard.tasks-manage">Create Tasks</button>
+                    </div>
+                    <li>Create tasks by assigning Rep / Lead / Template using dropdowns. You can add multiple tasks at once using the Add Tasks Button on top. Click on the create button at bottom of dialog to create tasks.</li>
+                    <div class="help-box d-flex m-3">
+                        <img class="help-image-landscape img-thumbnail" src="/static/images/dialog_task_create.png">
+                    </div>
+                </ul>
+            </li>
+            <li>To close a Task
+                <ul style="list-style-type:square" class="text-left m-3">
+                    <li>Go to
+                        <a class="a-orange" ui-sref="dashboard.tasks-manage">
+                            <strong>Task Management</strong>
+                        </a>
+                    </li>
+                    <li>Select the tasks you want to close using the checkboxes on left.</li>
+                    <li>Select Close from Actions Dropdown</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
