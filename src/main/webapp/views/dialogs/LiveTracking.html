@@ -5,8 +5,9 @@
             <h4><b>Live Tracking</b></h4>
             <div class="list-group p-1 mt-2 full-flex">
                 <div href ng-repeat="rep in team"
-                     class="list-group-item list-group-item-action">
-                    <div class="d-flex align-items-center">
+                     class="list-group-item list-group-item-action"
+                     ng-click="listItemClick(rep)">
+                    <div class="d-flex align-items-center" >
                         <img src="" class=" live-status-default m-2"
                              ng-class="{'live-status-active':rep.trackData.status}">
                         <span class="full-flex">

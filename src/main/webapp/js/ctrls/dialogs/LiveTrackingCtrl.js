@@ -54,18 +54,27 @@ app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, $interval, team)
         googleMap.fitBounds(bounds)
     // Trigger resize event (Hack since map is not loaded correctly second time)
         google.maps.event.trigger(googleMap, 'resize')
-
         // Run angular digest cycle since this is async callback
         $scope.$apply()
     }
 
-    // API to get marker icon
+        // API to get marker icon
     $scope.getMarkerIcon = function (rep) {
         // Blue marker for selected rep
             return {
                 url: "/static/images/marker_selected.png",
                 scaledSize: [40, 40]
             }
+    }
+
+    $scope.listItemClick = function (rep) {
+        // Select this lead
+        $scope.selectedRep = rep
+
+        // Center map on this lead
+        if (googleMap){
+            googleMap.panTo(new google.maps.LatLng(rep.trackData.location.lat, rep.trackData.location.lng))
+        }
     }
     /* ------------------------------- INIT -----------------------------------*/
     // Init objects
