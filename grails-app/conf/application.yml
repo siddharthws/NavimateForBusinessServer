@@ -113,6 +113,16 @@ environments:
                 timeout: 2000 # default in milliseconds
                 port: 6379
                 host: localhost
+            mail:
+                host: "smtp.gmail.com"
+                port: 465
+                username: "navm8dev@gmail.com"
+                password: "navm8devpass"
+                props:
+                    mail.smtp.auth: "true"
+                    mail.smtp.socketFactory.port: "465"
+                    mail.smtp.socketFactory.class: "javax.net.ssl.SSLSocketFactory"
+                    mail.smtp.socketFactory.fallback: "false"
     test:
         dataSource:
             url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
@@ -139,3 +149,6 @@ environments:
                 testOnReturn: false
                 jdbcInterceptors: ConnectionState
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+            mail:
+                username: "sales@navimateapp.com"
+                password: "${NAVIMATE_EMAIL_PASSWORD}"
