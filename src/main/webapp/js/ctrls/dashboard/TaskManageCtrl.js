@@ -9,10 +9,10 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     $scope.selection.item       = MENU_ITEMS[MENU_ITEM_TASKS]
     $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
 
-    //Re-initialize selection to empty
-    $scope.selection = []
-
     function initTasks () {
+        //Re-initialize selection to empty
+        $scope.selection = []
+
         $rootScope.showWaitingDialog("Please wait while we are fetching tasks...")
         $http({
             method:     'GET',
@@ -37,7 +37,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     /*-------------------------------- APIs --------------------------------*/
     $scope.add = function () {
         // Launch Task Creator dialog
-        DialogService.taskCreator(initTasks)
+        DialogService.taskCreator([{}], initTasks)
     }
 
     // Single List Item Selection Toggle
@@ -97,6 +97,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
 
                 // re-initialize tasks
                 initTasks()
+
             },
             function (error) {
                 $rootScope.hideWaitingDialog()

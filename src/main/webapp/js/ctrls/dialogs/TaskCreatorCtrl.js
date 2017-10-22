@@ -3,10 +3,10 @@
  */
 
 // Controller for Alert Dialog
-app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, taskAddedCb) {
+app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, taskAddedCb, tasks) {
 
     /* ----------------------------- INIT --------------------------------*/
-    $scope.tasks = [{}]
+    $scope.tasks = tasks
     $scope.leads = []
     $scope.team = []
     $scope.formTemplates = []
