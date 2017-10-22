@@ -4,15 +4,18 @@
         <div class="w-25 d-flex flex-column">
             <h4><b>Live Tracking</b></h4>
             <div class="list-group p-1 mt-2 full-flex">
-                <div href ng-repeat="rep in team"
-                     class="list-group-item list-group-item-action"
-                     ng-click="listItemClick(rep)">
-                    <div class="d-flex align-items-center" >
-                        <img src="" class=" live-status-default m-2"
-                             ng-class="{'live-status-active':rep.trackData.status}">
-                        <span class="full-flex">
-                            {{rep.name}}
-                        </span>
+                <div href ng-repeat="rep in team" ng-click="listItemClick(rep)">
+                    <div class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center" data-toggle="collapse" data-target="#{{'collapseOne' + $index}}">
+                            <img src="" class=" live-status-default m-2" ng-class="{'live-status-active':rep.trackData.status}" >
+                             <span class="full-flex">
+                                {{rep.name}}
+                             </span>
+                        </div>
+                    </div>
+                    <div id="{{'collapseOne' + $index}}" class="collapse text-center">
+                        <p><a class="a-white" >Speed: {{rep.trackData.speed}} km/hr</a></p>
+                        <p><a class="a-white" >Last Updated: {{rep.trackData.lastUpdated}} seconds ago</a></p>
                     </div>
                 </div>
             </div>
