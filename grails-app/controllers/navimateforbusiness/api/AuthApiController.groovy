@@ -10,6 +10,7 @@ import navimateforbusiness.User
 class AuthApiController {
 
     def authService
+    def emailService
 
     def register() {
         def input = request.JSON
@@ -58,9 +59,17 @@ class AuthApiController {
     }
 
     def email() {
+        // Check Params
         def otp = request.JSON.otp
+        def email = request.JSON.email
+        if (!otp || !email) {
+            throw new ApiException("Email / OTP not found...", Constants.HttpCodes.BAD_REQUEST)
+        }
 
-        //throw new ApiException("Test Failure", Constants.HttpCodes.BAD_REQUEST)
+        // Send Mail
+        def message = otp + " is your OTP for navimate verification."
+        def subject = "Navimate OTP Verification"
+        emailService.sendMail(email, subject, message)
 
         def resp = [success: true]
         render resp as JSON
