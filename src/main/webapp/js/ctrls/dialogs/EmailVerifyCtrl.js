@@ -11,7 +11,8 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
         // Validate OTP
         if (validateOtp()) {
             ToastService.toast("OTP Received...Checking")
-            /*
+
+            //Register the account as OTP is validated
             $rootScope.showWaitingDialog("Please wait while you are being registered...")
 
             AuthService.register($scope.name, $scope.email, $scope.password)
@@ -31,9 +32,8 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
                         // Show error toast
                         ToastService.toast("Unable to register...")
                     }
-                )*/
-
-        }
+                )
+            }
     }
 
         $scope.cancel = function () {
@@ -43,6 +43,23 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
     /* ------------------------------- Local APIs -----------------------------------*/
     function generateOtp(){
         otp_gen= Math.floor(100000 + Math.random() * 900000)
+        $rootScope.showWaitingDialog("Please wait while OTP is sent to mail ID")
+
+        AuthService.emailOtp(otp_gen)
+            .then(
+                function (response) {
+                    //Email Successfully sent
+                    ToastService.toast("Email Sent Successfully.")
+                    //Hide waiting dialog
+                    $rootScope.hideWaitingDialog()
+                },
+                function (error) {
+                    // Show error toast
+                    ToastService.toast("Error While Sending OTP to Email.")
+                    //Hide waiting dialog
+                    $rootScope.hideWaitingDialog()
+                }
+            )
     }
 
     function validateOtp() {
