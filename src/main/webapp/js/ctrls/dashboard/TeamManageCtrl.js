@@ -118,4 +118,15 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
             }
         )
     }
+
+    $scope.createtasks = function () {
+        var task = []
+        $scope.selection.forEach(function (rep)
+        {
+            task.push({
+                rep: rep
+            })
+        })
+        DialogService.taskCreator(task)
+    }
 })

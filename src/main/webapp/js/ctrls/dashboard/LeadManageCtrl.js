@@ -117,4 +117,15 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
         //Launch Leads-Editor dialog
         DialogService.leadEditor($scope.selection)
     }
+
+    $scope.createtasks = function () {
+        var task = []
+        $scope.selection.forEach(function (lead)
+        {
+            task.push({
+                lead: lead
+            })
+        })
+        DialogService.taskCreator(task)
+    }
 })
