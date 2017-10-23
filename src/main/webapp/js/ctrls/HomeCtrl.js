@@ -9,7 +9,7 @@ app.controller('HomeCtrl', function ($scope, $window, $state, DialogService) {
     }
 
     $scope.register = function () {
-        DialogService.register()
+        DialogService.register("", "", "")
     }
 
     $scope.explore=function(){

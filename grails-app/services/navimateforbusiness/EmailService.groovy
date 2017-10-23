@@ -5,11 +5,11 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class EmailService {
 
-    def sendMail(String address, String subject, String message) {
+    def sendMail(String address, String sub, String message) {
         // Send mail
         sendMail {
             to address
-            subject subject
+            subject sub
             text message
         }
     }

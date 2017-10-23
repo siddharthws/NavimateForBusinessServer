@@ -2,7 +2,7 @@
  * Created by Siddharth on 01-09-2017.
  */
 
-app.controller('RegisterCtrl', function ($scope, $rootScope, $mdDialog, AuthService, DialogService, ToastService) {
+app.controller('RegisterCtrl', function ($scope, $rootScope, $mdDialog, AuthService, DialogService, ToastService, name, email, password) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     // Button Click APIs
@@ -10,7 +10,9 @@ app.controller('RegisterCtrl', function ($scope, $rootScope, $mdDialog, AuthServ
 
         // Validate credentials
         if (validate()) {
-            DialogService.emailVerify()
+            DialogService.emailVerify(  $scope.name,
+                                        $scope.email,
+                                        $scope.password)
         }
     }
 
@@ -42,5 +44,8 @@ app.controller('RegisterCtrl', function ($scope, $rootScope, $mdDialog, AuthServ
 
     /* ------------------------------- INIT -----------------------------------*/
     $scope.bShowError = false;
+    $scope.name = name
+    $scope.email = email
+    $scope.password = password
 
 })
