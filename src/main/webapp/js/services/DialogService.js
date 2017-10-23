@@ -37,11 +37,16 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Register Dialog
-    this.register = function () {
+    this.register = function (name, email, password) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/Register.html',
                             controller: 'RegisterCtrl',
-                            clickOutsideToClose: true
+                            clickOutsideToClose: true,
+                            locals: {
+                                name: name,
+                                email: email,
+                                password: password,
+                            }
         })
     }
 
@@ -96,11 +101,16 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Email Verify Dialog
-    this.emailVerify = function () {
+    this.emailVerify = function (name, email, passowrd) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/EmailVerify.html',
                             controller: 'EmailVerifyCtrl',
-                            clickOutsideToClose: false
+                            clickOutsideToClose: false,
+                            locals: {
+                                name: name,
+                                email: email,
+                                password: passowrd,
+                            }
         })
     }
 })

@@ -2,7 +2,7 @@
  * Created by Siddharth on 01-09-2017.
  */
 
-app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthService, DialogService, ToastService) {
+app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthService, DialogService, ToastService, name, email, password) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     // Button Click APIs
@@ -10,12 +10,10 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
 
         // Validate OTP
         if (validateOtp()) {
-            ToastService.toast("OTP Received...Checking")
-
             //Register the account as OTP is validated
             $rootScope.showWaitingDialog("Please wait while you are being registered...")
 
-            AuthService.register($scope.name, $scope.email, $scope.password)
+            AuthService.register(name, email, password)
                 .then(
                     function (response) {
                         $rootScope.hideWaitingDialog()
@@ -23,6 +21,7 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
                         // Close this dialog
                         $mdDialog.hide()
                         ToastService.toast("Registered successfully...")
+
                         // Open Login Dialog
                         DialogService.login()
                     },
@@ -31,6 +30,9 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
 
                         // Show error toast
                         ToastService.toast("Unable to register...")
+
+                        // Re-open Register dialog
+                        DialogService.register(name, email, password)
                     }
                 )
             }
@@ -45,19 +47,24 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
         otp_gen= Math.floor(100000 + Math.random() * 900000)
         $rootScope.showWaitingDialog("Please wait while OTP is sent to mail ID")
 
-        AuthService.emailOtp(otp_gen)
+        AuthService.emailOtp(otp_gen, email)
             .then(
                 function (response) {
                     //Email Successfully sent
                     ToastService.toast("Email Sent Successfully.")
+
                     //Hide waiting dialog
                     $rootScope.hideWaitingDialog()
                 },
                 function (error) {
                     // Show error toast
                     ToastService.toast("Error While Sending OTP to Email.")
+
                     //Hide waiting dialog
                     $rootScope.hideWaitingDialog()
+
+                    // Re-open Register dialog
+                    DialogService.register(name, email, password)
                 }
             )
     }

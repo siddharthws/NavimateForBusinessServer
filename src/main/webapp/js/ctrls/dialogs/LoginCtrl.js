@@ -38,7 +38,7 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $lo
 
     $scope.register = function () {
         // Launch register dialog
-        DialogService.register()
+        DialogService.register("", "", "")
     }
 
     $scope.cancel = function () {

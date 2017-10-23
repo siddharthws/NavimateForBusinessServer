@@ -40,7 +40,7 @@ app.service('AuthService', function($http, $localStorage) {
         })
     }
 
-    this.emailOtp = function (otp_gen)
+    this.emailOtp = function (otp, email)
     {
         return $http({
             method:     'POST',
@@ -49,7 +49,8 @@ app.service('AuthService', function($http, $localStorage) {
                 'X-Auth-Token':    $localStorage.accessToken
             },
             data:       {
-                otp:          otp_gen
+                otp:          otp,
+                email:        email
             }
         })
     }
