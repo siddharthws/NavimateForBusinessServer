@@ -8,106 +8,165 @@ import org.grails.web.json.JSONArray
 class ReportService {
 
     def getTeamReport(User manager) {
-        def report = []
+        // Prepare list of columns
+        def columns = [
+                [type: "selection", title: "Rep"],
+                [type: "selection", title: "Lead"]
+        ]
+        def formColumns = getFormColumns(manager)
+        columns += formColumns
+        columns.push([type: "date", title: "Date"])
 
-        // Get reps
+        // Iterate though each rep to get list of values
+        def values = []
         List<User> team = User.findAllByManager(manager)
-        team.each {member ->
-            // Get all tasks for this rep
-            List<Task> tasks = Task.findAllByRep(member)
-            tasks.each {task ->
-                // Add an entry in report for each form in this task
-                task.forms.each {form ->
-                    JSONArray data = JSON.parse(form.data)
+        team.each {rep ->
+            // Get all tasks & forms for this rep
+            List<Task> tasks = Task.findAllByRep(rep)
 
-                    def row = [ rep: task.rep.name,
-                                lead: task.lead.title,
-                                date:  form.dateCreated.format("yyyy-MM-dd"),
-                                sales: data.get(0).value,
-                                notes: data.get(1).value,
-                                status: data.get(2).value.selection]
-
-                    report.push(row)
-                }
-
-                // If no forms in this task, add single entry with empty form
-                if (!task?.forms) {
-                    def row = [ rep: task.rep.name,
-                                lead: task.lead.title,
-                                sales: 0,
-                                status: "NA",
-                                notes: "NA",
-                                date:  task.dateCreated.format("yyyy-MM-dd")]
-
-                    report.push(row)
-                }
-            }
-
-            // If no tasks for this rep, add single entry with empty data
             if (!tasks) {
-                def row = [ rep: member.name,
-                            lead: "NA",
-                            sales: 0,
-                            status: "NA",
-                            notes: "NA",
-                            date:  member.lastUpdated.format("yyyy-MM-dd")]
-
-                report.push(row)
+                // If no tasks, create empty entry
+                def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
+                row[0] = rep.name
+                row[row.size() - 1] = rep.lastUpdated.format("yyyy-MM-dd")
+                values.push(row)
+            } else tasks.each {task ->
+                List<Form> forms = Form.findAllByTask(task)
+                if (!forms) {
+                    // Create single entry for each task
+                    def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
+                    row[0] = rep.name
+                    row[1] = task.lead.title
+                    row[row.size() - 1] = task.lastUpdated.format("yyyy-MM-dd")
+                    values.push(row)
+                } else forms.each {form ->
+                    def formRow = getFormRow(form, formColumns)
+                    def row = [
+                            rep.name,
+                            task.lead.title
+                    ]
+                    row += formRow
+                    row.push(form.lastUpdated.format("yyyy-MM-dd"))
+                    values.push(row)
+                }
             }
         }
 
+        // Parse columns and values into report
+        def report = [
+                columns: columns,
+                values: values
+        ]
         report
     }
 
     def getLeadReport(User manager) {
-        def report = []
+        // Prepare list of columns
+        def columns = [
+                [type: "selection", title: "Lead"],
+                [type: "selection", title: "Rep"]
+        ]
+        def formColumns = getFormColumns(manager)
+        columns += formColumns
+        columns.push([type: "date", title: "Date"])
 
-        // Get leads
+        // Iterate though each rep to get list of values
+        def values = []
         List<Lead> leads = Lead.findAllByManager(manager)
         leads.each {lead ->
-            // Get all tasks for this lead
+            // Get all tasks & forms for this rep
             List<Task> tasks = Task.findAllByLead(lead)
-            tasks.each {task ->
-                // Add an entry in report for each form in this task
-                task.forms.each {form ->
-                    JSONArray data = JSON.parse(form.data)
 
-                    def row = [ lead: task.lead.title,
-                                rep: task.rep.name,
-                                date:  form.dateCreated.format("yyyy-MM-dd"),
-                                sales: data.get(0).value,
-                                notes: data.get(1).value,
-                                status: data.get(2).value.selection]
-
-                    report.push(row)
-                }
-
-                // If no forms in this task, add single entry with empty form
-                if (!task?.forms) {
-                    def row = [ lead: task.lead.title,
-                                rep: task.rep.name,
-                                sales: 0,
-                                status: "NA",
-                                notes: "NA",
-                                date:  task.dateCreated.format("yyyy-MM-dd")]
-
-                    report.push(row)
-                }
-            }
-
-            // If no tasks for this rep, add single entry with empty data
             if (!tasks) {
-                def row = [ lead: lead.title,
-                            rep: "NA",
-                            sales: 0,
-                            status: "NA",
-                            notes: "NA",
-                            date:  lead.lastUpdated.format("yyyy-MM-dd")]
-
-                report.push(row)
+                // If no tasks, create empty entry
+                def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
+                row[0] = lead.title
+                row[row.size() - 1] = lead.lastUpdated.format("yyyy-MM-dd")
+                values.push(row)
+            } else tasks.each {task ->
+                List<Form> forms = Form.findAllByTask(task)
+                if (!forms) {
+                    // Create single entry for each task
+                    def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
+                    row[0] = lead.title
+                    row[1] = task.rep.name
+                    row[row.size() - 1] = task.lastUpdated.format("yyyy-MM-dd")
+                    values.push(row)
+                } else forms.each {form ->
+                    def formRow = getFormRow(form, formColumns)
+                    def row = [
+                            lead.title,
+                            task.rep.name
+                    ]
+                    row += formRow
+                    row.push(form.lastUpdated.format("yyyy-MM-dd"))
+                    values.push(row)
+                }
             }
         }
 
+        // Parse columns and values into report
+        def report = [
+                columns: columns,
+                values: values
+        ]
         report
+    }
+
+    def getFormColumns(User manager) {
+        def columns = []
+
+        // Iterate through all templates
+        manager.forms.each { template ->
+            JSONArray fields = JSON.parse(template.data)
+            // Iterate through all fields in template
+            fields.each {field ->
+                // Check if entry is already present in columns
+                boolean bDuplicate = false
+                columns.each {column ->
+                    if ((column.title == field.title) &&
+                        (column.type == field.type)) {
+                            bDuplicate = true
+                        }
+                }
+
+                // Add to columns
+                if (!bDuplicate) {
+                    columns.push([
+                            title: field.title,
+                            type:  field.type
+                    ])
+                }
+            }
+        }
+
+        columns
+    }
+
+    def getFormRow(Form form, def columns) {
+        def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
+
+        // Iterate through form fields
+        JSONArray fields = JSON.parse(form.data)
+        fields.each {field ->
+            // Add entry to appropriate index in row
+            columns.eachWithIndex {column, index ->
+                if ((column.title == field.title) &&
+                    (column.type == field.type)) {
+                    if (field.type == "radioList") {
+                        // Value.Seleciton for radio list
+                        row[index] = field.value.selection
+                        log.error(field.value.selection + " ... Status")
+                    } else {
+                        // Value for everything else
+                        if (field.value) {
+                            row[index] = field.value
+                        }
+                    }
+                }
+            }
+        }
+
+        row
     }
 }
