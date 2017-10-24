@@ -31,7 +31,7 @@ class TaskService {
                     rep:        rep,
                     lead:       lead,
                     template:   template,
-                    period:     tasksJson.period,
+                    period:     taskJson.period,
                     status:     navimateforbusiness.TaskStatus.OPEN
             )
             tasks.push(task)
