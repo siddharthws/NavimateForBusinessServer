@@ -9,4 +9,5 @@ databaseChangeLog = {
     include file: 'update-lead-title-desc.groovy'
     include file: 'update-user-phone-nullable.groovy'
     include file: 'add-column-task-period.groovy'
+    include file: 'update-string-longtext.groovy'
 }
