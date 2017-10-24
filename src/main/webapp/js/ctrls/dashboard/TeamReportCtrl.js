@@ -23,32 +23,18 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
     $scope.resetFilters = function () {
         // Init Blank Filter
         $scope.filter = {
-            rep: {
-                selection: []
-            },
-            lead: {
-                selection: []
-            },
-            sales: {
-                lesserThan: '',
-                greaterThan: ''
-            },
-            status: {
-                selection: []
-            },
-            notes: {
-                search: ''
-            },
-            date: {
-                from:   '',
-                to:     ''
-            },
-            sort: []
+            selection:  {},
+            text:       {},
+            number:     {},
+            date:       {},
+            sort:       []
         }
+
+        // Initialize filter data
+        initFilterData()
     }
 
     $scope.filterSort = function(property, bReverse) {
-        console.log(property + "  " + bReverse)
         if (bReverse) {
             // Remove forward if present
             if ($scope.filter.sort.indexOf(property) != -1) {
@@ -74,52 +60,111 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
         $scope.applyFilters()
     }
 
-    $scope.filterSelect = function(property, value) {
-        var idx = $scope.filter[property].selection.indexOf(value)
+    $scope.filterSelect = function(column, value) {
+        var idx = $scope.filter.selection[column].unselected.indexOf(value)
         if (idx == -1) {
             // Add to filter
-            $scope.filter[property].selection.push(value)
+            $scope.filter.selection[column].unselected.push(value)
         } else {
             // Remove from filter
-            $scope.filter[property].selection.splice(idx, 1)
+            $scope.filter.selection[column].unselected.splice(idx, 1)
         }
 
         // Reapply filters on data
         $scope.applyFilters()
     }
 
-    $scope.fromDateUpdate = function (fromDate) {
-        $scope.filter.date.from = $filter('date')(fromDate, 'yyyy-MM-dd')
+    $scope.fromDateUpdate = function (fromDate, column) {
+        $scope.filter.date[column].from = $filter('date')(fromDate, 'yyyy-MM-dd')
         $scope.applyFilters()
     }
 
-    $scope.toDateUpdate = function (toDate) {
-        $scope.filter.date.to = $filter('date')(toDate, 'yyyy-MM-dd')
+    $scope.toDateUpdate = function (toDate, column) {
+        $scope.filter.date[column].to = $filter('date')(toDate, 'yyyy-MM-dd')
         $scope.applyFilters()
     }
 
     // API to apply all filters
     $scope.applyFilters = function () {
         // Reset Report
-        $scope.filteredReport = []
+        $scope.filteredValues = []
 
-        // Apply select filters
-        $scope.report.forEach(function (row) {
-            if (($scope.filter.rep.selection.indexOf(row.rep) == -1) &&
-                ($scope.filter.lead.selection.indexOf(row.lead) == -1) &&
-                ($scope.filter.status.selection.indexOf(row.status) == -1) &&
-                (row.notes.toLowerCase().search($scope.filter.notes.search.toLowerCase()) != -1) &&
-                (!$scope.filter.sales.lesserThan || (row.sales <= $scope.filter.sales.lesserThan)) &&
-                (!$scope.filter.sales.greaterThan || (row.sales >= $scope.filter.sales.greaterThan)) &&
-                (!$scope.filter.date.from   || (row.date >= $scope.filter.date.from)) &&
-                (!$scope.filter.date.to     || (row.date <= $scope.filter.date.to)))
-            {
-                $scope.filteredReport.push(row)
+        // Apply filters
+        for (var i = 0; i < $scope.values.length; i++) {
+            var row = $scope.values[i]
+
+            var bAdd = true
+            for (var j = 0; j < $scope.columns.length; j++) {
+                var column = $scope.columns[j]
+                var value = row[column.title]
+
+                if ((column.type == 'selection') || (column.type == 'radioList')) {
+                    if ($scope.filter.selection[column.title].unselected.indexOf(value) != -1) {
+                        bAdd = false
+                    }
+                } else if (column.type == 'number') {
+                    var lessThan = $scope.filter.number[column.title].lesserThan
+                    var greaterThan = $scope.filter.number[column.title].greaterThan
+                    if ((value == "-") && (lessThan || greaterThan)) {
+                        bAdd = false
+                    } else if ((lessThan && (value > lessThan)) || (greaterThan && (value < greaterThan))) {
+                        bAdd = false
+                    }
+                } else if (column.type == 'text') {
+                    var searchText = $scope.filter.text[column.title].search
+                    if (searchText && (value.toLowerCase().search(searchText.toLowerCase()) == -1)) {
+                        bAdd = false
+                    }
+                } else if (column.type == 'date') {
+                    var from  = $scope.filter.date[column.title].from
+                    var to  = $scope.filter.date[column.title].to
+                    if ((from && (value < from)) || (to && (value > to))) {
+                        bAdd = false
+                    }
+                }
             }
-        })
 
-        // Apply sorting
-        $scope.filteredReport = $filter('orderBy')($scope.filteredReport, $scope.filter.sort)
+            if (bAdd) {
+                $scope.filteredValues.push(row)
+            }
+
+            // Apply sorting
+            $scope.filteredValues = $filter('orderBy')($scope.filteredValues, $scope.filter.sort)
+        }
+    }
+
+    /*-------------------------------------- Local APIs ---------------------------------------*/
+
+    function initFilterData() {
+        // Init Selection Options for each selection column type
+        for (var i = 0; i < $scope.columns.length; i++) {
+            var column = $scope.columns[i]
+            if ((column.type == 'selection') || (column.type == 'radioList')) {
+                // Init Selection options for the filter
+                var selectFilter = {}
+                selectFilter.options = []
+                selectFilter.unselected = []
+
+                // Iterate through values of this column
+                for (var j = 0; j < $scope.values.length; j++) {
+                    var value = $scope.values[j][column.title]
+
+                    // Add unique entries to selection options
+                    if (selectFilter.options.indexOf(value) == -1) {
+                        selectFilter.options.push(value)
+                    }
+                }
+
+                // Assign Selection filter for this column
+                $scope.filter.selection[column.title] = selectFilter
+            } else if (column.type == 'number') {
+                $scope.filter.number[column.title] = {}
+            } else if (column.type == 'text') {
+                $scope.filter.text[column.title] = {}
+            } else if (column.type == 'date') {
+                $scope.filter.date[column.title] = {}
+            }
+        }
     }
 
     /*----------------------------------- INIT --------------------------------*/
@@ -128,8 +173,9 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
     $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_REPORT]
 
     // Init Report Variables
-    $scope.report = []
-    $scope.filteredReport = []
+    $scope.values = []
+    $scope.columns = []
+    $scope.filteredValues = []
 
     // Init filter
     $scope.resetFilters()
@@ -144,19 +190,34 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
             headers:    {
                 'X-Auth-Token':    $localStorage.accessToken
             }
-        })
-        .then(
-            function (response) {
-                $rootScope.hideWaitingDialog()
-                $scope.report = response.data
-                $scope.filteredReport = $scope.report
-            },
-            function (error) {
-                $rootScope.hideWaitingDialog()
-                // Show Error Toast
-                ToastService.toast("Unable to load report !!!")
+        }).then(
+        function (response) {
+            $rootScope.hideWaitingDialog()
+
+            $scope.columns = response.data.columns
+            $scope.values = []
+
+            // Process report into columns
+            var values = response.data.values
+            for (var i = 0; i < values.length; i++) {
+                var row = {}
+                for (var j = 0; j < $scope.columns.length; j++) {
+                    var column = $scope.columns[j]
+                    row[column.title] = values[i][j]
+                }
+
+                $scope.values.push(row)
             }
-        )
+            $scope.filteredValues = $scope.values
+
+            // Init Filters
+            $scope.resetFilters()
+        },
+        function (error) {
+            $rootScope.hideWaitingDialog()
+            // Show Error Toast
+            ToastService.toast("Unable to load report !!!")
+        })
     }
 
     $scope.init()

@@ -11,200 +11,86 @@
             <th class="table-col-sm">
                 #
             </th>
-            <th class="table-col-md">
+            <th ng-repeat="column in columns" class="table-col-md"
+                ng-class="{'table-col-sm': column.type == 'number' || column.type == 'text',
+                           'table-col-lg': column.name == 'Lead'}">
                 <div class="dropdown dropdown-multiselect">
-                    <button class="dropdown-toggle-button-table d-flex w-100">
-                        <span class="full-flex">Name</span>
+                    <button class="dropdown-toggle-button-table d-flex w-100" data-toggle="dropdown">
+                        <span class="full-flex">{{column.title}}</span>
                         <img class="img-icon" src="/static/images/icon_filter.png"
-                             ng-show="  !filter.rep.selection.length &&
-                                        ((filter.sort.indexOf('rep') == -1) &&
-                                        (filter.sort.indexOf('-rep') == -1))"/>
+                             ng-show="((((column.type == 'radioList') || (column.type == 'selection')) && (filter.selection[column.title].unselected.length == 0)) ||
+                                      ((column.type == 'text') && !filter.text[column.title].search) ||
+                                      ((column.type == 'number') && !(filter.number[column.title].lesserThan || filter.number[column.title].greaterThan)) ||
+                                      ((column.type == 'date') && !(filter.date[column.title].from || filter.date[column.title].to))) &&
+                                      ((filter.sort.indexOf(column.title) == -1) && (filter.sort.indexOf('-' + column.title) == -1))"/>
                         <img class="img-icon" src="/static/images/icon_filter_active.png"
-                             ng-show="  filter.rep.selection.length ||
-                                        ((filter.sort.indexOf('rep') != -1) ||
-                                        (filter.sort.indexOf('-rep') != -1))"/>
+                             ng-show="(((column.type == 'radioList') || (column.type == 'selection')) && (filter.selection[column.title].unselected.length > 0)) ||
+                                      ((column.type == 'text') && filter.text[column.title].search) ||
+                                      ((column.type == 'number') && (filter.number[column.title].lesserThan || filter.number[column.title].greaterThan)) ||
+                                      ((column.type == 'date') && (filter.date[column.title].from || filter.date[column.title].to)) ||
+                                      ((filter.sort.indexOf(column.title) != -1) || (filter.sort.indexOf('-' + column.title) != -1))"/>
                     </button>
                     <div class="dropdown-menu p-2">
-                        <span>Sort:</span>
-                        <div class="d-flex justify-content-center">
-                            <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort('rep', false)"
-                                   ng-class="{'active' : filter.sort.indexOf('rep') != -1}"/>
-                            <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('rep', true)"
-                                   ng-class="{'active' : filter.sort.indexOf('-rep') != -1}"/>
+                        <div ng-show="column.type != 'text'">
+                            <span>Sort:</span>
+                            <div class="d-flex justify-content-center">
+                                <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort(column.title, false)"
+                                       ng-class="{'active' : filter.sort.indexOf(column.title) != -1}"/>
+                                <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort(column.title, true)"
+                                       ng-class="{'active' : (filter.sort.indexOf('-' + column.title) != -1)}"/>
+                            </div>
                         </div>
-                        <span>Select:</span>
-                        <input type="text" ng-model="repFilterSearch" placeholder="Search...">
-                        <div ng-repeat="row in report | unique: 'rep' | filter:repFilterSearch">
-                            <input type="checkbox" ng-click="filterSelect('rep', row.rep)" ng-checked="filter.rep.selection.indexOf(row.rep) == -1"/> {{row.rep}}
+
+                        <div ng-show="column.type == 'selection' || column.type == 'radioList'">
+                            <span>Select:</span>
+                            <input type="text" ng-model="filter.search[column.title]" placeholder="Search...">
+                            <div ng-repeat="value in filter.selection[column.title].options | filter:filter.search[column.title]">
+                                <input type="checkbox" ng-checked="filter.selection[column.title].unselected.indexOf(value) == -1"
+                                       ng-click="filterSelect(column.title, value)"/>
+                                {{value}}
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </th>
-            <th class="table-col-lg">
-                <div class="dropdown dropdown-multiselect">
-                    <button class="dropdown-toggle-button-table d-flex w-100">
-                        <span class="full-flex">Lead</span>
-                        <img class="img-icon" src="/static/images/icon_filter.png"
-                             ng-show="  !filter.lead.selection.length &&
-                                        ((filter.sort.indexOf('lead') == -1) &&
-                                        (filter.sort.indexOf('-lead') == -1))"/>
-                        <img class="img-icon" src="/static/images/icon_filter_active.png"
-                             ng-show="  filter.lead.selection.length ||
-                                        ((filter.sort.indexOf('lead') != -1) ||
-                                        (filter.sort.indexOf('-lead') != -1))"/>
-                    </button>
-                    <div class="dropdown-menu p-2">
-                        <span>Sort:</span>
-                        <div class="d-flex justify-content-center">
-                            <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort('lead', false)"
-                                   ng-class="{'active' : filter.sort.indexOf('lead') != -1}"/>
-                            <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('lead', true)"
-                                   ng-class="{'active' : filter.sort.indexOf('-lead') != -1}"/>
+
+                        <div ng-show="column.type == 'text'">
+                            <input type="text" placeholder="Search..." ng-model-options="{debounce: 500}"
+                                   ng-model="filter.text[column.title].search" ng-change="applyFilters()">
                         </div>
-                        <span>Select:</span>
-                        <input type="text" ng-model="leadFilterSearch" placeholder="Search...">
-                        <div ng-repeat="row in report | unique: 'lead' | filter:leadFilterSearch">
-                            <input type="checkbox" ng-click="filterSelect('lead', row.lead)" ng-checked="filter.lead.selection.indexOf(row.lead) == -1"/> {{row.lead}}
+
+                        <div ng-show="column.type == 'number'">
+                            <span>Range:</span>
+                            <div class="d-flex align-items-center">
+                                <span> <= </span>
+                                <input type="number" placeholder="Less than"
+                                       ng-model="filter.number[column.title].lesserThan" ng-model-options="{debounce: 500}"
+                                       ng-change="applyFilters()" >
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span> >= </span>
+                                <input type="number" placeholder="Greater than"
+                                       ng-model="filter.number[column.title].greaterThan" ng-model-options="{debounce: 500}"
+                                       ng-change="applyFilters()" >
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </th>
-            <th class="table-col-sm">
-                <div class="dropdown dropdown-multiselect w-100">
-                    <button class="dropdown-toggle-button-table d-flex w-100">
-                        <span class="full-flex">Sales</span>
-                        <img class="img-icon" src="/static/images/icon_filter.png"
-                             ng-show="  !filter.sales.greaterThan && !filter.sales.lesserThan &&
-                                        ((filter.sort.indexOf('sales') == -1) &&
-                                        (filter.sort.indexOf('-sales') == -1))"/>
-                        <img class="img-icon" src="/static/images/icon_filter_active.png"
-                             ng-show="  filter.sales.greaterThan || filter.sales.lesserThan ||
-                                        ((filter.sort.indexOf('sales') != -1) ||
-                                        (filter.sort.indexOf('-sales') != -1))"/>
-                    </button>
-                    <div class="dropdown-menu p-2">
-                        <span>Sort:</span>
-                        <div class="d-flex justify-content-center">
-                            <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort('sales', false)"
-                                   ng-class="{'active' : filter.sort.indexOf('sales') != -1}"/>
-                            <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('sales', true)"
-                                   ng-class="{'active' : filter.sort.indexOf('-sales') != -1}"/>
+
+                        <div ng-show="column.type == 'date'">
+                            <span>Range:</span>
+                            <md-datepicker ng-model="fromDate" md-placeholder="From Date"
+                                           ng-change="fromDateUpdate(fromDate, column.title)"></md-datepicker>
+                            <md-datepicker ng-model="toDate" md-placeholder="To Date"
+                                           ng-change="toDateUpdate(toDate, column.title)"></md-datepicker>
                         </div>
-                        <span>Range:</span>
-                        <div class="d-flex align-items-center">
-                            <span> <= </span>
-                            <input type="number" placeholder="Less than"
-                                   ng-model="filter.sales.lesserThan" ng-model-options="{debounce: 500}"
-                                   ng-change="applyFilters()" >
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <span> >= </span>
-                            <input type="number" placeholder="Greater than"
-                                   ng-model="filter.sales.greaterThan" ng-model-options="{debounce: 500}"
-                                   ng-change="applyFilters()" >
-                        </div>
-                    </div>
-                </div>
-            </th>
-            <th class="table-col-sm">
-                <div class="dropdown dropdown-multiselect">
-                    <button class="dropdown-toggle-button-table d-flex w-100">
-                        <span class="full-flex">Status</span>
-                        <img class="img-icon" src="/static/images/icon_filter.png"
-                             ng-show="  !filter.status.selection.length &&
-                                        ((filter.sort.indexOf('status') == -1) &&
-                                        (filter.sort.indexOf('-status') == -1))"/>
-                        <img class="img-icon" src="/static/images/icon_filter_active.png"
-                             ng-show="  filter.status.selection.length ||
-                                        ((filter.sort.indexOf('status') != -1) ||
-                                        (filter.sort.indexOf('-status') != -1))"/>
-                    </button>
-                    <div class="dropdown-menu p-2">
-                        <span>Sort:</span>
-                        <div class="d-flex justify-content-center">
-                            <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort('status', false)"
-                                   ng-class="{'active' : filter.sort.indexOf('status') != -1}"/>
-                            <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('status', true)"
-                                   ng-class="{'active' : filter.sort.indexOf('-status') != -1}"/>
-                        </div>
-                        <span>Select:</span>
-                        <input type="text" ng-model="statusFilterSearch" placeholder="Search...">
-                        <div ng-repeat="row in report | unique: 'status' | filter:statusFilterSearch">
-                            <input type="checkbox" ng-click="filterSelect('status', row.status)" ng-checked="filter.status.selection.indexOf(row.status) == -1"/> {{row.status}}
-                        </div>
-                    </div>
-                </div>
-            </th>
-            <th class="table-col-lg">
-                <div class="dropdown dropdown-multiselect w-100">
-                    <button class="dropdown-toggle-button-table d-flex w-100">
-                        <span class="full-flex">Notes</span>
-                        <img class="img-icon" src="/static/images/icon_filter.png"
-                             ng-show="  !filter.notes.search &&
-                                        ((filter.sort.indexOf('notes') == -1) &&
-                                        (filter.sort.indexOf('-notes') == -1))"/>
-                        <img class="img-icon" src="/static/images/icon_filter_active.png"
-                             ng-show="  filter.notes.search ||
-                                        ((filter.sort.indexOf('notes') != -1) ||
-                                        (filter.sort.indexOf('-notes') != -1))"/>
-                    </button>
-                    <div class="dropdown-menu p-2">
-                        <input type="text" placeholder="Search Notes..." ng-model-options="{debounce: 500}"
-                               ng-model="filter.notes.search" ng-change="applyFilters()">
-                    </div>
-                </div>
-            </th>
-            <th class="table-col-md">
-                <div class="dropdown dropdown-multiselect w-100">
-                    <button class="dropdown-toggle-button-table d-flex w-100">
-                        <span class="full-flex">Date</span>
-                        <img class="img-icon" src="/static/images/icon_filter.png"
-                             ng-show="  !filter.date.from && !filter.date.to &&
-                                        ((filter.sort.indexOf('date') == -1) &&
-                                        (filter.sort.indexOf('-date') == -1))"/>
-                        <img class="img-icon" src="/static/images/icon_filter_active.png"
-                             ng-show="  filter.date.from || filter.date.to ||
-                                        ((filter.sort.indexOf('date') != -1) ||
-                                        (filter.sort.indexOf('-date') != -1))"/>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right p-2">
-                        <span>Sort:</span>
-                        <div class="d-flex justify-content-center">
-                            <input type="button" value="" class="image-button ib-sort-down" ng-click="filterSort('date', false)"
-                                   ng-class="{'active' : filter.sort.indexOf('date') != -1}"/>
-                            <input type="button" value="" class="image-button ib-sort-up" ng-click="filterSort('date', true)"
-                                   ng-class="{'active' : filter.sort.indexOf('-date') != -1}"/>
-                        </div>
-                        <span>Range:</span>
-                        <md-datepicker ng-model="fromDate" md-placeholder="From Date"
-                                       ng-change="fromDateUpdate(fromDate)"></md-datepicker>
-                        <md-datepicker ng-model="toDate" md-placeholder="To Date"
-                                       ng-change="toDateUpdate(toDate)"></md-datepicker>
                     </div>
                 </div>
             </th>
         </thead>
-        <tr ng-repeat="row in filteredReport">
+        <tr ng-repeat="row in filteredValues">
             <td class="table-col-sm">
                 {{$index + 1}}
             </td>
-            <td class="table-col-md">
-                {{row.rep}}
-            </td>
-            <td class="table-col-lg">
-                {{row.lead}}
-            </td>
-            <td  class="table-col-sm">
-                {{row.sales}}
-            </td>
-            <td class="table-col-sm">
-                {{row.status}}
-            </td>
-            <td class="table-col-lg">
-                {{row.notes}}
-            </td>
-            <td class="table-col-md">
-                {{row.date}}
+            <td ng-repeat="column in columns" class="table-col-md"
+                ng-class="{'table-col-sm': column.type == 'number' || column.type == 'text',
+                           'table-col-lg': column.name == 'Lead'}">
+                {{filteredValues[$parent.$index][column.title]}}
             </td>
         </tr>
     </table>
