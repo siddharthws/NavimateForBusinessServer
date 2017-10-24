@@ -18,7 +18,8 @@
                 {{field.title}}
             </td>
             <td class="m-auto">
-                <input type="text" ng-show="(field.type == 'text') || (field.type == 'number')" ng-model="field.value">
+                <input type="text" ng-show="field.type == 'text'" ng-model="field.value">
+                <input type="number" ng-show="field.type == 'number'" ng-model="field.value">
                 <div ng-show="field.type == 'radioList'">
                     <md-radio-group ng-model="field.value.selection">
                         <md-radio-button ng-repeat="option in field.value.options track by $index" ng-value="option">
