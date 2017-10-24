@@ -150,5 +150,5 @@ environments:
                 jdbcInterceptors: ConnectionState
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
             mail:
-                username: "sales@navimateapp.com"
+                username: "navimateapp@gmail.com"
                 password: "${NAVIMATE_EMAIL_PASSWORD}"
