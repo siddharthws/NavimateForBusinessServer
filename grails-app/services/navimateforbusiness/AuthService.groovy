@@ -102,7 +102,7 @@ class AuthService {
                 account: manager.account,
                 owner: manager,
                 name: "Sales Template",
-                data: '[ { "title":  "Sales", "type":   "number", "value":  "0" }, { "title":  "Notes", "type":   "text", "value":  "" }, { "title":  "status", "type":   "radioList", "value":  { "options": ["Failed", "Waiting", "Done"], "selection": "Waiting" } }]'
+                data: '[ { "title":  "Sales", "type":   "number", "value":  "0" }, { "title":  "Notes", "type":   "text", "value":  "" }, { "title":  "Status", "type":   "radioList", "value":  { "options": ["Failed", "Waiting", "Done"], "selection": "Waiting" } }]'
         )
 
         salesTemplate

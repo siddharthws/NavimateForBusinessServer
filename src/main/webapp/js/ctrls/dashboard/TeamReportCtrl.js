@@ -7,7 +7,7 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
     /*-------------------------------------- Scope APIs ---------------------------------------*/
     $scope.export = function () {
         // Export only if some valid data is being displayed
-        if ($scope.filteredReport.length) {
+        if ($scope.filteredValues.length) {
             // Get table to export
             var table = $('.team-report-table').get(0)
 

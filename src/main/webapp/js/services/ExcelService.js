@@ -75,7 +75,7 @@ app.service("ExcelService", function ($http, $localStorage, $filter, FileSaver, 
         var ws = XLSX.utils.json_to_sheet(json)
 
         // Create workbook
-        const wb = { SheetNames: [], Sheets: {} }
+        var wb = { SheetNames: [], Sheets: {} }
         XLSX.utils.book_append_sheet(wb, ws, "Sheet 1")
 
         // Save workbook

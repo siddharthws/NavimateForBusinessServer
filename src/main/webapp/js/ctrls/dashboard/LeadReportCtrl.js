@@ -7,7 +7,7 @@ app.controller("LeadReportCtrl", function ($scope, $rootScope, $http, $localStor
     /*-------------------------------------- Scope APIs ---------------------------------------*/
     $scope.export = function () {
         // Export only if some valid data is being displayed
-        if ($scope.filteredReport.length) {
+        if ($scope.filteredValues.length) {
             // Get table to export
             var table = $('.lead-report-table').get(0)
 
