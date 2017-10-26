@@ -1,0 +1,15 @@
+{
+  "name": "navimatebusinessserver",
+  "version": "1.1.0",
+  "description": "Server Project for navimate",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-cssmin": "^2.2.1",
+    "grunt-contrib-uglify": "^3.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/siddharthws/NavimateForBusinessServer.git"
+  },
+  "author": "Siddharth Garg"
+}
