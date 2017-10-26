@@ -18,6 +18,10 @@ class TaskService {
             User rep = User.findById(taskJson.rep.id)
             Lead lead = Lead.findById(taskJson.lead.id)
             Form template = Form.findById(taskJson.template.id)
+            def period = taskJson.period
+            if (!period) {
+                period = 0
+            }
 
             // Validate JSON data
             if (!rep || !lead || !template){
@@ -31,7 +35,7 @@ class TaskService {
                     rep:        rep,
                     lead:       lead,
                     template:   template,
-                    period:     taskJson.period,
+                    period:     period,
                     status:     navimateforbusiness.TaskStatus.OPEN
             )
             tasks.push(task)
