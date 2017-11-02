@@ -10,9 +10,31 @@ app.controller('RegisterCtrl', function ($scope, $rootScope, $mdDialog, AuthServ
 
         // Validate credentials
         if (validate()) {
-            DialogService.emailVerify(  $scope.name,
-                                        $scope.email,
-                                        $scope.password)
+            //Register the account as OTP is validated
+            $rootScope.showWaitingDialog("Please wait while you are being registered...")
+
+            AuthService.register($scope.name, $scope.email, $scope.password)
+                .then(
+                    function (response) {
+                        $rootScope.hideWaitingDialog()
+
+                        // Close this dialog
+                        $mdDialog.hide()
+                        ToastService.toast("Registered successfully...")
+
+                        // Open Login Dialog
+                        DialogService.login()
+                    },
+                    function (error) {
+                        $rootScope.hideWaitingDialog()
+
+                        // Show error toast
+                        ToastService.toast("Unable to register...")
+
+                        // Re-open Register dialog
+                        //DialogService.register(name, email, password)
+                    }
+                )
         }
     }
 
