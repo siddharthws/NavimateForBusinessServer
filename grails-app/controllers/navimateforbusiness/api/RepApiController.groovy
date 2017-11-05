@@ -9,6 +9,7 @@ import navimateforbusiness.SmsHelper
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
 import navimateforbusiness.User
+import navimateforbusiness.UserStatus
 import org.grails.web.json.JSONArray
 
 class RepApiController {
@@ -22,6 +23,31 @@ class RepApiController {
 
         // Return user information
         def resp = navimateforbusiness.Marshaller.serializeUser(rep)
+        render resp as JSON
+    }
+
+    def register() {
+        // Check if the rep is registered. (Rep is registered from the dashboard)
+        User rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
+        if (!rep) {
+            // Create new rep object
+            rep = new User( name: request.JSON.name,
+                            phoneNumber: request.JSON.phoneNumber,
+                            role: Role.REP,
+                            status: UserStatus.ACTIVE)
+        } else {
+            rep.name = request.JSON.name
+        }
+        rep.save(failOnError: true, flush: true)
+
+        // Check if user has been registered
+        rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
+        if (!rep) {
+            throw new ApiException("Rep not registered", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Return user information
+        def resp = [id: rep.id]
         render resp as JSON
     }
 

@@ -29,6 +29,7 @@ class UrlMappings {
 
         // Rep APIs
         "/api/reps/profile"         (controller: "RepApi") {action = [POST: "getMyProfile"]}
+        "/api/reps/register"        (controller: "RepApi") {action = [POST: "register"]}
         "/api/reps/task"            (controller: "RepApi") {action = [GET: "getTasks", POST: "submitForm"]}
         "/api/reps/fcm"             (controller: "RepApi") {action = [POST: "updateFcm"]}
         "/api/reps/otp"             (controller: "RepApi") {action = [POST: "sendOtpSms"]}

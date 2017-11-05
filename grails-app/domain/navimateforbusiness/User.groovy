@@ -32,6 +32,7 @@ class User {
     ]
 
     static constraints = {
+        account         nullable: true
         password        nullable: true
         email           nullable: true
         phoneNumber     nullable: true

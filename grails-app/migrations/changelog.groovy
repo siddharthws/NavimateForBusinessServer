@@ -10,4 +10,5 @@ databaseChangeLog = {
     include file: 'update-user-phone-nullable.groovy'
     include file: 'add-column-task-period.groovy'
     include file: 'update-string-longtext.groovy'
+    include file: 'update-user-account-nullable.groovy'
 }
