@@ -280,10 +280,22 @@ class UserApiController {
     }
 
     def editForm() {
-        // Update Db's Form data
+        def manager = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
         def formJson = request.JSON.form
-        Form form = Form.findById(formJson.id)
-        form.data = formJson.data.toString()
+
+        // Update Db's Form data
+        Form form = null
+        if (formJson.id) {
+            form = Form.findById(formJson.id)
+            form.data = formJson.data.toString()
+            form.name = formJson.name
+        } else {
+            form = new Form(
+                    name: formJson.name,
+                    data: formJson.data.toString(),
+                    owner: manager,
+                    account: manager.account)
+        }
         form.save(flush: true, failOnError: true)
 
         // return resposne
