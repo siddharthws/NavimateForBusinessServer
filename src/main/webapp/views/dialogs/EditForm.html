@@ -27,6 +27,12 @@
                         </md-radio-button>
                     </md-radio-group>
                 </div>
+                <div ng-show="field.type == 'checkList'">
+                    <md-checkbox ng-repeat="option in field.value.options track by $index" ng-value="option"
+                                 ng-model="field.value.selection[$index]">
+                        {{option}}
+                    </md-checkbox>
+                </div>
             </td>
         </tr>
     </table>

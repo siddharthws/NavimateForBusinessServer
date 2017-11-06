@@ -156,7 +156,25 @@ class ReportService {
                     if (field.type == "radioList") {
                         // Value.Seleciton for radio list
                         row[index] = field.value.selection
-                        log.error(field.value.selection + " ... Status")
+                    } else if (field.type == 'checkList') {
+                        // Reset row data
+                        row[index] = ""
+
+                        // Create array of selected values
+                        def selection = []
+                        field.value.selection.eachWithIndex {bChecked, optionIdx ->
+                            if (bChecked) {
+                                selection.push(field.value.options[optionIdx])
+                            }
+                        }
+
+                        // Push array into row
+                        selection.eachWithIndex{ option, i ->
+                            row[index] += option
+                            if (i < (selection.size() - 1)) {
+                                row[index] += ', '
+                            }
+                        }
                     } else {
                         // Value for everything else
                         if (field.value) {
