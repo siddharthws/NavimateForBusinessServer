@@ -107,6 +107,7 @@ class LeadService {
                     catch (navimateforbusiness.ApiException e){
                         lead.latitude = 0
                         lead.longitude = 0
+                        lead.address=""
                     }
                 }
             }
