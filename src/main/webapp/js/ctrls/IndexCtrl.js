@@ -3,6 +3,9 @@
  */
 
 app.controller('IndexCtrl', function ($scope, $rootScope) {
+    // Attach Constants
+    $rootScope.Constants = Constants
+
     // Data object for waiting dialog
     $scope.waiting = {
         bShow: false,
