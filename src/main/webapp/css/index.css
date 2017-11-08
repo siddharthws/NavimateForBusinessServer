@@ -14,11 +14,17 @@
 
 .waiting-spinner {
     border: 6px solid #f3f3f3; /* Light grey */
-    border-top: 6px solid #37bcf2; /* Blue */
+    border-top-color: #37bcf2;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     animation: spin 1s linear infinite;
+}
+
+.waiting-spinner-small {
+    border-width: 4px;
+    width: 30px;
+    height: 30px;
 }
 
 @keyframes spin {

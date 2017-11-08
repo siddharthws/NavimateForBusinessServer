@@ -12,12 +12,15 @@
 }
 
 .live-status-default {
-    height: 16px;
-    width: 16px;
-    background-image: url("/static/images/red.png");
-    background-repeat: no-repeat;
+    background: url("/static/images/ic_status_red.png")
+                center / cover
+                no-repeat;
+}
+
+.live-status-waiting{
+    background-image: url("/static/images/ic_status_yellow.png");
 }
 
 .live-status-active{
-    background-image: url("/static/images/green.png");
+    background-image: url("/static/images/ic_status_green.png");
 }

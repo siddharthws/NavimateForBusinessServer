@@ -4,18 +4,39 @@
         <div class="w-25 d-flex flex-column">
             <h4><b>Live Tracking</b></h4>
             <div class="list-group p-1 mt-2 full-flex">
-                <div href ng-repeat="rep in team" ng-click="listItemClick(rep)">
-                    <div class="list-group-item list-group-item-action">
-                        <div class="d-flex align-items-center" data-toggle="collapse" data-target="#{{'collapseOne' + $index}}">
-                            <img src="" class=" live-status-default m-2" ng-class="{'live-status-active':rep.trackData.status}" >
-                             <span class="full-flex">
-                                {{rep.name}}
-                             </span>
-                        </div>
+                <div href ng-repeat="rep in team" ng-click="listItemClick(rep)"
+                     class="list-group-item list-group-item-action"
+                     ng-class="{'active': selectedRep == rep}">
+                    <div class="d-flex align-items-center">
+                        <div class="img-icon live-status-default m-2"
+                             ng-class="{'live-status-waiting': (rep.status == $root.Constants.Tracking.STATUS_WAITING),
+                                        'live-status-active': (rep.status == $root.Constants.Tracking.STATUS_AVAILABLE)}" ></div>
+                        <span class="full-flex">
+                            {{rep.name}}
+                        </span>
+                        <span class="ml-auto">
+                            {{rep.phone}}
+                        </span>
+                        <span class="waiting-spinner waiting-spinner-small ml-2"
+                              ng-show="rep.status == $root.Constants.Tracking.STATUS_WAITING"></span>
                     </div>
-                    <div id="{{'collapseOne' + $index}}" class="collapse text-center">
-                        <p><a class="a-white" >Speed: {{rep.trackData.speed}} km/hr</a></p>
-                        <p><a class="a-white" >Last Updated: {{rep.trackData.lastUpdated}} seconds ago</a></p>
+                    <div ng-show="selectedRep == rep">
+                        <div ng-show="rep.status == $root.Constants.Tracking.STATUS_AVAILABLE">
+                            <p>Speed: {{rep.speed}} km/hr</p>
+                            <p>Last Updated: {{rep.lastUpdated}} seconds ago</p>
+                        </div>
+                        <div ng-show="rep.status == $root.Constants.Tracking.STATUS_UNAVAILABLE">
+                            <p>Location is unavailable for this member. Possible issues :</p>
+                            <ol>
+                                <li>Phone is switched OFF</li>
+                                <li>App is not running</li>
+                                <li>Internet is not available in phone</li>
+                                <li>Location has been disabled</li>
+                            </ol>
+                        </div>
+                        <div ng-show="rep.status == $root.Constants.Tracking.STATUS_WAITING">
+                            <p>Waiting for user's location</p>
+                        </div>
                     </div>
                 </div>
             </div>

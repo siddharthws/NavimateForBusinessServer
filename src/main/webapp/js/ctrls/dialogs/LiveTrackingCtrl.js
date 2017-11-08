@@ -29,7 +29,7 @@ app.controller('LiveTrackingCtrl', function ($scope, $mdDialog, $interval, team)
     function initTrackData(){
         for(var i = 0; i<$scope.team.length ;i++){
             var trackData= {
-            status: false,
+            status: Constants.Tracking.STATUS_WAITING,
             location: {
                 lat: 20.0,
                 lng: 75.0
