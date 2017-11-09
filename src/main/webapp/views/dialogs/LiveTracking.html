@@ -7,40 +7,41 @@
                 <div href ng-repeat="trackee in trackees" ng-click="listItemClick(trackee)"
                      class="list-group-item list-group-item-action"
                      ng-class="{'active': selectedTrackee == trackee}">
-                    <div class="d-flex align-items-center">
-                        <div class="img-icon live-status-default m-2"
-                             ng-class="{'live-status-waiting': (trackee.status == $root.Constants.Tracking.STATUS_WAITING),
-                                        'live-status-active': (trackee.status == $root.Constants.Tracking.STATUS_AVAILABLE)}"></div>
-                        <span class="full-flex">
-                            {{trackee.name}}
-                        </span>
-                        <span class="ml-auto">
-                            {{trackee.phone}}
-                        </span>
-                        <span class="waiting-spinner waiting-spinner-small ml-2"
-                              ng-show="trackee.status == $root.Constants.Tracking.STATUS_WAITING"></span>
-                    </div>
-                    <div ng-show="selectedTrackee == trackee">
-                        <div ng-show="trackee.status == $root.Constants.Tracking.STATUS_AVAILABLE">
-                            <p>Speed: {{trackee.speed}} km/hr</p>
-                            <p>Last Updated: {{trackee.lastUpdated}} seconds ago</p>
-                        </div>
-                        <div ng-show="trackee.status == $root.Constants.Tracking.STATUS_UNAVAILABLE">
-                            <p>Location is unavailable for this member. Possible issues :</p>
-                            <ol>
-                                <li>Phone is switched OFF</li>
-                                <li>App is not running</li>
-                                <li>Internet is not available in phone</li>
-                                <li>Location has been disabled</li>
-                            </ol>
-                        </div>
-                        <div ng-show="trackee.status == $root.Constants.Tracking.STATUS_WAITING">
-                            <p>Waiting for user's location</p>
-                        </div>
-                    </div>
+                     <div class="d-flex align-items-center">
+                         <div class="img-icon live-status-default m-2"
+                              ng-class="{'live-status-waiting': (trackee.status == $root.Constants.Tracking.STATUS_WAITING),
+                                         'live-status-active': (trackee.status == $root.Constants.Tracking.STATUS_AVAILABLE)}"></div>
+                         <span class="full-flex">
+                             {{trackee.name}}
+                         </span>
+                         <span class="ml-auto">
+                             {{trackee.phone}}
+                         </span>
+                         <span class="waiting-spinner waiting-spinner-small ml-2"
+                               ng-show="trackee.status == $root.Constants.Tracking.STATUS_WAITING"></span>
+                     </div>
+                     <div ng-show="selectedTrackee == trackee">
+                         <div ng-show="trackee.status == $root.Constants.Tracking.STATUS_AVAILABLE">
+                             <p>Speed: {{trackee.speed}} km/hr</p>
+                             <p>Last Updated: {{trackee.lastUpdated}} seconds ago</p>
+                         </div>
+                         <div ng-show="trackee.status == $root.Constants.Tracking.STATUS_UNAVAILABLE">
+                             <p>Location is unavailable for this member. Possible issues :</p>
+                             <ol>
+                                 <li>Phone is switched OFF</li>
+                                 <li>App is not running</li>
+                                 <li>Internet is not available in phone</li>
+                                 <li>Location has been disabled</li>
+                             </ol>
+                         </div>
+                         <div ng-show="trackee.status == $root.Constants.Tracking.STATUS_WAITING">
+                             <p>Waiting for user's location</p>
+                         </div>
+                     </div>
                 </div>
             </div>
             <div class="container-fluid d-flex justify-content-around flex-shrink-0">
+                <button class="btn full-flex" ng-click="refreshReps()">Refresh</button>
                 <button class="btn full-flex" ng-click="cancel()">Cancel</button>
             </div>
         </div>

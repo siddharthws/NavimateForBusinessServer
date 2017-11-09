@@ -6,6 +6,36 @@
 app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $interval, $localStorage, ToastService, reps) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
+    // API to refresh Rep Status
+    $scope.refreshReps = function () {
+        // Get list of unavailable reps
+        var unAvReps = []
+        $scope.trackees.forEach(function (trackee) {
+            if (trackee.status == Constants.Tracking.STATUS_UNAVAILABLE) {
+                unAvReps.push(trackee.id)
+            }
+        })
+
+        if (unAvReps.length > 0) {
+            // Send Http request to refresh Unavailable reps
+            $http({
+                method:     'POST',
+                url:        '/api/track/refresh',
+                headers:    {
+                    'X-Auth-Token':    $localStorage.accessToken
+                },
+                data:       {
+                    'reps':     unAvReps
+                }
+            }).then(
+                function (response) {
+                },
+                function (error) {
+                }
+            )
+        }
+    }
+
     // Map Init Callback from ngMap
     $scope.mapInitialized = function (map) {
         // Set map object
