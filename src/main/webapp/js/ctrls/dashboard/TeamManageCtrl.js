@@ -45,7 +45,7 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     $scope.track = function() {
-        DialogService.liveTracking($scope.team, $scope.init)
+        DialogService.liveTracking($scope.selection)
     }
 
     // Single List Item Selection Toggle
