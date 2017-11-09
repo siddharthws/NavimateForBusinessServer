@@ -34,6 +34,12 @@ class UrlMappings {
         "/api/reps/fcm"             (controller: "RepApi") {action = [POST: "updateFcm"]}
         "/api/reps/otp"             (controller: "RepApi") {action = [POST: "sendOtpSms"]}
 
+        // Tracking APIs
+        "/api/track/start"          (controller: "TrackingApi") {action = [POST: "start"]}
+        "/api/track/refresh"        (controller: "TrackingApi") {action = [POST: "refresh"]}
+        "/api/track/stop"           (controller: "TrackingApi") {action = [POST: "stop"]}
+        "/api/track/data"           (controller: "TrackingApi") {action = [GET: "getData", POST: "postData"]}
+
         // Google API access
         "/api/googleapis/autocomplete"      (controller: "GoogleApi") {action = [GET: "autocomplete"]}
         "/api/googleapis/geocode"           (controller: "GoogleApi") {action = [GET: "geocode"]}

@@ -1,7 +1,6 @@
 package navimateforbusiness
 
 import grails.converters.JSON
-import navimateforbusiness.User
 
 class Marshaller {
 
@@ -50,6 +49,24 @@ class Marshaller {
                 id:     form.id,
                 name:   form.name,
                 data:   JSON.parse(form.data)
+        ]
+    }
+
+    static def serializeTrackObj(navimateforbusiness.TrackingObject trackObj) {
+        long currentTime = System.currentTimeMillis()
+        int lastUpdated = 0
+        if (currentTime > trackObj.lastUpdated) {
+            lastUpdated = (currentTime - trackObj.lastUpdated) / 1000
+        }
+
+        return [
+                name:           trackObj.rep.name,
+                id:             trackObj.rep.id,
+                latitude:       trackObj.position.latitude,
+                longitude:      trackObj.position.longitude,
+                lastUpdated:    lastUpdated,
+                speed:          trackObj.speed,
+                status:         trackObj.status
         ]
     }
 }
