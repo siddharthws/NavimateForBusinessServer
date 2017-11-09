@@ -47,10 +47,18 @@
         </div>
 
         <div class="map-box ml-2 full-flex" map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
-            <ng-map class="full-width full-height"
-                    center="{{mapCenter}}" zoom="{{mapZoom}}" map-initialized="mapInitialized(map)">
-                <marker ng-repeat="trackee in trackees" icon="{{getMarkerIcon(trackee)}}" title="{{trackee.name}}"
-                        position="[{{trackee.latitude}}, {{trackee.longitude}}]"/>
+            <ng-map class="full-width full-height" zoom="{{mapZoom}}"
+                    center="[{{selectedTrackee.latitude}}, {{selectedTrackee.longitude}}]"
+                    map-initialized="mapInitialized(map)">
+                <custom-marker
+                        ng-repeat="trackee in trackees"
+                        title="{{trackee.name}}"
+                        position="[{{trackee.latitude}}, {{trackee.longitude}}]"
+                        on-click="markerClick(trackee)">
+                    <div class="tracker-marker">
+                        {{trackee.name}}
+                    </div>
+                </custom-marker>
             </ng-map>
             <div class="map-box-shadow"></div>
         </div>
