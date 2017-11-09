@@ -11,3 +11,42 @@
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5) inset;
     pointer-events: none;
 }
+
+.tracker-marker {
+     font-size: 1.0em;
+     padding: 5px;
+     background: #37bcf2;
+     -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+     border-radius: 4px;
+     border: #37bcf2 solid 1px;
+     text-align: center;
+ }
+
+.tracker-marker:after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 7px 6px 0;
+    border-color: #37bcf2 transparent;
+    display: block;
+    width: 0;
+    z-index: 1;
+    margin-left: -6px;
+    bottom: -6px;
+    left: 50%;
+}
+
+.tracker-marker:before {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 7px 6px 0;
+    border-color: #7F7F7F transparent;
+    display: block;
+    width: 0;
+    z-index: 0;
+    margin-left: -6px;
+    bottom: -7px;
+    left: 50%;
+}

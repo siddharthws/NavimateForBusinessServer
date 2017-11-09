@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $interval, $localStorage, ToastService, reps) {
+app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $http, $mdDialog, $interval, $localStorage, ToastService, reps) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     // API to refresh Rep Status
@@ -41,35 +41,19 @@ app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $int
         // Set map object
         googleMap = map
 
-        // Center map on added leads
-        var bounds = new google.maps.LatLngBounds()
-        $scope.team.forEach(function (rep) {
-            bounds.extend(new google.maps.LatLng(rep.trackData.location.lat,rep.trackData.location.lng))
-        })
-        googleMap.fitBounds(bounds)
-    // Trigger resize event (Hack since map is not loaded correctly second time)
+        // Trigger resize event (Hack since map is not loaded correctly second time)
         google.maps.event.trigger(googleMap, 'resize')
+
         // Run angular digest cycle since this is async callback
         $scope.$apply()
     }
 
-        // API to get marker icon
-    $scope.getMarkerIcon = function (rep) {
-        // Blue marker for selected rep
-            return {
-                url: "/static/images/marker_selected.png",
-                scaledSize: [40, 40]
-            }
+    $scope.listItemClick = function (trackee) {
+        $scope.selectedTrackee = trackee
     }
 
-    $scope.listItemClick = function (rep) {
-        // Select this lead
-        $scope.selectedRep = rep
-
-        // Center map on this lead
-        if (googleMap){
-            googleMap.panTo(new google.maps.LatLng(rep.trackData.location.lat, rep.trackData.location.lng))
-        }
+    $scope.markerClick = function (event, trackee) {
+        $scope.listItemClick(trackee)
     }
 
     $scope.cancel = function () {
@@ -169,14 +153,14 @@ app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $int
 
     /* ------------------------------- INIT -----------------------------------*/
     // Init objects
-    $scope.mapCenter = [21, 75]
-    $scope.mapZoom   = 4
-    var googleMap = null
-
     // Tracking related variables
     $scope.trackees = []
     $scope.selectedTrackee = {}
     var refreshCb
+
+    // Map related vars
+    $scope.mapZoom = 14
+    var googleMap = null
 
     // Init Live Tracking
     init()
