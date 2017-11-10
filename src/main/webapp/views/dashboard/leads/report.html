@@ -88,9 +88,23 @@
                 {{$index + 1}}
             </td>
             <td ng-repeat="column in columns" class="table-col-md"
-                ng-class="{'table-col-sm': column.type == 'number' || column.type == 'text',
+                ng-class="{'table-col-sm': column.type == 'number' || column.type == 'text' || column.type == 'photo' || column.type == 'signature',
                            'table-col-lg': column.name == 'Lead'}">
-                {{filteredValues[$parent.$index][column.title]}}
+                <div ng-show="(column.type == 'text') ||
+                              (column.type == 'number') ||
+                              (column.type == 'radioList') ||
+                              (column.type == 'checkList') ||
+                              (column.type == 'selection') ||
+                              (column.type == 'date') ||
+                              (filteredValues[$parent.$index][column.title] == '-')">
+                    {{filteredValues[$parent.$index][column.title]}}
+                </div>
+                <input type="button" value=""
+                       ng-show="((column.type == 'photo') ||
+                                 (column.type == 'signature')) &&
+                                 (filteredValues[$parent.$index][column.title] != '-')"
+                       class="image-button ib-small ib-link"
+                       ng-click="showImage(filteredValues[$parent.$index][column.title])"/>
             </td>
         </tr>
     </table>
