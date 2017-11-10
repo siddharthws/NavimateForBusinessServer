@@ -103,7 +103,7 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Email Verify Dialog
-    this.emailVerify = function (name, email, passowrd) {
+    this.emailVerify = function (name, email, password) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/EmailVerify.html',
                             controller: 'EmailVerifyCtrl',
@@ -111,7 +111,19 @@ app.service('DialogService', function($mdDialog) {
                             locals: {
                                 name: name,
                                 email: email,
-                                password: passowrd,
+                                password: password,
+                            }
+        })
+    }
+
+    // Launch Email Verify Dialog
+    this.photoViewer = function (filename) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/PhotoViewer.html',
+                            controller: 'PhotoViewerCtrl',
+                            clickOutsideToClose: true,
+                            locals: {
+                                filename: filename
                             }
         })
     }
