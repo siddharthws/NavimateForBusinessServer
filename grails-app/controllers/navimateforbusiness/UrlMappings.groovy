@@ -34,6 +34,10 @@ class UrlMappings {
         "/api/reps/fcm"             (controller: "RepApi") {action = [POST: "updateFcm"]}
         "/api/reps/otp"             (controller: "RepApi") {action = [POST: "sendOtpSms"]}
 
+        // Photo APIs
+        "/api/photos/upload"        (controller: "PhotoApi") {action = [POST: "upload"]}
+        "/api/photos/get"           (controller: "PhotoApi") {action = [GET: "get"]}
+
         // Tracking APIs
         "/api/track/start"          (controller: "TrackingApi") {action = [POST: "start"]}
         "/api/track/refresh"        (controller: "TrackingApi") {action = [POST: "refresh"]}
