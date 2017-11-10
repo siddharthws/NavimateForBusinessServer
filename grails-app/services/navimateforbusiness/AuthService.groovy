@@ -22,7 +22,7 @@ class AuthService {
                                     status:         navimateforbusiness.UserStatus.ACTIVE)
 
         // Add Sales Template By Default
-        manager.addToForms(getSalesTemplate(manager))
+        manager.addToForms(getDefaultTemplate(manager))
 
         // Save
         manager.save(flush: true, failOnError: true)
@@ -97,14 +97,24 @@ class AuthService {
         true
     }
 
-    private def getSalesTemplate(User manager) {
-        Form salesTemplate = new Form(
+    private def getDefaultTemplate(User manager) {
+        Form defaultTemplate = new Form(
                 account: manager.account,
                 owner: manager,
-                name: "Sales Template",
-                data: '[ { "title":  "Sales", "type":   "number", "value":  "0" }, { "title":  "Notes", "type":   "text", "value":  "" }, { "title":  "Status", "type":   "radioList", "value":  { "options": ["Failed", "Waiting", "Done"], "selection": "Waiting" } }]'
+                name: "Default Template",
+                data:('[{"title":"Amount", "type":"number", "value":"0"},' +
+                       '{"title":"Notes", "type":"text", "value":"" },' +
+                       '{"title":"Photo", "type":"photo", "value":""},' +
+                       '{"title":"Sign", "type":"signature", "value":""},' +
+                       '{"title":"Status", "type":"radioList", "value":{"options": ["Failed",' +
+                                                                                   '"Waiting",' +
+                                                                                   '"Done"],' +
+                                                                       '"selection": "Waiting"}},' +
+                       '{"title":"To-Do", "type":"checkList", "value":{"options":["Meet Client",' +
+                                                                                 '"Collect Information"],' +
+                                                                      '"selection":["false", "false"]}}]')
         )
 
-        salesTemplate
+        defaultTemplate
     }
 }
