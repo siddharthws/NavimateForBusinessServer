@@ -68,6 +68,8 @@ grails:
             maxsize: 1000
     controllers:
         defaultScope: singleton
+        maxFileSize: 5000000
+        maxRequestSize: 5000000
     converters:
         encoding: UTF-8
     views:
@@ -86,6 +88,8 @@ grails:
             updateOnStart: true
             updateOnStartFileNames:
                 - changelog.groovy
+        awssdk:
+            region: us-west-2
 
 endpoints:
     jmx:
@@ -123,6 +127,12 @@ environments:
                   mail.smtp.socketFactory.port: "465"
                   mail.smtp.socketFactory.class: "javax.net.ssl.SSLSocketFactory"
                   mail.smtp.socketFactory.fallback: "false"
+            plugin:
+                awssdk:
+                    s3:
+                        accessKey: "AKIAJBDGFQ5JNLKWPT6A"
+                        secretKey: "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"
+                        bucket: 'navimate-biz-dev'
     test:
         dataSource:
             url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
@@ -164,3 +174,9 @@ environments:
                     mail.smtp.auth: "true"
                     mail.smtp.starttls.enable: "true"
                     mail.from: "navimateapp@gmail.com"
+            plugin:
+                awssdk:
+                    s3:
+                        accessKey: "${AWS_S3_ACCESS_KEY}"
+                        secretKey: "${AWS_S3_SECRET_KEY}"
+                        bucket: 'navimate-biz-prod'
