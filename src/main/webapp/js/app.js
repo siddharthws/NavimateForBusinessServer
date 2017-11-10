@@ -32,11 +32,26 @@ app.factory('httpResponseInterceptor', ['$q', '$injector',
     }
 ]);
 
+// Filter to convert form byte array to base string
+app.filter('bytetobase', function () {
+    return function (buffer) {
+        var binary = '';
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    };
+});
+
 app.config(['$locationProvider', function ($locationProvider) {
     $locationProvider.hashPrefix('');
 }]);
 
-app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compileProvider) {
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|file|ftp|blob):|data:image\//);
+
     // Configure Http Response Interceptor
     $httpProvider.interceptors.push('httpResponseInterceptor');
 
