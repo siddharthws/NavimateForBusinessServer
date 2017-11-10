@@ -64,3 +64,11 @@
 .ib-cross.active, .ib-cross:hover {
     background-image: url("/static/images/icon_cross_active.png");
 }
+
+.ib-link {
+    background-image: url("/static/images/ic_link.png");
+}
+
+.ib-link.active, .ib-link:hover {
+    background-image: url("/static/images/ic_link_active.png");
+}

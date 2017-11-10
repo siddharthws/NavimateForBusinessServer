@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStorage, $state, $filter, ExcelService) {
+app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStorage, $state, $filter, ExcelService, DialogService) {
 
     /*-------------------------------------- Scope APIs ---------------------------------------*/
     $scope.export = function () {
@@ -17,6 +17,10 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
             // Error toast
             ToastService.toast("Nothing to export !!!")
         }
+    }
+    
+    $scope.showImage = function (filename) {
+        DialogService.photoViewer(filename)
     }
 
     // Filter Related APIs
