@@ -14,7 +14,11 @@ app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStor
 
     /*------------------------------- Scope APIs -------------------------------*/
     $scope.edit = function (form) {
-        DialogService.editForm(form, getForms)
+        DialogService.formEditor(form, getForms)
+    }
+
+    $scope.create = function () {
+        DialogService.formEditor(null, getForms)
     }
 
     /*------------------------------- Other APIs -------------------------------*/

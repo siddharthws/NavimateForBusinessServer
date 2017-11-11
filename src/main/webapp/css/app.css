@@ -53,3 +53,11 @@ md-toast.md-center {
     position: absolute;
     left: -9999px;
 }
+
+.overflow-auto {
+    overflow: auto;
+}
+
+td.has-error, div.has-error {
+    border: 1px solid red;
+}

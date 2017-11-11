@@ -1,0 +1,123 @@
+<!-- HTML template for Form Editor Dialog -->
+<md-dialog class="dialog-container h-100 w-75">
+    <div class="d-flex flex-column h-100 w-100">
+        <!-- Dialog Title -->
+        <div class="container-fluid">
+            <h4><b>Form Editor</b></h4>
+            <hr>
+        </div>
+
+        <!-- Form Title -->
+        <div class="d-flex align-items-center">
+            <span>Template Name :</span>
+            <input class="input-underlined full-flex ml-2" type="text" placeholder="Enter template name..."
+                   ng-class="{'has-error': (!form.name || (formNames.indexOf(form.name) != -1)) && bShowError}"
+                   ng-model="form.name">
+        </div>
+
+        <!-- Form Fields -->
+        <a href class="mt-5" ng-click="form.data.push({type: 'text', title: '', value: ''})">+ Add New Field</a>
+        <div class="d-flex flex-column full-flex overflow-auto">
+            <table class="table table-striped text-center" ng-table="">
+                <thead>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        Default
+                    </th>
+                    <th>
+                    </th>
+                </thead>
+                <tr ng-repeat="field in form.data">
+                    <!-- Field Type Dropdown -->
+                    <td ng-class="{'has-error': !field.type && bShowError}">
+                        <div class="dropdown full-width full-height">
+                            <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
+                                <span class="full-flex">{{field.type}}</span>
+                                <img src="/static/images/icon_dropdown.png"/>
+                            </button>
+                            <div class="dropdown-menu full-width">
+                                <button class="dropdown-item" ng-repeat="type in $root.Constants.Form.Types"
+                                        ng-click="updateFieldType(field, type)">
+                                    {{type}}
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+
+                    <!-- Field title Input -->
+                    <td ng-class="{'has-error': isDupeFieldTitle(field.title) && bShowError}">
+                        <input class="input-underlined" type="text" placeholder="Enter title..."
+                               ng-model="field.title" ng-class="{'has-error': bShowError && !field.title}">
+                    </td>
+
+                    <!-- Field values -->
+                    <td>
+                        <!-- Text Field -->
+                        <input class="input-underlined" type="text" placeholder="Enter default text..."
+                               ng-model="field.value"
+                               ng-show="field.type == 'text'">
+
+                        <!-- Number Field -->
+                        <input string-to-number class="input-underlined" type="number" placeholder="Enter default value..."
+                               ng-model="field.value"
+                               ng-show="field.type == 'number'">
+
+                        <!-- Radio List Field -->
+                        <div ng-show="field.type == 'radioList'"
+                             ng-class="{'has-error': (!field.value.options.length || !field.value.selection || checkDupes(field.value.options)) && bShowError}">
+                            <md-radio-group ng-model="field.value.selection">
+                                <div class="d-flex align-items-center"
+                                     ng-repeat="option in field.value.options track by $index">
+                                    <md-radio-button ng-value="option"></md-radio-button>
+                                    <input class="input-underlined" type="text" placeholder="Enter option..."
+                                           ng-model="field.value.options[$index]" ng-class="{'has-error': bShowError && !option}"
+                                           ng-change="radioOptionChanged(field, field.value.options[$index], '{{field.value.options[$index]}}')">
+                                    <input type="button" value="" class="image-button ib-small ib-cross"
+                                           ng-click="radioOptionRemove(field, $index)"/>
+                                </div>
+                            </md-radio-group>
+                            <a href ng-click="field.value.options.push('')">+ Add Option</a>
+                        </div>
+
+                        <!-- Check list Field -->
+                        <div ng-show="field.type == 'checkList'"
+                             ng-class="{'has-error': (!field.value.options.length || checkDupes(field.value.options)) && bShowError}">
+                            <div class="d-flex align-items-center"
+                                 ng-repeat="option in field.value.options track by $index">
+                                <md-checkbox ng-value="option" ng-model="field.value.selection[$index]"></md-checkbox>
+                                <input class="input-underlined" type="text" placeholder="Enter option..."
+                                       ng-model="field.value.options[$index]" ng-class="{'has-error': bShowError && !option}">
+                                <input type="button" value="" class="image-button ib-small ib-cross"
+                                       ng-click="field.value.options.splice($index, 1);
+                                                 field.value.selection.splice($index, 1);"/>
+                            </div>
+                            <a href ng-click="field.value.options.push('');">+ Add Option</a>
+                        </div>
+
+                        <!-- Invalid Default Value Fields -->
+                        <div ng-show="field.type == 'photo' || field.type == 'signature'">
+                            NA
+                        </div>
+                    </td>
+
+                    <!-- Actions for field entry -->
+                    <td>
+                        <input type="button" value="" class="image-button ib-small ib-cross"
+                               ng-click="form.data.splice($index, 1)"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Dialog Buttons -->
+        <div class="container-fluid d-flex justify-content-end">
+            <button class="btn btn-primary" ng-click="save()">Save</button>
+            <button class="btn" ng-click="close()">Close</button>
+        </div>
+    </div>
+</md-dialog>
