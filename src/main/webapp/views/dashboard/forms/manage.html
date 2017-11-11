@@ -1,24 +1,34 @@
 <!-- Form Manage HTML -->
 <div class="content-toolbar d-flex">
     <button class="btn btn-primary" ng-click="create()">Create Template</button>
+
+    <div class="dropdown">
+        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown" ng-disabled="!selection.length">
+            <span>Actions | </span>
+            <img class="img-icon" src="/static/images/dropdown.png"/>
+        </button>
+        <div class="dropdown-menu">
+            <button class="dropdown-item" ng-click="edit()">Edit</button>
+        </div>
+    </div>
 </div>
 
 <div class="content-data full-flex">
     <table class="table table-striped" ng-table="">
         <thead>
-        <th>
-            Name
-        </th>
-        <th>
-            Actions
-        </th>
+            <th>
+                <input type="checkbox" ng-click="toggleAll()" ng-checked="selection.length == forms.length">
+            </th>
+            <th>
+                Name
+            </th>
         </thead>
         <tr ng-repeat="form in forms">
             <td class="text-center">
-                {{form.name}}
+                <input type="checkbox" ng-click="toggleSelection(form)" ng-checked="selection.indexOf(form) != -1">
             </td>
-            <td>
-                <input type="button" value="" class="image-button ib-small ib-edit" ng-click="edit(form)"/>
+            <td class="text-center">
+                {{form.name}}
             </td>
         </tr>
     </table>
