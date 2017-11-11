@@ -6,8 +6,8 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
 
     /* ------------------------------- INIT -----------------------------------*/
     // Set menu and option
-    $scope.selection.item       = MENU_ITEMS[MENU_ITEM_TEAM]
-    $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
+    $scope.nav.item       = MENU_ITEMS[MENU_ITEM_TEAM]
+    $scope.nav.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
     $scope.team = []
 
     $scope.init = function ()

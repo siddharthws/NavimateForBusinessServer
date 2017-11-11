@@ -173,8 +173,8 @@ app.controller("LeadReportCtrl", function ($scope, $rootScope, $http, $localStor
 
     /*-------------------------------------- INIT ---------------------------------------------*/
     // Set menu and option
-    $scope.selection.item       = MENU_ITEMS[MENU_ITEM_LEADS]
-    $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_REPORT]
+    $scope.nav.item       = MENU_ITEMS[MENU_ITEM_LEADS]
+    $scope.nav.option     = ITEM_OPTIONS[ITEM_OPTION_REPORT]
 
     // Init Report Variables
     $scope.values = []
