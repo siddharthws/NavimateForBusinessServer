@@ -5,19 +5,19 @@
         <div class="logo-container align-self-center">
             <img class="logo-1 align-self-center" src="/static/images/logo.png">
         </div>
-        <button class="nav-btn" ng-class="{true: 'active'}[selection.item.name == 'team']"
+        <button class="nav-btn" ng-class="{true: 'active'}[nav.item.name == 'team']"
                 ui-sref="dashboard.team-manage">
             Team
         </button>
-        <button class="nav-btn" ng-class="{true: 'active'}[selection.item.name == 'leads']"
+        <button class="nav-btn" ng-class="{true: 'active'}[nav.item.name == 'leads']"
                 ui-sref="dashboard.leads-manage">
             Leads
         </button>
-        <button class="nav-btn" ng-class="{true: 'active'}[selection.item.name == 'tasks']"
+        <button class="nav-btn" ng-class="{true: 'active'}[nav.item.name == 'tasks']"
                 ui-sref="dashboard.tasks-manage">
             Tasks
         </button>
-        <button class="nav-btn" ng-class="{true: 'active'}[selection.item.name == 'forms']"
+        <button class="nav-btn" ng-class="{true: 'active'}[nav.item.name == 'forms']"
                 ui-sref="dashboard.forms-manage">
             Forms
         </button>
@@ -25,9 +25,9 @@
 
     <div class="col-md-10 d-flex flex-column full-flex">
         <div class="dashboard-header d-flex align-items-center">
-            <button ng-repeat="option in selection.item.options"
+            <button ng-repeat="option in nav.item.options"
                     ng-click="onOptionClick(option)"
-                    class="nav-btn h-50 align-self-end" ng-class="{true: 'active'}[selection.option.id == option.id]">
+                    class="nav-btn h-50 align-self-end" ng-class="{true: 'active'}[nav.option.id == option.id]">
                 {{option.title}}
             </button>
 

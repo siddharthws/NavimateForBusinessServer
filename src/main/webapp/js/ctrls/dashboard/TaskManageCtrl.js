@@ -6,8 +6,8 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
 
     /*-------------------------------- INIT --------------------------------*/
         // Set menu and option
-    $scope.selection.item       = MENU_ITEMS[MENU_ITEM_TASKS]
-    $scope.selection.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
+    $scope.nav.item       = MENU_ITEMS[MENU_ITEM_TASKS]
+    $scope.nav.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
 
     function initTasks () {
         //Re-initialize selection to empty

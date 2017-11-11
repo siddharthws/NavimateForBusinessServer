@@ -6,7 +6,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $localStor
 
     /*------------------------------------ INIT --------------------------------*/
     // Menu Selection Parameters
-    $scope.selection = {}
+    $scope.nav = {}
     $scope.name = $localStorage.name
 
     /*------------------------------------ APIs --------------------------------*/
@@ -29,7 +29,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $localStor
 
     $scope.onOptionClick = function (option) {
         // Prepare State URL
-        var state = "dashboard." + $scope.selection.item.name + "-" + option.name
+        var state = "dashboard." + $scope.nav.item.name + "-" + option.name
 
         // Update State to this option
         $state.go(state)
