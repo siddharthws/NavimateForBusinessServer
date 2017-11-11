@@ -69,6 +69,7 @@
 
                         <!-- Radio List Field -->
                         <div ng-show="field.type == 'radioList'"
+                             class="d-flex flex-column align-items-center"
                              ng-class="{'has-error': (!field.value.options.length || !field.value.selection || checkDupes(field.value.options)) && bShowError}">
                             <md-radio-group ng-model="field.value.selection">
                                 <div class="d-flex align-items-center"
@@ -86,6 +87,7 @@
 
                         <!-- Check list Field -->
                         <div ng-show="field.type == 'checkList'"
+                             class="d-flex flex-column align-items-center"
                              ng-class="{'has-error': (!field.value.options.length || checkDupes(field.value.options)) && bShowError}">
                             <div class="d-flex align-items-center"
                                  ng-repeat="option in field.value.options track by $index">
