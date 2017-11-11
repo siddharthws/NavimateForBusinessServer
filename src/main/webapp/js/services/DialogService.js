@@ -81,10 +81,10 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Edit Form Dialog
-    this.editForm = function (form, updateCb) {
+    this.formEditor = function (form, updateCb) {
         // Show Dialog
-        $mdDialog.show({    templateUrl: '/static/views/dialogs/EditForm.html',
-                            controller: 'EditFormCtrl',
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/FormEditor.html',
+                            controller: 'FormEditorCtrl',
                             clickOutsideToClose: true,
                             locals: { form: form, updateCb: updateCb }
         })
