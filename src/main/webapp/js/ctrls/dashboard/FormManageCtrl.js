@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService) {
+app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService) {
 
     /*------------------------------- INIT -------------------------------*/
     // Set menu and option
