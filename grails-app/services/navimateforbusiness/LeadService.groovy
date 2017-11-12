@@ -24,10 +24,10 @@ class LeadService {
         def columns = excelJson[0]
 
         // Get indexes of columns
-        int titleIdx = columns.indexOf("Title")
+        int titleIdx = columns.indexOf("Title*")
         int descIdx = columns.indexOf("Description")
-        int phoneIdx = columns.indexOf("Phone")
-        int addressIdx = columns.indexOf("Address")
+        int phoneIdx = columns.indexOf("Phone*")
+        int addressIdx = columns.indexOf("Address*")
         int emailIdx = columns.indexOf("Email")
         int latIdx = columns.indexOf("Latitude")
         int lngIdx = columns.indexOf("Longitude")
@@ -40,6 +40,7 @@ class LeadService {
         // Create Lead Objects
         for (int i = 1; i < excelJson.length(); i++){
             def row = excelJson[i]
+
             String title = row[titleIdx]
             String phone = row[phoneIdx]
             String address = row[addressIdx]
@@ -48,9 +49,14 @@ class LeadService {
             Double lat = 0
             Double lng = 0
 
+            // Ignore entry if all mandatory fields are blank
+            if (!title && !phone && !address) {
+                continue
+            }
+
             // Ensure data is present for mandatory columns
             if (!title || !phone || !address){
-                throw new navimateforbusiness.ApiException("Data in mandatory columns missing", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new navimateforbusiness.ApiException("Data in mandatory columns missing (" + title + ":" + phone + ":" + address + ")", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Populate Optional
@@ -87,6 +93,11 @@ class LeadService {
             }
 
             leads.push(lead)
+        }
+
+        // Throw exception if no leads found
+        if (!leads.size()) {
+            throw new navimateforbusiness.ApiException("No leads found in excel...", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
         }
 
         return leads

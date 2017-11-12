@@ -206,14 +206,13 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
             },
             function (error) {
                 $rootScope.hideWaitingDialog()
-                // Excel File Parse Error
-                console.log(error)
+                ToastService.toast("Unable to parse uploaded file. Please make sure file is as per template.")
             }
         )
     }
 
     $scope.excelError = function (e) {
-        console.log("Excel Read Error = " + e)
+        ToastService.toast("Invalid file for uploading leads...")
     }
     
     $scope.uploadTemplate = function () {
