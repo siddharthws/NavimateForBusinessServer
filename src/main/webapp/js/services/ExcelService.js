@@ -64,13 +64,13 @@ app.service("ExcelService", function ($http, $localStorage, $filter, FileSaver, 
     this.leadUploadTemplate = function (){
         // Create worksheet from JSON
         var json = [{
-            "Title":        "",
+            "Title*":       "",
+            "Phone*":       "",
+            "Address*":     "",
             "Description":  "",
-            "Phone":        "",
-            "Address":      "",
             "Email":        "",
-            "Latitude":     0,
-            "Longitude":    0,
+            "Latitude":     "",
+            "Longitude":    "",
         }]
         var ws = XLSX.utils.json_to_sheet(json)
 
