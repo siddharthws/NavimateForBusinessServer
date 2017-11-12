@@ -115,11 +115,15 @@ class UserApiController {
                 // Edit Existing lead
                 lead = Lead.findById(jsonLead.id)
             } else {
-                // Create new lead
-                lead = new Lead(
-                        account: user.account,
-                        manager: user
-                )
+                // check for duplicate lead in database
+                lead = Lead.findByManagerAndTitleAndDescriptionAndPhoneAndAddressAndEmail(user,jsonLead.title,jsonLead.description,jsonLead.phoneNumber,jsonLead.address,jsonLead.email)
+                if(!lead) {
+                    // Create new lead
+                    lead = new Lead(
+                            account: user.account,
+                            manager: user
+                    )
+                }
             }
 
             // Update Information passed from json
