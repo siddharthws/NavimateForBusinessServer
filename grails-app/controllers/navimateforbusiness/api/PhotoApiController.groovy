@@ -29,8 +29,11 @@ class PhotoApiController {
             throw new ApiException("Invalid File..." + filename, Constants.HttpCodes.BAD_REQUEST)
         }
 
-        // Convert to bytes & send in response
+        // Convert to bytes & delete the file
         byte[] ba = IOUtils.copyToByteArray(imageFile)
+        imageFile.delete()
+
+        // Send bytes in response
         def resp = [image: ba]
         render resp as JSON
     }
