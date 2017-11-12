@@ -152,13 +152,6 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
                 scaledSize: [40, 40]
             }
         }
-        // Red marker for error marker lead
-        else if (!$scope.isLeadValid(lead) && $scope.bShowError) {
-            return {
-                url: "/static/images/marker_error.png",
-                scaledSize: [40, 40]
-            }
-        }
         // Default green icon
         else {
             return {
