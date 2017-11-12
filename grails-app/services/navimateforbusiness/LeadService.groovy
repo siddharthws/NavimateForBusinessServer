@@ -43,47 +43,47 @@ class LeadService {
             String title = row[titleIdx]
             String phone = row[phoneIdx]
             String address = row[addressIdx]
+            String email = ""
+            String description = ""
+            Double lat = 0
+            Double lng = 0
 
             // Ensure data is present for mandatory columns
             if (!title || !phone || !address){
                 throw new navimateforbusiness.ApiException("Data in mandatory columns missing", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
 
-            // Create Lead Objects
-            Lead lead = new Lead(   title: title,
-                                    phone: phone,
-                                    address: address,
-                                    manager: manager,
-                                    account: manager.account)
-
             // Populate Optional
             if (emailIdx != -1)
             {
-                String email = row[emailIdx]
-                if (email)
-                {
-                    lead.email = email
-                }
+                email = row[emailIdx]
             }
 
             if (descIdx != -1)
             {
-                String desc = row[descIdx]
-                if (desc)
-                {
-                    lead.description = desc
-                }
+                description = row[descIdx]
             }
 
             if ((latIdx != -1) && (lngIdx != -1) && row[latIdx] && row[lngIdx] )
             {
-                Double lat = Double.parseDouble(row[latIdx])
-                Double lng = Double.parseDouble(row[lngIdx])
-                if (lat && lng)
-                {
-                    lead.latitude = lat
-                    lead.longitude = lng
-                }
+                lat = Double.parseDouble(row[latIdx])
+                lng = Double.parseDouble(row[lngIdx])
+            }
+
+            // check if lead already present in database
+            Lead lead = Lead.findByManagerAndTitleAndDescriptionAndPhoneAndAddressAndEmail(manager,title,description,phone,address,email)
+            if(!lead) {
+                // Create Lead Objects
+                  lead = new Lead(
+                          title:          title,
+                          phone:          phone,
+                          address:        address,
+                          manager:        manager,
+                          account:        manager.account,
+                          description:    description,
+                          email:          email,
+                          latitude:       lat,
+                          longitude:      lng)
             }
 
             leads.push(lead)
@@ -107,7 +107,7 @@ class LeadService {
                     catch (navimateforbusiness.ApiException e){
                         lead.latitude = 0
                         lead.longitude = 0
-                        lead.address=""
+                        lead.address = ""
                     }
                 }
             }
