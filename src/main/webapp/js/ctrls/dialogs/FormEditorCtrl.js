@@ -64,8 +64,10 @@ app.controller('FormEditorCtrl', function ($scope, $rootScope, $http, $localStor
         }
 
         // Update Value dtaa structure according to selection
-        if ((type == 'text') || (type == 'number') || (type == 'photo') || (type == 'signature')) {
-            field.value = ''
+        if ((type == 'text') || (type == 'photo') || (type == 'signature')) {
+            field.value = ""
+        } else if (type == 'number') {
+            field.value = 0
         } else if (type == 'radioList' || type == 'checkList') {
             field.value = {
                 selection: [],
@@ -160,6 +162,8 @@ app.controller('FormEditorCtrl', function ($scope, $rootScope, $http, $localStor
                     toastMessage = "Field titles must be unique..."
                 } else if (!field.type) {
                     toastMessage = "Field type cannot be empty..."
+                } else if ((field.type == 'number') && (field.value == "null")) {
+                    toastMessage = "Please fill mandatory values..."
                 } else if (field.type == 'radioList') {
                     if (!field.value.options.length) {
                         toastMessage = "Please add atleast 1 option to list..."
