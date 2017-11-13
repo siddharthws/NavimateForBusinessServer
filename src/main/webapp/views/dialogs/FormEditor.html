@@ -99,7 +99,8 @@
                                        ng-click="field.value.options.splice($index, 1);
                                                  field.value.selection.splice($index, 1);"/>
                             </div>
-                            <a href ng-click="field.value.options.push('');">+ Add Option</a>
+                            <a href ng-click="field.value.options.push('');
+                                              field.value.selection.push(false)">+ Add Option</a>
                         </div>
 
                         <!-- Invalid Default Value Fields -->
