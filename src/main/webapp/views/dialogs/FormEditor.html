@@ -65,7 +65,8 @@
                         <!-- Number Field -->
                         <input string-to-number class="input-underlined" type="number" placeholder="Enter default value..."
                                ng-model="field.value"
-                               ng-show="field.type == 'number'">
+                               ng-show="field.type == 'number'"
+                               ng-class="{'has-error': bShowError && (field.value == 'null')}">
 
                         <!-- Radio List Field -->
                         <div ng-show="field.type == 'radioList'"
