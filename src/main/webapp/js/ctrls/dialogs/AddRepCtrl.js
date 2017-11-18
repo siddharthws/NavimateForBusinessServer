@@ -38,7 +38,7 @@ app.controller('AddRepCtrl', function ($scope, $rootScope, $http, $localStorage,
                     $rootScope.hideWaitingDialog()
                     // Hide dialog and show toast
                     $mdDialog.hide()
-                    ToastService.toast("Rep Added")
+                    ToastService.toast("An SMS has been sent to the rep...")
 
                     // Trigger Callback
                     teamUpdateCb()
