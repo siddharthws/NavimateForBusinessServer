@@ -81,12 +81,12 @@ app.controller("LeadReportCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     $scope.fromDateUpdate = function (fromDate, column) {
-        $scope.filter.date[column].from = $filter('date')(fromDate, 'yyyy-MM-dd')
+        $scope.filter.date[column].from = $filter('date')(fromDate, 'yyyy-MM-dd HH:mm:ss')
         $scope.applyFilters()
     }
 
     $scope.toDateUpdate = function (toDate, column) {
-        $scope.filter.date[column].to = $filter('date')(toDate, 'yyyy-MM-dd')
+        $scope.filter.date[column].to = $filter('date')(toDate, 'yyyy-MM-dd HH:mm:ss')
         $scope.applyFilters()
     }
 
