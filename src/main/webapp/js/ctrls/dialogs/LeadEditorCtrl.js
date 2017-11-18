@@ -191,10 +191,19 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
         ExcelService.excelRead(workbook).then(
             function (response) {
                 $rootScope.hideWaitingDialog()
+
+                //Adding leads from excel
                 response.data.forEach(function (lead) {
-                    //Adding leads from excel
                     $scope.leads.push(lead);
                 })
+
+                // Remove all empty leads from array
+                for (var i = ($scope.leads.length - 1); i >= 0; i--) {
+                    var lead = $scope.leads[i]
+                    if (!lead.title && !lead.description && !lead.phoneNumber && !lead.address) {
+                        $scope.leads.splice(i, 1)
+                    }
+                }
 
             },
             function (error) {
