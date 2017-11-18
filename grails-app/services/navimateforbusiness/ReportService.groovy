@@ -10,8 +10,10 @@ class ReportService {
     def getTeamReport(User manager) {
         // Prepare list of columns
         def columns = [
+                [type: "selection", title: "Manager"],
                 [type: "selection", title: "Rep"],
-                [type: "selection", title: "Lead"]
+                [type: "selection", title: "Lead"],
+                [type: "selection", title: "Template"]
         ]
         def formColumns = getFormColumns(manager)
         columns += formColumns
@@ -27,7 +29,8 @@ class ReportService {
             if (!tasks) {
                 // If no tasks, create empty entry
                 def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
-                row[0] = rep.name
+                row[0] = manager.name
+                row[1] = rep.name
                 row[row.size() - 1] = rep.lastUpdated.format("yyyy-MM-dd")
                 values.push(row)
             } else tasks.each {task ->
@@ -35,15 +38,19 @@ class ReportService {
                 if (!forms) {
                     // Create single entry for each task
                     def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
-                    row[0] = rep.name
-                    row[1] = task.lead.title
+                    row[0] = manager.name
+                    row[1] = rep.name
+                    row[2] = task.lead.title
+                    row[3] = task.template.name
                     row[row.size() - 1] = task.lastUpdated.format("yyyy-MM-dd")
                     values.push(row)
                 } else forms.each {form ->
                     def formRow = getFormRow(form, formColumns)
                     def row = [
+                            manager.name,
                             rep.name,
-                            task.lead.title
+                            task.lead.title,
+                            form.name
                     ]
                     row += formRow
                     row.push(form.lastUpdated.format("yyyy-MM-dd"))
@@ -63,8 +70,10 @@ class ReportService {
     def getLeadReport(User manager) {
         // Prepare list of columns
         def columns = [
+                [type: "selection", title: "Manager"],
                 [type: "selection", title: "Lead"],
-                [type: "selection", title: "Rep"]
+                [type: "selection", title: "Rep"],
+                [type: "selection", title: "Template"]
         ]
         def formColumns = getFormColumns(manager)
         columns += formColumns
@@ -80,7 +89,8 @@ class ReportService {
             if (!tasks) {
                 // If no tasks, create empty entry
                 def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
-                row[0] = lead.title
+                row[0] = manager.name
+                row[1] = lead.title
                 row[row.size() - 1] = lead.lastUpdated.format("yyyy-MM-dd")
                 values.push(row)
             } else tasks.each {task ->
@@ -88,15 +98,19 @@ class ReportService {
                 if (!forms) {
                     // Create single entry for each task
                     def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
-                    row[0] = lead.title
-                    row[1] = task.rep.name
+                    row[0] = manager.name
+                    row[1] = lead.title
+                    row[2] = task.rep.name
+                    row[3] = task.template.name
                     row[row.size() - 1] = task.lastUpdated.format("yyyy-MM-dd")
                     values.push(row)
                 } else forms.each {form ->
                     def formRow = getFormRow(form, formColumns)
                     def row = [
+                            manager.name,
                             lead.title,
-                            task.rep.name
+                            task.rep.name,
+                            form.name
                     ]
                     row += formRow
                     row.push(form.lastUpdated.format("yyyy-MM-dd"))
