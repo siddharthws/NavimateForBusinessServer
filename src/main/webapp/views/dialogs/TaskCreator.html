@@ -1,13 +1,13 @@
 <!-- HTML template for Task Creator Dialog -->
 <md-dialog class="dialog-container dialog-task-creator d-flex flex-column">
     <div class="dialog-header">
-        Create Tasks
+        <h4><b>Task Creator</b></h4>
         <hr>
     </div>
 
-    <button class="btn btn-primary" ng-click="add()">Add Task</button>
+    <a href class="ml-2" ng-click="add()">+ Add Task</a>
 
-    <div class="task-creator-table full-flex d-flex col-sm-12">
+    <div class="task-creator-table full-flex d-flex col-sm-12 mt-2">
         <table class="table table-bordered" ng-table="">
             <thead>
                 <tr class="row">
