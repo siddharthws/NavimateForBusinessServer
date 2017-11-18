@@ -11,4 +11,5 @@ databaseChangeLog = {
     include file: 'add-column-task-period.groovy'
     include file: 'update-string-longtext.groovy'
     include file: 'update-user-account-nullable.groovy'
+    include file: 'update-task-fields-nullable.groovy'
 }

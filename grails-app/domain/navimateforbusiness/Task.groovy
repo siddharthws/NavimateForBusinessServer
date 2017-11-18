@@ -29,6 +29,9 @@ class Task {
     ]
 
     static constraints = {
+        manager nullable: true
+        rep nullable: true
+        lead nullable: true
     }
 
     static mapping = {

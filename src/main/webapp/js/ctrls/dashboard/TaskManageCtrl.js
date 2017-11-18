@@ -76,6 +76,12 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
             closeSelected)
     }
 
+    $scope.remove = function () {
+        //Launch confirm Dialog box
+        DialogService.confirm("Are you sure you want to remove these " + $scope.selection.length + " tasks ?",
+            removeSelected)
+    }
+
     function closeSelected() {
         //http call to close tasks
         $rootScope.showWaitingDialog("Closing Tasks...")
@@ -93,7 +99,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
             function (response) {
                 $rootScope.hideWaitingDialog()
                 // Show Toast
-                ToastService.toast("tasks closed...")
+                ToastService.toast("Tasks closed...")
 
                 // re-initialize tasks
                 initTasks()
@@ -106,7 +112,38 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                 // re-initialize tasks
                 initTasks()
             })
+    }
 
+    function removeSelected() {
+        //http call to close tasks
+        $rootScope.showWaitingDialog("Removing Tasks...")
+        $http({
+            method: 'POST',
+            url:    '/api/users/task/remove',
+            headers: {
+                'X-Auth-Token': $localStorage.accessToken
+            },
+            data: {
+                tasks : $scope.selection
+            }
+        })
+        .then(
+            function (response) {
+                $rootScope.hideWaitingDialog()
+                // Show Toast
+                ToastService.toast("Tasks removed successfully...")
+
+                // re-initialize tasks
+                initTasks()
+
+            },
+            function (error) {
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Failed to remove tasks!!!")
+
+                // re-initialize tasks
+                initTasks()
+            })
     }
     
     $scope.stopRenewal = function () {

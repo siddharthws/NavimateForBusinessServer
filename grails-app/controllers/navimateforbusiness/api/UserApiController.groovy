@@ -270,6 +270,39 @@ class UserApiController {
         render resp as JSON
     }
 
+    def removeTasks() {
+        // Get Reps from JSON
+        def fcms = []
+        JSONArray tasksJson = request.JSON.tasks
+        tasksJson.each {taskJson ->
+            Task task = Task.findById(taskJson.id)
+            if (!task) {
+                throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Save rep's fcm to be used later
+            if (task.status != TaskStatus.CLOSED) {
+                if (!fcms.contains(task.rep.fcmId)) {
+                    fcms.push(task.rep.fcmId)
+                }
+            }
+
+            task.manager = null
+            task.rep = null
+            task.lead = null
+            task.status = TaskStatus.CLOSED
+            task.save(flush: true, failOnError: true)
+        }
+
+        // Send notifications to all reps
+        fcms.each {fcm ->
+            fcmService.notifyApp(fcm)
+        }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     def getForm() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
