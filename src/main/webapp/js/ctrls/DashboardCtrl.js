@@ -2,7 +2,7 @@
  * Created by Siddharth on 23-08-2017.
  */
 
-app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $localStorage, AuthService) {
+app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $localStorage, AuthService) {
 
     /*------------------------------------ INIT --------------------------------*/
     // Menu Selection Parameters
@@ -33,5 +33,9 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $localStor
 
         // Update State to this option
         $state.go(state)
+    }
+    
+    $scope.openHelp = function () {
+        $window.open($state.href('help'), "_blank")
     }
 })
