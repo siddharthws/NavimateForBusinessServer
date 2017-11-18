@@ -221,6 +221,12 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
         // Reset Error flag
         $scope.bShowError = false
 
+        // Check for empty leads
+        if ($scope.leads.length == 0) {
+            ToastService.toast("Please add some leads to save...")
+            return false
+        }
+
         // Validate leads
         for (var  i = 0; i < $scope.leads.length; i++) {
             var lead = $scope.leads[i]
