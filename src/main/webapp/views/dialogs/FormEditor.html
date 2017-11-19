@@ -17,8 +17,7 @@
 
         <!-- Form Fields -->
         <a href class="mt-5" ng-click="form.data.push({type: 'text', title: '', value: ''})">+ Add New Field</a>
-        <div class="d-flex flex-column full-flex overflow-auto">
-            <table class="table table-striped text-center" ng-table="">
+        <table class="table table-striped text-center full-flex" ng-table="">
                 <thead>
                     <th>
                         Type
@@ -116,10 +115,9 @@
                     </td>
                 </tr>
             </table>
-        </div>
 
         <!-- Dialog Buttons -->
-        <div class="container-fluid d-flex justify-content-end">
+        <div class="container-fluid d-flex justify-content-end flex-shrink-0">
             <button class="btn btn-primary" ng-click="save()">Save</button>
             <button class="btn" ng-click="close()">Close</button>
         </div>

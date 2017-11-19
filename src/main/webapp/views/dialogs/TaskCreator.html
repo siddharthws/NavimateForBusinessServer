@@ -1,40 +1,37 @@
 <!-- HTML template for Task Creator Dialog -->
-<md-dialog class="dialog-container dialog-task-creator d-flex flex-column">
-    <div class="dialog-header">
-        <h4><b>Task Creator</b></h4>
-        <hr>
-    </div>
+<md-dialog class="dialog-container w-100 h-100">
+    <div class="d-flex flex-column h-100 w-100">
+        <div class="dialog-header">
+            <h4><b>Task Creator</b></h4>
+            <hr>
+        </div>
 
-    <a href class="ml-2" ng-click="add()">+ Add Task</a>
-
-    <div class="task-creator-table full-flex d-flex col-sm-12 mt-2">
-        <table class="table table-bordered" ng-table="">
+        <a href class="ml-2" ng-click="add()">+ Add Task</a>
+        <table class="table table-bordered full-flex mt-1" ng-table="">
             <thead>
-                <tr class="row">
-                    <th class="col-sm-1">
-                        #
-                    </th>
-                    <th class="col-sm-4">
-                        Company
-                    </th>
-                    <th class="col-sm-3">
-                        Rep
-                    </th>
-                    <th class="col-sm-2">
-                        Template
-                    </th>
-                    <th class="col-sm-1">
-                        Renew In (Days)
-                    </th>
-                    <th class="col-sm-1">
-                    </th>
-                </tr>
+                <th class="table-col-sm">
+                    #
+                </th>
+                <th class="table-col-lg">
+                    Company
+                </th>
+                <th class="table-col-lg">
+                    Rep
+                </th>
+                <th class="table-col-md">
+                    Template
+                </th>
+                <th class="table-col-sm">
+                    Renew In (Days)
+                </th>
+                <th class="table-col-sm">
+                </th>
             </thead>
-            <tr class="row" ng-repeat="task in tasks">
-                <td class="text-center col-sm-1">
+            <tr ng-repeat="task in tasks">
+                <td class="text-center table-col-sm">
                     {{$index + 1}}
                 </td>
-                <td class="col-sm-4" ng-class="{'has-error': !task.lead && bShowError}">
+                <td class="table-col-lg" ng-class="{'has-error': !task.lead && bShowError}">
                     <div class="dropdown full-width full-height">
                         <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
                             <span class="full-flex">{{task.lead.title}}</span>
@@ -47,7 +44,7 @@
                     </div>
                 </td>
 
-                <td class="col-sm-3" ng-class="{'has-error': !task.rep && bShowError}">
+                <td class="table-col-lg" ng-class="{'has-error': !task.rep && bShowError}">
                     <div class="dropdown full-width full-height">
                         <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
                             <span class="full-flex">{{task.rep.name}}</span>
@@ -60,7 +57,7 @@
                     </div>
                 </td>
 
-                <td class="col-sm-2" ng-class="{'has-error': !task.template && bShowError}">
+                <td class="table-col-md" ng-class="{'has-error': !task.template && bShowError}">
                     <div class="dropdown full-width full-height">
                         <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
                             <span class="full-flex">{{task.template.name}}</span>
@@ -72,19 +69,19 @@
                         </div>
                     </div>
                 </td>
-                <td class="col-sm-1">
-                    <input type="number" ng-model="task.period" value="0" class="input-underlined w-75"
+                <td class="table-col-sm">
+                    <input type="number" ng-model="task.period" value="0" class="input-underlined"
                            onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"/>
                 </td>
-                <td class="col-sm-1">
-                    <input type="button" value="" class="image-button ib-bin" ng-click="remove(task)"/>
+                <td class="table-col-sm">
+                    <input type="button" value="" class="image-button ib-cross" ng-click="remove(task)"/>
                 </td>
             </tr>
         </table>
-    </div>
 
-    <div class="d-flex justify-content-end dialog-buttons">
-        <button class="btn btn-primary" ng-click="create()">Create</button>
-        <button class="btn" ng-click="cancel()">Cancel</button>
+        <div class="d-flex justify-content-end dialog-buttons flex-shrink-0">
+            <button class="btn btn-primary" ng-click="create()">Create</button>
+            <button class="btn" ng-click="cancel()">Cancel</button>
+        </div>
     </div>
 </md-dialog>
