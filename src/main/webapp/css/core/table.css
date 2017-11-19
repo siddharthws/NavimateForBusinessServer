@@ -1,4 +1,7 @@
 
+.table td {
+    padding: 0.25em;
+}
 
 .table-col-sm {
     min-width: 50px;

@@ -19,7 +19,7 @@ button:focus {
 /* Bootstrap button overrides */
 .btn {
     padding: 0.5em 1.5em;
-    margin: 5px;
+    margin: 0.25em;
     border: none;
 }
 
