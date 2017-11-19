@@ -8,11 +8,8 @@ app.controller("LeadReportCtrl", function ($scope, $rootScope, $http, $localStor
     $scope.export = function () {
         // Export only if some valid data is being displayed
         if ($scope.filteredValues.length) {
-            // Get table to export
-            var table = $('.lead-report-table').get(0)
-
             // Call Excel Service
-            ExcelService.export(table, "Lead-Report")
+            ExcelService.export($scope.filteredValues, $scope.columns, "Lead-Report")
         } else {
             // Error toast
             ToastService.toast("Nothing to export !!!")

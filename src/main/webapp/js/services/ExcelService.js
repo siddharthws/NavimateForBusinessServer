@@ -41,9 +41,24 @@ app.service("ExcelService", function ($http, $localStorage, $filter, FileSaver, 
     }
 
     // APIs to save table in excel file
-    this.export = function (table, fileNamePrefix){
-        // Convert table to workbook
-        var wb = XLSX.utils.table_to_book(table, {sheet:"Sheet 1"})
+    this.export = function (values, columns, fileNamePrefix){
+        // Create JSON based on visible columns
+        var json = []
+        for (var i = 0; i < values.length; i++) {
+            var row = values[i]
+            json.push({})
+            for (var j = 0; j < columns.length; j++) {
+                var column = columns[j]
+                if (column.show) {
+                    json[json.length - 1][column.title] = row[column.title]
+                }
+            }
+        }
+
+        // Convert json to workbook
+        var ws = XLSX.utils.json_to_sheet(json)
+        var wb = { SheetNames: [], Sheets: {} }
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet 1")
 
         // Create saveable blob object
         var wbOut = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'})
