@@ -3,7 +3,7 @@
     <div class="d-flex w-100 h-100">
         <div class="w-25 d-flex flex-column">
             <h4><b>Live Tracking</b></h4>
-            <div class="list-group p-1 mt-2 full-flex">
+            <div class="list-group list-group-bordered p-1 mt-1 full-flex overflow-auto">
                 <div href ng-repeat="trackee in trackees" ng-click="listItemClick(trackee)"
                      class="list-group-item list-group-item-action"
                      ng-class="{'active': selectedTrackee == trackee}">

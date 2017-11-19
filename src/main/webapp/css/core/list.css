@@ -1,14 +1,20 @@
 
-.list-group {
-    overflow: auto;
+.list-group-bordered {
     border: 1px solid #aaaaaa;
     border-radius: 0.25em;
+}
+
+.list-group-bordered-top {
+    border: 1px solid #aaaaaa;
+    border-bottom-color: transparent;
+    border-top-left-radius: 0.25em;
+    border-top-right-radius: 0.25em;
 }
 
 .list-group-item {
     border: 1px solid #aaaaaa;
     border-width: 1px 0px;
-    padding: 0.5em;
+    padding: 0.25em;
 }
 
 .list-group-item:first-child {

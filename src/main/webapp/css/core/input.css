@@ -40,6 +40,28 @@ input[type=number]::-webkit-outer-spin-button {
     border-color: #37bcf2;
 }
 
+.input-white {
+    color: white;
+    border-color: white;
+}
+
+.input-white::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    white;
+    opacity: 0.5;
+}
+.input-white:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    white;
+    opacity: 0.5;
+}
+.input-white::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    white;
+    opacity: 0.5;
+}
+.input-white:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color:    white;
+    opacity: 0.5;
+}
+
 input.img-icon:hover {
     border: 1px solid grey;
 }
