@@ -5,7 +5,7 @@
 app.service('GoogleApiService', function($http, $localStorage) {
 
     // API to show toast on screen
-    this.autoComplete = function (input, resultCb)
+    this.autoComplete = function (input, resultCb, errorCb)
     {
         // Send HTTP request to get place suggestions
         $http({
@@ -24,7 +24,7 @@ app.service('GoogleApiService', function($http, $localStorage) {
             },
             function (error) {
                 console.log("Cannot get autocomplete results : " + error)
-                resultCb()
+                errorCb()
             }
         )
     }
@@ -49,7 +49,6 @@ app.service('GoogleApiService', function($http, $localStorage) {
             },
             function (error) {
                 console.log("Cannot convert from address to latlng : " + error)
-                resultCb()
             }
         )
     }
@@ -75,7 +74,6 @@ app.service('GoogleApiService', function($http, $localStorage) {
             },
             function (error) {
                 console.log("Cannot convert from latlng to address : " + error)
-                resultCb()
             }
         )
     }

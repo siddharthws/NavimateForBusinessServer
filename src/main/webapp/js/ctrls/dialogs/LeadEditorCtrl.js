@@ -61,6 +61,10 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
 
                     // Stop Waiting flag
                     $scope.bSearchWaiting = false
+                },
+                function () {
+                    // Stop Waiting flag
+                    $scope.bSearchWaiting = false
                 })
         }
     }
@@ -175,11 +179,12 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
         // Update lead's latitude and longitude
         lead.latitude   = e.latLng.lat()
         lead.longitude  = e.latLng.lng()
+        lead.address = ""
 
         // Get address using reverse geocoding
         GoogleApiService.latlngToAddress(
             lead.latitude, lead.longitude,
-            function (address) { // Callback
+            function (address) { // Result Callback
                 // Assign address to lead
                 lead.address = address
             })
