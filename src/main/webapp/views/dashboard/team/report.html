@@ -3,6 +3,7 @@
     <button class="btn btn-primary" ng-click="resetFilters(); applyFilters()">Clear Filters</button>
     <button class="btn btn-primary" ng-click="export()">Export</button>
     <button class="btn btn-primary" ng-click="init()">Sync</button>
+    <button class="btn btn-primary" ng-click="toggleColumns()">Show/Hide Columns</button>
 </div>
 
 <div class="content-data full-flex">
@@ -12,10 +13,11 @@
                 #
             </th>
             <th ng-repeat="column in columns" class="table-col-md"
+                ng-show="column.show"
                 ng-class="{'table-col-sm': column.type == 'number' || column.type == 'text',
                            'table-col-lg': column.name == 'Lead'}">
                 <div class="dropdown dropdown-multiselect">
-                    <button class="dropdown-toggle-button-table d-flex w-100" data-toggle="dropdown">
+                    <button class="dropdown-toggle-button d-flex w-100" data-toggle="dropdown">
                         <span class="full-flex">{{column.title}}</span>
                         <img class="img-icon" src="/static/images/icon_filter.png"
                              ng-show="((((column.type == 'radioList') || (column.type == 'selection')) && (filter.selection[column.title].unselected.length == 0)) ||
@@ -88,6 +90,7 @@
                 {{$index + 1}}
             </td>
             <td ng-repeat="column in columns" class="table-col-md"
+                ng-show="column.show"
                 ng-class="{'table-col-sm': column.type == 'number' || column.type == 'text' || column.type == 'photo' || column.type == 'signature',
                            'table-col-lg': column.name == 'Lead'}">
                 <div ng-show="(column.type == 'text') ||

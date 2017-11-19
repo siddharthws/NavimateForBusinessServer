@@ -137,6 +137,13 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
         }
     }
 
+    // API to show / hide columns
+    $scope.toggleColumns = function () {
+        DialogService.toggleColumns($scope.columns, function (columns) {
+            $scope.columns = columns
+        })
+    }
+
     /*-------------------------------------- Local APIs ---------------------------------------*/
 
     function initFilterData() {
@@ -198,8 +205,18 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
         function (response) {
             $rootScope.hideWaitingDialog()
 
-            $scope.columns = response.data.columns
+            // Reset columns and values
+            $scope.columns = []
             $scope.values = []
+            $scope.filteredValues = []
+
+            // Init columns
+            var columns = response.data.columns
+            for (var i = 0; i < columns.length; i++) {
+                var column = columns[i]
+                column.show = true
+                $scope.columns.push(column)
+            }
 
             // Process report into columns
             var values = response.data.values

@@ -136,6 +136,13 @@ app.controller("LeadReportCtrl", function ($scope, $rootScope, $http, $localStor
         // Apply sorting
         $scope.filteredValues = $filter('orderBy')($scope.filteredValues, $scope.filter.sort)
     }
+    
+    // API to show / hide columns
+    $scope.toggleColumns = function () {
+        DialogService.toggleColumns($scope.columns, function (columns) {
+            $scope.columns = columns
+        })
+    }
 
     /*-------------------------------------- Local APIs ---------------------------------------*/
 
@@ -184,9 +191,7 @@ app.controller("LeadReportCtrl", function ($scope, $rootScope, $http, $localStor
     // Init filter
     $scope.resetFilters()
 
-
     // Get Lead report
-
     $scope.init = function () {
         $rootScope.showWaitingDialog("Please wait while we are fetching lead report...")
 
@@ -201,8 +206,18 @@ app.controller("LeadReportCtrl", function ($scope, $rootScope, $http, $localStor
             function (response) {
                 $rootScope.hideWaitingDialog()
 
-                $scope.columns = response.data.columns
+                // Reset columns and values
+                $scope.columns = []
                 $scope.values = []
+                $scope.filteredValues = []
+
+                // Init columns
+                var columns = response.data.columns
+                for (var i = 0; i < columns.length; i++) {
+                    var column = columns[i]
+                    column.show = true
+                    $scope.columns.push(column)
+                }
 
                 // Process report into columns
                 var values = response.data.values
