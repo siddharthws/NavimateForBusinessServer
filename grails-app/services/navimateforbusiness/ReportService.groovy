@@ -7,6 +7,7 @@ import org.grails.web.json.JSONArray
 @Transactional
 class ReportService {
     static String FORMAT_TIME = "yyyy-MM-dd HH:mm:ss"
+    static TimeZone IST = TimeZone.getTimeZone('Asia/Calcutta')
 
     def getTeamReport(User manager) {
         // Prepare list of columns
@@ -18,7 +19,7 @@ class ReportService {
         ]
         def formColumns = getFormColumns(manager)
         columns += formColumns
-        columns.push([type: "date", title: "Date"])
+        columns.push([type: "date", title: "Date(IST)"])
 
         // Iterate though each rep to get list of values
         def values = []
@@ -32,7 +33,7 @@ class ReportService {
                 def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
                 row[0] = manager.name
                 row[1] = rep.name
-                row[row.size() - 1] = rep.lastUpdated.format(FORMAT_TIME)
+                row[row.size() - 1] = rep.lastUpdated.format(FORMAT_TIME, IST)
                 values.push(row)
             } else tasks.each {task ->
                 List<Form> forms = Form.findAllByTask(task)
@@ -43,7 +44,7 @@ class ReportService {
                     row[1] = rep.name
                     row[2] = task.lead.title
                     row[3] = task.template.name
-                    row[row.size() - 1] = task.lastUpdated.format(FORMAT_TIME)
+                    row[row.size() - 1] = task.lastUpdated.format(FORMAT_TIME, IST)
                     values.push(row)
                 } else forms.each {form ->
                     def formRow = getFormRow(form, formColumns)
@@ -54,7 +55,7 @@ class ReportService {
                             form.name
                     ]
                     row += formRow
-                    row.push(form.lastUpdated.format(FORMAT_TIME))
+                    row.push(form.lastUpdated.format(FORMAT_TIME, IST))
                     values.push(row)
                 }
             }
@@ -78,7 +79,7 @@ class ReportService {
         ]
         def formColumns = getFormColumns(manager)
         columns += formColumns
-        columns.push([type: "date", title: "Date"])
+        columns.push([type: "date", title: "Date(IST)"])
 
         // Iterate though each rep to get list of values
         def values = []
@@ -92,7 +93,7 @@ class ReportService {
                 def row = new ArrayList<String>(Collections.nCopies(columns.size(), "-"))
                 row[0] = manager.name
                 row[1] = lead.title
-                row[row.size() - 1] = lead.lastUpdated.format(FORMAT_TIME)
+                row[row.size() - 1] = lead.lastUpdated.format(FORMAT_TIME, IST)
                 values.push(row)
             } else tasks.each {task ->
                 List<Form> forms = Form.findAllByTask(task)
@@ -103,7 +104,7 @@ class ReportService {
                     row[1] = lead.title
                     row[2] = task.rep.name
                     row[3] = task.template.name
-                    row[row.size() - 1] = task.lastUpdated.format(FORMAT_TIME)
+                    row[row.size() - 1] = task.lastUpdated.format(FORMAT_TIME, IST)
                     values.push(row)
                 } else forms.each {form ->
                     def formRow = getFormRow(form, formColumns)
@@ -114,7 +115,7 @@ class ReportService {
                             form.name
                     ]
                     row += formRow
-                    row.push(form.lastUpdated.format(FORMAT_TIME))
+                    row.push(form.lastUpdated.format(FORMAT_TIME, IST))
                     values.push(row)
                 }
             }
