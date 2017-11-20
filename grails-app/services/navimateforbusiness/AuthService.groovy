@@ -7,6 +7,7 @@ import grails.gorm.transactions.Transactional
 class AuthService {
 
     def redisService
+    def emailService
 
     def register(input) {
         // Create and save a new account
@@ -30,6 +31,10 @@ class AuthService {
         // Assign admin to account
         account.admin = manager
         account.save(flush: true, failOnError: true)
+
+        // Send invitation email
+        emailService.sendMail(  manager.email, "Your Navimate Credentials",
+                                "\nHi " + manager.name + ",\n\nThank you for registering on Navimate. You credentials are given below.\n\nEmail : " + manager.email + "\nPassword: " + manager.password)
 
         return manager
     }
