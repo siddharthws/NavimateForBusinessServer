@@ -30,6 +30,9 @@
         <th>
             Phone
         </th>
+        <th>
+            Address
+        </th>
         </thead>
         <tr ng-repeat="lead in leads">
             <td class="text-center">
@@ -43,6 +46,9 @@
             </td>
             <td class="text-center">
                 {{lead.phoneNumber}}
+            </td>
+            <td class="text-center">
+                {{lead.address}}
             </td>
         </tr>
     </table>
