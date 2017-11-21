@@ -2,7 +2,7 @@
  * Created by Siddharth on 01-09-2017.
  */
 
-app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $localStorage, AuthService, DialogService, ToastService) {
+app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $http, $localStorage, AuthService, DialogService, ToastService) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     // Button Click APIs
@@ -34,6 +34,36 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $lo
                     }
                 )
         }
+    }
+    
+    $scope.forgotPassword = function () {
+        // Check if email has been entered
+        if (!$scope.email) {
+            ToastService.toast("Please enter a valid Email Id...")
+            return
+        }
+
+        $rootScope.showWaitingDialog("Please wait while we email your password..")
+        $http({
+            method:     'POST',
+            url:        '/api/auth/forgotPassword',
+            data:       {
+                email:    $scope.email
+            }
+        })
+        .then(
+            function (response) {
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Your password has been mailed to your email ID...")
+            },
+            function (error) {
+                $rootScope.hideWaitingDialog()
+                if (error.status == 400) {
+                    ToastService.toast("Unknown email provided...")
+                } else {
+                    ToastService.toast("Unable to email your password...")
+                }
+            })
     }
 
     $scope.register = function () {

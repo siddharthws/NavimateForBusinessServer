@@ -12,6 +12,21 @@ class AuthApiController {
     def authService
     def emailService
 
+    def forgotPassword() {
+        // Validate user
+        String email = request.JSON.email
+        def user = User.findByEmailAndRole(email, Role.ADMIN)
+        if (!user) {
+            throw new ApiException("Unknown Email...", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Mail old password
+        emailService.sendMail(user.email, "Your Navimate Password", "Your Navimate Password is " + user.password)
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     def register() {
         def input = request.JSON
 
