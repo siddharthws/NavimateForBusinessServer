@@ -16,6 +16,7 @@ class UrlMappings {
         "/api/auth/forgotPassword"  (controller: "AuthApi") { action = [POST: "forgotPassword"] }
 
         // User Info APIs
+        "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
         "/api/users/team"           (controller: "UserApi") {action = [GET: "getTeam",      POST: "addRep"]}
         "/api/users/team/remove"    (controller: "UserApi") {action = [POST: "removeReps"]}
         "/api/users/lead"           (controller: "UserApi") {action = [GET: "getLead",      POST: "editLeads"]}

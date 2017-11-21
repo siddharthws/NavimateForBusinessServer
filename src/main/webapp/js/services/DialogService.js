@@ -140,4 +140,13 @@ app.service('DialogService', function($mdDialog) {
                             }
         })
     }
+
+    // Launch Change Password Dialog
+    this.changePassword = function () {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/ChangePassword.html',
+                            controller: 'ChangePasswordCtrl',
+                            clickOutsideToClose: true
+        })
+    }
 })

@@ -24,6 +24,22 @@ class UserApiController {
     def reportService
     def leadService
 
+    def changePassword() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Compare current password
+        if (!request.JSON.oldPassword.equals(user.password)) {
+            throw new ApiException("Password Validation Failed...", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Update password
+        user.password = request.JSON.newPassword
+        user.save(flush: true, failOnError: true)
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     def getTeam() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
