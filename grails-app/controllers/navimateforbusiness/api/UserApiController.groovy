@@ -351,6 +351,23 @@ class UserApiController {
         }
         form.save(flush: true, failOnError: true)
 
+        // Check if the form has any tasks
+        def fcms = []
+        def tasks = Task.findAllByTemplate(form)
+        tasks.each {task ->
+            // Send FCM notification only if task is OPEN
+            if (task.status == TaskStatus.OPEN) {
+                if (!fcms.contains(task.rep.fcmId)) {
+                    fcms.push(task.rep.fcmId)
+                }
+            }
+        }
+
+        // Send notifications to all reps
+        fcms.each {fcm ->
+            fcmService.notifyApp(fcm)
+        }
+
         // return resposne
         def resp = [success: true]
         render resp as JSON
