@@ -72,3 +72,11 @@
 .ib-link.active, .ib-link:hover {
     background-image: url("/static/images/ic_link_active.png");
 }
+
+.ib-map {
+    background-image: url("/static/images/icon_location_grey.png");
+}
+
+.ib-map.active, .ib-map:hover {
+    background-image: url("/static/images/icon_location_white.png");
+}

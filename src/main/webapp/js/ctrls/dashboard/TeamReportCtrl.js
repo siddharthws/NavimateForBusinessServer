@@ -20,6 +20,11 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
         DialogService.photoViewer(filename)
     }
 
+    $scope.showLocation = function (latlng) {
+        var latLngArr = latlng.split(',')
+        DialogService.locationViewer(latLngArr[0], latLngArr[1])
+    }
+
     // Filter Related APIs
     $scope.resetFilters = function () {
         // Init Blank Filter

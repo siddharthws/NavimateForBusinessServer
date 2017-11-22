@@ -156,6 +156,12 @@ class ReportService {
             }
         }
 
+        // Add Location column
+        columns.push([
+                title: 'Location',
+                type: 'location'
+        ])
+
         columns
     }
 
@@ -197,6 +203,17 @@ class ReportService {
                             row[index] = field.value
                         }
                     }
+                }
+            }
+        }
+
+        // Add form submission location
+        columns.eachWithIndex {column, index ->
+            if (column.type == 'location') {
+                if (form.latitude && form.longitude) {
+                    row[index] = form.latitude + "," + form.longitude
+                } else {
+                    row[index] = '-'
                 }
             }
         }
