@@ -2,7 +2,10 @@
  * Created by Siddharth on 01-09-2017.
  */
 
-app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $http, $localStorage, AuthService, DialogService, ToastService) {
+app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $http, $localStorage, $cookies, AuthService, DialogService, ToastService) {
+
+    var COOKIE_EMAIL = "Navm8Email"
+    var COOKIE_PASSWORD = "Navm8Password"
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     // Button Click APIs
@@ -15,6 +18,21 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
             AuthService.login($scope.email, $scope.password)
                 .then(
                     function (response) {
+                        // Save access token and user info
+                        $localStorage.accessToken = response.data.accessToken;
+                        $localStorage.name = response.data.name;
+
+                        // Check if user wants to be remembered
+                        if ($scope.bRemember) {
+                            // Add username and password to cookies
+                            $cookies.put(COOKIE_EMAIL, $scope.email)
+                            $cookies.put(COOKIE_PASSWORD, $scope.password)
+                        } else {
+                            // Remove username and password cookies
+                            $cookies.remove(COOKIE_EMAIL)
+                            $cookies.remove(COOKIE_PASSWORD)
+                        }
+
                         // Hide waiting dialog
                         $rootScope.hideWaitingDialog()
 
@@ -22,8 +40,6 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
                         $mdDialog.hide()
 
                         // Redirect to dashboard
-                        $localStorage.accessToken = response.data.accessToken;
-                        $localStorage.name = response.data.name;
                         $state.go("dashboard.team-manage")
                     },
                     function (error) {
@@ -91,6 +107,17 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
     }
 
     /* ------------------------------- INIT -----------------------------------*/
-    $scope.bShowError = false;
+    $scope.bShowError = false
+    $scope.bRemember = false
+    $scope.email = ""
+    $scope.password = ""
 
+    // Retrieve saved username and password
+    var savedEmail = $cookies.get(COOKIE_EMAIL)
+    var savedPassword = $cookies.get(COOKIE_PASSWORD)
+    if (savedEmail || savedPassword) {
+        $scope.bRemember = true
+        $scope.email = savedEmail
+        $scope.password = savedPassword
+    }
 })
