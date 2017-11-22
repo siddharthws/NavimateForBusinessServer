@@ -12,4 +12,5 @@ databaseChangeLog = {
     include file: 'update-string-longtext.groovy'
     include file: 'update-user-account-nullable.groovy'
     include file: 'update-task-fields-nullable.groovy'
+    include file: 'add-column-form-latlng.groovy'
 }
