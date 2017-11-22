@@ -33,6 +33,9 @@
         <th>
             Address
         </th>
+        <th>
+            Maps
+        </th>
         </thead>
         <tr ng-repeat="lead in leads">
             <td class="text-center">
@@ -49,6 +52,9 @@
             </td>
             <td class="text-center">
                 {{lead.address}}
+            </td>
+            <td>
+                <input type="button" value="" class="image-button ib-small ib-map" ng-click="showOnMaps(lead)"/>
             </td>
         </tr>
     </table>

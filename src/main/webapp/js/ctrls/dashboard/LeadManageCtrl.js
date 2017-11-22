@@ -2,7 +2,7 @@
  * Created by Siddharth on 04-09-2017.
  */
 
-app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, ExcelService, DialogService, ToastService) {
+app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, $window,  ExcelService, DialogService, ToastService) {
 
     /* ------------------------------- INIT -----------------------------------*/
     // Set menu and option
@@ -42,6 +42,10 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function() {
         DialogService.leadEditor(null, init)
+    }
+
+    $scope.showOnMaps = function (lead) {
+        $window.open("https://www.google.com/maps/search/?api=1&query=" + lead.latitude + "," + lead.longitude, "_blank")
     }
 
     // Single List Item Selection Toggle
