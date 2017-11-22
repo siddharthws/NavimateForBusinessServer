@@ -50,7 +50,11 @@ app.service("ExcelService", function ($http, $localStorage, $filter, FileSaver, 
             for (var j = 0; j < columns.length; j++) {
                 var column = columns[j]
                 if (column.show) {
-                    json[json.length - 1][column.title] = row[column.title]
+                    if ((column.type == 'location') && (row[column.title] != '-')) {
+                        json[json.length - 1][column.title] = "https://www.google.com/maps/search/?api=1&query=" + row[column.title]
+                    } else {
+                        json[json.length - 1][column.title] = row[column.title]
+                    }
                 }
             }
         }

@@ -108,8 +108,12 @@
                                  (filteredValues[$parent.$index][column.title] != '-')"
                        class="image-button ib-small ib-link"
                        ng-click="showImage(filteredValues[$parent.$index][column.title])"/>
+                <input type="button" value=""
+                       ng-show="(column.type == 'location') &&
+                                (filteredValues[$parent.$index][column.title] != '-')"
+                       class="image-button ib-small ib-map"
+                       ng-click="showLocation(filteredValues[$parent.$index][column.title])"/>
             </td>
-
         </tr>
     </table>
 </div>
