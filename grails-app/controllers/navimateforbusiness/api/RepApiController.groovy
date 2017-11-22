@@ -93,7 +93,9 @@ class RepApiController {
                                 task:       task,
                                 account:    rep.account,
                                 data:       data,
-                                owner:      rep)
+                                owner:      rep,
+                                latitude:   request.JSON.latitude,
+                                longitude:  request.JSON.longitude)
         form.save(flush: true, failOnErorr: true)
 
         // Update task status if required

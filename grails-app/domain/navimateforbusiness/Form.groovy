@@ -11,6 +11,11 @@ class Form {
     String name
     String data
 
+    // Location of form submission
+    double latitude     = 0
+    double longitude    = 0
+    String address      = ""
+
     static belongsTo = [
             account:    Account,
             owner:      User,
