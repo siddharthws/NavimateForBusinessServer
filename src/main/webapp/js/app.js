@@ -5,6 +5,7 @@ var app = angular.module("navimate", [
   'ngMaterial',
   'ngMap',
   'ngTable',
+  'ngCookies',
   'angularjs-dropdown-multiselect',
   'ngFileSaver',
   'angular.filter'
