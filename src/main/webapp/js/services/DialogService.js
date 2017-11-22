@@ -149,4 +149,17 @@ app.service('DialogService', function($mdDialog) {
                             clickOutsideToClose: true
         })
     }
+
+    // Launch Location Viewer Dialog
+    this.locationViewer = function (latitude, longitude) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/LocationViewer.html',
+                            controller: 'LocationViewerCtrl',
+                            clickOutsideToClose: true,
+                            locals: {
+                                latitude: latitude,
+                                longitude: longitude
+                            }
+        })
+    }
 })
