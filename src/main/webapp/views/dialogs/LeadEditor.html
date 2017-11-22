@@ -34,11 +34,11 @@
                             {{($index + 1) + "."}}
                         </span>
 
-                        <input class="input-underlined full-flex" type="text"  placeholder="Enter Title..."
+                        <input class="input-underlined w-75" type="text"  placeholder="Enter Title..."
                                ng-model="lead.title"
                                ng-class="{'has-error': bShowError && !lead.title, 'input-white': selectedLead == lead}">
 
-                        <input type="button" value="" class="image-button ib-small ib-cross" ng-click="remove(lead)"/>
+                        <input type="button" value="" class="image-button ib-small ib-cross flex-shrink-0" ng-click="remove(lead)"/>
                     </div>
 
                     <div class="d-flex flex-column" ng-show="selectedLead == lead">

@@ -38,7 +38,7 @@
                             <img src="/static/images/icon_dropdown.png"/>
                         </button>
                         <div class="dropdown-menu full-width">
-                            <input type="text" ng-model="leadFilter.title" placeholder="Search">
+                            <input type="text" ng-model="leadFilter.title" placeholder="Search" class="input-underlined">
                             <button class="dropdown-item" ng-repeat="lead in leads | filter:leadFilter" ng-click="task.lead = lead">{{lead.title}}</button>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                             <img src="/static/images/icon_dropdown.png"/>
                         </button>
                         <div class="dropdown-menu full-width">
-                            <input type="text" ng-model="repFilter.name" placeholder="Search">
+                            <input type="text" ng-model="repFilter.name" placeholder="Search" class="input-underlined">
                             <button class="dropdown-item" ng-repeat="rep in team | filter:repFilter" ng-click="task.rep = rep">{{rep.name}}</button>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                             <img src="/static/images/icon_dropdown.png"/>
                         </button>
                         <div class="dropdown-menu full-width">
-                            <input type="text" ng-model="formFilter.name" placeholder="Search">
+                            <input type="text" ng-model="formFilter.name" placeholder="Search" class="input-underlined">
                             <button class="dropdown-item" ng-repeat="template in formTemplates | filter:formFilter" ng-click="task.template = template">{{template.name}}</button>
                         </div>
                     </div>

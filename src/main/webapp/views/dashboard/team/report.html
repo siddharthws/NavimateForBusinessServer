@@ -45,7 +45,7 @@
 
                         <div ng-show="column.type == 'selection' || column.type == 'radioList'">
                             <span>Select:</span>
-                            <input type="text" ng-model="filter.search[column.title]" placeholder="Search...">
+                            <input type="text" ng-model="filter.search[column.title]" placeholder="Search..." class="input-underlined">
                             <div ng-repeat="value in filter.selection[column.title].options | filter:filter.search[column.title]">
                                 <input type="checkbox" ng-checked="filter.selection[column.title].unselected.indexOf(value) == -1"
                                        ng-click="filterSelect(column.title, value)"/>
@@ -54,7 +54,7 @@
                         </div>
 
                         <div ng-show="column.type == 'text'">
-                            <input type="text" placeholder="Search..." ng-model-options="{debounce: 500}"
+                            <input type="text" placeholder="Search..." ng-model-options="{debounce: 500}" class="input-underlined"
                                    ng-model="filter.text[column.title].search" ng-change="applyFilters()">
                         </div>
 
@@ -62,13 +62,13 @@
                             <span>Range:</span>
                             <div class="d-flex align-items-center">
                                 <span> <= </span>
-                                <input type="number" placeholder="Less than"
+                                <input type="number" placeholder="Less than" class="input-underlined"
                                        ng-model="filter.number[column.title].lesserThan" ng-model-options="{debounce: 500}"
                                        ng-change="applyFilters()" >
                             </div>
                             <div class="d-flex align-items-center">
                                 <span> >= </span>
-                                <input type="number" placeholder="Greater than"
+                                <input type="number" placeholder="Greater than" class="input-underlined"
                                        ng-model="filter.number[column.title].greaterThan" ng-model-options="{debounce: 500}"
                                        ng-change="applyFilters()" >
                             </div>
