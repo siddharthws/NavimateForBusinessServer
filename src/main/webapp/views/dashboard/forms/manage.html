@@ -19,7 +19,7 @@
             <th>
                 <input type="checkbox" ng-click="toggleAll()" ng-checked="selection.length == forms.length">
             </th>
-            <th>
+            <th class="text-left">
                 Name
             </th>
         </thead>
@@ -27,7 +27,7 @@
             <td class="text-center">
                 <input type="checkbox" ng-click="toggleSelection(form)" ng-checked="selection.indexOf(form) != -1">
             </td>
-            <td class="text-center">
+            <td>
                 {{form.name}}
             </td>
         </tr>

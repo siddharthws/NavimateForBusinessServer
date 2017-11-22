@@ -21,16 +21,16 @@
         <th>
             <input type="checkbox" ng-click="toggleAll()" ng-checked="selection.length == tasks.length">
         </th>
-        <th>
+        <th class="text-left">
             Company
         </th>
-        <th>
+        <th class="text-left">
             Rep
         </th>
-        <th>
+        <th class="text-left">
             Renewal Period
         </th>
-        <th>
+        <th class="text-left">
             Status
         </th>
         </thead>
@@ -38,16 +38,16 @@
             <td class="text-center">
                 <input type="checkbox" ng-click="toggleSelection(task)" ng-checked="selection.indexOf(task) != -1">
             </td>
-            <td class="text-center">
+            <td>
                 {{task.lead}}
             </td>
-            <td class="text-center">
+            <td>
                 {{task.rep}}
             </td>
-            <td class="text-center">
+            <td>
                 {{task.period}}
             </td>
-            <td class="text-center">
+            <td>
                 {{task.status}}
             </td>
         </tr>

@@ -3,6 +3,10 @@
     padding: 0.25em;
 }
 
+.table th {
+    padding: 0.5em 0.25em;
+}
+
 .table-col-sm {
     min-width: 50px;
 }

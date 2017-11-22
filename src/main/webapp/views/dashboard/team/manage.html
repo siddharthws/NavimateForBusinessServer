@@ -21,10 +21,10 @@
             <th>
                 <input type="checkbox" ng-click="toggleAll()" ng-checked="selection.length == team.length">
             </th>
-            <th>
+            <th class="text-left">
                 Name
             </th>
-            <th>
+            <th class="text-left">
                 Phone
             </th>
         </thead>
@@ -32,10 +32,10 @@
             <td class="text-center">
                 <input type="checkbox" ng-click="toggleSelection(rep)" ng-checked="selection.indexOf(rep) != -1">
             </td>
-            <td class="text-center">
+            <td>
                 {{rep.name}}
             </td>
-            <td class="text-center">
+            <td>
                 {{rep.phoneNumber}}
             </td>
         </tr>

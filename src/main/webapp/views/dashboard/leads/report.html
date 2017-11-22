@@ -12,20 +12,20 @@
             <th class="table-col-sm">
                 #
             </th>
-            <th ng-repeat="column in columns" class="table-col-md"
+            <th ng-repeat="column in columns" class="table-col-md text-left"
                 ng-show="column.show"
                 ng-class="{'table-col-sm': column.type == 'number' || column.type == 'text',
                            'table-col-lg': column.name == 'Lead'}">
                 <div class="dropdown dropdown-multiselect">
                     <button class="dropdown-toggle-button d-flex w-100" data-toggle="dropdown">
                         <span class="full-flex">{{column.title}}</span>
-                        <img class="img-icon" src="/static/images/icon_filter.png"
+                        <img class="img-icon ml-2" src="/static/images/icon_filter.png"
                              ng-show="((((column.type == 'radioList') || (column.type == 'selection')) && (filter.selection[column.title].unselected.length == 0)) ||
                                       ((column.type == 'text') && !filter.text[column.title].search) ||
                                       ((column.type == 'number') && !(filter.number[column.title].lesserThan || filter.number[column.title].greaterThan)) ||
                                       ((column.type == 'date') && !(filter.date[column.title].from || filter.date[column.title].to))) &&
                                       ((filter.sort.indexOf(column.title) == -1) && (filter.sort.indexOf('-' + column.title) == -1))"/>
-                        <img class="img-icon" src="/static/images/icon_filter_active.png"
+                        <img class="img-icon ml-2" src="/static/images/icon_filter_active.png"
                              ng-show="(((column.type == 'radioList') || (column.type == 'selection')) && (filter.selection[column.title].unselected.length > 0)) ||
                                       ((column.type == 'text') && filter.text[column.title].search) ||
                                       ((column.type == 'number') && (filter.number[column.title].lesserThan || filter.number[column.title].greaterThan)) ||
@@ -86,7 +86,7 @@
             </th>
         </thead>
         <tr ng-repeat="row in filteredValues">
-            <td class="table-col-sm">
+            <td class="table-col-sm text-center">
                 {{$index + 1}}
             </td>
             <td ng-repeat="column in columns" class="table-col-md"

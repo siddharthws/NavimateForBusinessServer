@@ -21,16 +21,16 @@
         <th>
             <input type="checkbox" ng-click="toggleAll()" ng-checked="selection.length == leads.length">
         </th>
-        <th>
+        <th class="text-left">
             Title
         </th>
-        <th>
+        <th class="text-left">
             Description
         </th>
-        <th>
+        <th class="text-left">
             Phone
         </th>
-        <th>
+        <th class="text-left">
             Address
         </th>
         <th>
@@ -41,19 +41,19 @@
             <td class="text-center">
                 <input type="checkbox" ng-click="toggleSelection(lead)" ng-checked="selection.indexOf(lead) != -1">
             </td>
-            <td class="text-center">
+            <td>
                 {{lead.title}}
             </td>
-            <td class="text-center">
+            <td>
                 {{lead.description}}
             </td>
-            <td class="text-center">
+            <td>
                 {{lead.phoneNumber}}
             </td>
-            <td class="text-center">
+            <td>
                 {{lead.address}}
             </td>
-            <td>
+            <td class="text-center">
                 <input type="button" value="" class="image-button ib-small ib-map" ng-click="showOnMaps(lead)"/>
             </td>
         </tr>
