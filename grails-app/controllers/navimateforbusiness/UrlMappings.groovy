@@ -30,6 +30,9 @@ class UrlMappings {
         "/api/reports/lead"         (controller: "UserApi") {action = [GET: "getLeadReport"]}
         "/api/leads/upload"         (controller: "UserApi") {action = [POST: "uploadLeads"]}
 
+        // App APIs
+        "/api/app/update"           (controller: "AppApi") {action = [POST: "checkForUpdate"]}
+
         // Rep APIs
         "/api/reps/profile"         (controller: "RepApi") {action = [POST: "getMyProfile"]}
         "/api/reps/register"        (controller: "RepApi") {action = [POST: "register"]}
