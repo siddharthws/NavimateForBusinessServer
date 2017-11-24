@@ -89,13 +89,15 @@ class RepApiController {
 
         // Add form to DB
         def data = request.JSON.data.toString()
+        def latitude = request.JSON.latitude ? request.JSON.latitude : 0
+        def longitude = request.JSON.longitude ? request.JSON.longitude : 0
         Form form = new Form(   name:       task.template.name,
                                 task:       task,
                                 account:    rep.account,
                                 data:       data,
                                 owner:      rep,
-                                latitude:   request.JSON.latitude,
-                                longitude:  request.JSON.longitude)
+                                latitude:   latitude,
+                                longitude:  longitude)
         form.save(flush: true, failOnErorr: true)
 
         // Update task status if required

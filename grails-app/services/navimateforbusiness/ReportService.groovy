@@ -19,7 +19,7 @@ class ReportService {
         ]
         def formColumns = getFormColumns(manager)
         columns += formColumns
-        columns.push([type: "date", title: "Date(IST)"])
+        columns.push([type: "date", title: "Date"])
 
         // Iterate though each rep to get list of values
         def values = []
@@ -79,7 +79,7 @@ class ReportService {
         ]
         def formColumns = getFormColumns(manager)
         columns += formColumns
-        columns.push([type: "date", title: "Date(IST)"])
+        columns.push([type: "date", title: "Date"])
 
         // Iterate though each rep to get list of values
         def values = []
