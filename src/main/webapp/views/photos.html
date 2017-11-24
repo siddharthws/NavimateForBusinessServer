@@ -1,0 +1,7 @@
+<div class="bg-grey h-100 w-100 d-flex align-items-center justify-content-center">
+    <img class="mh-100 mw-100" ng-show="image.length && !bError"
+         ng-src="data:image/JPEG;base64,{{image | bytetobase}}">
+    <span class="text-white" ng-show="bError">
+        Image is not available...
+    </span>
+</div>

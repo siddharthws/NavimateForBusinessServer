@@ -207,6 +207,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/forms/manage.html',
         controller: 'FormManageCtrl'
     })
+  .state('photos', {
+        url: '/photos?name',
+        templateUrl: '/static/views/photos.html',
+        controller: 'PhotosCtrl'
+  })
 });
 
 app.directive('stringToNumber', function() {

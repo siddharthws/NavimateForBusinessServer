@@ -52,6 +52,8 @@ app.service("ExcelService", function ($http, $localStorage, $filter, FileSaver, 
                 if (column.show) {
                     if ((column.type == 'location') && (row[column.title] != '-')) {
                         json[json.length - 1][column.title] = "https://www.google.com/maps/search/?api=1&query=" + row[column.title]
+                    } else if (((column.type == 'photo') || (column.type == 'signature')) && (row[column.title] != '-')) {
+                        json[json.length - 1][column.title] = "https://biz.navimateapp.com/#/photos?name=" + row[column.title]
                     } else {
                         json[json.length - 1][column.title] = row[column.title]
                     }

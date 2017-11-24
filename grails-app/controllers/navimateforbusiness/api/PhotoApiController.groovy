@@ -10,8 +10,13 @@ import navimateforbusiness.User
 class PhotoApiController {
 
     def amazonS3Service
+    def authService
 
     def get() {
+        if (!authService.authenticate(request.getHeader("X-Auth-Token"))) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
         // Get filename
         String filename = params.filename
         if (!filename) {

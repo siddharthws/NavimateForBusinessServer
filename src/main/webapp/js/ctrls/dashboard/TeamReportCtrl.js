@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStorage, $state, $filter, ExcelService, DialogService) {
+app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStorage, $state, $window, $filter, ExcelService, DialogService) {
 
     /*-------------------------------------- Scope APIs ---------------------------------------*/
     $scope.export = function () {
@@ -17,7 +17,7 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
     }
     
     $scope.showImage = function (filename) {
-        DialogService.photoViewer(filename)
+        $window.open($state.href('photos', {name: filename}), "_blank")
     }
 
     $scope.showLocation = function (latlng) {

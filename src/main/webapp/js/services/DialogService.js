@@ -116,18 +116,6 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
-    // Launch Email Verify Dialog
-    this.photoViewer = function (filename) {
-        // Show Dialog
-        $mdDialog.show({    templateUrl: '/static/views/dialogs/PhotoViewer.html',
-                            controller: 'PhotoViewerCtrl',
-                            clickOutsideToClose: true,
-                            locals: {
-                                filename: filename
-                            }
-        })
-    }
-
     // Launch Toggle Columns Dialog
     this.toggleColumns = function (columns, resultCb) {
         // Show Dialog
