@@ -7,15 +7,13 @@
 </div>
 
 <div class="content-data full-flex">
-    <table class="team-report-table table table-bordered" ng-table="">
+    <table class="table table-bordered" ng-table="">
         <thead>
-            <th class="table-col-sm">
+            <th>
                 #
             </th>
-            <th ng-repeat="column in columns" class="table-col-md"
-                ng-show="column.show"
-                ng-class="{'table-col-sm': column.type == 'number' || column.type == 'text',
-                           'table-col-lg': column.name == 'Lead'}">
+            <th ng-repeat="column in columns"
+                ng-show="column.show">
                 <div class="dropdown dropdown-multiselect">
                     <button class="dropdown-toggle-button d-flex w-100" data-toggle="dropdown">
                         <span class="full-flex">{{column.title}}</span>
@@ -86,13 +84,10 @@
             </th>
         </thead>
         <tr ng-repeat="row in filteredValues">
-            <td class="table-col-sm">
+            <td>
                 {{$index + 1}}
             </td>
-            <td ng-repeat="column in columns" class="table-col-md"
-                ng-show="column.show"
-                ng-class="{'table-col-sm': column.type == 'number' || column.type == 'text' || column.type == 'photo' || column.type == 'signature',
-                           'table-col-lg': column.name == 'Lead'}">
+            <td class="text-center" ng-repeat="column in columns" ng-show="column.show">
                 <div ng-show="(column.type == 'text') ||
                               (column.type == 'number') ||
                               (column.type == 'radioList') ||
