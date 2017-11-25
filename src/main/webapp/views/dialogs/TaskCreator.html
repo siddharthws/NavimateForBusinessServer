@@ -9,29 +9,29 @@
         <a href class="ml-2" ng-click="add()">+ Add Task</a>
         <table class="table table-bordered full-flex mt-1" ng-table="">
             <thead>
-                <th class="table-col-sm">
+                <th>
                     #
                 </th>
-                <th class="table-col-lg">
+                <th>
                     Company
                 </th>
-                <th class="table-col-lg">
+                <th>
                     Rep
                 </th>
-                <th class="table-col-md">
+                <th>
                     Template
                 </th>
-                <th class="table-col-sm">
+                <th>
                     Renew In (Days)
                 </th>
-                <th class="table-col-sm">
+                <th>
                 </th>
             </thead>
             <tr ng-repeat="task in tasks">
-                <td class="text-center table-col-sm">
+                <td class="text-center">
                     {{$index + 1}}
                 </td>
-                <td class="table-col-lg" ng-class="{'has-error': !task.lead && bShowError}">
+                <td ng-class="{'has-error': !task.lead && bShowError}">
                     <div class="dropdown full-width full-height">
                         <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
                             <span class="full-flex">{{task.lead.title}}</span>
@@ -44,7 +44,7 @@
                     </div>
                 </td>
 
-                <td class="table-col-lg" ng-class="{'has-error': !task.rep && bShowError}">
+                <td ng-class="{'has-error': !task.rep && bShowError}">
                     <div class="dropdown full-width full-height">
                         <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
                             <span class="full-flex">{{task.rep.name}}</span>
@@ -57,7 +57,7 @@
                     </div>
                 </td>
 
-                <td class="table-col-md" ng-class="{'has-error': !task.template && bShowError}">
+                <td ng-class="{'has-error': !task.template && bShowError}">
                     <div class="dropdown full-width full-height">
                         <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
                             <span class="full-flex">{{task.template.name}}</span>
@@ -69,11 +69,11 @@
                         </div>
                     </div>
                 </td>
-                <td class="table-col-sm">
-                    <input type="number" ng-model="task.period" value="0" class="input-underlined"
+                <td class="text-center">
+                    <input type="number" ng-model="task.period" value="0" class="input-underlined w-75"
                            onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"/>
                 </td>
-                <td class="table-col-sm">
+                <td>
                     <input type="button" value="" class="image-button ib-cross" ng-click="remove(task)"/>
                 </td>
             </tr>

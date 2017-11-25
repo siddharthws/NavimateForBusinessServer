@@ -8,7 +8,7 @@
         </div>
 
         <!-- Form Title -->
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center flex-shrink-0">
             <span>Template Name :</span>
             <input class="input-underlined full-flex ml-2" type="text" placeholder="Enter template name..."
                    ng-class="{'has-error': (!form.name || (formNames.indexOf(form.name) != -1)) && bShowError}"
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Form Fields -->
-        <a href class="mt-1" ng-click="form.data.push({type: 'text', title: '', value: ''})">+ Add New Field</a>
+        <a href class="mt-1 flex-shrink-0" ng-click="form.data.push({type: 'text', title: '', value: ''})">+ Add New Field</a>
         <table class="table table-striped text-center full-flex" ng-table="">
                 <thead>
                     <th>
@@ -50,19 +50,19 @@
 
                     <!-- Field title Input -->
                     <td ng-class="{'has-error': isDupeFieldTitle(field.title) && bShowError}">
-                        <input class="input-underlined" type="text" placeholder="Enter title..."
+                        <input class="input-underlined w-75" type="text" placeholder="Enter title..."
                                ng-model="field.title" ng-class="{'has-error': bShowError && !field.title}">
                     </td>
 
                     <!-- Field values -->
                     <td>
                         <!-- Text Field -->
-                        <input class="input-underlined" type="text" placeholder="Enter default text..."
+                        <input class="input-underlined w-75" type="text" placeholder="Enter default text..."
                                ng-model="field.value"
                                ng-show="field.type == 'text'">
 
                         <!-- Number Field -->
-                        <input string-to-number class="input-underlined" type="number" placeholder="Enter default value..."
+                        <input string-to-number class="input-underlined w-75" type="number" placeholder="Enter default value..."
                                ng-model="field.value"
                                ng-show="field.type == 'number'"
                                ng-class="{'has-error': bShowError && (field.value == 'null')}">
@@ -71,11 +71,11 @@
                         <div ng-show="field.type == 'radioList'"
                              class="d-flex flex-column align-items-center"
                              ng-class="{'has-error': (!field.value.options.length || !field.value.selection || checkDupes(field.value.options)) && bShowError}">
-                            <md-radio-group ng-model="field.value.selection">
-                                <div class="d-flex align-items-center"
+                            <md-radio-group ng-model="field.value.selection" class="w-75">
+                                <div class="d-flex align-items-center w-100"
                                      ng-repeat="option in field.value.options track by $index">
                                     <md-radio-button ng-value="option"></md-radio-button>
-                                    <input class="input-underlined" type="text" placeholder="Enter option..."
+                                    <input class="input-underlined full-flex" type="text" placeholder="Enter option..."
                                            ng-model="field.value.options[$index]" ng-class="{'has-error': bShowError && !option}"
                                            ng-change="radioOptionChanged(field, field.value.options[$index], '{{field.value.options[$index]}}')">
                                     <input type="button" value="" class="image-button ib-small ib-cross"
@@ -89,10 +89,10 @@
                         <div ng-show="field.type == 'checkList'"
                              class="d-flex flex-column align-items-center"
                              ng-class="{'has-error': (!field.value.options.length || checkDupes(field.value.options)) && bShowError}">
-                            <div class="d-flex align-items-center"
+                            <div class="d-flex align-items-center w-75"
                                  ng-repeat="option in field.value.options track by $index">
                                 <md-checkbox ng-value="option" ng-model="field.value.selection[$index]"></md-checkbox>
-                                <input class="input-underlined" type="text" placeholder="Enter option..."
+                                <input class="input-underlined full-flex" type="text" placeholder="Enter option..."
                                        ng-model="field.value.options[$index]" ng-class="{'has-error': bShowError && !option}">
                                 <input type="button" value="" class="image-button ib-small ib-cross"
                                        ng-click="field.value.options.splice($index, 1);
