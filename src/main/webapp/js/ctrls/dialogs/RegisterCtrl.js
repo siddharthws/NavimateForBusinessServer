@@ -22,13 +22,20 @@ app.controller('RegisterCtrl', function ($scope, $rootScope, $mdDialog, AuthServ
 
     /* ------------------------------- Local APIs -----------------------------------*/
     function validate() {
-        if (!$scope.email || !$scope.password || !$scope.name) {
+        if (!$scope.email || !$scope.password || !$scope.name || !$scope.confirmPassword) {
             // Raise error flag
             $scope.bShowError = true
 
             // Show error toast
             ToastService.toast("Please fill all fields !!!")
 
+            return false
+        }
+
+        // Valid passwords
+        if ($scope.password != $scope.confirmPassword) {
+            // Show error toast
+            ToastService.toast("Passwords do not match !!!")
             return false
         }
 
@@ -47,5 +54,6 @@ app.controller('RegisterCtrl', function ($scope, $rootScope, $mdDialog, AuthServ
     $scope.name = name
     $scope.email = email
     $scope.password = password
+    $scope.confirmPassword = password
 
 })
