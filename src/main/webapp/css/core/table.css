@@ -7,6 +7,16 @@
     width: -webkit-max-content;
 }
 
+tr:focus {
+    outline: none;
+}
+
+.table-striped tr.active:nth-of-type(odd),
+.table-striped tr.active {
+    background-color: #37bcf2;
+    color: white;
+ }
+
 .table td {
     padding: 0.25em;
     vertical-align: middle;

@@ -11,44 +11,32 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.track = function() {
-        DialogService.liveTracking(vm.selection)
-    }
-
-    // Single List Item Selection Toggle
-    vm.toggleSelection = function (rep) {
-        var idx = vm.selection.indexOf(rep)
-
-        // Check if rep is present in selection
-        if (idx != -1) {
-            // Remove from selection
-            vm.selection.splice(idx, 1)
-        } else {
-            // Add in selection
-            vm.selection.push(rep)
-        }
+        DialogService.liveTracking(vm.getSelectedItems())
     }
 
     // Full List Selection Toggling
     vm.toggleAll = function () {
-        // Check if all are selected
-        if (vm.selection.length == vm.team.length) {
-            // Remove All
-            vm.selection.splice(0, vm.selection.length)
-        } else {
-            // Add All
-            vm.team.forEach(function (rep) {
-                if (vm.selection.indexOf(rep) == -1) {
-                    vm.selection.push(rep)
-                }
-            })
+        for (var i = 0; i < vm.selection.length; i++) {
+            vm.selection[i] = vm.bCheckAll
         }
+    }
+
+    // API to get selected items
+    vm.getSelectedItems = function () {
+        var selectedItems = []
+        for (var i = 0; i < vm.selection.length; i++) {
+            if (vm.selection[i]) {
+                selectedItems.push(vm.team[i])
+            }
+        }
+        return selectedItems
     }
 
     // List Actions
     vm.remove = function() {
         // Launch Confirm Dialog
         DialogService.confirm(
-            "Are you sure you want to remove these " + vm.selection.length + " members from your team ?",
+            "Are you sure you want to remove these " + vm.getSelectedItems().length + " members from your team ?",
             function () {
                 $rootScope.showWaitingDialog("Please wait while we are removing members...")
                 // Make Http call to remove members
@@ -59,7 +47,7 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token':    $localStorage.accessToken
                     },
                     data: {
-                        reps: JSON.stringify(vm.selection)
+                        reps: JSON.stringify(vm.getSelectedItems())
                     }
                 })
                     .then(
@@ -84,20 +72,19 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
 
     vm.createtasks = function () {
         var task = []
-        vm.selection.forEach(function (rep)
+        vm.selection.forEach(function (bSelected, i)
         {
-            task.push({
-                rep: rep
-            })
+            if (bSelected) {
+                task.push({
+                    rep: vm.team[i]
+                })
+            }
         })
         DialogService.taskCreator(task)
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/
     function init() {
-        // Re-initialize selection to empty
-        vm.selection = []
-
         $rootScope.showWaitingDialog("Please wait while we are fetching team details...")
         // Get Team Data
         $http({
@@ -111,10 +98,17 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
                 function (response) {
                     $rootScope.hideWaitingDialog()
                     vm.team = response.data
+
+                    // Re-Init selection array with all unselected
+                    vm.selection = []
+                    vm.team.forEach(function () {
+                        vm.selection.push(false)
+                    })
                 },
                 function (error) {
                     $rootScope.hideWaitingDialog()
-                    console.log(error)
+
+                    ToastService.toast("Unable to load team !!!")
                 }
             )
     }
@@ -127,6 +121,7 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     // Init Variables
     vm.team = []
     vm.selection = []
+    vm.bCheckAll = false
 
     // Init View
     init()

@@ -1,0 +1,7 @@
+md-checkbox {
+    margin: 0.25em;
+}
+
+md-checkbox.md-checked .md-icon {
+    background-color: #37bcf2;
+}
