@@ -119,8 +119,8 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
 
     /* ------------------------------- INIT -----------------------------------*/
     // Set menu and option
-    $scope.nav.item       = MENU_ITEMS[MENU_ITEM_LEADS]
-    $scope.nav.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
+    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_LEADS]
+    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
 
     // Init Variables
     vm.leads = []

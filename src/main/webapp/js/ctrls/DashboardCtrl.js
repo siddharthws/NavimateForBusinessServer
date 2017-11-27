@@ -30,14 +30,6 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $
     $scope.changePassword = function () {
         DialogService.changePassword()
     }
-
-    $scope.onOptionClick = function (option) {
-        // Prepare State URL
-        var state = "dashboard." + $scope.nav.item.name + "-" + option.name
-
-        // Update State to this option
-        $state.go(state)
-    }
     
     $scope.openHelp = function () {
         $window.open($state.href('help'), "_blank")

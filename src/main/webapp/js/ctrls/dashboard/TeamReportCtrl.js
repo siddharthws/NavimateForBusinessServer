@@ -182,8 +182,8 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
 
     /*----------------------------------- INIT --------------------------------*/
     // Set menu and option
-    $scope.nav.item       = MENU_ITEMS[MENU_ITEM_TEAM]
-    $scope.nav.option     = ITEM_OPTIONS[ITEM_OPTION_REPORT]
+    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_TEAM]
+    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT]
 
     // Init Report Variables
     $scope.values = []
