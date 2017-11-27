@@ -14,41 +14,29 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
         $window.open("https://www.google.com/maps/search/?api=1&query=" + lead.latitude + "," + lead.longitude, "_blank")
     }
 
-    // Single List Item Selection Toggle
-    vm.toggleSelection = function (lead) {
-        var idx = vm.selection.indexOf(lead)
-
-        // Check if lead is present in selection
-        if (idx != -1) {
-            // Remove from selection
-            vm.selection.splice(idx, 1)
-        } else {
-            // Add in selection
-            vm.selection.push(lead)
+    // Full List Selection Toggling
+    vm.toggleAll = function () {
+        for (var i = 0; i < vm.selection.length; i++) {
+            vm.selection[i] = vm.bCheckAll
         }
     }
 
-    // Full List Selection Toggling
-    vm.toggleAll = function () {
-        // Check if all are selected
-        if (vm.selection.length == vm.leads.length) {
-            // Remove All
-            vm.selection.splice(0, vm.selection.length)
-        } else {
-            // Add All
-            vm.leads.forEach(function (lead) {
-                if (vm.selection.indexOf(lead) == -1) {
-                    vm.selection.push(lead)
-                }
-            })
+    // API to get selected items
+    vm.getSelectedItems = function () {
+        var selectedItems = []
+        for (var i = 0; i < vm.selection.length; i++) {
+            if (vm.selection[i]) {
+                selectedItems.push(vm.leads[i])
+            }
         }
+        return selectedItems
     }
 
     // List Actions
     vm.remove = function() {
         // Launch Confirm Dialog
         DialogService.confirm(
-            "Are you sure you want to remove these " + vm.selection.length + " leads ?",
+            "Are you sure you want to remove these " + vm.getSelectedItems().length + " leads ?",
             function () {
                 $rootScope.showWaitingDialog("Please wait while we are removing leads...")
                 // Make Http call to remove leads
@@ -59,7 +47,7 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        leads: vm.selection
+                        leads: vm.getSelectedItems()
                     }
                 }).then(
                     function (response) {
@@ -82,16 +70,18 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
     
     vm.edit = function () {
         //Launch Leads-Editor dialog
-        DialogService.leadEditor(vm.selection)
+        DialogService.leadEditor(vm.getSelectedItems())
     }
 
     vm.createtasks = function () {
         var task = []
-        vm.selection.forEach(function (lead)
+        vm.selection.forEach(function (bSelected, i)
         {
-            task.push({
-                lead: lead
-            })
+            if (bSelected) {
+                task.push({
+                    lead: vm.leads[i]
+                })
+            }
         })
         DialogService.taskCreator(task)
     }
@@ -99,9 +89,6 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
     /* ------------------------------- Local APIs -----------------------------------*/
     // Send request to get list of leads
     function init() {
-        // Re-initialize selection to empty
-        vm.selection = []
-
         $rootScope.showWaitingDialog("Please wait while we are fetching leads data...")
         //Get Leads Data
         $http({
@@ -115,10 +102,17 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
                 function (response) {
                     $rootScope.hideWaitingDialog()
                     vm.leads = response.data
+
+                    // Re-Init selection array with all unselected
+                    vm.selection = []
+                    vm.leads.forEach(function () {
+                        vm.selection.push(false)
+                    })
                 },
                 function (error) {
                     $rootScope.hideWaitingDialog()
-                    console.log(error)
+
+                    ToastService.toast("Unable to load leads")
                 }
             )
     }
@@ -131,6 +125,7 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
     // Init Variables
     vm.leads = []
     vm.selection = []
+    vm.bCheckAll = false
 
     init()
 })

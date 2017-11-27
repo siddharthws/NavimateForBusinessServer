@@ -3,7 +3,8 @@
     <button class="btn btn-primary" ng-click="$ctrl.add()">Add Rep</button>
 
     <div class="dropdown">
-        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown" ng-disabled="$ctrl.selection.length == 0">
+        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
+                ng-disabled="!$ctrl.getSelectedItems().length">
             <span>Actions | </span>
             <img class="img-icon" src="/static/images/dropdown.png"/>
         </button>
@@ -19,7 +20,7 @@
     <table class="table table-striped" ng-table="">
         <thead>
             <th>
-                <input type="checkbox" ng-click="$ctrl.toggleAll()" ng-checked="$ctrl.selection.length == $ctrl.team.length">
+                <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
             </th>
             <th class="text-left">
                 Name
@@ -28,9 +29,10 @@
                 Phone
             </th>
         </thead>
-        <tr ng-repeat="rep in $ctrl.team">
+        <tr ng-repeat="rep in $ctrl.team" ng-click="$ctrl.selection[$index] = !$ctrl.selection[$index]"
+            ng-class="{'active': $ctrl.selection[$index]}">
             <td class="text-center">
-                <input type="checkbox" ng-click="$ctrl.toggleSelection(rep)" ng-checked="$ctrl.selection.indexOf(rep) != -1">
+                <md-checkbox ng-model="$ctrl.selection[$index]" ng-click="$root.APIs.absorbEvent($event)"></md-checkbox>
             </td>
             <td>
                 {{rep.name}}

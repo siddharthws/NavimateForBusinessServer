@@ -7,10 +7,11 @@ app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStor
 
     /*------------------------------- Scope APIs -------------------------------*/
     vm.edit = function () {
-        if (vm.selection.length != 1) {
+        var selectedItems = vm.getSelectedItems()
+        if (selectedItems.length != 1) {
             ToastService.toast("Please select a single form to edit...")
         } else {
-            DialogService.formEditor(vm.selection[0], init)
+            DialogService.formEditor(selectedItems[0], init)
         }
     }
 
@@ -18,42 +19,27 @@ app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStor
         DialogService.formEditor(null, init)
     }
 
-    // Single List Item Selection Toggle
-    vm.toggleSelection = function (form) {
-        var idx = vm.selection.indexOf(form)
-
-        // Check if lead is present in selection
-        if (idx != -1) {
-            // Remove from selection
-            vm.selection.splice(idx, 1)
-        } else {
-            // Add in selection
-            vm.selection.push(form)
+    // Full List Selection Toggling
+    vm.toggleAll = function () {
+        for (var i = 0; i < vm.selection.length; i++) {
+            vm.selection[i] = vm.bCheckAll
         }
     }
 
-    // Full List Selection Toggling
-    vm.toggleAll = function () {
-        // Check if all are selected
-        if (vm.selection.length == vm.forms.length) {
-            // Remove All
-            vm.selection.splice(0, vm.selection.length)
-        } else {
-            // Add All
-            vm.forms.forEach(function (form) {
-                if (vm.selection.indexOf(form) == -1) {
-                    vm.selection.push(form)
-                }
-            })
+    // API to get selected items
+    vm.getSelectedItems = function () {
+        var selectedItems = []
+        for (var i = 0; i < vm.selection.length; i++) {
+            if (vm.selection[i]) {
+                selectedItems.push(vm.forms[i])
+            }
         }
+        return selectedItems
     }
 
     /*------------------------------- Local APIs -------------------------------*/
 
     function init() {
-        // Re-initialize selection array
-        vm.selection = []
-
         $rootScope.showWaitingDialog("Please wait while we are fetching forms...")
         $http({
             method:     'GET',
@@ -66,10 +52,17 @@ app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStor
             function (response) {
                 $rootScope.hideWaitingDialog()
                 vm.forms = response.data
+
+                // Re-Init selection array with all unselected
+                vm.selection = []
+                vm.forms.forEach(function () {
+                    vm.selection.push(false)
+                })
             },
             function (error) {
                 $rootScope.hideWaitingDialog()
-                console.log(error)
+
+                ToastService.toast("Unable to load forms !!!")
             }
         )
     }
@@ -82,6 +75,7 @@ app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStor
     // Init Object
     vm.selection = []
     vm.forms = []
+    vm.bCheckAll = false
 
     // Get Forms for this user
     init()

@@ -11,39 +11,27 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
         DialogService.taskCreator([{}], initTasks)
     }
 
-    // Single List Item Selection Toggle
-    vm.toggleSelection = function (task) {
-        var idx = vm.selection.indexOf(task)
-
-        // Check if task is present in selection
-        if (idx != -1) {
-            // Remove from selection
-            vm.selection.splice(idx, 1)
-        } else {
-            // Add in selection
-            vm.selection.push(task)
+    // Full List Selection Toggling
+    vm.toggleAll = function () {
+        for (var i = 0; i < vm.selection.length; i++) {
+            vm.selection[i] = vm.bCheckAll
         }
     }
 
-    // Full List Selection Toggling
-    vm.toggleAll = function () {
-        // Check if all are selected
-        if (vm.selection.length == vm.tasks.length) {
-            // Remove All
-            vm.selection.splice(0, vm.selection.length)
-        } else {
-            // Add All
-            vm.tasks.forEach(function (task) {
-                if (vm.selection.indexOf(task) == -1) {
-                    vm.selection.push(task)
-                }
-            })
+    // API to get selected items
+    vm.getSelectedItems = function () {
+        var selectedItems = []
+        for (var i = 0; i < vm.selection.length; i++) {
+            if (vm.selection[i]) {
+                selectedItems.push(vm.tasks[i])
+            }
         }
+        return selectedItems
     }
 
     vm.close = function () {
         //Launch confirm Dialog box
-        DialogService.confirm("Are you sure you want to close these " + vm.selection.length + " tasks ?",
+        DialogService.confirm("Are you sure you want to close these " + vm.getSelectedItems().length + " tasks ?",
             function () {
                 //http call to close tasks
                 $rootScope.showWaitingDialog("Closing Tasks...")
@@ -54,7 +42,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : vm.selection
+                        tasks : vm.getSelectedItems()
                     }
                 })
                 .then(
@@ -79,7 +67,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
 
     vm.remove = function () {
         //Launch confirm Dialog box
-        DialogService.confirm("Are you sure you want to remove these " + vm.selection.length + " tasks ?",
+        DialogService.confirm("Are you sure you want to remove these " + vm.getSelectedItems().length + " tasks ?",
             function () {
 
                 //http call to close tasks
@@ -91,7 +79,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : vm.selection
+                        tasks : vm.getSelectedItems()
                     }
                 })
                 .then(
@@ -116,7 +104,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     
     vm.stopRenewal = function () {
         //Launch confirm Dialog box
-        DialogService.confirm("Are you sure you want to stop renewal for " + vm.selection.length + " tasks ?",
+        DialogService.confirm("Are you sure you want to stop renewal for " + vm.getSelectedItems().length + " tasks ?",
             function () {
                 //http call to stop task renewal
                 $rootScope.showWaitingDialog("Stopping renewal period...")
@@ -127,7 +115,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : vm.selection
+                        tasks : vm.getSelectedItems()
                     }
                 })
                 .then(
@@ -150,11 +138,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     /*-------------------------------- Local APIs --------------------------------*/
-
     function initTasks () {
-        //Re-initialize selection to empty
-        vm.selection = []
-
         $rootScope.showWaitingDialog("Please wait while we are fetching tasks...")
         $http({
             method:     'GET',
@@ -167,10 +151,17 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                 function (response) {
                     $rootScope.hideWaitingDialog()
                     vm.tasks = response.data
+
+                    // Re-Init selection array with all unselected
+                    vm.selection = []
+                    vm.tasks.forEach(function () {
+                        vm.selection.push(false)
+                    })
                 },
                 function (error) {
                     $rootScope.hideWaitingDialog()
-                    console.log(error)
+
+                    ToastService.toast("Unable to load tasks !!!")
                 }
             )
     }
@@ -183,6 +174,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     // Init Objects
     vm.tasks = []
     vm.selection = []
+    vm.bCheckAll = false
 
     initTasks()
 })
