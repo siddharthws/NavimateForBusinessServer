@@ -1,16 +1,16 @@
 <!-- Tasks Manage HTML -->
 <div class="content-toolbar d-flex">
-    <button class="btn btn-primary" ng-click="add()">Add</button>
+    <button class="btn btn-primary" ng-click="$ctrl.add()">Add</button>
 
     <div class="dropdown">
-        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown" ng-disabled="selection.length == 0">
+        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown" ng-disabled="$ctrl.selection.length == 0">
             <span>Actions | </span>
             <img class="img-icon" src="/static/images/dropdown.png"/>
         </button>
         <div class="dropdown-menu">
-            <button class="dropdown-item" ng-click="close()">Close</button>
-            <button class="dropdown-item" ng-click="remove()">Remove</button>
-            <button class="dropdown-item" ng-click="stopRenewal()">Stop Renewal</button>
+            <button class="dropdown-item" ng-click="$ctrl.close()">Close</button>
+            <button class="dropdown-item" ng-click="$ctrl.remove()">Remove</button>
+            <button class="dropdown-item" ng-click="$ctrl.stopRenewal()">Stop Renewal</button>
         </div>
     </div>
 </div>
@@ -19,7 +19,7 @@
     <table class="table table-striped" ng-table="">
         <thead>
         <th>
-            <input type="checkbox" ng-click="toggleAll()" ng-checked="selection.length == tasks.length">
+            <input type="checkbox" ng-click="$ctrl.toggleAll()" ng-checked="$ctrl.selection.length == $ctrl.tasks.length">
         </th>
         <th class="text-left">
             Company
@@ -34,9 +34,9 @@
             Status
         </th>
         </thead>
-        <tr ng-repeat="task in tasks">
+        <tr ng-repeat="task in $ctrl.tasks">
             <td class="text-center">
-                <input type="checkbox" ng-click="toggleSelection(task)" ng-checked="selection.indexOf(task) != -1">
+                <input type="checkbox" ng-click="$ctrl.toggleSelection(task)" ng-checked="$ctrl.selection.indexOf(task) != -1">
             </td>
             <td>
                 {{task.lead}}
