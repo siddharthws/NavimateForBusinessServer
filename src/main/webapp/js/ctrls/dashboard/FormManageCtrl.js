@@ -3,66 +3,56 @@
  */
 
 app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService) {
-
-    /*------------------------------- INIT -------------------------------*/
-    // Set menu and option
-    $scope.nav.item       = MENU_ITEMS[MENU_ITEM_FORMS]
-    $scope.nav.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
-
-    // Init Object
-    $scope.selection = []
-
-    // Get Forms for this user
-    init()
+    var vm = this
 
     /*------------------------------- Scope APIs -------------------------------*/
-    $scope.edit = function () {
-        if ($scope.selection.length != 1) {
+    vm.edit = function () {
+        if (vm.selection.length != 1) {
             ToastService.toast("Please select a single form to edit...")
         } else {
-            DialogService.formEditor($scope.selection[0], init)
+            DialogService.formEditor(vm.selection[0], init)
         }
     }
 
-    $scope.create = function () {
+    vm.create = function () {
         DialogService.formEditor(null, init)
     }
 
     // Single List Item Selection Toggle
-    $scope.toggleSelection = function (form) {
-        var idx = $scope.selection.indexOf(form)
+    vm.toggleSelection = function (form) {
+        var idx = vm.selection.indexOf(form)
 
         // Check if lead is present in selection
         if (idx != -1) {
             // Remove from selection
-            $scope.selection.splice(idx, 1)
+            vm.selection.splice(idx, 1)
         } else {
             // Add in selection
-            $scope.selection.push(form)
+            vm.selection.push(form)
         }
     }
 
     // Full List Selection Toggling
-    $scope.toggleAll = function () {
+    vm.toggleAll = function () {
         // Check if all are selected
-        if ($scope.selection.length == $scope.forms.length) {
+        if (vm.selection.length == vm.forms.length) {
             // Remove All
-            $scope.selection.splice(0, $scope.selection.length)
+            vm.selection.splice(0, vm.selection.length)
         } else {
             // Add All
-            $scope.forms.forEach(function (form) {
-                if ($scope.selection.indexOf(form) == -1) {
-                    $scope.selection.push(form)
+            vm.forms.forEach(function (form) {
+                if (vm.selection.indexOf(form) == -1) {
+                    vm.selection.push(form)
                 }
             })
         }
     }
 
-    /*------------------------------- Other APIs -------------------------------*/
+    /*------------------------------- Local APIs -------------------------------*/
 
     function init() {
         // Re-initialize selection array
-        $scope.selection = []
+        vm.selection = []
 
         $rootScope.showWaitingDialog("Please wait while we are fetching forms...")
         $http({
@@ -75,7 +65,7 @@ app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStor
         .then(
             function (response) {
                 $rootScope.hideWaitingDialog()
-                $scope.forms = response.data
+                vm.forms = response.data
             },
             function (error) {
                 $rootScope.hideWaitingDialog()
@@ -83,4 +73,16 @@ app.controller("FormManageCtrl", function ($scope, $rootScope, $http, $localStor
             }
         )
     }
+
+    /*------------------------------- INIT -------------------------------*/
+    // Set menu and option
+    $scope.nav.item       = MENU_ITEMS[MENU_ITEM_FORMS]
+    $scope.nav.option     = ITEM_OPTIONS[ITEM_OPTION_MANAGE]
+
+    // Init Object
+    vm.selection = []
+    vm.forms = []
+
+    // Get Forms for this user
+    init()
 })

@@ -1,16 +1,16 @@
 <!-- Team Manage HTML -->
 <div class="content-toolbar d-flex">
-    <button class="btn btn-primary" ng-click="add()">Add Rep</button>
+    <button class="btn btn-primary" ng-click="$ctrl.add()">Add Rep</button>
 
     <div class="dropdown">
-        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown" ng-disabled="selection.length == 0">
+        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown" ng-disabled="$ctrl.selection.length == 0">
             <span>Actions | </span>
             <img class="img-icon" src="/static/images/dropdown.png"/>
         </button>
         <div class="dropdown-menu">
-            <button class="dropdown-item" ng-click="remove()">Remove</button>
-            <button class="dropdown-item" ng-click="createtasks()">Create Tasks</button>
-            <button class="dropdown-item" ng-click="track()">Live Tracking</button>
+            <button class="dropdown-item" ng-click="$ctrl.remove()">Remove</button>
+            <button class="dropdown-item" ng-click="$ctrl.createtasks()">Create Tasks</button>
+            <button class="dropdown-item" ng-click="$ctrl.track()">Live Tracking</button>
         </div>
     </div>
 </div>
@@ -19,7 +19,7 @@
     <table class="table table-striped" ng-table="">
         <thead>
             <th>
-                <input type="checkbox" ng-click="toggleAll()" ng-checked="selection.length == team.length">
+                <input type="checkbox" ng-click="$ctrl.toggleAll()" ng-checked="$ctrl.selection.length == $ctrl.team.length">
             </th>
             <th class="text-left">
                 Name
@@ -28,9 +28,9 @@
                 Phone
             </th>
         </thead>
-        <tr ng-repeat="rep in team">
+        <tr ng-repeat="rep in $ctrl.team">
             <td class="text-center">
-                <input type="checkbox" ng-click="toggleSelection(rep)" ng-checked="selection.indexOf(rep) != -1">
+                <input type="checkbox" ng-click="$ctrl.toggleSelection(rep)" ng-checked="$ctrl.selection.indexOf(rep) != -1">
             </td>
             <td>
                 {{rep.name}}

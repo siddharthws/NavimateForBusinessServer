@@ -1,14 +1,14 @@
 <!-- Form Manage HTML -->
 <div class="content-toolbar d-flex">
-    <button class="btn btn-primary" ng-click="create()">Create Template</button>
+    <button class="btn btn-primary" ng-click="$ctrl.create()">Create Template</button>
 
     <div class="dropdown">
-        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown" ng-disabled="!selection.length">
+        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown" ng-disabled="!$ctrl.selection.length">
             <span>Actions | </span>
             <img class="img-icon" src="/static/images/dropdown.png"/>
         </button>
         <div class="dropdown-menu">
-            <button class="dropdown-item" ng-click="edit()">Edit</button>
+            <button class="dropdown-item" ng-click="$ctrl.edit()">Edit</button>
         </div>
     </div>
 </div>
@@ -17,15 +17,15 @@
     <table class="table table-striped" ng-table="">
         <thead>
             <th>
-                <input type="checkbox" ng-click="toggleAll()" ng-checked="selection.length == forms.length">
+                <input type="checkbox" ng-click="$ctrl.toggleAll()" ng-checked="$ctrl.selection.length == $ctrl.forms.length">
             </th>
             <th class="text-left">
                 Name
             </th>
         </thead>
-        <tr ng-repeat="form in forms">
+        <tr ng-repeat="form in $ctrl.forms">
             <td class="text-center">
-                <input type="checkbox" ng-click="toggleSelection(form)" ng-checked="selection.indexOf(form) != -1">
+                <input type="checkbox" ng-click="$ctrl.toggleSelection(form)" ng-checked="$ctrl.selection.indexOf(form) != -1">
             </td>
             <td>
                 {{form.name}}
