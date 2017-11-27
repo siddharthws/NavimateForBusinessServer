@@ -12,6 +12,8 @@
                ng-class="{'has-error': bShowError && !email}">
         <input class="input-underlined" ng-model="password" type="password" placeholder="Enter password..."
                ng-class="{'has-error': bShowError && !password}">
+        <input class="input-underlined" ng-model="confirmPassword" type="password" placeholder="Confirm password..."
+               ng-class="{'has-error': bShowError && !confirmPassword}">
         <input type="submit" class="hidden-element"/>
     </form>
 
