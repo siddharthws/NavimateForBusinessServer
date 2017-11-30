@@ -23,6 +23,9 @@
             <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
         </th>
         <th class="text-left">
+            ID
+        </th>
+        <th class="text-left">
             Company
         </th>
         <th class="text-left">
@@ -39,6 +42,9 @@
             ng-class="{'active': $ctrl.selection[$index]}">
             <td class="text-center">
                 <md-checkbox ng-model="$ctrl.selection[$index]" ng-click="$root.APIs.absorbEvent($event)"></md-checkbox>
+            </td>
+            <td>
+                {{task.cId}}
             </td>
             <td>
                 {{task.lead}}

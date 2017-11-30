@@ -29,6 +29,7 @@ class Marshaller {
     static def serializeTask(Task task) {
         return [
                 id:         task.id,
+                cId:        task.account.id + String.format("%08d", task.id),
                 lead:       task.lead.title,
                 rep:        task.rep.name,
                 period:     task.period,
