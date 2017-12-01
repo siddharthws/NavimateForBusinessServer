@@ -6,6 +6,7 @@ button:focus {
 /* -- Nav Buttons -- */
 .nav-btn {
     color: white;
+    text-align: left;
     padding: 0.5em 3.0em;
     margin: 0px;
     background-color: transparent;

@@ -1,7 +1,7 @@
 <!-- Dahsboard -->
 
-<div class="dashboard row">
-    <div class="col-md-2 dashboard-menu d-flex flex-column">
+<div class="dashboard d-flex">
+    <div class="dashboard-menu d-flex flex-column">
         <div class="logo-container align-self-center">
             <img class="logo-1 align-self-center" src="/static/images/logo.png">
         </div>
@@ -15,7 +15,7 @@
         </button>
     </div>
 
-    <div class="col-md-10 d-flex flex-column full-flex">
+    <div class="d-flex flex-column full-flex">
         <div class="dashboard-header d-flex align-items-center">
             <button ng-repeat="option in nav.item.options"
                     ui-sref="{{'dashboard.' + nav.item.state + '-' + option.state}}"

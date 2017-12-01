@@ -1,1 +1,146 @@
-<div class="help d-flex flex-column" ui-view></div>
+<div class="d-flex flex-column h-100 w-100">
+    <div class="d-flex full-flex">
+        <!-- Help Menu -->
+        <div class="d-flex flex-column bg-black overflow-auto">
+            <a class="a-white" href="#">
+                <img class="logo-1 m-2" src="/static/images/logo.png">
+                <span>Navimate Help</span>
+            </a>
+            <button class="nav-btn" ng-click="scrollTo('introduction')">Introduction</button>
+            <button class="nav-btn" ng-click="scrollTo('gettingStarted')">Getting Started</button>
+            <button class="nav-btn" ng-click="scrollTo('registration')">Registration</button>
+            <button class="nav-btn" ng-click="scrollTo('teamManagement')">Team Management</button>
+            <button class="nav-btn" ng-click="scrollTo('leadManagement')">Lead Management</button>
+            <button class="nav-btn" ng-click="scrollTo('taskManagement')">Task Management</button>
+            <button class="nav-btn" ng-click="scrollTo('reporting')">Reporting</button>
+        </div>
+
+        <!-- Help Content -->
+        <div class="full-flex overflow-auto p-2">
+            <!-- Introduction -->
+            <div id="introduction">
+                <h4><b>1. Introduction</b></h4>
+                <hr>
+
+                <p class="ml-1">Navimate is a powerful and easy to use software to manage field operations and increase productivity. It provides a web-based dashboard with an android app to create, manage, analyze and track your business operations and field representatives in real time. Navimate provides unique solutions for an array of field operations in business areas like marketing, sales, delivery, survey, inspection, and even sporting events.</p>
+                <p class="ml-1">Navimate provides following core features to help simplify the field based operations:</p>
+                <ul class="bullet ml-3 pl-3">
+                    <li><b>Team Management</b> - Create, manage and track team / field representatives in real time.</li>
+                    <li><b>Lead Management</b> - Create, manage and locate physical lead location on Google maps.</li>
+                    <li><b>Task Management</b> - Create, manage and configure tasks based on field operations undertaken by teams and lead using forms to collect vital data.</li>
+                </ul>
+                <hr>
+            </div>
+
+            <!-- Getting Started -->
+            <div id="gettingStarted" class="mt-4">
+                <h4><b>2. Getting Started</b></h4>
+                <hr>
+
+                <p class="ml-1">Navimate provides you a simple 5-step solution to efficiently manage your field operations - </p>
+                <ol class="ml-3 pl-3">
+                    <li>Create an account</li>
+                    <li>Add members to team</li>
+                    <li>Upload leads</li>
+                    <li>Assign tasks</li>
+                    <li>Analyze reports</li>
+                </ol>
+
+                <p class="ml-1 mt-1"><b>Step 1 - Create an account</b></p>
+                <ul class="bullet ml-3 pl-3">
+                    <li>Visit our <a href="#">homepage</a></li>
+                    <li>Click on “Register” button on top right to create your new account for free. Enter the OTP to activate your web account and login.</li>
+                </ul>
+
+                <p class="ml-1 mt-1"><b>Step 2 - Add members to team</b></p>
+                <p class="ml-3">To add a new team / field representatives, click on “Add Rep” button in Team Management, provide details and click add. The added representative will receive an SMS on the provided mobile number with a link to the mobile application for installation.</p>
+
+                <p class="ml-1 mt-1"><b>Step 3 - Upload leads</b></p>
+                <p class="ml-3">Go to leads and click on ‘Add Leads’ to create your lead list manually or via excel import. </p>
+
+                <p class="ml-1 mt-1"><b>Step 4 - Assign tasks</b></p>
+                <p class="ml-3">To assign tasks, select the leads and reps from the dropdown. Once the tasks are assigned, the field reps will get a push notification on the app. The reps can view the task locations on a map and click to check lead details.</p>
+
+                <p class="ml-1 mt-1"><b>Step 5 - Analyze reports</b></p>
+                <p class="ml-3">After every meeting, the field reps can click on submit form to add revenue, meeting notes and task status. The manager will get real-time updates and monitor it on the dashboard.</p>
+                <p class="ml-3">The report can be filtered based on different fields such as rep, Lead or the custom fields used in forms. The reports can be downloaded in an excel file.</p>
+                <hr>
+            </div>
+
+            <!-- Registration -->
+            <div id="registration" class="mt-4">
+                <h4><b>3. Registration</b></h4>
+                <hr>
+
+                <p class="ml-3">A manager is required to first register and create an account for the web based dashboard in order to start creating and managing teams of field representatives, lead locations and field based tasks like sales, delivery or survey.</p>
+
+                <ul class="bullet ml-3 pl-3">
+                    <li>Visit our <a href="#">homepage</a></li>
+                    <li>Click on “Register” button on top right to create your new account for free. Enter the OTP to activate your web account and login.</li>
+                </ul>
+                <hr>
+            </div>
+
+            <!-- Team Management -->
+            <div id="teamManagement" class="mt-4">
+                <h4><b>4. Team Management</b></h4>
+                <hr>
+
+                <ul class="bullet ml-3 pl-3">
+                    <li>This helps to create, manage and track team / field representatives in real time. Click on “Team” button in left main menu to view the Team Management screen.</li>
+                    <li>To add a new team / field representatives, click on “Add Rep” button, provide details and click add. The added representative will receive an SMS on the provided mobile number with a link to the mobile application for installation.</li>
+                    <li>To remove any team / field representatives, select the records, click “Actions” button and click “Remove” button.</li>
+                    <li>To create or assign tasks to team / field representatives, select the records, click “Actions” button and click “Create Tasks” button, refer “Task Management” section for more details.</li>
+                    <li>To view Reports and Analysis based on data collected in real time from Tasks performed by the team / field representatives, click on “Reports” tab. You may filter and export the records in excel format. Click the “Sync” button to refresh data.</li>
+                </ul>
+                <hr>
+            </div>
+
+            <!-- Lead Management -->
+            <div id="leadManagement" class="mt-4">
+                <h4><b>5. Lead Management</b></h4>
+                <hr>
+
+                <ul class="bullet ml-3 pl-3">
+                    <li>This provides easy and intuitive solution to create, manage and locate physical lead location leveraging the power of Google maps.</li>
+                    <li>To add a new Lead locations, click on “Add Leads” button, the “Edit Lead” screen will appear where lead information can be added either using “Add New” button manually or using an excel template to mass upload Leads. Use auto suggest feature in “Search address” field to search and locate your Lead locations on Google maps. You may adjust the pinned locations on Google maps to precise locations and Click “Save” button at the bottom to save all Lead information.</li>
+                    <li>Click “Download Template” button to view and fill the excel template. Latitude and Longitude fields are for added accuracy and can be left blank. Click “Upload” button to mass upload the leads from your excel. Navimate automatically detects the Lead locations from the address field.</li>
+                    <li>To edit or remove any Lead location, select the records, click “Actions” button and click “Edit” or “Remove” button.</li>
+                    <li>To create or assign tasks to Lead location, select the records, click “Actions” button and click “Create Tasks” button, refer “Task Management” section for more details.</li>
+                    <li>To view Reports and Analysis based on data collected in real time from Tasks performed by the team / field representatives, click on “Reports” tab. You may filter and export the records in excel format. Click the “Sync” button to refresh data.</li>
+                </ul>
+                <hr>
+            </div>
+
+            <!-- Task Management -->
+            <div id="taskManagement" class="mt-4">
+                <h4><b>6. Task Management</b></h4>
+                <hr>
+
+                <ul class="bullet ml-3 pl-3">
+                    <li>This provide features to create, manage and configure tasks based on field operations undertaken by teams and their interactions with lead locations using configurable forms to collect data vital to the business workflows.</li>
+                    <li>You can configure multiple forms based on business operations like marketing, sales, delivery, survey, inspection, and even sporting events. To configure the Forms to be used by team / field representatives in order to collect data from their mobile apps, click on “Form” menu button.</li>
+                    <li>To create or assign tasks to Representatives or Lead location, click “Add” button. The “Create Task” screen will appear, where you can select the respective records from drop down list. You can assign Lead / Company, Task Template, and Renew period in days. Once you click “Create” button on bottom right, the team / field representatives will receive a push notification for their respective tasks on their mobile app. They will be able to check the lead details and route to the physical locations using Google maps.</li>
+                    <li>A new task is created with default status as “OPEN” and can be updated using the “Actions” button or based on the data provided by the representative from their mobile app.</li>
+                    <li>The team / field representatives will be able to collect and send information based on the forms configured for their tasks like notes, pictures, QR code or Bar code scans, signatures and statuses of the given tasks. This data can be viewed and analyzed in real time on the dashboard.</li>
+                </ul>
+                <hr>
+            </div>
+
+            <!-- Task Management -->
+            <div id="reporting" class="mt-4">
+                <h4><b>7. Reporting</b></h4>
+                <hr>
+
+                <ul class="bullet ml-3 pl-3">
+                    <li>The report screen displays a table with all the information that has been submitted by your representative.</li>
+                    <li>You can filter the reports usiing column filters to display more customized data.</li>
+                    <li>You can also show / hide specific columns and create a completely customized report.</li>
+                    <li>You can add custom columns with specific data types to reports by creating different templates using the dashboard</li>
+                    <li>Reports can be exported to spreadsheet using the Export button on top.</li>
+                </ul>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>

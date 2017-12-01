@@ -58,7 +58,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
 
     // Configure URL mapping for non existent URLs
   $urlRouterProvider.when('', '/')
-  $urlRouterProvider.when('/help', '/help/topics')
   $urlRouterProvider.when('/dashboard', '/dashboard/team/manage')
   $urlRouterProvider.when('/dashboard/team', '/dashboard/team/manage')
   $urlRouterProvider.when('/dashboard/tasks', '/dashboard/tasks/manage')
@@ -85,12 +84,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
     })
       // Help Mappings
     .state('help',{
-        abstract: true,
         url: '/help',
         templateUrl: '/static/views/help.html',
         controller: 'HelpCtrl'
     })
-    .state('help.topics',{
+    /*.state('help.topics',{
         url: '/topics',
         templateUrl: '/static/views/help/topics.html',
     })
@@ -169,7 +167,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
     .state('help.team-manage',{
         url: '/team-manage',
         templateUrl: '/static/views/help/team/manage.html',
-    })
+    })*/
       // Dashboard mappings
     .state('dashboard', {
         abstract: true,
