@@ -80,3 +80,19 @@
 .ib-map.active, .ib-map:hover {
     background-image: url("/static/images/icon_location_white.png");
 }
+
+.ib-up {
+    background-image: url("/static/images/ic_up_grey.png");
+}
+
+.ib-up.active, .ib-up:hover {
+    background-image: url("/static/images/ic_up_white.png");
+}
+
+.ib-down {
+    background-image: url("/static/images/dropdown.png");
+}
+
+.ib-down.active, .ib-down:hover {
+    background-image: url("/static/images/ic_down_white.png");
+}

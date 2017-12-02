@@ -120,7 +120,7 @@ app.service('DialogService', function($mdDialog) {
     this.toggleColumns = function (columns, resultCb) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/ToggleColumns.html',
-                            controller: 'ToggleColumnsCtrl',
+                            controller: 'ToggleColumnsCtrl as $ctrl',
                             clickOutsideToClose: true,
                             locals: {
                                 columns: columns,
