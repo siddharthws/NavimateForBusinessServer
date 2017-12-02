@@ -34,4 +34,8 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $
     $scope.openHelp = function () {
         $window.open($state.href('help'), "_blank")
     }
+    
+    $scope.optionClicked = function (state) {
+        $state.go(state)
+    }
 })

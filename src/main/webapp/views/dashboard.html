@@ -18,7 +18,7 @@
     <div class="d-flex flex-column full-flex">
         <div class="dashboard-header d-flex align-items-center">
             <button ng-repeat="option in nav.item.options"
-                    ui-sref="{{'dashboard.' + nav.item.state + '-' + option.state}}"
+                    ng-click="optionClicked('dashboard.' + nav.item.state + '-' + option.state)"
                     class="nav-btn h-50 align-self-end"
                     ng-class="{'active': nav.option.id == option.id}">
                 {{option.name}}
