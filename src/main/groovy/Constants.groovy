@@ -26,4 +26,27 @@ class Constants {
         // Maximum time to wait before marking rep as UNAVAILBALE
         public static final int MAX_UPDATE_WAIT_TIME_S = 60
     }
+
+    // Template Related Constants
+    class Template {
+        // Field types
+        public static final int FIELD_TYPE_NONE           = 0
+        public static final int FIELD_TYPE_TEXT           = 1
+        public static final int FIELD_TYPE_NUMBER         = 2
+        public static final int FIELD_TYPE_RADIOLIST      = 3
+        public static final int FIELD_TYPE_CHECKLIST      = 4
+        public static final int FIELD_TYPE_PHOTO          = 5
+        public static final int FIELD_TYPE_SIGN           = 6
+        public static final int FIELD_TYPE_LOCATION       = 7
+    }
+
+    // Filter related constants
+    class Filter {
+        // Filter types
+        public static final int TYPE_NONE           = 0
+        public static final int TYPE_SELECTION      = 1
+        public static final int TYPE_TEXT           = 2
+        public static final int TYPE_NUMBER         = 3
+        public static final int TYPE_DATE           = 4
+    }
 }

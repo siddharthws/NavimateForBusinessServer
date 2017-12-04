@@ -49,14 +49,17 @@ app.service("ExcelService", function ($http, $localStorage, $filter, FileSaver, 
             json.push({})
             for (var j = 0; j < columns.length; j++) {
                 var column = columns[j]
+                var value = row['Col' + j]
                 if (column.show) {
-                    if ((column.type == 'location') && (row[column.title] != '-')) {
-                        json[json.length - 1][column.title] = "https://www.google.com/maps/search/?api=1&query=" + row[column.title]
-                    } else if (((column.type == 'photo') || (column.type == 'signature')) && (row[column.title] != '-')) {
-                        json[json.length - 1][column.title] = "https://biz.navimateapp.com/#/photos?name=" + row[column.title]
-                    } else {
-                        json[json.length - 1][column.title] = row[column.title]
+                    if (value != '-') {
+                        if (column.type == Constants.Template.FIELD_TYPE_LOCATION) {
+                            value = "https://www.google.com/maps/search/?api=1&query=" + value
+                        } else if ((column.type == Constants.Template.FIELD_TYPE_PHOTO) || (column.type == Constants.Template.FIELD_TYPE_SIGN)) {
+                            value = "https://biz.navimateapp.com/#/photos?name=" + value
+                        }
                     }
+
+                    json[json.length - 1][column.title] = value
                 }
             }
         }
