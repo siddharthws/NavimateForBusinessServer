@@ -23,9 +23,7 @@ module.exports = function(grunt) {
             my_target: {
                 files: {
                     'src/main/webapp/app.min.css': ['src/main/webapp/css/*.css',
-                        'src/main/webapp/css/core/*.css',
-                        'src/main/webapp/css/dashboard/*.css',
-                        'src/main/webapp/css/dialogs/*.css']
+                        'src/main/webapp/css/core/*.css']
                 }
             }
         }
