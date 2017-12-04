@@ -1,7 +1,8 @@
 
+// Constants available throughout app
 var Constants = {}
 
-// Tracking Related Constants
+/* ------------------------------- Tracking -----------------------------------*/
 Constants.Tracking = {
     // Status Constants
     STATUS_UNAVAILABLE: 0,
@@ -21,7 +22,7 @@ Constants.Form = {
     ]
 }
 
-// Dashboard Navigation Constants
+/* ------------------------------- Dashboard navigation -----------------------------------*/
 Constants.DashboardNav = {
     ITEM_TEAM   : 0,
     ITEM_LEADS  : 1,
@@ -81,3 +82,25 @@ Constants.DashboardNav.Menu = [
         ]
     }
 ]
+
+/* ------------------------------- Template -----------------------------------*/
+Constants.Template = {
+    // Template Field types
+    FIELD_TYPE_TEXT:            1,
+    FIELD_TYPE_NUMBER:          2,
+    FIELD_TYPE_RADIOLIST:       3,
+    FIELD_TYPE_CHECKLIST:       4,
+    FIELD_TYPE_PHOTO:           5,
+    FIELD_TYPE_SIGN:            6,
+    FIELD_TYPE_LOCATION:        7
+}
+
+/* ------------------------------- Filters -----------------------------------*/
+Constants.Filter = {
+    // Filter types
+    TYPE_NONE           : 0,
+    TYPE_SELECTION      : 1,
+    TYPE_TEXT           : 2,
+    TYPE_NUMBER         : 3,
+    TYPE_DATE           : 4
+}

@@ -1,0 +1,124 @@
+<!-- Team Report HTML -->
+<div ng-controller="TableCtrl as $ctrl" class="full-flex d-flex flex-column">
+    <div class="bg-toolbar d-flex">
+        <button class="btn btn-primary" ng-click="$ctrl.resetFilters(); $ctrl.applyFilters()">Clear Filters</button>
+        <button class="btn btn-primary" ng-click="$ctrl.export()">Export</button>
+        <button class="btn btn-primary" ng-click="$ctrl.syncTable()">Sync</button>
+        <button class="btn btn-primary" ng-click="$ctrl.toggleColumns()">Customize Columns</button>
+    </div>
+
+    <div class="mt-1 overflow-auto full-flex">
+        <table class="table" ng-table=""
+               ng-class="{  'table-bordered': $ctrl.style.bBordered,
+                            'table-striped': $ctrl.style.bStriped}">
+            <thead>
+                <th>
+                    #
+                </th>
+
+                <!-- Table Header with filter dropdown -->
+                <th ng-repeat="column in $ctrl.columns" ng-show="column.show">
+                    <div class="dropdown dropdown-multiselect">
+                        <!-- Dropdown Button -->
+                        <button class="dropdown-toggle-button d-flex align-items-center justify-content-center w-100" data-toggle="dropdown">
+                            <!-- Column Title -->
+                            <span>{{column.title}}</span>
+
+                            <!-- Filter Icon -->
+                            <div class="img-icon ic-small ic-filter ml-2"
+                                 ng-if="column.filter.type != $root.Constants.Filter.TYPE_NONE"
+                                 ng-class="{'active' : $ctrl.isFilterActive($index)}"/>
+                        </button>
+
+                        <!-- Dropdown Filter -->
+                        <div class="dropdown-menu p-2" ng-if="column.filterType != $root.Constants.Filter.TYPE_NONE">
+                            <!-- Sorting Buttons -->
+                            <div ng-if="column.filter.type != $root.Constants.Filter.TYPE_TEXT">
+                                <span>Sort:</span>
+                                <div class="d-flex justify-content-center">
+                                    <input type="button" value="" class="image-button ib-sort-down"
+                                           ng-click="$ctrl.sortDown($index)"
+                                           ng-class="{'active' : column.filter.sort.down}"/>
+                                    <input type="button" value="" class="image-button ib-sort-up"
+                                           ng-click="$ctrl.sortUp($index)"
+                                           ng-class="{'active' : column.filter.sort.up}"/>
+                                </div>
+                            </div>
+
+                            <!-- Selection Filter -->
+                            <div ng-if="column.filter.type == $root.Constants.Filter.TYPE_SELECTION">
+                                <span>Select:</span>
+
+                                <!-- Search Box -->
+                                <input type="text" ng-model="column.filter.selection.search"
+                                       placeholder="Search..." class="input-underlined">
+
+                                <!-- Selection List -->
+                                <div ng-repeat="option in column.filter.selection.options | filter:{name: column.filter.selection.search}">
+                                    <md-checkbox ng-model="column.filter.selection.options[$index].checked"
+                                                 ng-change="$ctrl.applyFilters()">
+                                    </md-checkbox>
+                                    {{option.name}}
+                                </div>
+                            </div>
+
+                            <!-- Text Filter -->
+                            <div ng-if="column.filter.type == $root.Constants.Filter.TYPE_TEXT">
+                                <input type="text" placeholder="Search..." ng-model-options="{debounce: 500}"
+                                       class="input-underlined" ng-change="$ctrl.applyFilters()"
+                                       ng-model="column.filter.text.search" >
+                            </div>
+
+                            <!-- Number Filter -->
+                            <div ng-if="column.filter.type == $root.Constants.Filter.TYPE_NUMBER">
+                                <span>Range:</span>
+                                <div class="d-flex align-items-center">
+                                    <span> <= </span>
+                                    <input type="number" placeholder="Less than" class="input-underlined"
+                                           ng-model="column.filter.number.lesserThan"
+                                           ng-model-options="{debounce: 500}" ng-change="$ctrl.applyFilters()" >
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span> >= </span>
+                                    <input type="number" placeholder="Greater than" class="input-underlined"
+                                           ng-model="column.filter.number.greaterThan"
+                                           ng-model-options="{debounce: 500}" ng-change="$ctrl.applyFilters()" >
+                                </div>
+                            </div>
+
+                            <!-- Date Filter -->
+                            <div ng-if="column.filter.type == $root.Constants.Filter.TYPE_DATE">
+                                <span>Range:</span>
+                                <md-datepicker ng-model="fromDate" md-placeholder="From Date"
+                                               ng-change="$ctrl.fromDateUpdate(fromDate, $index)"></md-datepicker>
+                                <md-datepicker ng-model="toDate" md-placeholder="To Date"
+                                               ng-change="$ctrl.toDateUpdate(toDate, $index)"></md-datepicker>
+                            </div>
+                        </div>
+                    </div>
+                </th>
+            </thead>
+
+            <tr ng-repeat="row in $ctrl.filteredValues">
+                <td>
+                    {{$index + 1}}
+                </td>
+
+                <!-- Table Data -->
+                <td class="text-center" ng-repeat="column in $ctrl.columns" ng-show="column.show">
+                    <div ng-if="$ctrl.isTextValue(column, row['Col' + $index])">
+                        {{row['Col' + $index]}}
+                    </div>
+                    <input type="button" value=""
+                           ng-if="$ctrl.isImageValue(column, row['Col' + $index])"
+                           class="image-button ib-small ib-link"
+                           ng-click="$ctrl.showImage(row['Col' + $index])"/>
+                    <input type="button" value=""
+                           ng-if="$ctrl.isLocationValue(column, row['Col' + $index])"
+                           class="image-button ib-small ib-map"
+                           ng-click="$ctrl.showLocation(row['Col' + $index])"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

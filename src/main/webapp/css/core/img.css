@@ -16,6 +16,15 @@
     width: auto;
 }
 
+/* -- Filter icon classes -- */
+.ic-filter {
+    background: url("/static/images/icon_filter.png") center / cover no-repeat;
+}
+
+.ic-filter.active{
+    background-image: url("/static/images/icon_filter_active.png");
+}
+
 /* -- Status Icon classes-- */
 .live-status-default {
     background: url("/static/images/ic_status_red.png") center / cover no-repeat;

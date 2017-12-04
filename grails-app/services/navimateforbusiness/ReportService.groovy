@@ -12,14 +12,24 @@ class ReportService {
     def getTeamReport(User manager) {
         // Prepare list of columns
         def columns = [
-                [type: "selection", title: "Manager"],
-                [type: "selection", title: "Rep"],
-                [type: "selection", title: "Lead"],
-                [type: "selection", title: "Template"]
+                [filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION,
+                 type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                 title: "Manager"],
+                [filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION,
+                 type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                 title: "Rep"],
+                [filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION,
+                 type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                 title: "Lead"],
+                [filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION,
+                 type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                 title: "Template"]
         ]
         def formColumns = getFormColumns(manager)
         columns += formColumns
-        columns.push([type: "date", title: "Date"])
+        columns.push([filterType: navimateforbusiness.Constants.Filter.TYPE_DATE,
+                      type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                      title: "Date"])
 
         // Iterate though each rep to get list of values
         def values = []
@@ -70,16 +80,25 @@ class ReportService {
     }
 
     def getLeadReport(User manager) {
-        // Prepare list of columns
         def columns = [
-                [type: "selection", title: "Manager"],
-                [type: "selection", title: "Lead"],
-                [type: "selection", title: "Rep"],
-                [type: "selection", title: "Template"]
+                [filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION,
+                 type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                 title: "Manager"],
+                [filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION,
+                 type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                 title: "Lead"],
+                [filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION,
+                 type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                 title: "Rep"],
+                [filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION,
+                 type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                 title: "Template"]
         ]
         def formColumns = getFormColumns(manager)
         columns += formColumns
-        columns.push([type: "date", title: "Date"])
+        columns.push([filterType: navimateforbusiness.Constants.Filter.TYPE_DATE,
+                      type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                      title: "Date"])
 
         // Iterate though each rep to get list of values
         def values = []
@@ -150,7 +169,8 @@ class ReportService {
                 if (!bDuplicate) {
                     columns.push([
                             title: field.title,
-                            type:  field.type
+                            type: getFieldTypeFromName(field.type),
+                            filterType: getFilterForField(getFieldTypeFromName(field.type))
                     ])
                 }
             }
@@ -159,7 +179,8 @@ class ReportService {
         // Add Location column
         columns.push([
                 title: 'Location',
-                type: 'location'
+                type: navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION,
+                filterType: navimateforbusiness.Constants.Filter.TYPE_NONE
         ])
 
         columns
@@ -174,7 +195,7 @@ class ReportService {
             // Add entry to appropriate index in row
             columns.eachWithIndex {column, index ->
                 if ((column.title == field.title) &&
-                    (column.type == field.type)) {
+                    (column.type == getFieldTypeFromName(field.type))) {
                     if (field.type == "radioList") {
                         // Value.Seleciton for radio list
                         row[index] = field.value.selection
@@ -209,7 +230,7 @@ class ReportService {
 
         // Add form submission location
         columns.eachWithIndex {column, index ->
-            if (column.type == 'location') {
+            if (column.type == navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION) {
                 if (form.latitude && form.longitude) {
                     row[index] = form.latitude + "," + form.longitude
                 } else {
@@ -219,5 +240,37 @@ class ReportService {
         }
 
         row
+    }
+
+    def getFieldTypeFromName(String name) {
+        if (name.equals('text')) {
+            return navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT
+        } else if (name.equals('number')) {
+            return navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER
+        } else if (name.equals('checkList')) {
+            return navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST
+        } else if (name.equals('radioList')) {
+            return navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST
+        } else if (name.equals('photo')) {
+            return navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO
+        } else if (name.equals('signature')) {
+            return navimateforbusiness.Constants.Template.FIELD_TYPE_SIGN
+        }
+
+        return navimateforbusiness.Constants.Template.FIELD_TYPE_NONE
+    }
+
+    def getFilterForField(int fieldType) {
+        switch (fieldType) {
+            case navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT :
+            case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST :
+                return navimateforbusiness.Constants.Filter.TYPE_TEXT
+            case navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER :
+                return navimateforbusiness.Constants.Filter.TYPE_NUMBER
+            case navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST :
+                return navimateforbusiness.Constants.Filter.TYPE_SELECTION
+        }
+
+        return navimateforbusiness.Constants.Filter.TYPE_NONE
     }
 }
