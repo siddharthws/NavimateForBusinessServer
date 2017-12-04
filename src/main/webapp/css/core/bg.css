@@ -1,7 +1,17 @@
+.bg-primary-blue {
+    background-color: #37bcf2;
+}
+
 .bg-black {
     background-color: black;
 }
 
 .bg-grey {
     background-color: #444444;
+}
+
+.bg-toolbar {
+    background-color: #eeeeee;
+    border-radius: 0.25em;
+    padding: 0.5em;
 }

@@ -4,18 +4,6 @@
     min-height: 100%; /* Content should expand to bottom of screen */
 }
 
-.home-header{
-    background-color: black;
-}
-
-.home-content{
-    background: #37bcf2;
-}
-
-.home-footer{
-    background-color: black;
-}
-
 .copyright-notice{
     background-color: #17253d;
 }

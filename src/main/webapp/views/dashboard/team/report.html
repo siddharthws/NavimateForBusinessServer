@@ -1,12 +1,12 @@
 <!-- Team Report HTML -->
-<div class="content-toolbar d-flex">
+<div class="bg-toolbar d-flex">
     <button class="btn btn-primary" ng-click="resetFilters(); applyFilters()">Clear Filters</button>
     <button class="btn btn-primary" ng-click="export()">Export</button>
     <button class="btn btn-primary" ng-click="init()">Sync</button>
     <button class="btn btn-primary" ng-click="toggleColumns()">Show/Hide Columns</button>
 </div>
 
-<div class="content-data full-flex">
+<div class="overflow-auto mt-1 full-flex">
     <table class="table table-bordered" ng-table="">
         <thead>
             <th>
