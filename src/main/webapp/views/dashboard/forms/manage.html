@@ -27,7 +27,7 @@
         <tr ng-repeat="form in $ctrl.forms" ng-click="$ctrl.selection[$index] = !$ctrl.selection[$index]"
             ng-class="{'active': $ctrl.selection[$index]}">
             <td class="text-center">
-                <md-checkbox ng-model="$ctrl.selection[$index]" ng-click="$root.APIs.absorbEvent($event)"></md-checkbox>
+                <md-checkbox ng-model="$ctrl.selection[$index]" ng-click="$root.Statics.absorbEvent($event)"></md-checkbox>
             </td>
             <td>
                 {{form.name}}

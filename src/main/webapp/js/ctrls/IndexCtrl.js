@@ -5,6 +5,7 @@
 app.controller('IndexCtrl', function ($scope, $rootScope) {
     // Attach Constants
     $rootScope.Constants = Constants
+    $rootScope.Statics = Statics
 
     // Data object for waiting dialog
     $scope.waiting = {
@@ -20,13 +21,6 @@ app.controller('IndexCtrl', function ($scope, $rootScope) {
 
     $rootScope.hideWaitingDialog = function () {
         $scope.waiting.bShow = false
-    }
-
-    // General APIs to use throughout app
-    $rootScope.APIs = {
-        absorbEvent :   function (event) {
-                            event.stopPropagation()
-                        }
     }
 
     Array.prototype.move = function (old_index, new_index) {
