@@ -1,20 +1,24 @@
 /* -- Image styling -- */
 .img-icon {
     height: 25px;
-    width: 25px;
+    width: auto;
     padding: 5px;
     background-color: transparent;
 }
 
-.logo-1{
+.ic-large {
     height: 70px;
     width: auto;
 }
 
+.ic-small {
+    height: 15px;
+    width: auto;
+}
+
+/* -- Status Icon classes-- */
 .live-status-default {
-    background: url("/static/images/ic_status_red.png")
-                center / cover
-                no-repeat;
+    background: url("/static/images/ic_status_red.png") center / cover no-repeat;
 }
 
 .live-status-waiting{
