@@ -3,14 +3,15 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
+import navimateforbusiness.DomainToJson
 import navimateforbusiness.Form
+import navimateforbusiness.Lead
 import navimateforbusiness.Role
 import navimateforbusiness.SmsHelper
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
 import navimateforbusiness.User
 import navimateforbusiness.UserStatus
-import org.grails.web.json.JSONArray
 
 class RepApiController {
 
@@ -51,7 +52,7 @@ class RepApiController {
         render resp as JSON
     }
 
-    def getTasks() {
+    def syncTasks() {
         def id = request.getHeader("id")
         User rep = User.findById(id)
         if (!rep) {
@@ -59,17 +60,91 @@ class RepApiController {
         }
 
         // Get Task List
-        List<Task> tasks = Task.findAllByRep(rep)
+        List<Task> tasks = Task.findAllByRepAndManagerAndStatus(rep, rep.manager, TaskStatus.OPEN)
 
-        def tasksJson = new JSONArray()
-        tasks.each { task ->
-            if (task.status == TaskStatus.OPEN) {
-                tasksJson.add(navimateforbusiness.Marshaller.serializeTaskForRep(task))
+        // Get Sync data form request
+        def syncData = request.JSON.syncData
+
+        // Check which tasks need to be sent back to app
+        def tasksJson = []
+        tasks.each {task ->
+            // Mark task as synced if version and id are same
+            boolean bSynced = false
+            for (int i = 0; i < syncData.size(); i++) {
+                def syncObject = syncData.get(i)
+                if ((syncObject.id == task.id) && (syncObject.ver == task.version)) {
+                    bSynced = true
+                    break
+                }
+            }
+
+            // If unsynced, add to JSON response
+            if (!bSynced) {
+                tasksJson.push(DomainToJson.Task(task))
             }
         }
 
+        // Send response
         def resp = [
                 "tasks" : tasksJson
+        ]
+        render resp as JSON
+    }
+
+    def syncLeads() {
+        def id = request.getHeader("id")
+        User rep = User.findById(id)
+        if (!rep) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Get Sync data form request
+        def syncData = request.JSON.syncData
+
+        // Check which tasks need to be sent back to app
+        def leadsJson = []
+        syncData.each {syncObject ->
+            // Get lead with this id
+            Lead lead = Lead.findByIdAndManager(syncObject.id, rep.manager)
+
+            // Add to response if version mismatch
+            if (lead && (lead.version > syncObject.ver)) {
+                leadsJson.push(DomainToJson.Lead(lead))
+            }
+        }
+
+        // Send response
+        def resp = [
+                "leads" : leadsJson
+        ]
+        render resp as JSON
+    }
+
+    def syncTemplates() {
+        def id = request.getHeader("id")
+        User rep = User.findById(id)
+        if (!rep) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Get Sync data form request
+        def syncData = request.JSON.syncData
+
+        // Check which templates need to be sent back to app
+        def templatesJson = []
+        syncData.each {syncObject ->
+            // Get lead with this id
+            Form form = Form.findByIdAndOwner(syncObject.id, rep.manager)
+
+            // Add to response if version mismatch
+            if (form && (form.version > syncObject.ver)) {
+                templatesJson.push(DomainToJson.Form(form))
+            }
+        }
+
+        // Send response
+        def resp = [
+                "templates" : templatesJson
         ]
         render resp as JSON
     }
@@ -106,7 +181,7 @@ class RepApiController {
             task.save(flush: true, failOnErorr: true)
         }
 
-        def resp = [success: true]
+        def resp = [id: form.id, ver: form.version]
         render resp as JSON
     }
 
