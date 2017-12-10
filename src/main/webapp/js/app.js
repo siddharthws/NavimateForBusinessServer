@@ -200,16 +200,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/tasks/manage.html',
         controller: 'TaskManageCtrl as $ctrl'
     })
-    .state('dashboard.forms-manage', {
-        url: '/forms/manage',
-        templateUrl: '/static/views/dashboard/forms/manage.html',
-        controller: 'FormManageCtrl as $ctrl'
+    .state('dashboard.templates-form', {
+        url: '/templates/form',
+        templateUrl: '/static/views/dashboard/templates/form.html',
+        controller: 'FormTemplatesCtrl as $ctrl'
     })
-  .state('photos', {
-        url: '/photos?name',
-        templateUrl: '/static/views/photos.html',
-        controller: 'PhotosCtrl'
-  })
+    .state('photos', {
+          url: '/photos?name',
+          templateUrl: '/static/views/photos.html',
+          controller: 'PhotosCtrl'
+    })
 });
 
 app.directive('stringToNumber', function() {
