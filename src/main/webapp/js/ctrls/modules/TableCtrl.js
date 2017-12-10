@@ -27,7 +27,7 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
                 // Get all unique values for this column
                 var optionNames = []
                 for (var j = 0; j < vm.values.length; j++) {
-                    var value = vm.values[j]['Col' + i]
+                    var value = vm.values[j]['Col' + column.id]
 
                     // Add unique entries to selection options
                     if (optionNames.indexOf(value) == -1) {
@@ -104,7 +104,7 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
             var bAdd = true
             for (var j = 0; j < vm.columns.length; j++) {
                 var filter = vm.columns[j].filter
-                var value = vm.values[i]['Col' + j]
+                var value = vm.values[i]['Col' + vm.columns[j].id]
 
                 if (filter.type == $rootScope.Constants.Filter.TYPE_SELECTION) {
                     // Check if this option is selected
@@ -278,6 +278,7 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
         for (var i = 0; i < $scope.tableParams.columns.length; i++) {
             var column = $scope.tableParams.columns[i]
             column.show = true
+            column.id = i
             vm.columns.push(column)
         }
 
@@ -286,7 +287,7 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
         for (var i = 0; i < $scope.tableParams.values.length; i++) {
             var row = {}
             for (var j = 0; j < vm.columns.length; j++) {
-                row['Col' + j] = $scope.tableParams.values[i][j]
+                row['Col' + vm.columns[j].id] = $scope.tableParams.values[i][j]
             }
 
             vm.values.push(row)
@@ -303,9 +304,9 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
         var sortingArray = []
         vm.columns.forEach(function (column, i) {
             if (column.filter.sort.down) {
-                sortingArray.push('Col' + i)
+                sortingArray.push('Col' + column.id)
             } else if (column.filter.sort.up) {
-                sortingArray.push('-Col' + i)
+                sortingArray.push('-Col' + column.id)
             }
         })
 
@@ -321,15 +322,7 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
     vm.style             = $scope.tableParams.style
 
     // Hack to persist multiselect dropdowns after clicking on dropdown items
-    $('body').on('click', function (e) {
-        if (!$('.dropdown.dropdown-multiselect').is(e.target)
-            && $('.dropdown.dropdown-multiselect').has(e.target).length === 0
-            && $('.show').has(e.target).length === 0) {
-            $('.dropdown.dropdown-multiselect .dropdown-menu').removeClass('show')
-        }
-    })
-
-    $('.dropdown.dropdown-multiselect > button').on('click', function (e) {
-        $($(this).parent()).find('.dropdown-menu').toggleClass('show')
+    $(document).on('click', '.dropdown-multiselect .dropdown-menu', function (e) {
+        e.stopPropagation();
     })
 })
