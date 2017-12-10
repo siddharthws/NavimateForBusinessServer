@@ -13,4 +13,5 @@ databaseChangeLog = {
     include file: 'update-user-account-nullable.groovy'
     include file: 'update-task-fields-nullable.groovy'
     include file: 'add-column-form-latlng.groovy'
+    include file: 'add-templating-db.groovy'
 }
