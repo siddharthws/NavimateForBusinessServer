@@ -106,17 +106,17 @@
 
                 <!-- Table Data -->
                 <td class="text-center" ng-repeat="column in $ctrl.columns" ng-show="column.show">
-                    <div ng-if="$ctrl.isTextValue(column, row['Col' + $index])">
-                        {{row['Col' + $index]}}
+                    <div ng-if="$ctrl.isTextValue(column, row['Col' + column.id])">
+                        {{row['Col' + column.id]}}
                     </div>
                     <input type="button" value=""
-                           ng-if="$ctrl.isImageValue(column, row['Col' + $index])"
+                           ng-if="$ctrl.isImageValue(column, row['Col' + column.id])"
                            class="image-button ib-small ib-link"
-                           ng-click="$ctrl.showImage(row['Col' + $index])"/>
+                           ng-click="$ctrl.showImage(row['Col' + column.id])"/>
                     <input type="button" value=""
-                           ng-if="$ctrl.isLocationValue(column, row['Col' + $index])"
+                           ng-if="$ctrl.isLocationValue(column, row['Col' + column.id])"
                            class="image-button ib-small ib-map"
-                           ng-click="$ctrl.showLocation(row['Col' + $index])"/>
+                           ng-click="$ctrl.showLocation(row['Col' + column.id])"/>
                 </td>
             </tr>
         </table>
