@@ -17,7 +17,7 @@ class TaskService {
             // Get Rep, lead and template for the new task
             User rep = User.findById(taskJson.rep.id)
             Lead lead = Lead.findById(taskJson.lead.id)
-            Form template = Form.findById(taskJson.template.id)
+            Template template = Template.findById(taskJson.template.id)
             def period = taskJson.period
             if (!period) {
                 period = 0
@@ -30,13 +30,13 @@ class TaskService {
 
             // Create Task Object
             Task task = new Task(
-                    account:    manager.account,
-                    manager:    manager,
-                    rep:        rep,
-                    lead:       lead,
-                    template:   template,
-                    period:     period,
-                    status:     navimateforbusiness.TaskStatus.OPEN
+                    account:        manager.account,
+                    manager:        manager,
+                    rep:            rep,
+                    lead:           lead,
+                    formTemplate:   template,
+                    period:         period,
+                    status:         navimateforbusiness.TaskStatus.OPEN
             )
             tasks.push(task)
 

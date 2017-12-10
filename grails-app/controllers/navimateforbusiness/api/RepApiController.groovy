@@ -3,15 +3,20 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
+import navimateforbusiness.Data
 import navimateforbusiness.DomainToJson
+import navimateforbusiness.Field
 import navimateforbusiness.Form
+import navimateforbusiness.JsonToDomain
 import navimateforbusiness.Lead
 import navimateforbusiness.Role
 import navimateforbusiness.SmsHelper
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
+import navimateforbusiness.Template
 import navimateforbusiness.User
 import navimateforbusiness.UserStatus
+import navimateforbusiness.Value
 
 class RepApiController {
 
@@ -134,11 +139,11 @@ class RepApiController {
         def templatesJson = []
         syncData.each {syncObject ->
             // Get lead with this id
-            Form form = Form.findByIdAndOwner(syncObject.id, rep.manager)
+            Template template = Template.findByIdAndOwner(syncObject.id, rep.manager)
 
             // Add to response if version mismatch
-            if (form && (form.version > syncObject.ver)) {
-                templatesJson.push(DomainToJson.Form(form))
+            if (template && (template.version > syncObject.ver)) {
+                templatesJson.push(DomainToJson.Template(template))
             }
         }
 
@@ -149,39 +154,139 @@ class RepApiController {
         render resp as JSON
     }
 
-    def submitForm() {
+    def syncFields() {
         def id = request.getHeader("id")
         User rep = User.findById(id)
         if (!rep) {
             throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
         }
 
-        // Validate Task
-        def task = Task.findById(request.JSON.taskId)
-        if (!task) {
-            throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
+        // Get Sync data form request
+        def syncData = request.JSON.syncData
+
+        // Check which templates need to be sent back to app
+        def fieldsJson = []
+        syncData.each {syncObject ->
+            // Get lead with this id
+            Field field = Field.findById(syncObject.id)
+
+            // Add to response if version mismatch
+            if (field && (field.version > syncObject.ver)) {
+                fieldsJson.push(DomainToJson.Field(field))
+            }
         }
 
-        // Add form to DB
-        def data = request.JSON.data.toString()
-        def latitude = request.JSON.latitude ? request.JSON.latitude : 0
-        def longitude = request.JSON.longitude ? request.JSON.longitude : 0
-        Form form = new Form(   name:       task.template.name,
-                                task:       task,
-                                account:    rep.account,
-                                data:       data,
-                                owner:      rep,
-                                latitude:   latitude,
-                                longitude:  longitude)
-        form.save(flush: true, failOnErorr: true)
+        // Send response
+        def resp = [
+                "fields" : fieldsJson
+        ]
+        render resp as JSON
+    }
 
-        // Update task status if required
-        if (request.JSON.closeTask) {
-            task.status = TaskStatus.CLOSED
-            task.save(flush: true, failOnErorr: true)
+    def syncData() {
+        def id = request.getHeader("id")
+        User rep = User.findById(id)
+        if (!rep) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
         }
 
-        def resp = [id: form.id, ver: form.version]
+        // Get Sync data form request
+        def syncData = request.JSON.syncData
+
+        // Check which templates need to be sent back to app
+        def dataJson = []
+        syncData.each {syncObject ->
+            // Get lead with this id
+            Data data = Data.findById(syncObject.id)
+
+            // Add to response if version mismatch
+            if (data && (data.version > syncObject.ver)) {
+                dataJson.push(DomainToJson.Data(data))
+            }
+        }
+
+        // Send response
+        def resp = [
+                "data" : dataJson
+        ]
+        render resp as JSON
+    }
+
+    def syncValues() {
+        def id = request.getHeader("id")
+        User rep = User.findById(id)
+        if (!rep) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Get Sync data form request
+        def syncData = request.JSON.syncData
+
+        // Check which templates need to be sent back to app
+        def valuesJson = []
+        syncData.each {syncObject ->
+            // Get lead with this id
+            Value value = Value.findById(syncObject.id)
+
+            // Add to response if version mismatch
+            if (value && (value.version > syncObject.ver)) {
+                valuesJson.push(DomainToJson.Value(value))
+            }
+        }
+
+        // Send response
+        def resp = [
+                "values" : valuesJson
+        ]
+        render resp as JSON
+    }
+
+    def syncForms() {
+        def id = request.getHeader("id")
+        User rep = User.findById(id)
+        if (!rep) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Get Sync data form request
+        def formsJson = request.JSON.forms
+
+        // Check which templates need to be sent back to app
+        def formsJsonResp = []
+        formsJson.each {formJson ->
+            Form form = JsonToDomain.Form(formJson, rep)
+            form.save(failOnError: true, flush: true)
+
+            // Close task if required
+            if (formJson.closeTask) {
+                form.task.status = TaskStatus.CLOSED
+                form.task.save(failOnError: true, flush: true)
+            }
+
+            // prepare response JSOn with IDs and version
+            def valuesResp = []
+            form.submittedData.values.each {value ->
+                valuesResp.push([
+                    id: value.id,
+                    ver: value.version
+                ])
+            }
+            def formResp = [
+                    id: form.id,
+                    ver: form.version,
+                    data: [
+                        id: form.submittedData.id,
+                        ver: form.submittedData.version,
+                        values: valuesResp
+                    ]
+            ]
+            formsJsonResp.push(formResp)
+        }
+
+        // Send response
+        def resp = [
+                "forms" : formsJsonResp
+        ]
         render resp as JSON
     }
 
