@@ -40,6 +40,10 @@ class UrlMappings {
         "/api/reps/sync/tasks"      (controller: "RepApi") {action = [POST: "syncTasks"]}
         "/api/reps/sync/leads"      (controller: "RepApi") {action = [POST: "syncLeads"]}
         "/api/reps/sync/templates"  (controller: "RepApi") {action = [POST: "syncTemplates"]}
+        "/api/reps/sync/forms"      (controller: "RepApi") {action = [POST: "syncForms"]}
+        "/api/reps/sync/fields"     (controller: "RepApi") {action = [POST: "syncFields"]}
+        "/api/reps/sync/data"       (controller: "RepApi") {action = [POST: "syncData"]}
+        "/api/reps/sync/values"     (controller: "RepApi") {action = [POST: "syncValues"]}
         "/api/reps/fcm"             (controller: "RepApi") {action = [POST: "updateFcm"]}
         "/api/reps/otp"             (controller: "RepApi") {action = [POST: "sendOtpSms"]}
 

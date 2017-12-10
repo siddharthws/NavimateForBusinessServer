@@ -29,6 +29,9 @@ class Constants {
 
     // Template Related Constants
     class Template {
+        // Template Types
+        public static final int TYPE_FORM                 = 1
+
         // Field types
         public static final int FIELD_TYPE_NONE           = 0
         public static final int FIELD_TYPE_TEXT           = 1

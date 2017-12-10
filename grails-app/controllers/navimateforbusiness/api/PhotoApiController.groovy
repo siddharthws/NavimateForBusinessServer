@@ -54,6 +54,7 @@ class PhotoApiController {
 
         // Convert multipart data to byte array
         def multipartData = params.uploadedFile
+        String filename = multipartData.originalFilename
         InputStream is = multipartData.getInputStream()
         ByteArrayOutputStream baos = new ByteArrayOutputStream()
         byte[] buffer = new byte[1024]
@@ -65,7 +66,6 @@ class PhotoApiController {
         def ba = baos.toByteArray()
 
         // Upload to S3 with a UUID filename
-        String filename = UUID.randomUUID().toString() + ".jpg"
         ByteArrayInputStream bis = new ByteArrayInputStream(ba)
         ObjectMetadata meta = new ObjectMetadata()
         meta.setContentLength(ba.length)
@@ -73,7 +73,7 @@ class PhotoApiController {
         amazonS3Service.storeInputStream(filename, bis, meta)
 
         // Send filename in response
-        def resp=  [filename: filename]
+        def resp=  [success: true]
         render resp as JSON
     }
 }

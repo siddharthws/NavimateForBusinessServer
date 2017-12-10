@@ -11,6 +11,8 @@ grails:
             # Whether to translate GORM events into Reactor events
             # Disabled by default for performance reasons
             events: false
+    databinding:
+        convertEmptyStringsToNull: false
 info:
     app:
         name: '@info.app.name@'
