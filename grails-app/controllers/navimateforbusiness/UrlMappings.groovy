@@ -26,8 +26,7 @@ class UrlMappings {
         "/api/users/task/remove"    (controller: "UserApi") {action = [POST: "removeTasks"]}
         "/api/users/task/stoprenew" (controller: "UserApi") {action = [POST: "stopTaskRenewal"]}
         "/api/users/formTemplate"   (controller: "UserApi") {action = [GET: "getFormTemplates", POST: "saveFormTemplate"]}
-        "/api/reports/team"         (controller: "UserApi") {action = [GET: "getTeamReport"]}
-        "/api/reports/lead"         (controller: "UserApi") {action = [GET: "getLeadReport"]}
+        "/api/users/report"         (controller: "UserApi") {action = [GET: "getReport"]}
         "/api/leads/upload"         (controller: "UserApi") {action = [POST: "uploadLeads"]}
 
         // App APIs

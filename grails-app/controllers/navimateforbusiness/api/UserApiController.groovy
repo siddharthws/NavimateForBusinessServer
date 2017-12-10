@@ -404,21 +404,11 @@ class UserApiController {
         render resp as JSON
     }
 
-    def getTeamReport() {
+    def getReport() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get Report
-        def resp = reportService.getTeamReport(user)
-
-        // Send response
-        render resp as JSON
-    }
-
-    def getLeadReport() {
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Get Report
-        def resp = reportService.getLeadReport(user)
+        def resp = reportService.getReport(user)
 
         // Send response
         render resp as JSON
