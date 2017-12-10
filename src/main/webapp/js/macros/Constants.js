@@ -27,7 +27,8 @@ Constants.DashboardNav = {
     ITEM_TEAM       : 0,
     ITEM_LEADS      : 1,
     ITEM_TASKS      : 2,
-    ITEM_TEMPLATES  : 3,
+    ITEM_REPORTS    : 3,
+    ITEM_TEMPLATES  : 4,
 
     OPTION_MANAGE   : 0,
     OPTION_REPORT   : 1,
@@ -58,8 +59,7 @@ Constants.DashboardNav.Menu = [
         name:       "Team",
         state:      "team",
         options:    [
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE],
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT]
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
         ]
     },
     {
@@ -67,8 +67,7 @@ Constants.DashboardNav.Menu = [
         name:       "Leads",
         state:      "leads",
         options:    [
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE],
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT]
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
         ]
     },
     {
@@ -77,6 +76,14 @@ Constants.DashboardNav.Menu = [
         state:      "tasks",
         options:    [
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
+        ]
+    },
+    {
+        id:         Constants.DashboardNav.ITEM_REPORTS,
+        name:       "Reports",
+        state:      "reports",
+        options:    [
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT]
         ]
     },
     {

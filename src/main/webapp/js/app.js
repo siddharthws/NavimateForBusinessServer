@@ -180,25 +180,20 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/team/manage.html',
         controller: 'TeamManageCtrl as $ctrl'
     })
-    .state('dashboard.team-report', {
-        url: '/team/report',
-        templateUrl: '/static/views/dashboard/team/report.html',
-        controller: 'TeamReportCtrl'
-    })
     .state('dashboard.leads-manage', {
         url: '/leads/manage',
         templateUrl: '/static/views/dashboard/leads/manage.html',
         controller: 'LeadManageCtrl as $ctrl'
     })
-    .state('dashboard.leads-report', {
-        url: '/leads/report',
-        templateUrl: '/static/views/dashboard/leads/report.html',
-        controller: 'LeadReportCtrl'
-    })
     .state('dashboard.tasks-manage', {
         url: '/tasks/manage',
         templateUrl: '/static/views/dashboard/tasks/manage.html',
         controller: 'TaskManageCtrl as $ctrl'
+    })
+    .state('dashboard.reports-report', {
+        url: '/report',
+        templateUrl: '/static/views/dashboard/reports/report.html',
+        controller: 'ReportCtrl as $ctrl'
     })
     .state('dashboard.templates-form', {
         url: '/templates/form',

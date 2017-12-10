@@ -1,15 +1,15 @@
 /**
- * Created by Siddharth on 22-08-2017.
+ * Created by Siddharth on 11-12-2017.
  */
 
-app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStorage) {
+app.controller("ReportCtrl", function ($scope, $rootScope, $http, $localStorage) {
     /*-------------------------------------- Scope APIs ---------------------------------------*/
     /*-------------------------------------- Local APIs ---------------------------------------*/
     this.syncTable = function () {
         $rootScope.showWaitingDialog("Please wait while we are fetching the report...")
         $http({
             method:     'GET',
-            url:        '/api/reports/team',
+            url:        '/api/users/report',
             headers:    {
                 'X-Auth-Token':    $localStorage.accessToken
             }
@@ -34,7 +34,7 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
 
     /*-------------------------------------- INIT ---------------------------------------------*/
     // Set menu and option
-    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_TEAM]
+    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_REPORTS]
     $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT]
 
     // Init Table Parametes
@@ -42,7 +42,7 @@ app.controller("TeamReportCtrl", function ($scope, $rootScope, $http, $localStor
     $scope.tableParams.style = {
         bBordered: true
     }
-    $scope.tableParams.exportName = 'Team-Report'
+    $scope.tableParams.exportName = 'Navimate-Report'
     $scope.tableParams.columns = []
     $scope.tableParams.values = []
 
