@@ -12,16 +12,23 @@ class Task {
             manager:    User
     ]
     User rep
+    Lead lead
+
+    // Task properties
+    navimateforbusiness.TaskStatus status = TaskStatus.OPEN
+    int period
+
+    // Form template to be used
+    Template formTemplate
 
     // Data
-    Lead lead
-    navimateforbusiness.TaskStatus status = TaskStatus.OPEN
-    Form template
-    int period
     static hasMany = [
             forms:      Form,
             visits:     Visit
     ]
+
+    // Deprecated. To be removed
+    Form template
 
     static mappedBy = [
             manager:            'createdTasks',
@@ -32,6 +39,8 @@ class Task {
         manager nullable: true
         rep nullable: true
         lead nullable: true
+        formTemplate nullable: true
+        template nullable: true
     }
 
     static mapping = {
