@@ -24,13 +24,14 @@ Constants.Form = {
 
 /* ------------------------------- Dashboard navigation -----------------------------------*/
 Constants.DashboardNav = {
-    ITEM_TEAM   : 0,
-    ITEM_LEADS  : 1,
-    ITEM_TASKS  : 2,
-    ITEM_FORMS  : 3,
+    ITEM_TEAM       : 0,
+    ITEM_LEADS      : 1,
+    ITEM_TASKS      : 2,
+    ITEM_TEMPLATES  : 3,
 
     OPTION_MANAGE   : 0,
-    OPTION_REPORT   : 1
+    OPTION_REPORT   : 1,
+    OPTION_FORM     : 2
 }
 
 Constants.DashboardNav.Options = [
@@ -43,6 +44,11 @@ Constants.DashboardNav.Options = [
         id:         Constants.DashboardNav.OPTION_REPORT,
         name:       'Reports',
         state:      'report'
+    },
+    {
+        id:         Constants.DashboardNav.OPTION_FORM,
+        name:       'Form',
+        state:      'form'
     }
 ]
 
@@ -74,11 +80,11 @@ Constants.DashboardNav.Menu = [
         ]
     },
     {
-        id:         Constants.DashboardNav.ITEM_FORMS,
-        name:       "Forms",
-        state:      "forms",
+        id:         Constants.DashboardNav.ITEM_TEMPLATES,
+        name:       "Templates",
+        state:      "templates",
         options:    [
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_FORM]
         ]
     }
 ]
@@ -92,8 +98,30 @@ Constants.Template = {
     FIELD_TYPE_CHECKLIST:       4,
     FIELD_TYPE_PHOTO:           5,
     FIELD_TYPE_SIGN:            6,
-    FIELD_TYPE_LOCATION:        7
+    FIELD_TYPE_LOCATION:        7,
+
+    // Field Names
+    FIELD_NAMES:    [
+        '',
+        'Text',
+        'Number',
+        'Radio List',
+        'Checklist',
+        'Photo',
+        'Signature',
+        'Location',
+    ]
 }
+
+// Available field types for different template editors
+Constants.Template.FORM_FIELD_TYPES = [
+    Constants.Template.FIELD_TYPE_TEXT,
+    Constants.Template.FIELD_TYPE_NUMBER,
+    Constants.Template.FIELD_TYPE_RADIOLIST,
+    Constants.Template.FIELD_TYPE_CHECKLIST,
+    Constants.Template.FIELD_TYPE_PHOTO,
+    Constants.Template.FIELD_TYPE_SIGN
+]
 
 /* ------------------------------- Filters -----------------------------------*/
 Constants.Filter = {

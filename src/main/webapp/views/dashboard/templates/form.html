@@ -17,20 +17,20 @@
 <div class="overflow-auto mt-1 full-flex">
     <table class="table table-striped" ng-table="">
         <thead>
-            <th>
-                <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
-            </th>
-            <th class="text-left">
-                Name
-            </th>
+        <th>
+            <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
+        </th>
+        <th class="text-left">
+            Name
+        </th>
         </thead>
-        <tr ng-repeat="form in $ctrl.forms" ng-click="$ctrl.selection[$index] = !$ctrl.selection[$index]"
+        <tr ng-repeat="template in $ctrl.templates" ng-click="$ctrl.selection[$index] = !$ctrl.selection[$index]"
             ng-class="{'active': $ctrl.selection[$index]}">
             <td class="text-center">
                 <md-checkbox ng-model="$ctrl.selection[$index]" ng-click="$root.Statics.absorbEvent($event)"></md-checkbox>
             </td>
             <td>
-                {{form.name}}
+                {{template.name}}
             </td>
         </tr>
     </table>

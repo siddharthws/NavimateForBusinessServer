@@ -1,0 +1,124 @@
+<div ng-controller="TemplateEditorCtrl as $ctrl">
+    <!-- Template Name -->
+    <div class="d-flex align-items-center flex-shrink-0">
+        <span>Template Name :</span>
+        <input class="input-underlined full-flex ml-2" type="text" placeholder="Enter name for template..."
+               ng-class="{'has-error': !$ctrl.template.name && $ctrl.bShowError}"
+               ng-model="$ctrl.template.name">
+    </div>
+
+    <!-- Add Field Button -->
+    <a href class="mt-1 flex-shrink-0" ng-click="$ctrl.addNewField()">
+        + Add New Field
+    </a>
+
+    <!-- Template Fields -->
+    <table class="table table-striped text-center full-flex" ng-table="">
+        <thead>
+            <th>
+                Type
+            </th>
+            <th>
+                Title
+            </th>
+            <th>
+                Default Value
+            </th>
+            <th>
+            </th>
+        </thead>
+        <tr ng-repeat="field in $ctrl.fields">
+            <!-- Field Type Dropdown -->
+            <td ng-class="{'has-error': !field.type && $ctrl.bShowError}">
+                <div class="dropdown full-width full-height">
+                    <button class="dropdown-toggle-button d-flex" data-toggle="dropdown"
+                            ng-disabled="field.id">
+                        <span class="full-flex">{{$ctrl.Const.FIELD_NAMES[field.type]}}</span>
+                        <img src="/static/images/icon_dropdown.png"/>
+                    </button>
+                    <div class="dropdown-menu full-width">
+                        <button class="dropdown-item"
+                                ng-repeat="type in $ctrl.Const.FORM_FIELD_TYPES"
+                                ng-click="$ctrl.updateFieldType($parent.$index, type)">
+                            {{$ctrl.Const.FIELD_NAMES[type]}}
+                        </button>
+                    </div>
+                </div>
+            </td>
+
+            <!-- Field title Input -->
+            <td ng-class="{'has-error': $ctrl.isDupeFieldTitle(field.title) && $ctrl.bShowError}">
+                <input class="input-underlined w-75" type="text" placeholder="Enter title..."
+                       ng-model="field.title" ng-class="{'has-error': $ctrl.bShowError && !field.title}">
+            </td>
+
+            <!-- Field values -->
+            <td>
+                <!-- Text Field -->
+                <input ng-if="field.type == $ctrl.Const.FIELD_TYPE_TEXT"
+                       class="input-underlined w-75" type="text" placeholder="Enter default text..."
+                       ng-model="$ctrl.data.values[$index].value">
+
+                <!-- Number Field -->
+                <input ng-if="field.type == $ctrl.Const.FIELD_TYPE_NUMBER"
+                       string-to-number class="input-underlined w-75" type="number" placeholder="Enter default value..."
+                       ng-model="$ctrl.data.values[$index].value"
+                       ng-class="{'has-error':  $ctrl.bShowError &&
+                                               ($ctrl.data.values[$index].value == 'null')}">
+
+                <!-- Radio List Field -->
+                <div ng-if="field.type == $ctrl.Const.FIELD_TYPE_RADIOLIST"
+                     class="d-flex flex-column align-items-center"
+                     ng-class="{'has-error': (  !$ctrl.data.values[$index].value.options.length ||
+                                                 $ctrl.data.values[$index].value.options.hasDupes()) &&
+                                                 $ctrl.bShowError}">
+                    <md-radio-group ng-model="$ctrl.data.values[$index].value.selection" class="w-75">
+                        <div class="d-flex align-items-center w-100"
+                             ng-repeat="option in $ctrl.data.values[$index].value.options track by $index">
+                            <md-radio-button ng-value="$index"></md-radio-button>
+                            <input class="input-underlined full-flex" type="text" placeholder="Enter option..."
+                                   ng-model="$ctrl.data.values[$parent.$index].value.options[$index]"
+                                   ng-class="{'has-error': $ctrl.bShowError && !option}">
+                            <input type="button" value="" class="image-button ib-small ib-cross"
+                                   ng-click="$ctrl.removeRadioOption($parent.$index, $index)"/>
+                        </div>
+                    </md-radio-group>
+                    <a href ng-click="$ctrl.addRadioOption($index)">+ Add Option</a>
+                </div>
+
+                <!-- Check list Field -->
+                <div ng-if="field.type == $ctrl.Const.FIELD_TYPE_CHECKLIST"
+                     class="d-flex flex-column align-items-center"
+                     ng-class="{'has-error':   (!$ctrl.data.values[$index].value.length ||
+                                                 $ctrl.isDupesInChecklist($index)) &&
+                                                 $ctrl.bShowError}">
+                    <div class="d-flex align-items-center w-75"
+                         ng-repeat="option in $ctrl.data.values[$index].value track by $index">
+                        <md-checkbox ng-value="option.name"
+                                     ng-model="option.selection">
+                        </md-checkbox>
+                        <input class="input-underlined full-flex" type="text" placeholder="Enter option..."
+                               ng-model="option.name" ng-class="{'has-error': $ctrl.bShowError && !option.name}">
+                        <input type="button" value="" class="image-button ib-small ib-cross"
+                               ng-click="$ctrl.removeCheckOption($parent.$index, $index)"/>
+                    </div>
+                    <a href ng-click="$ctrl.addCheckOption($index)">
+                        + Add Option
+                    </a>
+                </div>
+
+                <!-- Invalid Default Value Fields -->
+                <div ng-if="  field.type == $ctrl.Const.FIELD_TYPE_PHOTO ||
+                                field.type == $ctrl.Const.FIELD_TYPE_SIGN">
+                    NA
+                </div>
+            </td>
+
+            <!-- Actions for field entry -->
+            <td>
+                <input type="button" value="" class="image-button ib-small ib-cross"
+                       ng-click="$ctrl.removeField($index)" ng-show="!field.id"/>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -3,18 +3,18 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
-import navimateforbusiness.Form
+import navimateforbusiness.Data
+import navimateforbusiness.DomainToJson
+import navimateforbusiness.JsonToDomain
 import navimateforbusiness.Lead
 import navimateforbusiness.Role
 import navimateforbusiness.SmsHelper
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
+import navimateforbusiness.Template
 import navimateforbusiness.User
 import navimateforbusiness.UserStatus
 import org.grails.web.json.JSONArray
-import org.grails.web.json.JSONObject
-
-import javax.xml.bind.Marshaller
 
 class UserApiController {
 
@@ -319,41 +319,72 @@ class UserApiController {
         render resp as JSON
     }
 
-    def getForm() {
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+    def getFormTemplates() {
+        def manager = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get Form List
-        List<Form> forms = Form.findAllByOwner(user)
+        // Get List of Form templates for this user
+        List<Template> templates = Template.findAllByOwnerAndType(manager, Constants.Template.TYPE_FORM)
 
-        def resp = new JSONArray()
-        forms.each { form ->
-            resp.add(navimateforbusiness.Marshaller.serializeForm(form))
+        // Serialize into response
+        def templatesJson = []
+        templates.each {template ->
+            // Create Field array and data array for template
+            def fieldsJson = []
+            def defaultData = [id: template.defaultData.id, values: []]
+            template.fields.each {field ->
+                fieldsJson.push(DomainToJson.Field(field))
+
+                // Add corresponding data
+                def values = template.defaultData.values.sort(false) {it.id}
+                values.each {value ->
+                    if (value.fieldId == field.id) {
+                        def valueJson = DomainToJson.Value(value)
+                        if (value.field.type == Constants.Template.FIELD_TYPE_RADIOLIST ||
+                                value.field.type == Constants.Template.FIELD_TYPE_CHECKLIST) {
+                            valueJson.value = JSON.parse(valueJson.value)
+                        }
+                        defaultData.values.push(valueJson)
+                    }
+                }
+            }
+
+            // Create template JSon
+            def templateJson = [id: template.id, name: template.name, fields: fieldsJson, defaultData: defaultData]
+
+            templatesJson.push(templateJson)
         }
+
+        def resp = [templates: templatesJson]
         render resp as JSON
     }
 
-    def editForm() {
+    def saveFormTemplate() {
         def manager = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-        def formJson = request.JSON.form
 
-        // Update Db's Form data
-        Form form = null
-        if (formJson.id) {
-            form = Form.findById(formJson.id)
-            form.data = formJson.data.toString()
-            form.name = formJson.name
+        // Parse to Template Object
+        Template template = JsonToDomain.Template(request.JSON.template, manager)
+
+        // Set Template type
+        template.type = Constants.Template.TYPE_FORM
+
+        // For new templates, save needs to be called twice
+        if (!template.id) {
+            Data defaultData = template.defaultData
+
+            // Save template (default data will become null due to nullable constraint)
+            template.save(flush: true, failOnError: true)
+
+            // Save template with default data
+            template.defaultData = defaultData
+            template.save(flush: true, failOnError: true)
         } else {
-            form = new Form(
-                    name: formJson.name,
-                    data: formJson.data.toString(),
-                    owner: manager,
-                    account: manager.account)
+            // Save Template Object
+            template.save(flush: true, failOnError: true)
         }
-        form.save(flush: true, failOnError: true)
 
         // Check if the form has any tasks
         def fcms = []
-        def tasks = Task.findAllByTemplate(form)
+        def tasks = Task.findAllByFormTemplate(template)
         tasks.each {task ->
             // Send FCM notification only if task is OPEN
             if (task.status == TaskStatus.OPEN) {

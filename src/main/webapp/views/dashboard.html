@@ -7,7 +7,7 @@
         </div>
         <button class="nav-btn" ng-repeat="item in $root.Constants.DashboardNav.Menu"
                 ng-class="{'active': item.id == nav.item.id}"
-                ui-sref="{{'dashboard.' + item.state + '-manage'}}">
+                ui-sref="{{'dashboard.' + item.state + '-' + item.options[0].state}}">
             {{item.name}}
         </button>
         <button class="nav-btn" ng-click="openHelp()">
