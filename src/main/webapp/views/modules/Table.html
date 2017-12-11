@@ -26,14 +26,20 @@
 
                             <!-- Filter Icon -->
                             <div class="img-icon ic-small ic-filter ml-2"
-                                 ng-if="column.filter.type != $root.Constants.Filter.TYPE_NONE"
                                  ng-class="{'active' : $ctrl.isFilterActive($index)}"/>
                         </button>
 
                         <!-- Dropdown Filter -->
-                        <div class="dropdown-menu p-2" ng-if="column.filterType != $root.Constants.Filter.TYPE_NONE">
+                        <div class="dropdown-menu p-2">
+                            <!-- Blank Filters -->
+                            <div>
+                                <md-checkbox ng-model="column.filter.showBlanks" ng-change="$ctrl.applyFilters()"></md-checkbox>
+                                <span>Show Blanks</span>
+                            </div>
+
                             <!-- Sorting Buttons -->
-                            <div ng-if="column.filter.type != $root.Constants.Filter.TYPE_TEXT">
+                            <div ng-if="column.filter.type != $root.Constants.Filter.TYPE_TEXT &&
+                                        column.filterType != $root.Constants.Filter.TYPE_NONE">
                                 <span>Sort:</span>
                                 <div class="d-flex justify-content-center">
                                     <input type="button" value="" class="image-button ib-sort-down"

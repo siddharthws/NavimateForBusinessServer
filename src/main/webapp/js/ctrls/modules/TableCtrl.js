@@ -16,7 +16,8 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
         for (var i = 0; i < vm.columns.length; i++) {
             var column = vm.columns[i]
             var filter = {
-                type: column.filterType
+                type: column.filterType,
+                showBlanks: true
             }
 
             // Init filter object
@@ -91,6 +92,11 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
             bActive = true
         }
 
+        // Check for show blanks filter
+        if (!filter.showBlanks) {
+            bActive = true
+        }
+
         return bActive
     }
 
@@ -106,32 +112,41 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
                 var filter = vm.columns[j].filter
                 var value = vm.values[i]['Col' + vm.columns[j].id]
 
-                if (filter.type == $rootScope.Constants.Filter.TYPE_SELECTION) {
-                    // Check if this option is selected
-                    filter.selection.options.forEach(function (option) {
-                        if ((option.name == value) && (!option.checked)) {
+                if (!filter.showBlanks && value == '-') {
+                    bAdd = false
+                } else {
+                    if (filter.type == $rootScope.Constants.Filter.TYPE_SELECTION) {
+                        // Check if this option is selected
+                        filter.selection.options.forEach(function (option) {
+                            if ((option.name == value) && (!option.checked)) {
+                                bAdd = false
+                            }
+                        })
+                    } else if (filter.type == $rootScope.Constants.Filter.TYPE_NUMBER) {
+                        var lessThan = filter.number.lesserThan
+                        var greaterThan = filter.number.greaterThan
+                        if ((value == "-") && (lessThan || greaterThan)) {
+                            bAdd = false
+                        } else if ((lessThan && (value > lessThan)) || (greaterThan && (value < greaterThan))) {
                             bAdd = false
                         }
-                    })
-                } else if (filter.type == $rootScope.Constants.Filter.TYPE_NUMBER) {
-                    var lessThan = filter.number.lesserThan
-                    var greaterThan = filter.number.greaterThan
-                    if ((value == "-") && (lessThan || greaterThan)) {
-                        bAdd = false
-                    } else if ((lessThan && (value > lessThan)) || (greaterThan && (value < greaterThan))) {
-                        bAdd = false
+                    } else if (filter.type == $rootScope.Constants.Filter.TYPE_TEXT) {
+                        var searchText = filter.text.search
+                        if (searchText && (value.toLowerCase().search(searchText.toLowerCase()) == -1)) {
+                            bAdd = false
+                        }
+                    } else if (filter.type == $rootScope.Constants.Filter.TYPE_DATE) {
+                        var from  = filter.date.from
+                        var to  = filter.date.to
+                        if ((from && (value < from)) || (to && (value > to))) {
+                            bAdd = false
+                        }
                     }
-                } else if (filter.type == $rootScope.Constants.Filter.TYPE_TEXT) {
-                    var searchText = filter.text.search
-                    if (searchText && (value.toLowerCase().search(searchText.toLowerCase()) == -1)) {
-                        bAdd = false
-                    }
-                } else if (filter.type == $rootScope.Constants.Filter.TYPE_DATE) {
-                    var from  = filter.date.from
-                    var to  = filter.date.to
-                    if ((from && (value < from)) || (to && (value > to))) {
-                        bAdd = false
-                    }
+                }
+
+                // Break from loop if row is not to be added
+                if (!bAdd) {
+                    break
                 }
             }
 
