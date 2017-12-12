@@ -96,6 +96,9 @@ class ReportService {
         columns.push([title: 'Date',
                       type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
                       filterType: navimateforbusiness.Constants.Filter.TYPE_DATE])
+        columns.push([title: 'Location',
+                      type: navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION,
+                      filterType: navimateforbusiness.Constants.Filter.TYPE_NONE])
 
         // Add columns from elements
         elements.each {element ->
@@ -158,6 +161,11 @@ class ReportService {
 
             // Feed form data
             if (element.form?.submittedData) {
+                // Feed location if valid
+                if (element.form.latitude || element.form.longitude) {
+                    row[5] = element.form.latitude + ',' + element.form.longitude
+                }
+
                 // Iterate through each value in this dataset
                 element.form.submittedData.values.each {value ->
                     // Get column title
