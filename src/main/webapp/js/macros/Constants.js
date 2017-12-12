@@ -96,6 +96,11 @@ Constants.DashboardNav.Menu = [
     }
 ]
 
+/* ------------------------------- Pagination -----------------------------------*/
+Constants.Table = {
+    DEFAULT_COUNT_PER_PAGE:     10
+}
+
 /* ------------------------------- Template -----------------------------------*/
 Constants.Template = {
     // Template Field types
