@@ -37,22 +37,6 @@ class Marshaller {
         ]
     }
 
-    static def serializeTaskForRep(Task task) {
-        return [
-                id:         task.id,
-                lead:       serializeLead(task.lead),
-                template:   serializeForm(task.template)
-        ]
-    }
-
-    static def serializeForm(Form form) {
-        return [
-                id:     form.id,
-                name:   form.name,
-                data:   JSON.parse(form.data)
-        ]
-    }
-
     static def serializeTrackObj(navimateforbusiness.TrackingObject trackObj) {
         long currentTime = System.currentTimeMillis()
         int lastUpdated = 0

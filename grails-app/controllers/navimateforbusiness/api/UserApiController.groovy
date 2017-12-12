@@ -213,8 +213,11 @@ class UserApiController {
     def getTask() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get Form List
+        // Get Task List
         List<Task> tasks = Task.findAllByManager(user)
+
+        // Sort in descending order of ID
+        tasks.sort(true) {-it.id}
 
         def resp = new JSONArray()
         tasks.each { task ->
