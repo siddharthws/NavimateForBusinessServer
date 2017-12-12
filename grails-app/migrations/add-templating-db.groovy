@@ -213,4 +213,8 @@ databaseChangeLog = {
     changeSet(author: "Siddharth (generated)", id: "1512908746428-23") {
         dropNotNullConstraint(columnDataType: "bigint", columnName: "template_id", tableName: "task")
     }
+
+    changeSet(author: "Siddharth (generated)", id: "1512908746428-24") {
+        dropNotNullConstraint(columnDataType: "bigint", columnName: "owner_id", tableName: "form")
+    }
 }

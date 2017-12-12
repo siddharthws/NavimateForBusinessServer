@@ -29,6 +29,7 @@ class Form {
     ]
 
     static constraints = {
+        owner nullable: true
         task nullable: true
         submittedData nullable: true
         name nullable: true
