@@ -61,10 +61,6 @@ class UrlMappings {
         "/api/googleapis/geocode"           (controller: "GoogleApi") {action = [GET: "geocode"]}
         "/api/googleapis/geocode/reverse"   (controller: "GoogleApi") {action = [GET: "reverseGeocode"]}
 
-        // Porting APis
-        "/api/port1"   (controller: "Porting") {action = [GET: "port1"]}
-        "/api/port2"   (controller: "Porting") {action = [GET: "port2"]}
-
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
 
