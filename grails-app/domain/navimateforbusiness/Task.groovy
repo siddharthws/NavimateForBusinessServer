@@ -27,9 +27,6 @@ class Task {
             visits:     Visit
     ]
 
-    // Deprecated. To be removed
-    Form template
-
     static mappedBy = [
             manager:            'createdTasks',
             rep:                'assignedTasks'
@@ -39,8 +36,6 @@ class Task {
         manager nullable: true
         rep nullable: true
         lead nullable: true
-        formTemplate nullable: true
-        template nullable: true
     }
 
     static mapping = {

@@ -20,20 +20,11 @@ class Form {
     // Form Submission Data
     Data submittedData
 
-    // Deprecated. To be removed in later versions
-    String name
-    String data
-
     static mappedBy = [
             task: 'forms'
     ]
 
     static constraints = {
-        owner nullable: true
-        task nullable: true
-        submittedData nullable: true
-        name nullable: true
-        data nullable: true
     }
 
     static mapping = {
