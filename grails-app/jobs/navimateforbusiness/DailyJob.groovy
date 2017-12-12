@@ -20,13 +20,13 @@ class DailyJob {
                 if(expiryDate <= currentDate) {
                     //Creating new task with previous details
                     Task newTask = new Task(
-                            account:    task.account,
-                            manager:    task.manager,
-                            rep:        task.rep,
-                            lead:       task.lead,
-                            template:   task.template,
-                            period:     task.period,
-                            status:     navimateforbusiness.TaskStatus.OPEN
+                            account:        task.account,
+                            manager:        task.manager,
+                            rep:            task.rep,
+                            lead:           task.lead,
+                            formTemplate:   task.formTemplate,
+                            period:         task.period,
+                            status:         navimateforbusiness.TaskStatus.OPEN
                     )
                     newTask.save(flush: true, failOnError: true)
 
