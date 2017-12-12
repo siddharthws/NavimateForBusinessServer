@@ -45,14 +45,6 @@ class DomainToJson {
         ]
     }
 
-    static def Form(Form form) {
-        return [
-                id:                 form.id,
-                ver:                form.version,
-                name:               form.name
-        ]
-    }
-
     static def Template(Template template) {
         // Create Field Ids array
         def fieldIds = []
