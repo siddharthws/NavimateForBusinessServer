@@ -22,15 +22,15 @@ class AuthService {
                                     role:           navimateforbusiness.Role.ADMIN,
                                     status:         navimateforbusiness.UserStatus.ACTIVE)
 
-        // Add Sales Template By Default
-        manager.addToForms(getDefaultTemplate(manager))
-
         // Save
         manager.save(flush: true, failOnError: true)
 
         // Assign admin to account
         account.admin = manager
         account.save(flush: true, failOnError: true)
+
+        // Save a default template for the user
+        getDefaultTemplate(manager).save(flush: true, failOnError: true)
 
         // Send invitation email
         emailService.sendMail(  manager.email, "Your Navimate Credentials",
@@ -102,23 +102,76 @@ class AuthService {
         true
     }
 
+    // Needs to be updated
     private def getDefaultTemplate(User manager) {
-        Form defaultTemplate = new Form(
-                account: manager.account,
+        // Create template object
+        Template defaultTemplate = new Template(
                 owner: manager,
-                name: "Default Template",
-                data:('[{"title":"Amount", "type":"number", "value":"0"},' +
-                       '{"title":"Notes", "type":"text", "value":"" },' +
-                       '{"title":"Photo", "type":"photo", "value":""},' +
-                       '{"title":"Sign", "type":"signature", "value":""},' +
-                       '{"title":"Status", "type":"radioList", "value":{"options": ["Failed",' +
-                                                                                   '"Waiting",' +
-                                                                                   '"Done"],' +
-                                                                       '"selection": "Waiting"}},' +
-                       '{"title":"To-Do", "type":"checkList", "value":{"options":["Meet Client",' +
-                                                                                 '"Collect Information"],' +
-                                                                      '"selection":["false", "false"]}}]')
+                account: manager.account,
+                name: "Default",
+                type: navimateforbusiness.Constants.Template.TYPE_FORM
         )
+
+        // Create Data Object
+        Data defaultData = new Data(
+                owner: manager,
+                account: manager.account,
+                template: defaultTemplate
+        )
+
+        // Create some default fields
+        Field notesField = new Field(
+                account: manager.account,
+                template: defaultTemplate,
+                type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                title: "Notes",
+                bMandatory: false
+        )
+        Field amountField = new Field(
+                account: manager.account,
+                template: defaultTemplate,
+                type: navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER,
+                title: "Amount",
+                bMandatory: false
+        )
+        Field photoField = new Field(
+                account: manager.account,
+                template: defaultTemplate,
+                type: navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO,
+                title: "Photo",
+                bMandatory: false
+        )
+
+        // Create values for these fields
+        Value notesValue = new Value(
+                account: manager.account,
+                field: notesField,
+                data: defaultData,
+                value: ""
+        )
+        Value amountValue = new Value(
+                account: manager.account,
+                field: amountField,
+                data: defaultData,
+                value: String.valueOf(0)
+        )
+        Value photoValue = new Value(
+                account: manager.account,
+                field: photoField,
+                data: defaultData,
+                value: ""
+        )
+
+        // Add values to template
+        defaultData.addToValues(notesValue)
+        defaultData.addToValues(amountValue)
+        defaultData.addToValues(photoValue)
+        defaultTemplate.defaultData = defaultData
+
+        // Add fields to template
+        defaultTemplate.addToFields(notesField)
+        defaultTemplate.addToFields(amountField)
+        defaultTemplate.addToFields(photoField)
 
         defaultTemplate
     }
