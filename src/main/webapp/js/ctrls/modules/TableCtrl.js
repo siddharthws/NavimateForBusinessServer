@@ -3,7 +3,7 @@
  */
 
 // Controller for Table View
-app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filter, ExcelService, DialogService) {
+app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filter, NgTableParams, ExcelService, DialogService, ToastService) {
     var vm = this
 
     /*------------------------------------ HTML APIs --------------------------------*/
@@ -335,6 +335,16 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
     vm.values            = []
     vm.filteredValues    = []
     vm.style             = $scope.tableParams.style
+    vm.pageSize          = $rootScope.Constants.Table.DEFAULT_COUNT_PER_PAGE
+    vm.pagerParams       = new NgTableParams(   {count:   vm.pageSize},
+                                                {dataset: vm.filteredValues})
+
+    // Add watcher for updating table params when filtered values change
+    $scope.$watch(function pagerWatch(scope) {return vm.filteredValues},
+                  function () {
+                    vm.pagerParams.settings().dataset = vm.filteredValues
+                    vm.pagerParams.reload()
+                })
 
     // Hack to persist multiselect dropdowns after clicking on dropdown items
     $(document).on('click', '.dropdown-multiselect .dropdown-menu', function (e) {
