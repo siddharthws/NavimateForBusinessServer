@@ -20,15 +20,16 @@ class JsonToDomain {
             double lat = formJson.latitude
             double lng = formJson.longitude
             Date date = new Date(formJson.timestamp)
-            Data data = Data(formJson.data, owner)
+            Template template = navimateforbusiness.Template.findById(formJson.templateId)
+            Data data = Data(formJson.data, owner, template)
             form = new Form(owner: owner,
                             account: owner.account,
                             task: task,
-                            dateCreated: date,
-                            lastUpdated: date,
                             latitude: lat,
                             longitude: lng,
                             submittedData: data)
+            form.dateCreated = date
+            form.lastUpdated = date
         }
 
         form
@@ -51,35 +52,21 @@ class JsonToDomain {
                         navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
         } else {
-            template = new Template(owner: owner, account: owner.account, name: templateJson.name)
+            template = new Template(owner: owner, account: owner.account)
         }
 
-        // Populate Field Objects
-        if (!templateJson.fields || !templateJson.fields.size()) {
-            throw new navimateforbusiness.ApiException( "No fields found in template !!!",
-                    navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-        }
-        def fields = []
+        // Assign Name
+        template.name = templateJson.name
+
+        // Get Fields Array
+        List<Field> fields = []
         templateJson.fields.each { fieldJson ->
             fields.push(Field(fieldJson, template, owner.account))
         }
         template.fields = fields
 
         // Populate Data Object
-        if (!templateJson.defaultData || !templateJson.defaultData.size()) {
-            throw new navimateforbusiness.ApiException( "No data found in template !!!",
-                    navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-        }
-        Data data = Data(templateJson.defaultData, owner)
-        if (!data) {
-            return null
-        }
-        template.defaultData = data
-
-        // Assign other properties
-        template.account = owner.account
-        template.owner = owner
-        template.name = templateJson.name
+        template.defaultData = Data(templateJson.defaultData, owner, template)
 
         template
     }
@@ -107,7 +94,7 @@ class JsonToDomain {
         field
     }
 
-    static Data Data(def dataJson, User owner) {
+    static Data Data(def dataJson, User owner, Template template) {
         if (!dataJson) {
             throw new navimateforbusiness.ApiException( "No data found !!!",
                     navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
@@ -124,22 +111,20 @@ class JsonToDomain {
                             navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
         } else {
-            data = new Data(owner: owner, account: owner.account)
-        }
-
-        // Assign Template from json
-        if (dataJson.templateId) {
-            Template template = Template.findByIdAndAccount(dataJson.templateId, owner.account)
-            if (template) {
-                data.template = template
-            }
+            data = new Data(owner: owner, account: owner.account, template: template)
         }
 
         // Assign values from json
         List<Value> values = []
         if (dataJson.values) {
-            dataJson.values.each { valueJson ->
-                values.add(Value(valueJson, data))
+            dataJson.values.eachWithIndex { valueJson, i ->
+                Field field = null
+                if (valueJson.fieldId) {
+                    field = Field.findById(valueJson.fieldId)
+                } else {
+                    field = data.template.fields.getAt(i)
+                }
+                values.add(Value(valueJson, data, field))
             }
         }
         data.values = values
@@ -147,7 +132,7 @@ class JsonToDomain {
         data
     }
 
-    static Value Value(def valueJson, Data data) {
+    static Value Value(def valueJson, Data data, Field field) {
         navimateforbusiness.Value value = null
 
         // Check for existing objects
@@ -160,19 +145,7 @@ class JsonToDomain {
                             navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
         } else {
-            // Check Valid Field
-            if (valueJson.fieldId) {
-                Field field = Field.findById(valueJson.fieldId)
-                if (field) {
-                    value = new Value(account: data.account, data: data, field: field)
-                } else {
-                    throw new   navimateforbusiness.ApiException("Field not found for new value",
-                            navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-                }
-            } else {
-                throw new   navimateforbusiness.ApiException("No fieldId for new value",
-                        navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-            }
+            value = new Value(account: data.account, data: data, field: field)
         }
 
         // Assign Value from json
