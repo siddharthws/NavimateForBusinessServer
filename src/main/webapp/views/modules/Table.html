@@ -128,13 +128,10 @@
         </table>
 
         <div>
-            <span>Records / Page :</span>
-            <input style="width: 3em" type="number" class="input-underlined" ng-model="$ctrl.pageSize"
+            <span>Showing </span>
+            <input style="width: 3em" type="number" class="input-underlined text-center" ng-model="$ctrl.pageSize"
                    ng-change="$ctrl.pagerParams.count($ctrl.pageSize)">
-        </div>
-
-        <div>
-            <span>Total Records : {{$ctrl.filteredValues.length}}</span>
+            <span> records / page | Total Records : {{$ctrl.filteredValues.length}}</span>
         </div>
     </div>
 </div>
