@@ -20,7 +20,7 @@ class JsonToDomain {
             double lat = formJson.latitude
             double lng = formJson.longitude
             Date date = new Date(formJson.timestamp)
-            Template template = navimateforbusiness.Template.findById(formJson.templateId)
+            Template template = Template.findById(formJson.data.templateId)
             Data data = Data(formJson.data, owner, template)
             form = new Form(owner: owner,
                             account: owner.account,
@@ -111,7 +111,8 @@ class JsonToDomain {
                             navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
         } else {
-            data = new Data(owner: owner, account: owner.account, template: template)
+            data = new Data(owner: owner, account: owner.account)
+            data.template = template
         }
 
         // Assign values from json

@@ -5,7 +5,7 @@
         <div class="logo-container align-self-center">
             <img class="ic-large align-self-center" src="/static/images/logo.png">
         </div>
-        <button class="nav-btn" ng-repeat="item in $root.Constants.DashboardNav.Menu"
+        <button class="nav-btn flex-shrink-0" ng-repeat="item in $root.Constants.DashboardNav.Menu"
                 ng-class="{'active': item.id == nav.item.id}"
                 ui-sref="{{'dashboard.' + item.state + '-' + item.options[0].state}}">
             {{item.name}}
@@ -24,7 +24,7 @@
                 {{option.name}}
             </button>
 
-            <div class="dropdown ml-auto mr-2">
+            <div class="dropdown ml-5">
                 <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown">
                     <span>{{name}} | </span>
                     <img class="img-icon" src="/static/images/dropdown.png"/>
