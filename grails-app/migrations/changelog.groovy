@@ -19,4 +19,5 @@ databaseChangeLog = {
     include file: 'api-key-add.groovy'
     include file: 'api-extId-add.groovy'
     include file: 'form-add-taskstatus.groovy'
+    include file: 'templating-lead-support.groovy'
 }

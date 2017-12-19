@@ -9,16 +9,21 @@ class Lead {
     // External ID for API access
     String extId
 
-    // Contact Info
+    // Lead Name
     String title
-    String description
-    String phone
-    String email
 
     // Location
     double latitude
     double longitude
     String address
+
+    // Templated Data
+    Data templateData
+
+    // Deprecated
+    String description
+    String phone
+    String email
 
     static belongsTo = [
             account: Account,
@@ -32,6 +37,7 @@ class Lead {
         latitude        nullable: true
         longitude       nullable: true
         extId           nullable: true
+        templateData    nullable: true
     }
 
     static mapping = {
