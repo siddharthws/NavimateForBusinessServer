@@ -6,6 +6,9 @@ class Template {
     Date dateCreated
     Date lastUpdated
 
+    //Remove Flags
+    boolean isRemoved = false
+
     static belongsTo = [
             account:    Account,
             owner:      User

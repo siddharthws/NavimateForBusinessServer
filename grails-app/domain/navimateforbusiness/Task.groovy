@@ -6,6 +6,9 @@ class Task {
     Date dateCreated
     Date lastUpdated
 
+    //Remove Flags
+    boolean isRemoved = false
+
     // Associated Users
     static belongsTo = [
             account:    Account,
