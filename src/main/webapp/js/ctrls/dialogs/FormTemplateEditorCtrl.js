@@ -24,7 +24,7 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
         $rootScope.showWaitingDialog("Please wait while template is being saved...")
         $http({
             method:     'POST',
-            url:        '/api/users/formTemplate',
+            url:        '/api/users/template',
             headers:    {
                 'X-Auth-Token':    $localStorage.accessToken
             },
@@ -54,6 +54,7 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
     if (!$scope.template) {
         // Create empty template object
         $scope.template = {
+            type: Constants.Template.TYPE_FORM,
             name: '',
             fields: [],
             defaultData: {

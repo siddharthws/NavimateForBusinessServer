@@ -52,7 +52,7 @@ class JsonToDomain {
                         navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
         } else {
-            template = new Template(owner: owner, account: owner.account)
+            template = new Template(owner: owner, account: owner.account, type: templateJson.type)
         }
 
         // Assign Name

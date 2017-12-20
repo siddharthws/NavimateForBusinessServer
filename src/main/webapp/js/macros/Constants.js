@@ -116,6 +116,9 @@ Constants.Table = {
 
 /* ------------------------------- Template -----------------------------------*/
 Constants.Template = {
+    // Template Types
+    TYPE_FORM:          1,
+
     // Template Field types
     FIELD_TYPE_TEXT:            1,
     FIELD_TYPE_NUMBER:          2,

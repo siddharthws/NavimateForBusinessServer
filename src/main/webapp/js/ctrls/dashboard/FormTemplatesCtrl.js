@@ -43,9 +43,10 @@ app.controller("FormTemplatesCtrl", function ($scope, $rootScope, $http, $localS
         $rootScope.showWaitingDialog("Please wait while we are fetching forms...")
         $http({
             method:     'GET',
-            url:        '/api/users/formTemplate',
+            url:        '/api/users/template',
             headers:    {
-                'X-Auth-Token':    $localStorage.accessToken
+                'X-Auth-Token':    $localStorage.accessToken,
+                'templateType':    Constants.Template.TYPE_FORM
             }
         })
             .then(

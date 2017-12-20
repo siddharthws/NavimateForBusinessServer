@@ -335,11 +335,12 @@ class UserApiController {
         render resp as JSON
     }
 
-    def getFormTemplates() {
+    def getTemplates() {
         def manager = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get List of Form templates for this user
-        List<Template> templates = Template.findAllByOwnerAndType(manager, Constants.Template.TYPE_FORM)
+        int type = Integer.parseInt(request.getHeader("templateType"))
+        List<Template> templates = Template.findAllByOwnerAndType(manager, type)
 
         // Serialize into response
         def templatesJson = []
@@ -374,17 +375,14 @@ class UserApiController {
         render resp as JSON
     }
 
-    def saveFormTemplate() {
+    def saveTemplate() {
         def manager = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Parse to Template Object
         Template template = JsonToDomain.Template(request.JSON.template, manager)
 
-        // Set Template type
-        template.type = Constants.Template.TYPE_FORM
-
-        // For new templates, save needs to be called twice
         if (!template.id) {
+            // For new templates, save needs to be called twice
             Data defaultData = template.defaultData
 
             // Save template (default data will become null due to nullable constraint)
@@ -398,15 +396,19 @@ class UserApiController {
             template.save(flush: true, failOnError: true)
         }
 
-        // Check if the form has any tasks
+        // Get open tasks that are affected due to this template
+        def openTasks = []
+        switch (template.type) {
+            case Constants.Template.TYPE_FORM :
+                openTasks = Task.findAllByFormTemplateAndStatus(template, TaskStatus.OPEN)
+                break
+        }
+
+        // Collect FCM Ids of affected reps
         def fcms = []
-        def tasks = Task.findAllByFormTemplate(template)
-        tasks.each {task ->
-            // Send FCM notification only if task is OPEN
-            if (task.status == TaskStatus.OPEN) {
-                if (!fcms.contains(task.rep.fcmId)) {
-                    fcms.push(task.rep.fcmId)
-                }
+        openTasks.each {task ->
+            if (!fcms.contains(task.rep.fcmId)) {
+                fcms.push(task.rep.fcmId)
             }
         }
 
