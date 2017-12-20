@@ -6,6 +6,9 @@ class Field {
     Date dateCreated
     Date lastUpdated
 
+    //Remove Flags
+    boolean isRemoved = false
+
     static belongsTo = [
             account:    Account,
             template:   Template

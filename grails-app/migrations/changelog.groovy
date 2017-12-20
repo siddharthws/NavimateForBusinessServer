@@ -15,4 +15,5 @@ databaseChangeLog = {
     include file: 'add-column-form-latlng.groovy'
     include file: 'add-templating-db.groovy'
     include file: 'templating-porting-cleanup.groovy'
+    include file: 'add-is-removed-column.groovy'
 }
