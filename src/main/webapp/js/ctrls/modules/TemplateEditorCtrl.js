@@ -137,7 +137,7 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
     }
 
     // API to validate entered data
-    $scope.callbacks.validateTemplate = function () {
+    function validateTemplate () {
         var toastMessage = ""
 
         if (!vm.template.name) {
@@ -189,15 +189,20 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
             }
         }
 
-        // Show Error Toast and eror UI for invalid data
+        // Show Error Toast and error UI for invalid data
         if (toastMessage.length) {
-            ToastService.toast(toastMessage)
+            // Shoe Error UI
             vm.bShowError = true
-        } else {
-            vm.bShowError = false
-        }
 
-        return !vm.bShowError
+            // Show error toast
+            ToastService.toast(toastMessage)
+        } else {
+            // Hide Error UI
+            vm.bShowError = false
+
+            // Emit Validation success event
+            $scope.$emit(Constants.Events.TEMPLATE_VALIDATE_SUCCESS)
+        }
     }
 
     /*------------------------------- Local APIs -------------------------------*/
@@ -208,4 +213,11 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
     vm.fields = vm.template.fields
     vm.data = vm.template.defaultData
     vm.bShowError = false
+
+    // Set broadcast listener
+    // Validation event
+    $scope.$on(Constants.Events.TEMPLATE_VALIDATE, function (event, args) {
+        // Emit success event if validation completes
+        validateTemplate()
+    })
 })

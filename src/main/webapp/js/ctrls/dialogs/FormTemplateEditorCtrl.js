@@ -14,38 +14,40 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
 
     // API to save template
     vm.save = function () {
-        if ($scope.callbacks.validateTemplate()) {
-            $rootScope.showWaitingDialog("Please wait while template is being saved...")
-            $http({
-                method:     'POST',
-                url:        '/api/users/formTemplate',
-                headers:    {
-                    'X-Auth-Token':    $localStorage.accessToken
-                },
-                data: {
-                    'template': $scope.template
-                }
-            })
-                .then(
-                    function (response) {
-                        // Hide dialog and show toast
-                        $rootScope.hideWaitingDialog()
-                        $mdDialog.hide()
-                        ToastService.toast("Form saved successfully...")
-
-                        // Trigger Callback
-                        updateCb()
-                    },
-                    function (error) {
-                        // Hide waiting and show error toast
-                        $rootScope.hideWaitingDialog()
-                        ToastService.toast(error.data.error)
-                    }
-                )
-        }
+        // Broadcast Template validation event and wait for success.
+        // Success event listener is set during init)
+        $scope.$broadcast(Constants.Events.TEMPLATE_VALIDATE)
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/
+    function savePostValidation() {
+        $rootScope.showWaitingDialog("Please wait while template is being saved...")
+        $http({
+            method:     'POST',
+            url:        '/api/users/formTemplate',
+            headers:    {
+                'X-Auth-Token':    $localStorage.accessToken
+            },
+            data: {
+                'template': $scope.template
+            }
+        }).then(
+            function (response) {
+                // Hide dialog and show toast
+                $rootScope.hideWaitingDialog()
+                $mdDialog.hide()
+                ToastService.toast("Template saved successfully...")
+
+                // Trigger Callback
+                updateCb()
+            },
+            function (error) {
+                // Hide waiting and show error toast
+                $rootScope.hideWaitingDialog()
+                ToastService.toast(error.data.error)
+            }
+        )
+    }
     /* ------------------------------- Init -----------------------------------*/
     // Attach template to scope to pass to child template editor view
     $scope.template = template
@@ -60,6 +62,10 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
         }
     }
 
-    // Attach Callbacks
-    $scope.callbacks = {}
+    // Add event listener
+    // Event listener for Template validation success
+    $scope.$on(Constants.Events.TEMPLATE_VALIDATE_SUCCESS, function (event, args) {
+        // Emit success event if validation completes
+        savePostValidation()
+    })
 })

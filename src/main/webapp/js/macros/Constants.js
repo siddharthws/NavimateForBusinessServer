@@ -4,11 +4,15 @@ var Constants = {}
 
 /* ------------------------------- Events -------------------------------------*/
 Constants.Events = {
-    // Table Related events
+    // Table Module Related events
     TABLE_INIT:             "event_table_init",
     TABLE_EXPORT:           "event_table_export",
     TABLE_TOGGLE_COLUMNS:   "event_table_toggle_columns",
-    TABLE_CLEAR_FILTERS:    "event_table_clear_filters"
+    TABLE_CLEAR_FILTERS:    "event_table_clear_filters",
+
+    // Template Editor Module related events
+    TEMPLATE_VALIDATE:          "event_template_validate",
+    TEMPLATE_VALIDATE_SUCCESS:  "event_template_validate_success"
 }
 
 /* ------------------------------- Tracking -----------------------------------*/
