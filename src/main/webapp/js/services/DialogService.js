@@ -92,6 +92,16 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
+    // Launch Lead Template Editor Dialog
+    this.leadTemplateEditor = function (template, updateCb) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/LeadTemplateEditor.html',
+                            controller: 'LeadTemplateEditorCtrl as $ctrl',
+                            clickOutsideToClose: true,
+                            locals: { template: template, updateCb: updateCb }
+        })
+    }
+
     // Launch Live Tracking Dialog
     this.liveTracking = function (reps) {
         // Show Dialog

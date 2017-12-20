@@ -1,0 +1,38 @@
+<!-- Lead Template Management HTML -->
+<div class="bg-toolbar d-flex">
+    <button class="btn btn-primary" ng-click="$ctrl.create()">Create Template</button>
+
+    <div class="dropdown">
+        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
+                ng-disabled="!$ctrl.getSelectedItems().length">
+            <span>Actions | </span>
+            <img class="img-icon" src="/static/images/dropdown.png"/>
+        </button>
+        <div class="dropdown-menu">
+            <button class="dropdown-item" ng-click="$ctrl.edit()">Edit</button>
+            <button class="dropdown-item" ng-click="$ctrl.remove()">Remove</button>
+        </div>
+    </div>
+</div>
+
+<div class="overflow-auto mt-1 full-flex">
+    <table class="table table-striped" ng-table="">
+        <thead>
+            <th>
+                <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
+            </th>
+            <th class="text-left">
+                Name
+            </th>
+        </thead>
+        <tr ng-repeat="template in $ctrl.templates" ng-click="$ctrl.selection[$index] = !$ctrl.selection[$index]"
+            ng-class="{'active': $ctrl.selection[$index]}">
+            <td class="text-center">
+                <md-checkbox ng-model="$ctrl.selection[$index]" ng-click="$root.Statics.absorbEvent($event)"></md-checkbox>
+            </td>
+            <td>
+                {{template.name}}
+            </td>
+        </tr>
+    </table>
+</div>
