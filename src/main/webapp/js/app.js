@@ -200,6 +200,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/templates/form.html',
         controller: 'FormTemplatesCtrl as $ctrl'
     })
+    .state('dashboard.templates-lead', {
+        url: '/templates/lead',
+        templateUrl: '/static/views/dashboard/templates/lead.html',
+        controller: 'LeadTemplatesCtrl as $ctrl'
+    })
     .state('dashboard.company-profile', {
         url: '/company/profile',
         templateUrl: '/static/views/dashboard/company/profile.html',

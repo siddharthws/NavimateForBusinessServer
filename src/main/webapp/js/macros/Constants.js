@@ -62,15 +62,16 @@ Constants.DashboardNav = {
     OPTION_MANAGE   : 0,
     OPTION_REPORT   : 1,
     OPTION_FORM     : 2,
-    OPTION_PROFILE  : 3
+    OPTION_LEAD     : 3,
+    OPTION_PROFILE  : 4
 }
 
 /*-----------------------------Dashboard user role-------------------------------------*/
 Constants.Role = {
-    REP : 1,
-    MANAGER: 2,
-    ADMIN: 3,
-    NVM_ADMIN: 4
+    REP :       1,
+    MANAGER:    2,
+    ADMIN:      3,
+    NVM_ADMIN:  4
 }
 
 Constants.DashboardNav.Options = [
@@ -88,6 +89,11 @@ Constants.DashboardNav.Options = [
         id:         Constants.DashboardNav.OPTION_FORM,
         name:       'Form',
         state:      'form'
+    },
+    {
+        id:         Constants.DashboardNav.OPTION_LEAD,
+        name:       'Lead',
+        state:      'lead'
     },
     {
         id:         Constants.DashboardNav.OPTION_PROFILE,
@@ -139,7 +145,8 @@ Constants.DashboardNav.Menu = [
         state:      "templates",
         accessLevel:Constants.Role.MANAGER,
         options:    [
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_FORM]
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_FORM],
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_LEAD]
         ]
     },
     {
@@ -162,6 +169,7 @@ Constants.Table = {
 Constants.Template = {
     // Template Types
     TYPE_FORM:          1,
+    TYPE_LEAD:          2,
 
     // Template Field types
     FIELD_TYPE_TEXT:            1,
