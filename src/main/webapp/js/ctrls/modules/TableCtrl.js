@@ -247,47 +247,10 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
         DialogService.locationViewer(latLngArr[0], latLngArr[1])
     }
 
-    // API to show / hide columns
-    vm.toggleColumns = function () {
-        DialogService.toggleColumns(vm.columns, function (columns) {
-            vm.columns = columns
-        })
-    }
-
-    // API to export data to excel
-    vm.export = function () {
-        // Don't export if no values present
-        if (!vm.filteredValues.length) {
-            ToastService.toast("No data to export !!!")
-            return
-        }
-
-        // Check if any columns are showing
-        var bValidColumns = false
-        for (var i  = 0; i < vm.columns.length; i++) {
-            if (vm.columns[i].show) {
-                bValidColumns = true
-                break
-            }
-        }
-
-        // Don't export if no columns selected
-        if (!bValidColumns) {
-            ToastService.toast("No columns to export !!!")
-            return
-        }
-
-        // Call Excel Service to perform export
-        ExcelService.export(vm.filteredValues, vm.columns, $scope.tableParams.exportName)
-    }
-
-    // APi to sync table is provided by parent
-    vm.syncTable = $scope.tableParams.functions.syncTable
-
     /*------------------------------------ Local APIs --------------------------------*/
 
     // Data Init Callback. Triggered by parent when data syncing is complete
-    $scope.tableParams.functions.initTable = function () {
+    var init = function () {
         // Init Columns
         vm.columns = []
         for (var i = 0; i < $scope.tableParams.columns.length; i++) {
@@ -311,6 +274,40 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
 
         // Reset Filters
         vm.resetFilters()
+    }
+
+    // API to export data to excel
+    function exportTable (filename) {
+        // Don't export if no values present
+        if (!vm.filteredValues.length) {
+            ToastService.toast("No data to export !!!")
+            return
+        }
+
+        // Check if any columns are showing
+        var bValidColumns = false
+        for (var i  = 0; i < vm.columns.length; i++) {
+            if (vm.columns[i].show) {
+                bValidColumns = true
+                break
+            }
+        }
+
+        // Don't export if no columns selected
+        if (!bValidColumns) {
+            ToastService.toast("No columns to export !!!")
+            return
+        }
+
+        // Call Excel Service to perform export
+        ExcelService.export(vm.filteredValues, vm.columns, filename)
+    }
+
+    // API to show / hide columns
+    function toggleColumns () {
+        DialogService.toggleColumns(vm.columns, function (columns) {
+            vm.columns = columns
+        })
     }
 
     // API to update filtered values with current sorting selection
@@ -338,6 +335,28 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
     vm.pageSize          = $rootScope.Constants.Table.DEFAULT_COUNT_PER_PAGE
     vm.pagerParams       = new NgTableParams(   {count:   vm.pageSize},
                                                 {dataset: vm.filteredValues})
+
+    // Broadcast event listeners
+    // Table Init Event
+    $scope.$on(Constants.Events.TABLE_INIT, function (event, args) {
+        init()
+    })
+
+    // Clear Filters Event
+    $scope.$on(Constants.Events.TABLE_CLEAR_FILTERS, function (event, args) {
+        vm.resetFilters()
+        vm.applyFilters()
+    })
+
+    // Toggle columns event
+    $scope.$on(Constants.Events.TABLE_TOGGLE_COLUMNS, function (event, args) {
+        toggleColumns()
+    })
+
+    // Export event
+    $scope.$on(Constants.Events.TABLE_EXPORT, function (event, args) {
+        exportTable(args.filename)
+    })
 
     // Add watcher for updating table params when filtered values change
     $scope.$watch(function pagerWatch(scope) {return vm.filteredValues},

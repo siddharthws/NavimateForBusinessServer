@@ -1,2 +1,11 @@
 <!-- Lead Report HTML -->
+<!-- Toolbar -->
+<div class="bg-toolbar d-flex">
+    <button class="btn btn-primary" ng-click="$ctrl.clearFilters()">Clear Filters</button>
+    <button class="btn btn-primary" ng-click="$ctrl.export()">Export</button>
+    <button class="btn btn-primary" ng-click="$ctrl.syncTable()">Sync</button>
+    <button class="btn btn-primary" ng-click="$ctrl.toggleColumns()">Customize Columns</button>
+</div>
+
+<!-- Table -->
 <ng-include src="'/static/views/modules/Table.html'" class="d-flex flex-column full-flex"></ng-include>

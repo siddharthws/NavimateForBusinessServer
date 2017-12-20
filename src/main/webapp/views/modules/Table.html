@@ -1,12 +1,5 @@
 <!-- Team Report HTML -->
 <div ng-controller="TableCtrl as $ctrl" class="full-flex d-flex flex-column">
-    <div class="bg-toolbar d-flex">
-        <button class="btn btn-primary" ng-click="$ctrl.resetFilters(); $ctrl.applyFilters()">Clear Filters</button>
-        <button class="btn btn-primary" ng-click="$ctrl.export()">Export</button>
-        <button class="btn btn-primary" ng-click="$ctrl.syncTable()">Sync</button>
-        <button class="btn btn-primary" ng-click="$ctrl.toggleColumns()">Customize Columns</button>
-    </div>
-
     <div class="mt-1 overflow-auto full-flex">
         <table class="table" ng-table="$ctrl.pagerParams"
                ng-class="{  'table-bordered': $ctrl.style.bBordered,

@@ -2,6 +2,15 @@
 // Constants available throughout app
 var Constants = {}
 
+/* ------------------------------- Events -------------------------------------*/
+Constants.Events = {
+    // Table Related events
+    TABLE_INIT:             "event_table_init",
+    TABLE_EXPORT:           "event_table_export",
+    TABLE_TOGGLE_COLUMNS:   "event_table_toggle_columns",
+    TABLE_CLEAR_FILTERS:    "event_table_clear_filters"
+}
+
 /* ------------------------------- Tracking -----------------------------------*/
 Constants.Tracking = {
     // Status Constants

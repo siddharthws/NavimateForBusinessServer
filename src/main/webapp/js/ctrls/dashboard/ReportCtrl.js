@@ -2,10 +2,12 @@
  * Created by Siddharth on 11-12-2017.
  */
 
-app.controller("ReportCtrl", function ($scope, $rootScope, $http, $localStorage) {
+app.controller("ReportCtrl", function ($scope, $rootScope, $http, $localStorage, ToastService) {
+    var vm = this
+
     /*-------------------------------------- Scope APIs ---------------------------------------*/
-    /*-------------------------------------- Local APIs ---------------------------------------*/
-    this.syncTable = function () {
+    // APi to sync table data with server and re-initialize table
+    vm.syncTable = function () {
         $rootScope.showWaitingDialog("Please wait while we are fetching the report...")
         $http({
             method:     'GET',
@@ -20,8 +22,8 @@ app.controller("ReportCtrl", function ($scope, $rootScope, $http, $localStorage)
                     $scope.tableParams.columns = response.data.columns
                     $scope.tableParams.values = response.data.values
 
-                    // Trigger Init data callback for table view
-                    $scope.tableParams.functions.initTable()
+                    // Broadcast Table Init Event
+                    $scope.$broadcast(Constants.Events.TABLE_INIT)
                 },
                 function (error) {
                     $rootScope.hideWaitingDialog()
@@ -32,6 +34,23 @@ app.controller("ReportCtrl", function ($scope, $rootScope, $http, $localStorage)
             )
     }
 
+    // APIs for table based actions
+    vm.export = function () {
+        // Broadcast Toggle Columns Event
+        $scope.$broadcast(Constants.Events.TABLE_EXPORT, {filename: 'Navimate-Report'})
+    }
+
+    vm.clearFilters = function () {
+        // Broadcast Toggle Columns Event
+        $scope.$broadcast(Constants.Events.TABLE_CLEAR_FILTERS)
+    }
+
+    vm.toggleColumns = function () {
+        // Broadcast Toggle Columns Event
+        $scope.$broadcast(Constants.Events.TABLE_TOGGLE_COLUMNS)
+    }
+
+    /*-------------------------------------- Local APIs ---------------------------------------*/
     /*-------------------------------------- INIT ---------------------------------------------*/
     // Set menu and option
     $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_REPORTS]
@@ -42,14 +61,9 @@ app.controller("ReportCtrl", function ($scope, $rootScope, $http, $localStorage)
     $scope.tableParams.style = {
         bBordered: true
     }
-    $scope.tableParams.exportName = 'Navimate-Report'
     $scope.tableParams.columns = []
     $scope.tableParams.values = []
 
-    // Add sync table function to table params
-    $scope.tableParams.functions = {}
-    $scope.tableParams.functions.syncTable = this.syncTable
-
-    // Sync Table now
-    this.syncTable()
+    // Sync Table once on init
+    vm.syncTable()
 })
