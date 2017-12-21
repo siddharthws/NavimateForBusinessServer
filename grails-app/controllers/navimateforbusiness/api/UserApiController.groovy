@@ -41,10 +41,17 @@ class UserApiController {
     }
 
     def getTeam() {
+        List<User> team
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get Team List
-        List<User> team = User.findAllByManager(user)
+        if(user.role==navimateforbusiness.Role.ADMIN) {
+             //Get Team List of Admin
+             team = User.findAllByAccountAndRole(user.account, Role.REP)
+        }
+        else {
+            // Get Team List of Manager
+            team = User.findAllByManager(user)
+        }
 
         def resp = new JSONArray()
         team.each { member ->
@@ -103,11 +110,17 @@ class UserApiController {
     }
 
     def getLead() {
+        List<Lead> leads
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get Lead List
-        List<Lead> leads = Lead.findAllByManager(user)
-
+        if(user.role==navimateforbusiness.Role.ADMIN) {
+            //Get Lead List of Admin
+            leads = Lead.findAllByAccount(user.account)
+        }
+        else {
+            // Get Lead List of Manager
+            leads = Lead.findAllByManager(user)
+        }
         def resp = new JSONArray()
         leads.each { lead ->
             resp.add(navimateforbusiness.Marshaller.serializeLead(lead))
