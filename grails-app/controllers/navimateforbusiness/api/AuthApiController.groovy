@@ -15,7 +15,7 @@ class AuthApiController {
     def forgotPassword() {
         // Validate user
         String email = request.JSON.email
-        def user = User.findByEmailAndRole(email, Role.ADMIN)
+        def user = User.findByEmailAndRole(email, Role.ADMIN) ?: User.findByEmailAndRole(email, Role.MANAGER)
         if (!user) {
             throw new ApiException("Unknown Email...", Constants.HttpCodes.BAD_REQUEST)
         }
@@ -31,15 +31,17 @@ class AuthApiController {
         def input = request.JSON
 
         // Validate User
-        if (!input.name || !input.email || !input.password) {
+        if (!input.name || !input.email || !input.password || !input.role || !input.companyName) {
             throw new ApiException("Please check input", Constants.HttpCodes.BAD_REQUEST)
         }
-        def existingUser = User.findByEmailAndRole(input.email, Role.ADMIN)
+
+        //check if the user with email already exist
+        def existingUser = User.findByEmailAndRole(input.email, Role.ADMIN) ?: User.findByEmailAndRole(input.email, Role.MANAGER)
         if (existingUser) {
-            throw new ApiException("Admin with email already exists", Constants.HttpCodes.CONFLICT)
+            throw new ApiException("User with email already exists", Constants.HttpCodes.CONFLICT)
         }
 
-        // Register User
+        //register the user
         authService.register(input)
 
         // Send response

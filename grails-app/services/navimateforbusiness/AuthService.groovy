@@ -1,7 +1,16 @@
-package navimateforbusiness
+package navimateforbusiness.api
 
 import grails.converters.JSON
+import navimateforbusiness.Account
+import navimateforbusiness.User
+import navimateforbusiness.Template
+import navimateforbusiness.Data
+import navimateforbusiness.Field
+import navimateforbusiness.Value
+import navimateforbusiness.Constants
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.Role
+import navimateforbusiness.ApiException
 
 @Transactional
 class AuthService {
@@ -10,33 +19,63 @@ class AuthService {
     def emailService
 
     def register(input) {
-        // Create and save a new account
-        Account account = new Account(name: input.name)
-        account.save(flush: true, failOnError: true)
+        //local variables of register
+        def account
+        def user
 
-        // Create and save a new Admin user
-        User manager = new User(    name:           input.name,
-                                    email:          input.email,
-                                    password:       input.password,
-                                    account:        account,
-                                    role:           navimateforbusiness.Role.ADMIN,
-                                    status:         navimateforbusiness.UserStatus.ACTIVE)
+        //parsing the role as Enum
+        Role role=input.role as Role
 
-        // Save
-        manager.save(flush: true, failOnError: true)
+        //register a new admin
+        if(role==Role.ADMIN) {
+            // Create and save a new account
+            account = new Account(name: input.companyName)
+            account.save(flush: true, failOnError: true)
 
-        // Assign admin to account
-        account.admin = manager
-        account.save(flush: true, failOnError: true)
+            // Create and save a new Admin
+            user  = new User(name: input.name,
+                    email: input.email,
+                    password: input.password,
+                    account: account,
+                    role: navimateforbusiness.Role.ADMIN,
+                    status: navimateforbusiness.UserStatus.ACTIVE)
+
+            // Save
+            user.save(flush: true, failOnError: true)
+
+            // Assign admin to account
+            account.admin = user
+            account.save(flush: true, failOnError: true)
+        }
+
+        //register a new manager
+        else if(role==Role.MANAGER) {
+            // Open existing account
+            account = Account.findByName(input.companyName)
+            if(!account){
+                throw new ApiException("Company name does not exist", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Create and save a new Manager
+            user  = new User(name: input.name,
+                    email: input.email,
+                    password: input.password,
+                    account: account,
+                    role: navimateforbusiness.Role.MANAGER,
+                    status: navimateforbusiness.UserStatus.ACTIVE)
+
+            // Save
+            user.save(flush: true, failOnError: true)
+        }
 
         // Save a default template for the user
-        getDefaultTemplate(manager).save(flush: true, failOnError: true)
+        getDefaultTemplate(user).save(flush: true, failOnError: true)
 
         // Send invitation email
-        emailService.sendMail(  manager.email, "Your Navimate Credentials",
-                                "\nHi " + manager.name + ",\n\nThank you for registering on Navimate. You credentials are given below.\n\nEmail : " + manager.email + "\nPassword: " + manager.password)
+        emailService.sendMail(  user.email, "Your Navimate Credentials",
+                                "\nHi " + user.name + ",\n\nThank you for registering on Navimate. You credentials are given below.\n\nEmail : " + user.email + "\nPassword: " + user.password)
 
-        return manager
+        return user
     }
 
     def login(long id) {
