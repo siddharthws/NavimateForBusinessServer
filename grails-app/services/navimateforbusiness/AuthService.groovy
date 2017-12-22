@@ -1,16 +1,7 @@
-package navimateforbusiness.api
+package navimateforbusiness
 
 import grails.converters.JSON
-import navimateforbusiness.Account
-import navimateforbusiness.User
-import navimateforbusiness.Template
-import navimateforbusiness.Data
-import navimateforbusiness.Field
-import navimateforbusiness.Value
-import navimateforbusiness.Constants
 import grails.gorm.transactions.Transactional
-import navimateforbusiness.Role
-import navimateforbusiness.ApiException
 
 @Transactional
 class AuthService {
@@ -24,10 +15,10 @@ class AuthService {
         def user
 
         //parsing the role as Enum
-        Role role=input.role as Role
+        navimateforbusiness.Role role = input.role as navimateforbusiness.Role
 
         //register a new admin
-        if(role==Role.ADMIN) {
+        if(role == navimateforbusiness.Role.ADMIN) {
             // Create and save a new account
             account = new Account(name: input.companyName)
             account.save(flush: true, failOnError: true)
@@ -49,11 +40,11 @@ class AuthService {
         }
 
         //register a new manager
-        else if(role==Role.MANAGER) {
+        else if(role == navimateforbusiness.Role.MANAGER) {
             // Open existing account
             account = Account.findByName(input.companyName)
             if(!account){
-                throw new ApiException("Company name does not exist", Constants.HttpCodes.BAD_REQUEST)
+                throw new navimateforbusiness.ApiException("Company name does not exist", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Create and save a new Manager

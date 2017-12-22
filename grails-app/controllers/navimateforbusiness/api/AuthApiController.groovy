@@ -30,9 +30,18 @@ class AuthApiController {
     def register() {
         def input = request.JSON
 
+        //parsing the role as Enum
+        Role role = input.role as Role
+
         // Validate User
         if (!input.name || !input.email || !input.password || !input.role || !input.companyName) {
             throw new ApiException("Please check input", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        //check if company already exist for admin
+        def existingCompany=Account.findByName(input.companyName)
+        if(existingCompany && (role == Role.ADMIN)) {
+            throw new ApiException("Company name already exists", Constants.HttpCodes.CONFLICT)
         }
 
         //check if the user with email already exist
