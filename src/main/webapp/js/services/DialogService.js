@@ -37,7 +37,7 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Register Dialog
-    this.register = function (name, email, password) {
+    this.register = function (name, email, password,role,companyName) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/Register.html',
                             controller: 'RegisterCtrl',
@@ -46,6 +46,8 @@ app.service('DialogService', function($mdDialog) {
                                 name: name,
                                 email: email,
                                 password: password,
+                                role:role,
+                                companyName:companyName
                             }
         })
     }
@@ -103,7 +105,7 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Email Verify Dialog
-    this.emailVerify = function (name, email, password) {
+    this.emailVerify = function (name, email, password, role, companyName) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/EmailVerify.html',
                             controller: 'EmailVerifyCtrl',
@@ -112,6 +114,8 @@ app.service('DialogService', function($mdDialog) {
                                 name: name,
                                 email: email,
                                 password: password,
+                                role:role,
+                                companyName:companyName
                             }
         })
     }

@@ -4,7 +4,7 @@
 
 app.service('AuthService', function($http, $localStorage) {
 
-    this.register = function (name, email, password)
+    this.register = function (name, email, password, role, companyName)
     {
         return $http({
             method:     'POST',
@@ -12,7 +12,9 @@ app.service('AuthService', function($http, $localStorage) {
             data:       {
                 name:           name,
                 email:          email,
-                password:       password
+                password:       password,
+                role:           role.toUpperCase(),
+                companyName:    companyName
             }
         })
     }
