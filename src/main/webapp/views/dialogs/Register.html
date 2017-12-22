@@ -6,8 +6,13 @@
     </div>
 
     <form class="d-flex flex-column" ng-submit="register()">
+            <select class="ml-auto btn btn-primary" ng-model="role" ng-options="role for role in roles">
+                <option value="" ng-disabled="true">-- select a role --</option>
+            </select>
         <input class="input-underlined" ng-model="name" type="text" placeholder="Enter your name..."
                ng-class="{'has-error': bShowError && !name}">
+        <input class="input-underlined" ng-model="companyName" type="text" placeholder="Enter company name..."
+               ng-class="{'has-error': bShowError && !companyName}">
         <input class="input-underlined" ng-model="email" type="text" placeholder="Enter email..."
                ng-class="{'has-error': bShowError && !email}">
         <input class="input-underlined" ng-model="password" type="password" placeholder="Enter password..."
