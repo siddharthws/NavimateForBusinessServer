@@ -29,7 +29,7 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
                         $rootScope.hideWaitingDialog()
 
                         // Show error toast
-                        ToastService.toast("Unable to register...")
+                        ToastService.toast(error.data.error)
 
                         // Re-open Register dialog
                         DialogService.register(name, email, password, role, companyName)
