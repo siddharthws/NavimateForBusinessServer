@@ -2,7 +2,7 @@
  * Created by Siddharth on 01-09-2017.
  */
 
-app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthService, DialogService, ToastService, name, email, password) {
+app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthService, DialogService, ToastService, name, email, password, role, companyName) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     // Button Click APIs
@@ -13,7 +13,7 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
             //Register the account as OTP is validated
             $rootScope.showWaitingDialog("Please wait while you are being registered...")
 
-            AuthService.register(name, email, password)
+            AuthService.register(name, email, password, role, companyName)
                 .then(
                     function (response) {
                         $rootScope.hideWaitingDialog()
@@ -32,7 +32,7 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
                         ToastService.toast("Unable to register...")
 
                         // Re-open Register dialog
-                        DialogService.register(name, email, password)
+                        DialogService.register(name, email, password, role, companyName)
                     }
                 )
             }
