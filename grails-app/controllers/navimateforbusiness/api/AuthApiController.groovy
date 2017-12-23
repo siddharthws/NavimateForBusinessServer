@@ -70,7 +70,8 @@ class AuthApiController {
         // Send response
         def resp = [
                 accessToken: accessToken,
-                name  : user.name
+                name  : user.name,
+                id: user.id
         ]
         render resp as JSON
     }

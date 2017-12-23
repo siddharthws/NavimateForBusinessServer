@@ -20,6 +20,7 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
                     function (response) {
                         // Save access token and user info
                         $localStorage.accessToken = response.data.accessToken;
+                        $localStorage.id = response.data.id
                         $localStorage.name = response.data.name;
 
                         // Check if user wants to be remembered
