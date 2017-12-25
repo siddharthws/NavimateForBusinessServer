@@ -1,0 +1,19 @@
+<!-- Map View -->
+<div class="map-box h-100 w-100" ng-controller="MapCtrl as $ctrl"
+     map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
+    <!-- Map UI using ng-maps -->
+    <ng-map class="w-100 h-100" center="[0, 0]" zoom="{{mapParams.zoom}}"
+            map-initialized="$ctrl.mapInitialized(map)">
+        <!-- Markers on map -->
+        <custom-marker  ng-repeat="marker in $ctrl.markers" ng-if="marker.latitude && marker.longitude"
+                        title="{{marker.title}}" position="[{{marker.latitude}}, {{marker.longitude}}]" draggable="mapParams.draggable"
+                        on-click="$ctrl.markerClick($index)" on-dragend="$ctrl.markerDragend($index)">
+            <div class="tracker-marker">
+                {{marker.title}}
+            </div>
+        </custom-marker>
+    </ng-map>
+
+    <!-- Shadowed Box around the map -->
+    <div class="map-box-shadow"></div>
+</div>
