@@ -46,7 +46,7 @@ class UserApiController {
 
         if(user.role==navimateforbusiness.Role.ADMIN) {
              //Get Team List of Admin
-             team = User.findAllByAccountAndRole(user.account, Role.REP)
+             team = User.findAllByAccountAndRoleAndManagerIsNotNull(user.account, Role.REP)
         }
         else {
             // Get Team List of Manager
@@ -115,7 +115,7 @@ class UserApiController {
 
         if(user.role==navimateforbusiness.Role.ADMIN) {
             //Get Lead List of Admin
-            leads = Lead.findAllByAccount(user.account)
+            leads = Lead.findAllByAccountAndManagerIsNotNull(user.account)
         }
         else {
             // Get Lead List of Manager
@@ -207,9 +207,14 @@ class UserApiController {
             tasks.each {task ->
                 // Send FCM notification only if task is OPEN
                 if (task.status == TaskStatus.OPEN) {
+                    // Push user to FCM
                     if (!fcms.contains(task.rep.fcmId)) {
                         fcms.push(task.rep.fcmId)
                     }
+
+                    // Close and save task
+                    task.status = TaskStatus.CLOSED
+                    task.save(failOnError: true, flush: true)
                 }
             }
         }

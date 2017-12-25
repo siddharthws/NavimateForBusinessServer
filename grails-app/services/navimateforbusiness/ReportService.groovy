@@ -26,7 +26,7 @@ class ReportService {
 
         if (user.role==navimateforbusiness.Role.ADMIN){
           // Iterate though each rep of this company
-           team = User.findAllByAccountAndRole(user.account, Role.REP)
+           team = User.findAllByAccountAndRole(user.account, navimateforbusiness.Role.REP)
         }
         else {
             // Iterate though each rep of this manager
@@ -34,37 +34,40 @@ class ReportService {
         }
 
         team.each {rep ->
-            // Get all tasks for this rep assigned by his current manager
-            List<Task> tasks = Task.findAllByRepAndManager(rep, rep.manager)
-            if (!tasks) {
-                // Push empty report element for this rep
-                reportElements.push(new ReportElement(
-                        manager: rep.manager,
-                        rep: rep,
-                        date: rep.dateCreated
-                ))
-            } else tasks.each {task ->
-                // Get list of forms submitted for this task
-                List<Form> forms = Form.findAllByOwnerAndTask(rep, task)
-                if (!forms) {
-                    // Push report element for this task without any data
+            // Ignore if rep has not manager
+            if (rep.manager) {
+                // Get all tasks for this rep assigned by his current manager
+                List<Task> tasks = Task.findAllByRepAndManager(rep, rep.manager)
+                if (!tasks) {
+                    // Push empty report element for this rep
                     reportElements.push(new ReportElement(
                             manager: rep.manager,
                             rep: rep,
-                            lead: task.lead,
-                            template: task.formTemplate,
-                            date: task.dateCreated
+                            date: rep.dateCreated
                     ))
-                } else forms.each {form ->
-                    // Push report element for every form in this task
-                    reportElements.push(new ReportElement(
-                            manager: rep.manager,
-                            rep: rep,
-                            lead: task.lead,
-                            template: task.formTemplate,
-                            form: form,
-                            date: form.dateCreated
-                    ))
+                } else tasks.each {task ->
+                    // Get list of forms submitted for this task
+                    List<Form> forms = Form.findAllByOwnerAndTask(rep, task)
+                    if (!forms) {
+                        // Push report element for this task without any data
+                        reportElements.push(new ReportElement(
+                                manager: rep.manager,
+                                rep: rep,
+                                lead: task.lead,
+                                template: task.formTemplate,
+                                date: task.dateCreated
+                        ))
+                    } else forms.each {form ->
+                        // Push report element for every form in this task
+                        reportElements.push(new ReportElement(
+                                manager: rep.manager,
+                                rep: rep,
+                                lead: task.lead,
+                                template: task.formTemplate,
+                                form: form,
+                                date: form.dateCreated
+                        ))
+                    }
                 }
             }
         }
