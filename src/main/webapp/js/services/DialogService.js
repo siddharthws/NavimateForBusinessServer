@@ -96,7 +96,7 @@ app.service('DialogService', function($mdDialog) {
     this.liveTracking = function (reps) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/LiveTracking.html',
-                            controller: 'LiveTrackingCtrl',
+                            controller: 'LiveTrackingCtrl as $ctrl',
                             clickOutsideToClose: false,
                             locals: {
                                 reps: reps

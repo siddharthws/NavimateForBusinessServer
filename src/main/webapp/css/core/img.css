@@ -1,7 +1,7 @@
 /* -- Image styling -- */
 .img-icon {
     height: 25px;
-    width: auto;
+    width: 25px;
     padding: 5px;
     background-color: transparent;
 }
@@ -23,17 +23,4 @@
 
 .ic-filter.active{
     background-image: url("/static/images/icon_filter_active.png");
-}
-
-/* -- Status Icon classes-- */
-.live-status-default {
-    background: url("/static/images/ic_status_red.png") center / cover no-repeat;
-}
-
-.live-status-waiting{
-    background-image: url("/static/images/ic_status_yellow.png");
-}
-
-.live-status-active{
-    background-image: url("/static/images/ic_status_green.png");
 }

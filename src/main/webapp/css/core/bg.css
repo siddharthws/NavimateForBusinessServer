@@ -15,3 +15,15 @@
     border-radius: 0.25em;
     padding: 0.5em;
 }
+
+/* Classes for setting background image as per status */
+
+/* -- Classes to put a status icon as background for an empty div -- */
+.bg-status         {
+    height: 25px;
+    width: 25px;
+    background: transparent url("/static/images/ic_status_green.png") center / cover no-repeat;
+}
+.bg-status-yellow  {   background-image: url("/static/images/ic_status_yellow.png");  }
+.bg-status-orange  {   background-image: url("/static/images/ic_status_orange.png");  }
+.bg-status-red     {   background-image: url("/static/images/ic_status_red.png");  }

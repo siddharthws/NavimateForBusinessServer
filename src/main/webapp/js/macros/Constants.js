@@ -22,10 +22,14 @@ Constants.Events = {
 
 /* ------------------------------- Tracking -----------------------------------*/
 Constants.Tracking = {
-    // Status Constants
-    STATUS_UNAVAILABLE: 0,
-    STATUS_WAITING:     1,
-    STATUS_AVAILABLE:   2
+    // Error Codes reported by app while tracking
+    ERROR_NONE:             0,
+    ERROR_IDLE:             1,
+    ERROR_WAITING:          2,
+    ERROR_NO_UPDATES:       3,
+    ERROR_NO_GPS:           4,
+    ERROR_NO_PERMISSION:    5,
+    ERROR_OFFLINE:          6
 }
 
 // Form Related Constants
