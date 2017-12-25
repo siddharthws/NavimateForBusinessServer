@@ -338,7 +338,7 @@ class UserApiController {
 
         // Get List of Form templates for this user
         int type = Integer.parseInt(request.getHeader("templateType"))
-        List<Template> templates = Template.findAllByOwnerAndType(manager, type)
+        List<Template> templates = Template.findAllByOwnerAndTypeAndIsRemoved(manager, type, false)
 
         // Serialize into response
         def templatesJson = []
