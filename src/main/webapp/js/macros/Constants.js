@@ -12,7 +12,12 @@ Constants.Events = {
 
     // Template Editor Module related events
     TEMPLATE_VALIDATE:          "event_template_validate",
-    TEMPLATE_VALIDATE_SUCCESS:  "event_template_validate_success"
+    TEMPLATE_VALIDATE_SUCCESS:  "event_template_validate_success",
+
+    // Map related events
+    MAP_CENTER:             "evt-map-center",
+    MAP_MARKER_CLICK:       "evt-marker-click",
+    MAP_MARKER_DRAGEND:     "evt-marker-dragend"
 }
 
 /* ------------------------------- Tracking -----------------------------------*/
