@@ -20,18 +20,27 @@ class ReportService {
     }
 
     // API to get report
-    def getReport(User manager) {
-        def reportElements = []
+    def getReport(User user) {
+       def reportElements = []
+        List<User> team
 
-        // Iterate though each rep of this manager
-        List<User> team = User.findAllByManager(manager)
+        if (user.role==navimateforbusiness.Role.ADMIN){
+          // Iterate though each rep of this company
+           team = User.findAllByAccountAndRole(user.account, Role.REP)
+        }
+        else {
+            // Iterate though each rep of this manager
+            team = User.findAllByManager(user)
+        }
+
         team.each {rep ->
             // Get all tasks for this rep
-            List<Task> tasks = Task.findAllByRepAndManager(rep, manager)
+            //check if manager  then run  the same code as below.. else for admin select all reps of admin code from previous commit.
+            List<Task> tasks = Task.findAllByRepAndManager(rep, user)
             if (!tasks) {
                 // Push empty report element for this rep
                 reportElements.push(new ReportElement(
-                        manager: manager,
+                        manager: rep.manager,
                         rep: rep,
                         date: rep.dateCreated
                 ))
@@ -41,7 +50,7 @@ class ReportService {
                 if (!forms) {
                     // Push report element for this task without any data
                     reportElements.push(new ReportElement(
-                            manager: manager,
+                            manager: rep.manager,
                             rep: rep,
                             lead: task.lead,
                             template: task.formTemplate,
@@ -50,7 +59,7 @@ class ReportService {
                 } else forms.each {form ->
                     // Push report element for every form in this task
                     reportElements.push(new ReportElement(
-                            manager: manager,
+                            manager: rep.manager,
                             rep: rep,
                             lead: task.lead,
                             template: task.formTemplate,
