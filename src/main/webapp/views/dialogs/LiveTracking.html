@@ -1,66 +1,71 @@
 <!-- HTML template for Live Tracking Dialog -->
 <md-dialog class="dialog-container h-100 w-100">
-    <div class="d-flex w-100 h-100">
-        <div class="w-25 d-flex flex-column">
+    <div class="d-flex oriented-flexbox w-100 h-100">
+        <div class="flex-2 d-flex flex-column">
             <h4><b>Live Tracking</b></h4>
-            <div class="list-group list-group-bordered p-1 mt-1 full-flex overflow-auto">
-                <div href ng-repeat="trackee in trackees" ng-click="listItemClick(trackee)"
-                     class="list-group-item list-group-item-action"
-                     ng-class="{'active': selectedTrackee == trackee}">
-                     <div class="d-flex align-items-center">
-                         <div class="img-icon live-status-default m-2"
-                              ng-class="{'live-status-waiting': (trackee.status == $root.Constants.Tracking.STATUS_WAITING),
-                                         'live-status-active': (trackee.status == $root.Constants.Tracking.STATUS_AVAILABLE)}"></div>
-                         <span class="full-flex">
-                             {{trackee.name}}
-                         </span>
-                         <span class="ml-auto">
-                             {{trackee.phone}}
-                         </span>
-                         <span class="waiting-spinner waiting-spinner-small ml-2"
-                               ng-show="trackee.status == $root.Constants.Tracking.STATUS_WAITING"></span>
-                     </div>
-                     <div ng-show="selectedTrackee == trackee">
-                         <div ng-show="trackee.status == $root.Constants.Tracking.STATUS_AVAILABLE">
-                             <p>Speed: {{trackee.speed}} km/hr</p>
-                             <p>Last Updated: {{trackee.lastUpdated}} seconds ago</p>
-                         </div>
-                         <div ng-show="trackee.status == $root.Constants.Tracking.STATUS_UNAVAILABLE">
-                             <p>Location is unavailable for this member. Possible issues :</p>
-                             <ol>
-                                 <li>Phone is switched OFF</li>
-                                 <li>App is not running</li>
-                                 <li>Internet is not available in phone</li>
-                                 <li>Location has been disabled</li>
-                             </ol>
-                         </div>
-                         <div ng-show="trackee.status == $root.Constants.Tracking.STATUS_WAITING">
-                             <p>Waiting for user's location</p>
-                         </div>
-                     </div>
-                </div>
-            </div>
+            <!-- Control Buttons -->
             <div class="container-fluid d-flex justify-content-around flex-shrink-0">
-                <button class="btn full-flex" ng-click="refreshReps()">Refresh</button>
-                <button class="btn full-flex" ng-click="cancel()">Cancel</button>
+                <button class="btn btn-primary" ng-click="$ctrl.refreshAll()">Refresh</button>
+                <button class="btn" ng-click="$ctrl.close()">Cancel</button>
+            </div>
+
+            <!-- Rep List -->
+            <div class="list-group list-group-bordered p-1 mt-1 flex-1 overflow-auto">
+                <div ng-repeat="rep in $ctrl.reps" ng-click="$ctrl.listItemClick($index)"
+                     class="list-group-item list-group-item-action" ng-class="{'active': $ctrl.selectedRep == rep}">
+
+                    <!-- Basic rep info -->
+                    <div class="d-flex align-items-center">
+                        <div class="bg-status flex-shrink-0"
+                             ng-class="{'bg-status-yellow':     (rep.status == $root.Constants.Tracking.ERROR_NO_UPDATES ||
+                                                                 rep.status == $root.Constants.Tracking.ERROR_WAITING),
+                                        'bg-status-red':        (rep.status == $root.Constants.Tracking.ERROR_OFFLINE),
+                                        'bg-status-orange':     (rep.status == $root.Constants.Tracking.ERROR_NO_GPS ||
+                                                                 rep.status == $root.Constants.Tracking.ERROR_NO_PERMISSION)}"></div>
+                        <span class="flex-1 ml-2">
+                             {{rep.name}}
+                         </span>
+                        <span class="ml-auto">
+                             {{rep.phoneNumber}}
+                         </span>
+                        <span class="waiting-spinner waiting-spinner-small ml-2 flex-shrink-0"
+                              ng-show="rep.status == $root.Constants.Tracking.ERROR_WAITING"></span>
+                    </div>
+
+                    <!-- Tracking info becomes visible on click -->
+                    <div ng-show="$ctrl.selectedRep == rep">
+                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_NONE">
+                            <p>Updated {{$root.Statics.getFormattedElapsedTime(rep.lastUpdateTimeMs)}} ago...</p>
+                        </div>
+                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_IDLE">
+                            <p>Idle since last {{$root.Statics.getFormattedElapsedTime(rep.lastUpdateTimeMs)}}...</p>
+                        </div>
+                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_NO_UPDATES">
+                            <p>Trying to retrieve location since last {{$root.Statics.getFormattedElapsedTime(rep.lastUpdateTimeMs)}} !!!</p>
+                        </div>
+                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_OFFLINE">
+                            <p>User is offline. Possible reasons :</p>
+                            <ol>
+                                <li>Phone is switched OFF</li>
+                                <li>App is not running</li>
+                                <li>Internet is not available in phone</li>
+                            </ol>
+                        </div>
+                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_NO_GPS">
+                            <p>User disabled his GPS {{$root.Statics.getFormattedElapsedTime(rep.lastUpdateTimeMs)}} ago !!!</p>
+                        </div>
+                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_NO_PERMISSION">
+                            <p>User has not provided location permission !!!</p>
+                        </div>
+                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_WAITING">
+                            <p>Trying to retrieve user location. This may take few minutes...</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="map-box ml-2 full-flex" map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
-            <ng-map class="full-width full-height" zoom="{{mapZoom}}"
-                    center="[{{selectedTrackee.latitude}}, {{selectedTrackee.longitude}}]"
-                    map-initialized="mapInitialized(map)">
-                <custom-marker
-                        ng-repeat="trackee in trackees"
-                        title="{{trackee.name}}"
-                        position="[{{trackee.latitude}}, {{trackee.longitude}}]"
-                        on-click="markerClick(trackee)">
-                    <div class="tracker-marker">
-                        {{trackee.name}}
-                    </div>
-                </custom-marker>
-            </ng-map>
-            <div class="map-box-shadow"></div>
-        </div>
+        <!-- Include Map View -->
+        <ng-include class="ml-2 flex-3" src="'/static/views/modules/Map.html'"></ng-include>
     </div>
 </md-dialog>

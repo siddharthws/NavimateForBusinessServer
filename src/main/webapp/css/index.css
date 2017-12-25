@@ -31,3 +31,16 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/* Orientation sensitive layouts */
+@media screen and (orientation: landscape) {
+    .oriented-flexbox {
+        flex-direction: row;
+    }
+}
+
+@media screen and (orientation: portrait) {
+    .oriented-flexbox {
+        flex-direction: column;
+    }
+}

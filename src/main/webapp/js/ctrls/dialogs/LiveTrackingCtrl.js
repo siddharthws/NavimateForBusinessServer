@@ -3,165 +3,154 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $http, $mdDialog, $interval, $localStorage, ToastService, reps) {
+app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $interval, $localStorage, ToastService, DialogService, reps) {
+    var vm = this
 
     /* ------------------------------- Scope APIs -----------------------------------*/
-    // API to refresh Rep Status
-    $scope.refreshReps = function () {
-        // Get list of unavailable reps
-        var unAvReps = []
-        $scope.trackees.forEach(function (trackee) {
-            if (trackee.status == Constants.Tracking.STATUS_UNAVAILABLE) {
-                unAvReps.push(trackee.id)
-            }
+    // APIs to refresh rep status
+    vm.refreshAll = function () {
+        var repIds = []
+
+        // Prepare Rep ID Array
+        vm.reps.forEach(function (rep) {
+            repIds.push(rep.id)
+            rep.status = Constants.Tracking.ERROR_WAITING
         })
 
-        if (unAvReps.length > 0) {
-            // Send Http request to refresh Unavailable reps
-            $http({
-                method:     'POST',
-                url:        '/api/track/refresh',
-                headers:    {
-                    'X-Auth-Token':    $localStorage.accessToken
-                },
-                data:       {
-                    'reps':     unAvReps
-                }
-            }).then(
-                function (response) {
-                },
-                function (error) {
-                }
-            )
-        }
+        // Send request on socket
+        wsClient.send("/rxc/start-tracking", {}, JSON.stringify({reps: repIds}))
     }
 
-    // Map Init Callback from ngMap
-    $scope.mapInitialized = function (map) {
-        // Set map object
-        googleMap = map
-
-        // Trigger resize event (Hack since map is not loaded correctly second time)
-        google.maps.event.trigger(googleMap, 'resize')
-
-        // Run angular digest cycle since this is async callback
-        $scope.$apply()
+    vm.close = function () {
+        //wsClient.disconnect()
+        $mdDialog.hide()
     }
+    
+    // API to handle list click event
+    vm.listItemClick = function (idx) {
+        // Update Selected Rep
+        vm.selectedRep = vm.reps[idx]
 
-    $scope.listItemClick = function (trackee) {
-        $scope.selectedTrackee = trackee
-    }
-
-    $scope.markerClick = function (event, trackee) {
-        $scope.listItemClick(trackee)
-    }
-
-    $scope.cancel = function () {
-        // Stop refresh callback
-        $interval.cancel(refreshCb)
-
-        // Stop live tracking on server
-        $rootScope.showWaitingDialog("Stopping Live tracking...")
-        $http({
-            method:     'POST',
-            url:        '/api/track/stop',
-            headers:    {
-                'X-Auth-Token':    $localStorage.accessToken
-            }
-        }).then(
-            function (response) {
-                $rootScope.hideWaitingDialog()
-                $mdDialog.hide()
-            },
-            function (error) {
-                $rootScope.hideWaitingDialog()
-                $mdDialog.hide()
-            }
-        )
+        // Center map on this marker
+        var marker = $scope.mapParams.markers[idx]
+        $scope.$broadcast(Constants.Events.MAP_CENTER, {latitude: marker.latitude, longitude: marker.longitude})
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/
-    function init() {
-        // Init Track Data Structure
-        reps.forEach(function (rep) {
-            $scope.trackees.push({
-                id:             rep.id,
-                name:           rep.name,
-                phone:          rep.phoneNumber,
-                latitude:       0,
-                longitude:      0,
-                lastUpdated:    0,
-                speed:          0,
-                status:         Constants.Tracking.STATUS_WAITING
-            })
-        })
-        $scope.selectedTrackee = $scope.trackees[0]
+    // WS Client Connection Callbacks
+    function wsConnectSuccess () {
+        // Subscribe to tracking channels
+        wsClient.subscribe("/user/txc/tracking-update", trackingUpdateCb)
+        wsClient.subscribe("/user/txc/tracking-error", trackingErrorCb)
 
-        // Http Request to start tracking
-        $rootScope.showWaitingDialog("Starting Live Tracking...")
-        $http ({
-            method:     'POST',
-            url:        '/api/track/start',
-            headers:    {
-                'X-Auth-Token':    $localStorage.accessToken
-            },
-            data:       {
-                'reps':     reps
-            }
-        }).then(
-            function (response) {
-                $rootScope.hideWaitingDialog();
 
-                // Start periodic Data Refresh
-                refreshCb = $interval(refreshData, 1000)
-            },
-            function (error) {
-                $rootScope.hideWaitingDialog();
+        // Start periodic Data Refresh
+        refreshCb = $interval(function () {
+            // Do Nothing. Digest cycle runs automatically
+        }, 1000)
 
-                // Show Error Toast
-                ToastService.toast("Unable to start live tracking...")
-            }
-        )
+        // Send Refresh Reps request
+        vm.refreshAll()
     }
 
-    function refreshData() {
-        $http({
-            method:     'GET',
-            url:        '/api/track/data',
-            headers:    {
-                'X-Auth-Token':    $localStorage.accessToken
+    function wsConnectError () {
+        // Show alert dialog with error
+        DialogService.alert("Unable to start live tracking. Your session may have expired !!!")
+    }
+
+    // Tracking related callbacks
+    function trackingUpdateCb (message) {
+        var msgBody = JSON.parse(message.body)
+
+        // Get rep from message ID
+        var rep = getRepById(msgBody.repId)
+
+        // Update rep properties
+        rep.lastUpdateTimeMs = msgBody.timestamp
+        rep.speed = msgBody.speed
+        rep.status = Constants.Tracking.ERROR_NONE
+
+        // Get marker object for this rep
+        var marker = $scope.mapParams.markers[vm.reps.indexOf(rep)]
+
+        // Update marker details
+        marker.latitude = msgBody.latitude
+        marker.longitude = msgBody.longitude
+
+        // If this is the first update, set map center
+        if (bFirstUpdate) {
+            bFirstUpdate = false
+            $scope.$broadcast(Constants.Events.MAP_CENTER, {latitude: marker.latitude, longitude: marker.longitude})
+        }
+    }
+
+    function trackingErrorCb(message) {
+        var msgBody = JSON.parse(message.body)
+
+        // Get rep from message
+        var rep = getRepById(msgBody.repId)
+
+        // Update status
+        rep.status = msgBody.errorCode
+    }
+
+    // APi to get rep by ID
+    function getRepById(id) {
+        var rep = null
+        for (var i = 0; i < vm.reps.length; i++) {
+            if (vm.reps[i].id == id) {
+                rep = vm.reps[i]
             }
-        }).then(
-            function (response) {
-                // Copy all server data from response object to tracking object
-                response.data.forEach(function (serverData) {
-                    $scope.trackees.forEach(function (currentData) {
-                        if (currentData.id == serverData.id) {
-                            currentData.latitude    = serverData.latitude
-                            currentData.longitude   = serverData.longitude
-                            currentData.lastUpdated = serverData.lastUpdated
-                            currentData.speed       = serverData.speed
-                            currentData.status      = serverData.status
-                        }
-                    })
-                })
-            },
-            function (error) {
-            }
-        )
+        }
+
+        return rep
     }
 
     /* ------------------------------- INIT -----------------------------------*/
-    // Init objects
-    // Tracking related variables
-    $scope.trackees = []
-    $scope.selectedTrackee = {}
-    var refreshCb
+    // Init Objects
+    vm.reps = reps
+    vm.selectedRep = vm.reps[0]
+    var refreshCb = null
+    var bFirstUpdate = true
 
-    // Map related vars
-    $scope.mapZoom = 14
-    var googleMap = null
+    // Init web socket relates vars
+    var socket = new SockJS('/ws-endpoint')
+    var wsClient = Stomp.over(socket)
 
-    // Init Live Tracking
-    init()
+    // Init Map Parameters
+    $scope.mapParams = {}
+    $scope.mapParams.markers = []
+
+    // Create marker for each
+    vm.reps.forEach(function (rep) {
+        // Add marker
+        $scope.mapParams.markers.push({
+            title: rep.name,
+            latitude: 0,
+            longitude: 0
+        })
+
+        // Add status to rep
+        rep.status = Constants.Tracking.ERROR_WAITING
+    })
+    
+    // Set event listeners
+    $scope.$on(Constants.Events.MAP_MARKER_CLICK, function (event, params) {
+        // Perform List click action
+        vm.listItemClick(params.idx)
+    })
+
+    // Set Scope Destroy listener to close socket
+    $scope.$on('$destroy', function () {
+        // Close Websocket
+        wsClient.disconnect()
+
+        // Stop periodic updates
+        if (refreshCb) {
+            $interval.cancel(refreshCb)
+        }
+    })
+
+    // Connect Websocket
+    wsClient.connect({id: $localStorage.id}, wsConnectSuccess, wsConnectError)
 })
