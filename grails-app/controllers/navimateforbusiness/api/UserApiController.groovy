@@ -420,6 +420,32 @@ class UserApiController {
         render resp as JSON
     }
 
+    def removeTemplates() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get Templates from JSON
+        JSONArray templateIdsJson = request.JSON.templateIds
+        templateIdsJson.each {templateId ->
+            // Get Template
+            Template template = Template.findById(templateId)
+            if (!template) {
+                throw new ApiException("Template not found...", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Check if this user owns this template
+            if (template.owner != user) {
+                throw new ApiException("Not enough privilege to remove " + template.name + "...", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Remove Template
+            template.isRemoved = true
+            template.save(flush: true, failOnError: true)
+        }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     def getReport() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
