@@ -334,11 +334,16 @@ class UserApiController {
     }
 
     def getTemplates() {
-        def manager = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Get List of Form templates for this user
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
         int type = Integer.parseInt(request.getHeader("templateType"))
-        List<Template> templates = Template.findAllByOwnerAndTypeAndIsRemoved(manager, type, false)
+        List<Template> templates
+
+        // Get List of Form templates of admin for this user
+        templates = Template.findAllByOwnerAndTypeAndIsRemoved(user, type, false)
+        if(user.role==navimateforbusiness.Role.MANAGER) {
+           // Get List of Form templates for this manager
+           templates.addAll(Template.findAllByOwnerAndTypeAndIsRemoved(user.account.admin, type, false))
+        }
 
         // Serialize into response
         def templatesJson = []

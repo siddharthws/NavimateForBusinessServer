@@ -37,6 +37,9 @@ class AuthService {
             // Assign admin to account
             account.admin = user
             account.save(flush: true, failOnError: true)
+
+            // Save a default template for the user
+            getDefaultTemplate(user).save(flush: true, failOnError: true)
         }
 
         //register a new manager
@@ -58,9 +61,6 @@ class AuthService {
             // Save
             user.save(flush: true, failOnError: true)
         }
-
-        // Save a default template for the user
-        getDefaultTemplate(user).save(flush: true, failOnError: true)
 
         // Send invitation email
         emailService.sendMail(  user.email, "Your Navimate Credentials",
