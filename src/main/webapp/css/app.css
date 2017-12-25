@@ -25,23 +25,6 @@ ul.bullet {
     margin:     0;
 }
 
-/* Classes for specific properties */
-.full-height {
-    height: 100%;
-}
-
-.full-width {
-    width: 100%;
-}
-
-.full-flex{
-    flex: 1;
-}
-
-.flex-shrink-0 {
-    flex-shrink: 0;
-}
-
 /* MD Toast Positioning Hack */
 md-toast.md-center {
     left: 50%;

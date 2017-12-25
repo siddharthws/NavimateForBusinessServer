@@ -2,7 +2,7 @@
     <!-- Template Name -->
     <div class="d-flex align-items-center flex-shrink-0">
         <span>Template Name :</span>
-        <input class="input-underlined full-flex ml-2" type="text" placeholder="Enter name for template..."
+        <input class="input-underlined flex-1 ml-2" type="text" placeholder="Enter name for template..."
                ng-class="{'has-error': !$ctrl.template.name && $ctrl.bShowError}"
                ng-model="$ctrl.template.name">
     </div>
@@ -13,7 +13,7 @@
     </a>
 
     <!-- Template Fields -->
-    <table class="table table-striped text-center full-flex" ng-table="">
+    <table class="table table-striped text-center flex-1" ng-table="">
         <thead>
             <th>
                 Type
@@ -30,13 +30,13 @@
         <tr ng-repeat="field in $ctrl.fields">
             <!-- Field Type Dropdown -->
             <td ng-class="{'has-error': !field.type && $ctrl.bShowError}">
-                <div class="dropdown full-width full-height">
+                <div class="dropdown w-100 h-100">
                     <button class="dropdown-toggle-button d-flex" data-toggle="dropdown"
                             ng-disabled="field.id">
-                        <span class="full-flex">{{$ctrl.Const.FIELD_NAMES[field.type]}}</span>
+                        <span class="flex-1">{{$ctrl.Const.FIELD_NAMES[field.type]}}</span>
                         <img src="/static/images/icon_dropdown.png"/>
                     </button>
-                    <div class="dropdown-menu full-width">
+                    <div class="dropdown-menu w-100">
                         <button class="dropdown-item"
                                 ng-repeat="type in $ctrl.Const.FORM_FIELD_TYPES"
                                 ng-click="$ctrl.updateFieldType($parent.$index, type)">
@@ -76,7 +76,7 @@
                         <div class="d-flex align-items-center w-100"
                              ng-repeat="option in $ctrl.data.values[$index].value.options track by $index">
                             <md-radio-button ng-value="$index"></md-radio-button>
-                            <input class="input-underlined full-flex" type="text" placeholder="Enter option..."
+                            <input class="input-underlined flex-1" type="text" placeholder="Enter option..."
                                    ng-model="$ctrl.data.values[$parent.$index].value.options[$index]"
                                    ng-class="{'has-error': $ctrl.bShowError && !option}">
                             <input type="button" value="" class="image-button ib-small ib-cross"
@@ -97,7 +97,7 @@
                         <md-checkbox ng-value="option.name"
                                      ng-model="option.selection">
                         </md-checkbox>
-                        <input class="input-underlined full-flex" type="text" placeholder="Enter option..."
+                        <input class="input-underlined flex-1" type="text" placeholder="Enter option..."
                                ng-model="option.name" ng-class="{'has-error': $ctrl.bShowError && !option.name}">
                         <input type="button" value="" class="image-button ib-small ib-cross"
                                ng-click="$ctrl.removeCheckOption($parent.$index, $index)"/>

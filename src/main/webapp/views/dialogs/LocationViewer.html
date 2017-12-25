@@ -1,7 +1,7 @@
 <!-- HTML template for Location Viewer Dialog -->
 <md-dialog class="dialog-container w-50 h-50">
-    <div class="map-box full-flex" map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
-        <ng-map class="full-width full-height" zoom="{{mapZoom}}" map-initialized="mapInitialized(map)">
+    <div class="map-box flex-1" map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
+        <ng-map class="w-100 h-100" zoom="{{mapZoom}}" map-initialized="mapInitialized(map)">
             <marker position="[{{markerLocation.latitude}}, {{markerLocation.longitude}}]"/>
         </ng-map>
 

@@ -51,6 +51,7 @@
   <link rel="stylesheet" href="/static/css/core/table.css">
   <link rel="stylesheet" href="/static/css/core/datepicker.css">
   <link rel="stylesheet" href="/static/css/core/map.css">
+  <link rel="stylesheet" href="/static/css/core/flex.css">
 
   <link rel="stylesheet" href="/static/css/index.css">
   <link rel="stylesheet" href="/static/css/home.css">
@@ -106,7 +107,7 @@
 
 <body ng-app="navimate" ng-controller="IndexCtrl">
   <!-- Waiting dialog with customizable message for the site -->
-  <div class="waiting-cover full-height full-width d-flex align-items-center justify-content-center"
+  <div class="waiting-cover h-100 w-100 d-flex align-items-center justify-content-center"
        ng-show="waiting.bShow">
     <div class="waiting-dialog p-4 d-flex justify-content-around align-items-center">
       <span class="waiting-spinner mr-3"></span>
@@ -115,7 +116,7 @@
   </div>
 
   <!-- Blank Index File. Head HTML of SPA. UI-Router used to populate views -->
-  <div class="full-height full-width" ui-view></div>
+  <div class="h-100 w-100" ui-view></div>
 
 </body>
 </html>
