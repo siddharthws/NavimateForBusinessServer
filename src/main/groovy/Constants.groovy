@@ -18,13 +18,14 @@ class Constants {
 
     // Tracking related constants
     class Tracking {
-        // Status
-        public static final int STATUS_UNAVAILABLE  = 0
-        public static final int STATUS_WAITING      = 1
-        public static final int STATUS_AVAILABLE    = 2
-
-        // Maximum time to wait before marking rep as UNAVAILBALE
-        public static final int MAX_UPDATE_WAIT_TIME_S = 60
+        // Error Codes
+        public static final int ERROR_NONE              = 0
+        public static final int ERROR_IDLE              = 1
+        public static final int ERROR_WAITING           = 2
+        public static final int ERROR_NO_UPDATES        = 3
+        public static final int ERROR_NO_GPS            = 4
+        public static final int ERROR_NO_PERMISSION     = 5
+        public static final int ERROR_OFFLINE           = 6
     }
 
     // Template Related Constants
