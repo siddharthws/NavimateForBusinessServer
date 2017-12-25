@@ -227,7 +227,7 @@ class UserApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get Task List
-        List<Task> tasks = Task.findAllByManager(user)
+        List<Task> tasks = Task.findAllByManagerAndIsRemoved(user, false)
 
         // Sort in descending order of ID
         tasks.sort(true) {-it.id}
@@ -319,9 +319,7 @@ class UserApiController {
                 }
             }
 
-            task.manager = null
-            task.rep = null
-            task.lead = null
+            task.isRemoved = true
             task.status = TaskStatus.CLOSED
             task.save(flush: true, failOnError: true)
         }
