@@ -51,9 +51,10 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
     // Get Form Templates
     $http({
         method:     'GET',
-        url:        '/api/users/formTemplate',
+        url:        '/api/users/template',
         headers:    {
-            'X-Auth-Token':    $localStorage.accessToken
+            'X-Auth-Token':    $localStorage.accessToken,
+            'templateType':    Constants.Template.TYPE_FORM
         }
     })
     .then(
