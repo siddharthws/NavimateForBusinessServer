@@ -13,6 +13,7 @@ import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
+import org.springframework.web.socket.server.standard.TomcatRequestUpgradeStrategy
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -29,8 +30,9 @@ class DefaultWebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
         stompEndpointRegistry.addEndpoint("/ws-endpoint") // Set websocket endpoint to connect to
-                            .setHandshakeHandler(new navimateforbusiness.CustomHandshakeHandler()) // Set custom handshake handler
-                            .withSockJS() // Add Sock JS support for frontend
+                             .setAllowedOrigins("*")
+                             .setHandshakeHandler(new navimateforbusiness.CustomHandshakeHandler(new TomcatRequestUpgradeStrategy())) // Set custom handshake handler
+                             .withSockJS() // Add Sock JS support for frontend
     }
 
     // Bean to set annotation mappings
