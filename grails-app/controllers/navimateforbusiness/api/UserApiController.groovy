@@ -41,9 +41,9 @@ class UserApiController {
     }
 
     /*
-     * Get team function is used to get the List of Representatives.
-     * For Manager a list of Representatives assigned to that particular Manager will be fetched.
-     * For Admin a list of all the Representatives available will be fetched.
+     * Get team function is used to get the list of representatives.
+     * For manager a list of representatives assigned to that particular manager will be fetched.
+     * For admin a list of all the representatives available will be fetched.
      */
     def getTeam() {
         List<User> team
@@ -67,9 +67,9 @@ class UserApiController {
     }
 
     /*
-     * This function is used by the Admin or Manager to add Representatives.
-     * The function checks if the representative is already registered else it creates Representative object
-     * and sends a notification to the provided  mobile number
+     * This function is used by the admin or manager to add representatives.
+     * The function checks if the representative is already registered else it creates representative object
+     * and sends a notification to the provided mobile number
      */
     def addRep() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -102,6 +102,11 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Remove reps function is used to remove representatives.
+     * Admin or manager select representatives to be removed.
+     * Remove reps function receives a JSON object of representatives selected by admin or their manager.
+     */
     def removeReps() {
         // Get Reps from JSON
         JSONArray repsJson = JSON.parse(request.JSON.reps)
@@ -120,6 +125,13 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Get lead function is used to get leads from the database.
+     * Leads are fetched according to the role of the user.
+     * If user's role is admin then all leads of the company are fetched.
+     * If user's role is manager then leads created by the manager are fetched.
+     * After fetching the data the response is sent to the frontend in form of JSON format.
+     */
     def getLead() {
         List<Lead> leads
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -132,6 +144,8 @@ class UserApiController {
             // Get Lead List of Manager
             leads = Lead.findAllByManager(user)
         }
+
+        //Serialize the leads into a JSON object and send the response to frontend
         def resp = new JSONArray()
         leads.each { lead ->
             resp.add(navimateforbusiness.Marshaller.serializeLead(lead))
@@ -139,6 +153,17 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Edit leads function is used to edit the leads selected
+     * This function receives a JSON object of selected leads which are to be edited.
+     * This function validates the JSON object and check if it contains all the mandatory
+     * lead information like title, phone number, latitude, longitude and address.
+     * If the lead exists edits then edits lead, if it does not exist then the function looks for
+     * duplicate lead having same lead information. If it finds a duplicate lead then what lead will be
+     * edited, if duplicate lead is not found a new lead is created.
+     * The function checks if there are any tasks associated with the lead which is edited. If the
+     * status of the task is OPEN then it sends a notification to the representative assigned to the task.
+     */
     def editLeads() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
@@ -147,7 +172,7 @@ class UserApiController {
         jsonLeads.each { jsonLead ->
             // Validate mandatory lead fields
             if (!jsonLead.title || !jsonLead.phoneNumber || !jsonLead.latitude || !jsonLead.longitude || !jsonLead.address) {
-                throw new ApiException("Manadaotry lead information missing", Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Mandatory lead information missing", Constants.HttpCodes.BAD_REQUEST)
             }
 
             Lead lead = null
@@ -167,12 +192,12 @@ class UserApiController {
             }
 
             // Update Information passed from json
-            lead.title       = jsonLead.title
+            lead.title      = jsonLead.title
             lead.phone      = jsonLead.phoneNumber
             lead.address    = jsonLead.address
             lead.latitude   = jsonLead.latitude
             lead.longitude  = jsonLead.longitude
-            lead.description  = jsonLead.description ? jsonLead.description : ""
+            lead.description= jsonLead.description ? jsonLead.description : ""
             lead.email      = jsonLead.email ? jsonLead.email : ""
 
             // Save lead
@@ -199,6 +224,13 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Remove lead function receives a JSON object from the frontend containing leads to be removed.
+     * If lead is not found an error will be displayed else it will remove the Manager associated with the lead.
+     * It will check if the lead has any task assigned, if the task's status is OPEN then it will
+     * send notification to respective representative and change the status to CLOSED.
+     * Sends a notification to all representatives after closing the tasks.
+     */
     def removeLeads() {
         // Get Leads from JSON
         def fcms = []
@@ -239,6 +271,12 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Get Task function is used get tasks of a user from database.
+     * The function gets the tasks assigned that user only.
+     * It will arrange the tasks in descending order, serialize them into a JSON object and send
+     * them to frontend.
+     */
     def getTask() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
@@ -248,6 +286,7 @@ class UserApiController {
         // Sort in descending order of ID
         tasks.sort(true) {-it.id}
 
+        //Serialize the tasks into a JSON object and send the response to frontend
         def resp = new JSONArray()
         tasks.each { task ->
             resp.add(navimateforbusiness.Marshaller.serializeTask(task))
@@ -255,6 +294,12 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Add task function simply adds a new task.
+     * It makes use of addTasks method in TaskService.groovy file to add a new task.
+     * It gets an JSON object of task information and passes it to the addTasks method to add the
+     * particular task.
+     */
     def addTasks() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
@@ -267,6 +312,11 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Stop task renewal function gets a JSON object of tasks.
+     * It validates the task, if the task is not found error will be displayed else it sets
+     * the renewal period of the task to zero.
+     */
     def stopTaskRenewal() {
         // Get Tasks from JSON
         JSONArray tasksJson = request.JSON.tasks
@@ -287,8 +337,15 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Close task function gets a JSON object of tasks to be closed from the frontend.
+     * It validates the tasks, if not found error is displayed.
+     * If the task is found then checks the status of the task. If task's status is OPEN then the
+     * assigned representatives are notified and the tasks status is updated to CLOSED.
+     * A notification again is sent to all the representatives regarding the closed tasks.
+     */
     def closeTasks() {
-        // Get Reps from JSON
+        // Get Tasks from JSON
         def fcms = []
         JSONArray tasksJson = request.JSON.tasks
         tasksJson.each {taskJson ->
