@@ -40,6 +40,11 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Get team function is used to get the List of Representatives.
+     * For Manager a list of Representatives assigned to that particular Manager will be fetched.
+     * For Admin a list of all the Representatives available will be fetched.
+     */
     def getTeam() {
         List<User> team
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -49,10 +54,11 @@ class UserApiController {
              team = User.findAllByAccountAndRoleAndManagerIsNotNull(user.account, Role.REP)
         }
         else {
-            // Get Team List of Manager
-            team = User.findAllByManager(user)
+             //Get Team List of Manager
+             team = User.findAllByManager(user)
         }
 
+        //Serialize the members into a JSON object and send the response to frontend
         def resp = new JSONArray()
         team.each { member ->
             resp.add(navimateforbusiness.Marshaller.serializeUser(member))
@@ -60,6 +66,11 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * This function is used by the Admin or Manager to add Representatives.
+     * The function checks if the representative is already registered else it creates Representative object
+     * and sends a notification to the provided  mobile number
+     */
     def addRep() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
