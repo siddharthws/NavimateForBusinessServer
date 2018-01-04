@@ -41,9 +41,9 @@ class UserApiController {
     }
 
     /*
-     * Get team function is used to get the List of Representatives.
-     * For Manager a list of Representatives assigned to that particular Manager will be fetched.
-     * For Admin a list of all the Representatives available will be fetched.
+     * Get team function is used to get the list of representatives.
+     * For manager a list of representatives assigned to that particular manager will be fetched.
+     * For admin a list of all the representatives available will be fetched.
      */
     def getTeam() {
         List<User> team
@@ -67,9 +67,9 @@ class UserApiController {
     }
 
     /*
-     * This function is used by the Admin or Manager to add Representatives.
-     * The function checks if the representative is already registered else it creates Representative object
-     * and sends a notification to the provided  mobile number
+     * This function is used by the admin or manager to add representatives.
+     * The function checks if the representative is already registered else it creates representative object
+     * and sends a notification to the provided mobile number
      */
     def addRep() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -101,7 +101,11 @@ class UserApiController {
         def resp = [success: true]
         render resp as JSON
     }
-
+    /*
+     * Remove reps function is used to remove representatives.
+     * Admin or manager select representatives to be removed.
+     * Remove reps function receives a JSON object of representatives selected by admin or their manager.
+     */
     def removeReps() {
         // Get Reps from JSON
         JSONArray repsJson = JSON.parse(request.JSON.reps)
@@ -120,6 +124,13 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Get lead function is used to get leads from the database.
+     * Leads are fetched according to the role of the user.
+     * If user's role is admin then lead list of admin is fetched.
+     * If user's role is manager then lead list of manager is fetched.
+     * After fetching the data the response is sent to the frontend in form of JSON format.
+     */
     def getLead() {
         List<Lead> leads
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -132,6 +143,7 @@ class UserApiController {
             // Get Lead List of Manager
             leads = Lead.findAllByManager(user)
         }
+        //Serialize the leads into a JSON object and send the response to frontend
         def resp = new JSONArray()
         leads.each { lead ->
             resp.add(navimateforbusiness.Marshaller.serializeLead(lead))
@@ -147,7 +159,7 @@ class UserApiController {
         jsonLeads.each { jsonLead ->
             // Validate mandatory lead fields
             if (!jsonLead.title || !jsonLead.phoneNumber || !jsonLead.latitude || !jsonLead.longitude || !jsonLead.address) {
-                throw new ApiException("Manadaotry lead information missing", Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Mandatory lead information missing", Constants.HttpCodes.BAD_REQUEST)
             }
 
             Lead lead = null
@@ -167,12 +179,12 @@ class UserApiController {
             }
 
             // Update Information passed from json
-            lead.title       = jsonLead.title
+            lead.title      = jsonLead.title
             lead.phone      = jsonLead.phoneNumber
             lead.address    = jsonLead.address
             lead.latitude   = jsonLead.latitude
             lead.longitude  = jsonLead.longitude
-            lead.description  = jsonLead.description ? jsonLead.description : ""
+            lead.description= jsonLead.description ? jsonLead.description : ""
             lead.email      = jsonLead.email ? jsonLead.email : ""
 
             // Save lead
