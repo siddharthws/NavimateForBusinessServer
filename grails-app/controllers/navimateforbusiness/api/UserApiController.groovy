@@ -151,6 +151,17 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Edit leads function is used to edit the leads selected
+     * This function receives a JSON object of selected leads which are to be edited.
+     * This function validates the JSON object and check if it contains all the mandatory
+     * lead information like title, phone number, latitude, longitude and address.
+     * If the lead exists edits then edits lead, if it does not exist then the function looks for
+     * duplicate lead having same lead information. If it finds a duplicate lead then what lead will be
+     * edited, if duplicate lead is not found a new lead is created.
+     * The function checks if there are any tasks associated with the lead which is edited. If the
+     * status of the task is OPEN then it sends a notification to the representative assigned to the task.
+     */
     def editLeads() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
@@ -211,6 +222,13 @@ class UserApiController {
         render resp as JSON
     }
 
+    /*
+     * Remove lead function receives a JSON object from the frontend containing leads to be removed.
+     * If lead is not found an error will be displayed else it will remove the Manager associated with the lead.
+     * It will check if the lead has any task assigned, if the task's status is OPEN then it will
+     * send notification to respective representative and change the status to CLOSED.
+     * Sends a notification to all representatives after closing the tasks.
+     */
     def removeLeads() {
         // Get Leads from JSON
         def fcms = []
