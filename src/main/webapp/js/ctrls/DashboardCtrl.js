@@ -8,6 +8,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $
     // Menu Selection Parameters
     $scope.nav = {}
     $scope.name = $localStorage.name
+    $scope.role = $localStorage.role
 
     /*------------------------------------ APIs --------------------------------*/
     // Button Click APIs

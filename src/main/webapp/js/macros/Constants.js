@@ -51,10 +51,20 @@ Constants.DashboardNav = {
     ITEM_TASKS      : 2,
     ITEM_REPORTS    : 3,
     ITEM_TEMPLATES  : 4,
+    ITEM_COMPANY    : 5,
 
     OPTION_MANAGE   : 0,
     OPTION_REPORT   : 1,
-    OPTION_FORM     : 2
+    OPTION_FORM     : 2,
+    OPTION_PROFILE  : 3
+}
+
+/*-----------------------------Dashboard user role-------------------------------------*/
+Constants.Role = {
+    REP : 1,
+    MANAGER: 2,
+    ADMIN: 3,
+    NVM_ADMIN: 4
 }
 
 Constants.DashboardNav.Options = [
@@ -72,6 +82,11 @@ Constants.DashboardNav.Options = [
         id:         Constants.DashboardNav.OPTION_FORM,
         name:       'Form',
         state:      'form'
+    },
+    {
+        id:         Constants.DashboardNav.OPTION_PROFILE,
+        name:       'Profile',
+        state:      'profile'
     }
 ]
 
@@ -80,6 +95,7 @@ Constants.DashboardNav.Menu = [
         id:         Constants.DashboardNav.ITEM_TEAM,
         name:       "Team",
         state:      "team",
+        accessLevel:Constants.Role.MANAGER,
         options:    [
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
         ]
@@ -88,6 +104,7 @@ Constants.DashboardNav.Menu = [
         id:         Constants.DashboardNav.ITEM_LEADS,
         name:       "Leads",
         state:      "leads",
+        accessLevel:Constants.Role.MANAGER,
         options:    [
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
         ]
@@ -96,6 +113,7 @@ Constants.DashboardNav.Menu = [
         id:         Constants.DashboardNav.ITEM_TASKS,
         name:       "Tasks",
         state:      "tasks",
+        accessLevel:Constants.Role.MANAGER,
         options:    [
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
         ]
@@ -104,6 +122,7 @@ Constants.DashboardNav.Menu = [
         id:         Constants.DashboardNav.ITEM_REPORTS,
         name:       "Reports",
         state:      "reports",
+        accessLevel:Constants.Role.MANAGER,
         options:    [
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT]
         ]
@@ -112,8 +131,18 @@ Constants.DashboardNav.Menu = [
         id:         Constants.DashboardNav.ITEM_TEMPLATES,
         name:       "Templates",
         state:      "templates",
+        accessLevel:Constants.Role.MANAGER,
         options:    [
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_FORM]
+        ]
+    },
+    {
+        id:         Constants.DashboardNav.ITEM_COMPANY,
+        name:       "Company",
+        state:      "company",
+        accessLevel:Constants.Role.ADMIN,
+        options:    [
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_PROFILE]
         ]
     }
 ]
