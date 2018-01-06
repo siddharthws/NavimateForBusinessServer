@@ -64,6 +64,7 @@ class AuthApiController {
         if (!user) {
             throw new ApiException("Invalid email or password", Constants.HttpCodes.UNAUTHORIZED)
         }
+
         // log the user in
         def accessToken = authService.login(user.id)
 
@@ -71,7 +72,9 @@ class AuthApiController {
         def resp = [
                 accessToken: accessToken,
                 name  : user.name,
-                id: user.id
+                id: user.id,
+                role : user.role.value,
+                companyName : user.account.name
         ]
         render resp as JSON
     }

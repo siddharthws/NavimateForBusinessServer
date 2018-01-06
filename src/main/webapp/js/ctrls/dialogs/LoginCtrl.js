@@ -18,10 +18,13 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
             AuthService.login($scope.email, $scope.password)
                 .then(
                     function (response) {
+
                         // Save access token and user info
                         $localStorage.accessToken = response.data.accessToken;
-                        $localStorage.id = response.data.id
+                        $localStorage.id = response.data.id;
                         $localStorage.name = response.data.name;
+                        $localStorage.role = response.data.role;
+                        $localStorage.companyName = response.data.companyName;
 
                         // Check if user wants to be remembered
                         if ($scope.bRemember) {
