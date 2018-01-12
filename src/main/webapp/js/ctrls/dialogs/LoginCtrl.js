@@ -19,13 +19,21 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
                 .then(
                     function (response) {
 
-                        // Save access token and user info
-                        $localStorage.accessToken = response.data.accessToken;
-                        $localStorage.id = response.data.id;
-                        $localStorage.name = response.data.name;
-                        $localStorage.role = response.data.role;
-                        $localStorage.companyName = response.data.companyName;
-                        $localStorage.apiKey = response.data.apiKey;
+                        // Save access token
+                        $localStorage.accessToken = response.data.accessToken
+
+                        // Save user information
+                        $localStorage.id    = response.data.id
+                        $localStorage.name  = response.data.name
+                        $localStorage.role  = response.data.role
+
+                        // Save Company Information
+                        $localStorage.companyName = response.data.companyName
+
+                        // Save Admin Specific Information
+                        if ($localStorage.role == Constants.Role.ADMIN) {
+                            $localStorage.apiKey = response.data.apiKey
+                        }
 
                         // Check if user wants to be remembered
                         if ($scope.bRemember) {
