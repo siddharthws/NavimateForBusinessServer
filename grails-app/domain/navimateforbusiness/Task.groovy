@@ -6,6 +6,9 @@ class Task {
     Date dateCreated
     Date lastUpdated
 
+    // External ID for API access
+    String extId
+
     //Remove Flags
     boolean isRemoved = false
 
@@ -36,9 +39,10 @@ class Task {
     ]
 
     static constraints = {
-        manager nullable: true
-        rep nullable: true
-        lead nullable: true
+        manager         nullable: true
+        rep             nullable: true
+        lead            nullable: true
+        extId           nullable: true
     }
 
     static mapping = {

@@ -17,4 +17,5 @@ databaseChangeLog = {
     include file: 'templating-porting-cleanup.groovy'
     include file: 'add-is-removed-column.groovy'
     include file: 'api-key-add.groovy'
+    include file: 'api-extId-add.groovy'
 }

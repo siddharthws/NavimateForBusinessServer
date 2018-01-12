@@ -6,6 +6,9 @@ class User {
     Date dateCreated
     Date lastUpdated
 
+    // External ID for API access
+    String extId
+
     // Contact Information
     String name
     String phoneNumber
@@ -38,6 +41,7 @@ class User {
         phoneNumber     nullable: true
         fcmId           nullable: true
         manager         nullable: true
+        extId           nullable: true
     }
 
     static mapping = {
