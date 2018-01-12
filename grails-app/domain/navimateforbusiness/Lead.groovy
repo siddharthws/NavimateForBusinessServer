@@ -6,6 +6,9 @@ class Lead {
     Date dateCreated
     Date lastUpdated
 
+    // External ID for API access
+    String extId
+
     // Contact Info
     String title
     String description
@@ -28,6 +31,7 @@ class Lead {
         email           nullable: true
         latitude        nullable: true
         longitude       nullable: true
+        extId           nullable: true
     }
 
     static mapping = {
