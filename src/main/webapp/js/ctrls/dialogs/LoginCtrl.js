@@ -25,6 +25,7 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
                         $localStorage.name = response.data.name;
                         $localStorage.role = response.data.role;
                         $localStorage.companyName = response.data.companyName;
+                        $localStorage.apiKey = response.data.apiKey;
 
                         // Check if user wants to be remembered
                         if ($scope.bRemember) {

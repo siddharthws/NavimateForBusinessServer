@@ -2,6 +2,7 @@ package navimateforbusiness
 
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
+import org.apache.commons.lang.RandomStringUtils
 
 @Transactional
 class AuthService {
@@ -22,6 +23,10 @@ class AuthService {
             // Create and save a new account
             account = new Account(name: input.companyName)
             account.save(flush: true, failOnError: true)
+
+            // Create and save an api key for this account
+            ApiKey apiKey = new ApiKey(key: generateApiKey(), account: account)
+            apiKey.save(flush: true, failOnError: true)
 
             // Create and save a new Admin
             user  = new User(name: input.name,
@@ -130,6 +135,20 @@ class AuthService {
         redisService.set("accessToken:$accessToken", sessionData.toString())
 
         true
+    }
+
+    def generateApiKey() {
+        String key = ""
+
+        // Add Label
+        key += "NAVM8"
+
+        // Add 20 random characters
+        int randomStringLength = 20
+        String charset = (('a'..'z') + ('A'..'Z') + ('0'..'9')).join()
+        key += RandomStringUtils.random(randomStringLength, charset.toCharArray())
+
+        key
     }
 
     // Needs to be updated

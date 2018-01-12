@@ -7,7 +7,8 @@ app.controller("CompanyProfileCtrl", function ($scope, $rootScope, $http, $local
 
     /*------------------------------------ INIT --------------------------------*/
     // Set menu and option
-    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_COMPANY]
-    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_PROFILE]
-    vm.companyName    = $localStorage.companyName
+    $scope.nav.item     = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_COMPANY]
+    $scope.nav.option   = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_PROFILE]
+    vm.companyName      = $localStorage.companyName
+    vm.apiKey           = $localStorage.apiKey
 })
