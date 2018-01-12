@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('AddRepCtrl', function ($scope, $rootScope, $http, $localStorage, $mdDialog, ToastService, teamUpdateCb) {
+app.controller('AddRepCtrl', function ($scope, $rootScope, $http, $localStorage, $mdDialog, ToastService, teamUpdateCb, TeamDataService) {
 
     $scope.add = function () {
         if (validate()) {
@@ -38,6 +38,10 @@ app.controller('AddRepCtrl', function ($scope, $rootScope, $http, $localStorage,
                     $rootScope.hideWaitingDialog()
                     // Hide dialog and show toast
                     $mdDialog.hide()
+
+                    //Re-sync team data since new member has been added
+                    TeamDataService.sync()
+
                     ToastService.toast("An SMS has been sent to the rep...")
 
                     // Trigger Callback
