@@ -17,7 +17,10 @@ Constants.Events = {
     // Map related events
     MAP_CENTER:             "evt-map-center",
     MAP_MARKER_CLICK:       "evt-marker-click",
-    MAP_MARKER_DRAGEND:     "evt-marker-dragend"
+    MAP_MARKER_DRAGEND:     "evt-marker-dragend",
+
+    // Data Service Related events
+    TEAM_DATA_READY:         "evt-team-data-ready"
 }
 
 /* ------------------------------- Tracking -----------------------------------*/

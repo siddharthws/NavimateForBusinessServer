@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService) {
+app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TeamDataService) {
     var vm = this
 
     /* ------------------------------- APIs -----------------------------------*/
@@ -53,6 +53,7 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
                     .then(
                         function (response) {
                             $rootScope.hideWaitingDialog()
+                            TeamDataService.sync()
                             // Show Toast
                             ToastService.toast("Reps removed...")
 
@@ -84,33 +85,17 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/
-    function init() {
-        $rootScope.showWaitingDialog("Please wait while we are fetching team details...")
+
+     function init(){
+        // Re-Init selection array with all unselected
+        vm.selection = []
         // Get Team Data
-        $http({
-            method:     'GET',
-            url:        '/api/users/team',
-            headers:    {
-                'X-Auth-Token':    $localStorage.accessToken
-            }
-        })
-            .then(
-                function (response) {
-                    $rootScope.hideWaitingDialog()
-                    vm.team = response.data
-
-                    // Re-Init selection array with all unselected
-                    vm.selection = []
-                    vm.team.forEach(function () {
-                        vm.selection.push(false)
-                    })
-                },
-                function (error) {
-                    $rootScope.hideWaitingDialog()
-
-                    ToastService.toast("Unable to load team !!!")
-                }
-            )
+        vm.team =  TeamDataService.cache.data
+        if(vm.team) {
+            vm.team.forEach(function () {
+                vm.selection.push(false)
+            })
+        }
     }
 
     /* ------------------------------- INIT -----------------------------------*/
@@ -123,6 +108,12 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     vm.selection = []
     vm.bCheckAll = false
 
+    // Add event listeners
+    // Listener for Team data ready event
+    $scope.$on(Constants.Events.TEAM_DATA_READY, function (event, data) {
+        init()
+    })
     // Init View
     init()
+
 })
