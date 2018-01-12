@@ -9,3 +9,7 @@
 .text-black{
     color: black;
 }
+
+.text-bold{
+    font-weight: bold;
+}

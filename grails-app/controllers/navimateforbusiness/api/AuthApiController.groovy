@@ -3,6 +3,7 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.Account
 import navimateforbusiness.ApiException
+import navimateforbusiness.ApiKey
 import navimateforbusiness.Constants
 import navimateforbusiness.Role
 import navimateforbusiness.User
@@ -76,6 +77,12 @@ class AuthApiController {
                 role : user.role.value,
                 companyName : user.account.name
         ]
+
+        // Add API Key to response for admin user only
+        if (user.role == Role.ADMIN) {
+            ApiKey apiKey = ApiKey.findByAccount(user.account)
+            resp += [apiKey: apiKey.key]
+        }
         render resp as JSON
     }
 
