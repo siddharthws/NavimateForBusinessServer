@@ -1,11 +1,39 @@
 package navimateforbusiness
 
 import grails.converters.JSON
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONException
+import org.grails.web.json.JSONObject
 
 /**
  * Created by Siddharth on 05-12-2017.
  */
 class DomainToJson {
+
+    // Methods to validate JSON Strings
+    static boolean isJsonValid(String string) {
+        isJsonObjectValid(string) || isJsonArrayValid(string)
+    }
+
+    static boolean isJsonObjectValid(String string) {
+        try {
+            new JSONObject(string)
+        } catch (JSONException ex1) {
+            return false
+        }
+
+        return true
+    }
+
+    static boolean isJsonArrayValid(String string) {
+        try {
+            new JSONArray(string)
+        } catch (JSONException ex1) {
+            return false
+        }
+
+        return true
+    }
 
     static def User(User user) {
         return [
