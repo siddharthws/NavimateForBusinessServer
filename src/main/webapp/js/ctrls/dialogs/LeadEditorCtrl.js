@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, ExcelService, leads, leadUpdateCb) {
+app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, ExcelService, leads, leadUpdateCb, LeadDataService) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function () {
@@ -107,6 +107,9 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
                     // Hide dialog and show toast
                     $mdDialog.hide()
                     ToastService.toast("Leads added succesfully...")
+
+                    //Re-sync Lead data since new member has been added
+                    LeadDataService.sync()
 
                     // Trigger Callback
                     leadUpdateCb()
