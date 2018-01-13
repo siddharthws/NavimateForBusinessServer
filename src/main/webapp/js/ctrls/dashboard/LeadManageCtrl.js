@@ -2,7 +2,7 @@
  * Created by Siddharth on 04-09-2017.
  */
 
-app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, $window,  ExcelService, DialogService, ToastService) {
+app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, $window,  ExcelService, DialogService, ToastService, LeadDataService) {
     var vm = this
 
     /* ------------------------------- Scope APIs -----------------------------------*/
@@ -52,6 +52,10 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
                 }).then(
                     function (response) {
                         $rootScope.hideWaitingDialog()
+
+                        //Re-sync Lead data since lead has been deleted
+                        LeadDataService.sync()
+
                         // Show Toast
                         ToastService.toast("leads removed...")
 
@@ -89,32 +93,15 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
     /* ------------------------------- Local APIs -----------------------------------*/
     // Send request to get list of leads
     function init() {
-        $rootScope.showWaitingDialog("Please wait while we are fetching leads data...")
-        //Get Leads Data
-        $http({
-            method:     'GET',
-            url:        '/api/users/lead',
-            headers:    {
-                'X-Auth-Token':    $localStorage.accessToken
-            }
-        })
-            .then(
-                function (response) {
-                    $rootScope.hideWaitingDialog()
-                    vm.leads = response.data
-
-                    // Re-Init selection array with all unselected
-                    vm.selection = []
-                    vm.leads.forEach(function () {
-                        vm.selection.push(false)
-                    })
-                },
-                function (error) {
-                    $rootScope.hideWaitingDialog()
-
-                    ToastService.toast("Unable to load leads")
-                }
-            )
+        // Re-Init selection array with all unselected
+        vm.selection = []
+        // Get Lead Data
+        vm.leads =  LeadDataService.cache.data
+        if(vm.leads) {
+            vm.leads.forEach(function () {
+                vm.selection.push(false)
+            })
+        }
     }
 
     /* ------------------------------- INIT -----------------------------------*/
@@ -127,5 +114,11 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
     vm.selection = []
     vm.bCheckAll = false
 
+    // Add event listeners
+    // Listener for Lead data ready event
+    $scope.$on(Constants.Events.LEAD_DATA_READY, function (event, data) {
+        init()
+    })
+    // Init View
     init()
 })

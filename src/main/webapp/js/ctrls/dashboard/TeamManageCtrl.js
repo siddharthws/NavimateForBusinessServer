@@ -53,7 +53,10 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
                     .then(
                         function (response) {
                             $rootScope.hideWaitingDialog()
+
+                            //Re-sync team data since member has been removed
                             TeamDataService.sync()
+
                             // Show Toast
                             ToastService.toast("Reps removed...")
 
