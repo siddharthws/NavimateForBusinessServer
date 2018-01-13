@@ -62,6 +62,9 @@ class UrlMappings {
         "/api/googleapis/geocode"           (controller: "GoogleApi") {action = [GET: "geocode"]}
         "/api/googleapis/geocode/reverse"   (controller: "GoogleApi") {action = [GET: "reverseGeocode"]}
 
+        // External APIs
+        "/api/ext/sync/managers"    (controller: "ExtApi") {action = [POST: "syncManagers"]}
+
         // Porting API for internal use
         "/api/port/apiKey"   (controller: "PortingApi") {action = [GET: "portApiKey"]}
 
