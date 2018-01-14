@@ -64,6 +64,7 @@ class UrlMappings {
 
         // External APIs
         "/api/ext/sync/managers"    (controller: "ExtApi") {action = [POST: "syncManagers"]}
+        "/api/ext/sync/reps"        (controller: "ExtApi") {action = [POST: "syncReps"]}
 
         // Porting API for internal use
         "/api/port/apiKey"   (controller: "PortingApi") {action = [GET: "portApiKey"]}
