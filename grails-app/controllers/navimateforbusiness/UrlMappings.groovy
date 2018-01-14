@@ -67,9 +67,6 @@ class UrlMappings {
         "/api/ext/sync/reps"        (controller: "ExtApi") {action = [POST: "syncReps"]}
         //"/api/ext/report/forms"     (controller: "ExtApi") {action = [GET: "getFormReport"]}
 
-        // Porting API for internal use
-        "/api/port/apiKey"   (controller: "PortingApi") {action = [GET: "portApiKey"]}
-
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
 
