@@ -20,6 +20,9 @@ class Form {
     // Form Submission Data
     Data submittedData
 
+    // Task status while submitting this form
+    navimateforbusiness.TaskStatus taskStatus
+
     static mappedBy = [
             task: 'forms'
     ]

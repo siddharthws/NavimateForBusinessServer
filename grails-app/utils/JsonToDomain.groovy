@@ -22,12 +22,18 @@ class JsonToDomain {
             Date date = new Date(formJson.timestamp)
             Template template = Template.findById(formJson.data.templateId)
             Data data = Data(formJson.data, owner, template)
+
+            // Get Taks status form close task boolean
+            navimateforbusiness.TaskStatus submitStatus = formJson.closeTask ? navimateforbusiness.TaskStatus.CLOSED : navimateforbusiness.TaskStatus.OPEN
+
+            // Create form object
             form = new Form(owner: owner,
                             account: owner.account,
                             task: task,
                             latitude: lat,
                             longitude: lng,
-                            submittedData: data)
+                            submittedData: data,
+                            taskStatus: submitStatus)
             form.dateCreated = date
             form.lastUpdated = date
         }
