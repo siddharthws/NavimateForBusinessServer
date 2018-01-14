@@ -200,7 +200,7 @@ class ExtApiController {
             }
 
             // Check if manager exists
-            def existingManager = User.findByExtIdAndRoleGreaterThanEquals(userJson.managerId, Role.MANAGER)
+            def existingManager = User.findByAccountAndExtIdAndRoleGreaterThanEquals(account, userJson.managerId, Role.MANAGER)
             if (!existingManager) {
                 throw new ApiException("Unknown manager ID " + userJson.managerId + " for user " + userJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
@@ -230,7 +230,7 @@ class ExtApiController {
 
             // If user does not exist, find by ext ID
             if (!user) {
-                user = User.findByExtIdAndRoleGreaterThanEquals(userJson.id, Role.MANAGER)
+                user = User.findByAccountAndExtIdAndRoleGreaterThanEquals(account, userJson.id, Role.MANAGER)
             }
 
             // If user not found by ext Id or Email, create a new one
@@ -261,7 +261,7 @@ class ExtApiController {
 
             // If user does not exist, find by ext ID
             if (!user) {
-                user = User.findByExtIdAndRole(userJson.id, Role.REP)
+                user = User.findByAccountAndExtIdAndRole(account, userJson.id, Role.REP)
             }
 
             // If user not found by ext Id or Email, create a new one
@@ -275,7 +275,7 @@ class ExtApiController {
             user.extId          = userJson.id
             user.name           = userJson.name
             user.phoneNumber    = userJson.phone
-            user.manager        = User.findByExtIdAndRoleGreaterThanEquals(userJson.managerId, Role.MANAGER)
+            user.manager        = User.findByAccountAndExtIdAndRoleGreaterThanEquals(account, userJson.managerId, Role.MANAGER)
             user.email          = userJson.email
 
             // Save user
