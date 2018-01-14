@@ -95,8 +95,10 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
     function init() {
         // Re-Init selection array with all unselected
         vm.selection = []
+
         // Get Lead Data
         vm.leads =  LeadDataService.cache.data
+
         if(vm.leads) {
             vm.leads.forEach(function () {
                 vm.selection.push(false)
@@ -119,6 +121,7 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
     $scope.$on(Constants.Events.LEAD_DATA_READY, function (event, data) {
         init()
     })
+
     // Init View
     init()
 })

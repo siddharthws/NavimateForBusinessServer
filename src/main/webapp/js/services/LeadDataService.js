@@ -19,10 +19,10 @@ app.service('LeadDataService', function($rootScope, $http, $localStorage) {
             headers:    {
                 'X-Auth-Token':    $localStorage.accessToken
             }
-        })
-            .then(
+        }).then(
                 function (response) {
                     $rootScope.hideWaitingDialog()
+
                     // Update cache data
                     vm.cache.data = response.data
                     $rootScope.$broadcast(Constants.Events.LEAD_DATA_READY)

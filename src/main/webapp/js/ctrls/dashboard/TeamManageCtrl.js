@@ -92,8 +92,10 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
      function init(){
         // Re-Init selection array with all unselected
         vm.selection = []
+
         // Get Team Data
         vm.team =  TeamDataService.cache.data
+
         if(vm.team) {
             vm.team.forEach(function () {
                 vm.selection.push(false)
@@ -116,6 +118,7 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     $scope.$on(Constants.Events.TEAM_DATA_READY, function (event, data) {
         init()
     })
+
     // Init View
     init()
 
