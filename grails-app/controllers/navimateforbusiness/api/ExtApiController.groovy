@@ -6,6 +6,8 @@ import navimateforbusiness.ApiException
 import navimateforbusiness.ApiKey
 import navimateforbusiness.Constants
 import navimateforbusiness.DomainToJson
+import navimateforbusiness.Data
+import navimateforbusiness.Form
 import navimateforbusiness.Role
 import navimateforbusiness.User
 import org.grails.web.json.JSONArray
@@ -47,6 +49,73 @@ class ExtApiController {
         if (validateReps(account, users)) {
             // Add all users to database
             addReps(account, users)
+        }
+
+        // Send success response
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def getFormReport() {
+        // Get account for this request
+        def account = ApiKey.findByKey(request.getHeader("X-Api-Key")).account
+
+        // Validate to & from parameters
+        if (!params.from || !(params.from instanceof long )) {
+            throw new ApiException("Invalid 'from' date parameter", Constants.HttpCodes.BAD_REQUEST)
+        }
+        if (!params.to || !(params.to instanceof long )) {
+            throw new ApiException("Invalid 'to' date parameter", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Get from and to dates
+        Date from = new Date(params.from)
+        Date to = new Date(params.to)
+
+        // Filter data submissions
+        List<Data> submissions = Data.findAll().findAll {it ->
+            (it.account.id == account.id) &&        // Submission for this account
+            (it.dateCreated >= from) &&             // Submission after from date
+            (it.dateCreated <= to) &&               // Submissions before to date
+            (it.owner.role == Role.REP)             // Submissions done by representative users
+        }
+
+        // Create JSON Array for report
+        def report = []
+        submissions.each {submission ->
+            // Get form object for this submission
+            Form form = Form.findBySubmittedData(submission)
+
+            // Get all ext IDs to be sent to external server
+            String managerId = submission.owner.manager.extId
+            String userId = submission.owner.extId
+            String leadId = form.task.lead.extId
+            String taskId = form.task.extId
+
+            // Ignore if any of ext IDs are null
+            if (!managerId || !userId || !leadId || !taskId) {
+                return
+            }
+
+            // Create report row for this submission
+            def row = [
+                    managerId: managerId,
+                    userId: userId,
+                    leadId: leadId,
+                    taskId: taskId,
+                    status: form.taskStatus.value,
+                    date: submission.dateCreated.time,
+                    location: [ lat: form.latitude, lng: form.longitude],
+                    template: submission.template.name
+            ]
+
+            // Add submission values
+            submission.values.each {value ->
+                row += [(value.field.title): value.value]
+            }
+
+            // Add element to report
+            report.push()
         }
 
         // Send success response
