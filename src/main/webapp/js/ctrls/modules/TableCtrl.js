@@ -369,4 +369,7 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
     $(document).on('click', '.dropdown-multiselect .dropdown-menu', function (e) {
         e.stopPropagation();
     })
+
+    // Run init once when controller initialized
+    init()
 })
