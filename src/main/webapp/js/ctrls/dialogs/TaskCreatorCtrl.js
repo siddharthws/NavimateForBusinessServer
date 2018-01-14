@@ -11,6 +11,8 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
     $scope.team = TeamDataService.cache.data
     $scope.formTemplates = []
 
+    $rootScope.showWaitingDialog("Please wait while we are fetching Information...")
+
     // Get Form Templates
     $http({
         method:     'GET',
@@ -22,9 +24,11 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
     })
     .then(
         function (response) {
+            $rootScope.hideWaitingDialog()
             $scope.formTemplates = response.data.templates
         },
         function (error) {
+            $rootScope.hideWaitingDialog()
             console.log(error)
         }
     )

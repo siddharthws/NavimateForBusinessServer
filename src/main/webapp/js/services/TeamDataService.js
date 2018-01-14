@@ -23,6 +23,7 @@ app.service('TeamDataService', function($rootScope, $http, $localStorage) {
         .then(
             function (response) {
                     $rootScope.hideWaitingDialog()
+
                     // Update cache data
                     vm.cache.data = response.data
                     $rootScope.$broadcast(Constants.Events.TEAM_DATA_READY)
