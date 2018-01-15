@@ -2,7 +2,7 @@
  * Created by Siddharth on 23-08-2017.
  */
 
-app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $localStorage, AuthService, DialogService, TeamDataService, LeadDataService) {
+app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $localStorage, AuthService, DialogService, TeamDataService, LeadDataService, TemplateDataService) {
 
     /*------------------------------------ INIT --------------------------------*/
     // Menu Selection Parameters
@@ -13,6 +13,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $
     // Sync all data on Initialization
     TeamDataService.sync()
     LeadDataService.sync()
+    TemplateDataService.syncForms()
 
     /*------------------------------------ APIs --------------------------------*/
     // Button Click APIs
