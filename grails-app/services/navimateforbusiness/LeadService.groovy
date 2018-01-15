@@ -77,7 +77,7 @@ class LeadService {
             }
 
             // check if lead already present in database
-            Lead lead = Lead.findByManagerAndTitleAndDescriptionAndPhoneAndAddressAndEmail(manager,title,description,phone,address,email)
+            Lead lead = Lead.findByManagerAndTitleAndDescriptionAndPhoneAndAddressAndEmailAndIsRemoved(manager,title,description,phone,address,email, false)
             if(!lead) {
                 // Create Lead Objects
                   lead = new Lead(
@@ -89,7 +89,8 @@ class LeadService {
                           description:    description,
                           email:          email,
                           latitude:       lat,
-                          longitude:      lng)
+                          longitude:      lng,
+                          isRemoved:      false)
             }
 
             leads.push(lead)
