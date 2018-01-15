@@ -21,7 +21,8 @@ Constants.Events = {
 
     // Data Service Related events
     TEAM_DATA_READY:         "evt-team-data-ready",
-    LEAD_DATA_READY:         "evt-lead-data-ready"
+    LEAD_DATA_READY:         "evt-lead-data-ready",
+    FORM_TEMPLATE_DATA_READY:     "evt-form-template-data-ready"
 }
 
 /* ------------------------------- Tracking -----------------------------------*/

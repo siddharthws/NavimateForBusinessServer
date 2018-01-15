@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, template, updateCb) {
+app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, template, updateCb, TemplateDataService) {
     var vm = this
 
     /* ------------------------------- HTML APIs -----------------------------------*/
@@ -38,8 +38,8 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
                 $mdDialog.hide()
                 ToastService.toast("Template saved successfully...")
 
-                // Trigger Callback
-                updateCb()
+                // Re-sync Template data since template has been added.
+                TemplateDataService.syncForms()
             },
             function (error) {
                 // Hide waiting and show error toast

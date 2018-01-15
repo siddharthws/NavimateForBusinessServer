@@ -3,35 +3,13 @@
  */
 
 // Controller for Alert Dialog
-app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, taskAddedCb, tasks, TeamDataService, LeadDataService) {
+app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, taskAddedCb, tasks, TeamDataService, LeadDataService, TemplateDataService) {
 
     /* ----------------------------- INIT --------------------------------*/
     $scope.tasks = tasks
     $scope.leads = LeadDataService.cache.data
     $scope.team = TeamDataService.cache.data
-    $scope.formTemplates = []
-
-    $rootScope.showWaitingDialog("Please wait while we are fetching Information...")
-
-    // Get Form Templates
-    $http({
-        method:     'GET',
-        url:        '/api/users/template',
-        headers:    {
-            'X-Auth-Token':    $localStorage.accessToken,
-            'templateType':    Constants.Template.TYPE_FORM
-        }
-    })
-    .then(
-        function (response) {
-            $rootScope.hideWaitingDialog()
-            $scope.formTemplates = response.data.templates
-        },
-        function (error) {
-            $rootScope.hideWaitingDialog()
-            console.log(error)
-        }
-    )
+    $scope.formTemplates = TemplateDataService.cache.data.forms
 
     /* ----------------------------- APIs --------------------------------*/
     // Button Click APIs

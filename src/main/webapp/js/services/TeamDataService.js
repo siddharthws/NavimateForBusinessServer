@@ -19,8 +19,7 @@ app.service('TeamDataService', function($rootScope, $http, $localStorage) {
             headers:    {
                 'X-Auth-Token':    $localStorage.accessToken
             }
-        })
-        .then(
+        }).then(
             function (response) {
                     $rootScope.hideWaitingDialog()
 
