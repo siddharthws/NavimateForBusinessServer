@@ -138,11 +138,10 @@ class UserApiController {
 
         if(user.role==navimateforbusiness.Role.ADMIN) {
             //Get Lead List of Admin
-            leads = Lead.findAllByAccountAndManagerIsNotNull(user.account)
-        }
-        else {
+            leads = Lead.findAllByAccountAndIsRemoved(user.account, false)
+        } else {
             // Get Lead List of Manager
-            leads = Lead.findAllByManager(user)
+            leads = Lead.findAllByManagerAndIsRemoved(user, false)
         }
 
         //Serialize the leads into a JSON object and send the response to frontend
@@ -181,12 +180,13 @@ class UserApiController {
                 lead = Lead.findById(jsonLead.id)
             } else {
                 // check for duplicate lead in database
-                lead = Lead.findByManagerAndTitleAndDescriptionAndPhoneAndAddressAndEmail(user,jsonLead.title,jsonLead.description,jsonLead.phoneNumber,jsonLead.address,jsonLead.email)
+                lead = Lead.findByManagerAndTitleAndDescriptionAndPhoneAndAddressAndEmailAndIsRemoved(user,jsonLead.title,jsonLead.description,jsonLead.phoneNumber,jsonLead.address,jsonLead.email, false)
                 if(!lead) {
                     // Create new lead
                     lead = new Lead(
                             account: user.account,
-                            manager: user
+                            manager: user,
+                            isRemoved: false
                     )
                 }
             }
@@ -233,7 +233,6 @@ class UserApiController {
      */
     def removeLeads() {
         // Get Leads from JSON
-        def fcms = []
         JSONArray leadsJson = request.JSON.leads
         leadsJson.each {leadJson ->
             Lead lead = Lead.findById(leadJson.id)
@@ -241,30 +240,9 @@ class UserApiController {
                 throw new ApiException("Lead not found", Constants.HttpCodes.BAD_REQUEST)
             }
 
-            // Remove Lead's Manager
-            lead.manager = null
+            // Mark remove flag in lead
+            lead.isRemoved = true
             lead.save(flush: true, failOnError: true)
-
-            // Check if the lead has any tasks
-            def tasks = Task.findAllByLead(lead)
-            tasks.each {task ->
-                // Send FCM notification only if task is OPEN
-                if (task.status == TaskStatus.OPEN) {
-                    // Push user to FCM
-                    if (!fcms.contains(task.rep.fcmId)) {
-                        fcms.push(task.rep.fcmId)
-                    }
-
-                    // Close and save task
-                    task.status = TaskStatus.CLOSED
-                    task.save(failOnError: true, flush: true)
-                }
-            }
-        }
-
-        // Send notifications to all reps
-        fcms.each {fcm ->
-            fcmService.notifyApp(fcm)
         }
 
         def resp = [success: true]

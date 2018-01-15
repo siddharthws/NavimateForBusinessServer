@@ -9,6 +9,9 @@ class Lead {
     // External ID for API access
     String extId
 
+    // Remove Flag
+    boolean isRemoved
+
     // Lead Name
     String title
 
