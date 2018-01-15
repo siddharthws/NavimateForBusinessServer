@@ -402,11 +402,12 @@ class UserApiController {
             // Create Field array and data array for template
             def fieldsJson = []
             def defaultData = [id: template.defaultData.id, values: []]
-            template.fields.each {field ->
+            def fields = template.fields.sort(false) {it.id}
+            fields.each {field ->
                 fieldsJson.push(DomainToJson.Field(field))
 
                 // Add corresponding data
-                def values = template.defaultData.values.sort(false) {it.id}
+                def values = template.defaultData.values
                 values.each {value ->
                     if (value.fieldId == field.id) {
                         def valueJson = DomainToJson.Value(value)
