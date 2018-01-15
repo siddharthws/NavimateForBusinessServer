@@ -51,6 +51,7 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
     /* ------------------------------- Init -----------------------------------*/
     // Attach template to scope to pass to child template editor view
     $scope.template = template
+    $scope.availableFieldTypes = Constants.Template.FORM_FIELD_TYPES
     if (!$scope.template) {
         // Create empty template object
         $scope.template = {

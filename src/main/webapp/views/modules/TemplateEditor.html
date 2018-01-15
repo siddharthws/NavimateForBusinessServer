@@ -38,7 +38,7 @@
                     </button>
                     <div class="dropdown-menu w-100">
                         <button class="dropdown-item"
-                                ng-repeat="type in $ctrl.Const.FORM_FIELD_TYPES"
+                                ng-repeat="type in $ctrl.availableFieldTypes"
                                 ng-click="$ctrl.updateFieldType($parent.$index, type)">
                             {{$ctrl.Const.FIELD_NAMES[type]}}
                         </button>
