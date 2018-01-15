@@ -203,6 +203,13 @@ Constants.Template.FORM_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_SIGN
 ]
 
+Constants.Template.LEAD_FIELD_TYPES = [
+    Constants.Template.FIELD_TYPE_TEXT,
+    Constants.Template.FIELD_TYPE_NUMBER,
+    Constants.Template.FIELD_TYPE_RADIOLIST,
+    Constants.Template.FIELD_TYPE_CHECKLIST
+]
+
 /* ------------------------------- Filters -----------------------------------*/
 Constants.Filter = {
     // Filter types

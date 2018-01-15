@@ -210,6 +210,7 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
     /*------------------------------- Init -------------------------------*/
     // Init Objects
     vm.template = $scope.template
+    vm.availableFieldTypes = $scope.availableFieldTypes
     vm.fields = vm.template.fields
     vm.data = vm.template.defaultData
     vm.bShowError = false

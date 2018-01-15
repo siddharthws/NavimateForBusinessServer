@@ -52,6 +52,7 @@ app.controller('LeadTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
     /* ------------------------------- Init -----------------------------------*/
     // Attach template to scope to pass to child template editor view
     $scope.template = template
+    $scope.availableFieldTypes = Constants.Template.LEAD_FIELD_TYPES
     if (!$scope.template) {
         // Create empty template object
         $scope.template = {
