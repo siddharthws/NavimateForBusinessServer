@@ -5,3 +5,7 @@ md-checkbox {
 md-checkbox.md-checked .md-icon {
     background-color: #37bcf2;
 }
+
+md-checkbox.cb-white.md-checked .md-icon {
+    background-color: #dddddd;
+}

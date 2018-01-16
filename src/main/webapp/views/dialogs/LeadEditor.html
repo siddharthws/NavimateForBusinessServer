@@ -1,6 +1,6 @@
 <!-- HTML template for Alert Dialog -->
 <md-dialog class="dialog-container h-100 w-100">
-    <div class="d-flex oriented-flexbox w-100 h-100">
+    <div class="d-flex oriented-flexbox w-100 h-100 p-1">
         <div class="p-1 d-flex flex-1 flex-column">
             <h4><b>Edit Leads</b></h4>
 
@@ -37,19 +37,79 @@
                     </div>
 
                     <div class="d-flex flex-column" ng-show="selectedLead == lead">
-                        <input class="input-underlined input-white" type="text"  placeholder="Enter Description..."
-                               ng-model="lead.description">
-                        <input class="input-underlined input-white" type="text"  placeholder="Enter phone number"
-                               ng-model="lead.phoneNumber" ng-class="{'has-error': bShowError && !lead.phoneNumber}">
-                        <div class="dropdown d-flex">
-                            <input class="input-underlined input-white w-100" type="text"  placeholder="Search address..."
+
+                        <div class="dropdown flex-1">
+                            <input class="input-underlined input-white w-75" type="text"  placeholder="Search address..."
                                    ng-model="lead.address" ng-model-options="{debounce: 500}"
                                    ng-class="{'has-error': bShowError && !(lead.latitude && lead.longitude && lead.address)}"
                                    ng-change="searchAddress()" data-toggle="dropdown">
-                            <div class="dropdown-menu w-100">
+                            <div class="dropdown-menu">
                                 <p ng-show="(searchResults.length == 0) && !bSearchWaiting">Nothing to Show</p>
                                 <p ng-show="bSearchWaiting">Waiting for results...</p>
                                 <button class="dropdown-item" ng-repeat="searchResult in searchResults" ng-click="searchResultClick(searchResult)">{{searchResult.address}}</button>
+                            </div>
+                        </div>
+
+                        <div class="dropdown align-self-start m-1 p-1 bdr-primary-light bdr-round">
+                                <span class="d-flex dropdown-toggle-button justify-content-around align-items-center" data-toggle="dropdown">
+                                    <span>Template : {{getTemplateById(lead.templateId).name}}</span>
+                                    <img class="img-icon ml-2" src="/static/images/dropdown.png"/>
+                                </span>
+                            <div class="dropdown-menu">
+                                <button class="dropdown-item" ng-repeat="template in templates"
+                                        ng-click="updateTemplate($parent.$index, $index)">{{template.name}}</button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap align-items-center">
+
+                            <div ng-repeat="value in lead.templateData.values" class="p-1 m-1 bdr-primary-light bdr-round">
+
+                                <!-- Text Field -->
+                                <span ng-if="getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_TEXT">
+                                    <span>{{getFieldById(value.fieldId).title}}: </span>
+                                    <input  class="input-underlined" type="text"
+                                            ng-model="lead.templateData.values[$index].value"
+                                            ng-class="{'input-white': selectedLead == lead}">
+                                </span>
+
+                                <!-- Number Field -->
+                                <span ng-if="getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_NUMBER">
+                                    <span>{{getFieldById(value.fieldId).title}}: </span>
+                                    <input  string-to-number class="input-underlined" type="number"
+                                            ng-model="lead.templateData.values[$index].value"
+                                            ng-class="{'input-white': selectedLead == lead}">
+                                </span>
+
+                                <!-- Radio List Field -->
+                                <div ng-if="getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_RADIOLIST"
+                                     class="d-flex align-items-center">
+                                    <span>{{getFieldById(value.fieldId).title}}</span>
+                                    <md-radio-group ng-model="lead.templateData.values[$index].value.selection">
+                                        <div class="d-flex flex-column ml-2">
+                                                <div class="d-flex align-items-center"
+                                                     ng-repeat="option in lead.templateData.values[$index].value.options track by $index">
+                                                    <md-radio-button ng-value="$index" ng-class="{'rb-white': selectedLead == lead}"></md-radio-button>
+                                                    <span class=" ml-1">{{option}}</span>
+                                                </div>
+                                        </div>
+                                    </md-radio-group>
+                                </div>
+
+                                <!-- Check list Field -->
+                                <div ng-if="getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_CHECKLIST"
+                                     class="d-flex align-items-center">
+                                    <span>{{getFieldById(value.fieldId).title}}</span>
+                                    <div class="d-flex flex-column ml-2">
+                                        <div class="d-flex align-items-center"
+                                             ng-repeat="option in lead.templateData.values[$index].value track by $index">
+                                            <md-checkbox ng-value="option.name"
+                                                         ng-model="option.selection" ng-class="{'cb-white': selectedLead == lead}">
+                                            </md-checkbox>
+                                            <span class=" ml-1">{{option.name}}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

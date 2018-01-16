@@ -7,19 +7,77 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function () {
-        // Add a lead to current center of map
+        // Add a lead to current center of map with first template's default data
         var lead = {
             latitude: googleMap.getCenter().lat(),
-            longitude: googleMap.getCenter().lng()
+            longitude: googleMap.getCenter().lng(),
+            templateId: 0
         }
 
+        // Add lead to array
         $scope.leads.push(lead)
+
+        // Add template data to the lead
+        $scope.updateTemplate($scope.leads.length - 1, 0)
 
         // Simulate a click on the new item
         $scope.listItemClick(lead)
 
         // Scroll to bottom
         scrollList($scope.leads.length)
+    }
+
+    $scope.updateTemplate = function (leadIdx, templateIdx) {
+        var lead = $scope.leads[leadIdx]
+        var template = $scope.templates[templateIdx]
+
+        // Ignore if same template is selected
+        if (lead.templateId == template.id) return
+
+        // Create template data object from given template's default data
+        var templateData = {}
+        templateData.values = []
+        template.defaultData.values.forEach(function (value) {
+            templateData.values.push({
+                fieldId: value.fieldId,
+                value: value.value
+            })
+        })
+
+        // Update lead's template data
+        lead.templateData = templateData
+        lead.templateId = template.id
+    }
+
+    $scope.getTemplateById = function (templateId) {
+        // Iterate through all templates
+        for (var i  = 0; i < $scope.templates.length; i++) {
+            var template = $scope.templates[i]
+
+            if (template.id == templateId) {
+                return template
+            }
+        }
+
+        return null
+    }
+
+    $scope.getFieldById = function (fieldId) {
+        // Iterate through all templates
+        for (var i  = 0; i < $scope.templates.length; i++) {
+            var template = $scope.templates[i]
+
+            // Iterate through all fields
+            for (var j  = 0; j < template.fields.length; j++) {
+                var field = template.fields[j]
+
+                if (field.id == fieldId) {
+                    return field
+                }
+            }
+        }
+
+        return null
     }
 
     $scope.listItemClick = function (lead) {
@@ -98,7 +156,7 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
                     'X-Auth-Token':    $localStorage.accessToken
                 },
                 data:       {
-                    leads:           JSON.stringify($scope.leads)
+                    leads:           $scope.leads
                 }
             })
             .then(
@@ -123,7 +181,7 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
     }
 
     $scope.isLeadValid = function (lead) {
-        return (lead.title && lead.phoneNumber && lead.latitude && lead.longitude && lead.address)
+        return (lead.title && lead.latitude && lead.longitude && lead.address)
     }
 
     // Map Init Callback from ngMap
@@ -131,10 +189,7 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
         // Set map object
         googleMap = map
 
-        if (!$scope.leads.length) {
-            // Add atleast one lead if leads are empty
-            $scope.add()
-        } else {
+        if ($scope.leads.length) {
             // Center map on added leads
             var bounds = new google.maps.LatLngBounds()
             $scope.leads.forEach(function (lead) {
@@ -304,4 +359,31 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
         $scope.leads = leads
         $scope.selectedLead = $scope.leads[0]
     }
+
+    // Get all lead templates from backend
+    $rootScope.showWaitingDialog("Please wait while we are fetching templates...")
+    $http({
+        method:     'GET',
+        url:        '/api/users/template',
+        headers:    {
+            'X-Auth-Token':    $localStorage.accessToken,
+            'templateType':     Constants.Template.TYPE_LEAD
+        }
+    }).then(
+        function (response) {
+            $rootScope.hideWaitingDialog()
+            $scope.templates = response.data.templates
+
+            // Re-Init selection array with all unselected
+            $scope.selection = []
+            $scope.templates.forEach(function () {
+                $scope.selection.push(false)
+            })
+        },
+        function (error) {
+            $rootScope.hideWaitingDialog()
+
+            ToastService.toast("Unable to load forms templates !!!")
+        }
+    )
 })
