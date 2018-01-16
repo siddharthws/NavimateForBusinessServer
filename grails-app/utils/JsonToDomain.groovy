@@ -4,6 +4,37 @@
 package navimateforbusiness
 
 class JsonToDomain {
+    static Lead Lead(def leadJson, User owner) {
+        navimateforbusiness.Lead lead = null
+        // Check for existing objects
+        if (leadJson.id) {
+            lead = Lead.findByIdAndManager(leadJson.id, owner)
+
+            // Throw exception if invalid id / owner
+            if (!lead) {
+                throw new navimateforbusiness.ApiException("Invalid Lead Id for this user",
+                        navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            }
+        } else {
+            // Create new lead
+            lead = new Lead(manager: owner,
+                    account: owner.account,
+                    isRemoved: false)
+        }
+
+        // Update lead info from JSON received
+        lead.latitude = leadJson.latitude
+        lead.longitude = leadJson.longitude
+        lead.address = leadJson.address
+        lead.title = leadJson.title
+
+        Template template = Template.findById(leadJson.templateId)
+        Data data = Data(leadJson.templateData, owner, template)
+        lead.templateData = data
+
+        lead
+    }
+
     static Form Form(def formJson, User owner) {
         navimateforbusiness.Form form = null
         // Check for existing objects

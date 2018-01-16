@@ -166,51 +166,28 @@ class UserApiController {
     def editLeads() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        def jsonLeads = JSON.parse(request.JSON.leads)
+        def leadsJson = request.JSON.leads
         def fcms = []
-        jsonLeads.each { jsonLead ->
+
+        // Iterate through all Lead JSONs
+        leadsJson.each { leadJson ->
             // Validate mandatory lead fields
-            if (!jsonLead.title || !jsonLead.phoneNumber || !jsonLead.latitude || !jsonLead.longitude || !jsonLead.address) {
+            if (!leadJson.title || !leadJson.latitude || !leadJson.longitude || !leadJson.address) {
                 throw new ApiException("Mandatory lead information missing", Constants.HttpCodes.BAD_REQUEST)
             }
 
-            Lead lead = null
-            if (jsonLead.id) {
-                // Edit Existing lead
-                lead = Lead.findById(jsonLead.id)
-            } else {
-                // check for duplicate lead in database
-                lead = Lead.findByManagerAndTitleAndDescriptionAndPhoneAndAddressAndEmailAndIsRemoved(user,jsonLead.title,jsonLead.description,jsonLead.phoneNumber,jsonLead.address,jsonLead.email, false)
-                if(!lead) {
-                    // Create new lead
-                    lead = new Lead(
-                            account: user.account,
-                            manager: user,
-                            isRemoved: false
-                    )
-                }
-            }
-
-            // Update Information passed from json
-            lead.title      = jsonLead.title
-            lead.phone      = jsonLead.phoneNumber
-            lead.address    = jsonLead.address
-            lead.latitude   = jsonLead.latitude
-            lead.longitude  = jsonLead.longitude
-            lead.description= jsonLead.description ? jsonLead.description : ""
-            lead.email      = jsonLead.email ? jsonLead.email : ""
+            // Get Lead object from JSON
+            Lead lead = JsonToDomain.Lead(leadJson, user)
 
             // Save lead
             lead.save(flush: true, failOnError: true)
 
             // Check if the lead has any tasks
-            def tasks = Task.findAllByLead(lead)
+            def tasks = Task.findAllByLeadAndStatus(lead, TaskStatus.OPEN)
             tasks.each {task ->
-                // Send FCM notification only if task is OPEN
-                if (task.status == TaskStatus.OPEN) {
-                    if (!fcms.contains(task.rep.fcmId)) {
-                        fcms.push(task.rep.fcmId)
-                    }
+                // Collect FCM Ids
+                if (!fcms.contains(task.rep.fcmId)) {
+                    fcms.push(task.rep.fcmId)
                 }
             }
         }

@@ -9,3 +9,11 @@ md-radio-button.md-default-theme .md-on, md-radio-button .md-on {
 md-radio-button.md-default-theme.md-checked .md-off, md-radio-button.md-checked .md-off {
     border-color: #37bcf2;
 }
+
+md-radio-button.rb-white.md-default-theme .md-on, md-radio-button.rb-white .md-on {
+    background-color: white;
+}
+
+md-radio-button.rb-white.md-default-theme.md-checked .md-off, md-radio-button.rb-white.md-checked .md-off {
+    border-color: white;
+}
