@@ -43,8 +43,9 @@ class AuthService {
             account.admin = user
             account.save(flush: true, failOnError: true)
 
-            // Save a default template for the user
+            // Save default templates for this user
             getDefaultTemplate(user).save(flush: true, failOnError: true)
+            createDefaultLeadTemplate(user).save(flush: true, failOnError: true)
         }
 
         //register a new manager
@@ -223,5 +224,36 @@ class AuthService {
         defaultTemplate.addToFields(photoField)
 
         defaultTemplate
+    }
+
+    Template createDefaultLeadTemplate(User user) {
+        // Create a default Lead template
+        Template template = new Template(account: user.account, owner: user, name: "Default", type: navimateforbusiness.Constants.Template.TYPE_LEAD)
+
+        // Create default data for this template
+        Data data = new Data(account: user.account, owner: user, template: template)
+
+        // Create Fields for the template
+        Field descField     = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false)
+        Field phoneField    = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Phone", bMandatory: false)
+        Field emailField    = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Email", bMandatory: false)
+
+        // Create Values for the fields
+        Value descValue = new Value(account: user.account, field: descField, value: "")
+        Value phoneValue = new Value(account: user.account, field: phoneField, value: "")
+        Value emailValue = new Value(account: user.account, field: emailField, value: "")
+
+        // Add fields to template
+        template.addToFields(descField)
+        template.addToFields(phoneField)
+        template.addToFields(emailField)
+
+        // Add default data to template
+        data.addToValues(descValue)
+        data.addToValues(phoneValue)
+        data.addToValues(emailValue)
+        template.defaultData = data
+
+        template
     }
 }
