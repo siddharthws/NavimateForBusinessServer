@@ -8,19 +8,21 @@ class Data {
 
     static belongsTo = [
             account:    Account,
-            owner:      User,
-            template:   Template
+            owner:      User
     ]
+
+    // Template used for data submission
+    Template template
 
     static hasMany = [
             values:    Value
     ]
 
     static mappedBy = [
-            template:            'none'
     ]
 
     static constraints = {
+        template nullable: true
     }
 
     static mapping = {

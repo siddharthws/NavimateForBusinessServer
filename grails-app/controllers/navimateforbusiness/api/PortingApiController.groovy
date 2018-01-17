@@ -96,4 +96,20 @@ class PortingApiController {
 
         template
     }
+
+    def dataTemplates() {
+        // Get list of data and templates
+        List<Data> datas = Data.findAll()
+        List<Template> templates = Template.findAll()
+
+        // Iterate through all data objects
+        datas.each {data ->
+            // Get template used for this data through submitted fields
+            Template template = data.values.getAt(0).field.template
+
+            // Assign template to data and save
+            data.template = template
+            data.save(failOnError: true, flush: true)
+        }
+    }
 }
