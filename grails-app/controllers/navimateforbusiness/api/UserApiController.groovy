@@ -145,10 +145,9 @@ class UserApiController {
         }
 
         //Serialize the leads into a JSON object and send the response to frontend
-        def resp = new JSONArray()
-        leads.each { lead ->
-            resp.add(navimateforbusiness.Marshaller.serializeLead(lead))
-        }
+        // Get Table type data form leads
+        def resp = leadService.getLeadData(leads)
+
         render resp as JSON
     }
 
