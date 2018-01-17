@@ -70,6 +70,7 @@ class UrlMappings {
         // Porting APIS
         "/api/port/leadIsRemove"           (controller: "PortingApi") {action = [GET: "leadIsRemoved"]}
         "/api/port/leadTemplating"         (controller: "PortingApi") {action = [GET: "leadTemplating"]}
+        "/api/port/dataTemplates"          (controller: "PortingApi") {action = [GET: "dataTemplates"]}
 
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
