@@ -2,21 +2,21 @@
  * Created by Siddharth on 15-12-2017.
  */
 
-app.controller("LeadTemplatesCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService) {
+app.controller("LeadTemplatesCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TemplateDataService) {
     var vm = this
 
     /*------------------------------- Scope APIs -------------------------------*/
     vm.edit = function () {
         var selectedItems = vm.getSelectedItems()
         if (selectedItems.length != 1) {
-            ToastService.toast("Please select a single form to edit...")
+            ToastService.toast("Please select a single template to edit...")
         } else {
-            DialogService.leadTemplateEditor(selectedItems[0], init)
+            DialogService.leadTemplateEditor(selectedItems[0])
         }
     }
 
     vm.create = function () {
-        DialogService.leadTemplateEditor(null, init)
+        DialogService.leadTemplateEditor(null)
     }
 
     // Full List Selection Toggling
@@ -40,31 +40,16 @@ app.controller("LeadTemplatesCtrl", function ($scope, $rootScope, $http, $localS
     /*------------------------------- Local APIs -------------------------------*/
 
     function init() {
-        $rootScope.showWaitingDialog("Please wait while we are fetching forms...")
-        $http({
-            method:     'GET',
-            url:        '/api/users/template',
-            headers:    {
-                'X-Auth-Token':    $localStorage.accessToken,
-                'templateType':     Constants.Template.TYPE_LEAD
-            }
-        }).then(
-            function (response) {
-                $rootScope.hideWaitingDialog()
-                vm.templates = response.data.templates
+        // Get Template Data
+        vm.templates = TemplateDataService.cache.data.leads
 
-                // Re-Init selection array with all unselected
-                vm.selection = []
-                vm.templates.forEach(function () {
-                    vm.selection.push(false)
-                })
-            },
-            function (error) {
-                $rootScope.hideWaitingDialog()
-
-                ToastService.toast("Unable to load forms templates !!!")
-            }
-        )
+        // Re-Init selection array with all unselected
+        vm.selection = []
+        if(vm.templates) {
+            vm.templates.forEach(function () {
+                vm.selection.push(false)
+            })
+        }
     }
 
     /*------------------------------- INIT -------------------------------*/
@@ -77,6 +62,12 @@ app.controller("LeadTemplatesCtrl", function ($scope, $rootScope, $http, $localS
     vm.templates = []
     vm.bCheckAll = false
 
-    // Get Forms for this user
+    // Add event listeners
+    // Listener for Template data ready event
+    $scope.$on(Constants.Events.LEAD_TEMPLATE_DATA_READY, function (event, data) {
+        init()
+    })
+
+    // Run init sequence if data is already updated
     init()
 })

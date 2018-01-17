@@ -3,7 +3,7 @@
  */
 
 // Controller for Lead Template Editor Dialog
-app.controller('LeadTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, template, updateCb) {
+app.controller('LeadTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, TemplateDataService, template) {
     var vm = this
 
     /* ------------------------------- HTML APIs -----------------------------------*/
@@ -38,8 +38,8 @@ app.controller('LeadTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
                 $mdDialog.hide()
                 ToastService.toast("Template saved successfully...")
 
-                // Trigger Callback
-                updateCb()
+                // Re-sync Lead Templates
+                TemplateDataService.syncLeads()
             },
             function (error) {
                 // Hide waiting and show error toast
