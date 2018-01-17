@@ -125,4 +125,36 @@ class LeadService {
             }
         leads
     }
+
+    def getLeadData (List<Lead> leads) {
+        def leadsJson = []
+
+        leads.each {lead ->
+            // Create lead JSON object
+            def leadJson = [
+                    id: lead.id,
+                    title: lead.title,
+                    address: lead.address,
+                    lat: lead.latitude,
+                    lng: lead.longitude,
+                    templateData: [
+                        id: lead.templateData.template.id,
+                        values: []
+                    ]
+            ]
+
+            // Add values to templated data
+            lead.templateData.values.each {value ->
+                leadJson.templateData.values.push([
+                        fieldId: value.fieldId,
+                        value: value.value
+                ])
+            }
+
+            // Add to JSON Array
+            leadsJson.push(leadJson)
+        }
+
+        leadsJson
+    }
 }
