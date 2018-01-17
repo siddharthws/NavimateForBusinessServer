@@ -6,7 +6,9 @@ app.service('TemplateDataService', function($rootScope, $http, $localStorage, To
     /* ----------------------------- INIT --------------------------------*/
     var vm = this
     vm.cache ={
-        data: { forms:[] }
+        data: { forms:[],
+                leads: []
+        }
     }
 
     /* ----------------------------- APIs --------------------------------*/
@@ -32,6 +34,28 @@ app.service('TemplateDataService', function($rootScope, $http, $localStorage, To
                     $rootScope.hideWaitingDialog()
                     ToastService.toast("Unable to load forms templates !!!")
                 })
+    }
+
+    //API to get Lead Templates
+    vm.syncLeads = function (){
+        $http({
+            method:     'GET',
+            url:        '/api/users/template',
+            headers:    {
+                'X-Auth-Token':    $localStorage.accessToken,
+                'templateType':    Constants.Template.TYPE_LEAD
+            }
+        }).then(
+            function (response) {
+                // Update cache data
+                vm.cache.data.leads = response.data.templates
+
+                // Broadcast Data ready event
+                $rootScope.$broadcast(Constants.Events.LEAD_TEMPLATE_DATA_READY)
+            },
+            function (error) {
+                ToastService.toast("Unable to load lead templates !!!")
+            })
     }
 
 })

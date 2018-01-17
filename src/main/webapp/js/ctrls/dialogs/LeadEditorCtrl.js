@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, ExcelService, leads, leadUpdateCb, LeadDataService) {
+app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, ExcelService, LeadDataService, TemplateDataService, leads, leadUpdateCb) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function () {
@@ -354,36 +354,13 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
     var googleMap = null
     var markerIconDefault, markerIconSelected, markerIconError = null
 
+    // Init leads
     if (leads) {
         // Assign the passed leads & mark the first one as selected
         $scope.leads = leads
         $scope.selectedLead = $scope.leads[0]
     }
 
-    // Get all lead templates from backend
-    $rootScope.showWaitingDialog("Please wait while we are fetching templates...")
-    $http({
-        method:     'GET',
-        url:        '/api/users/template',
-        headers:    {
-            'X-Auth-Token':    $localStorage.accessToken,
-            'templateType':     Constants.Template.TYPE_LEAD
-        }
-    }).then(
-        function (response) {
-            $rootScope.hideWaitingDialog()
-            $scope.templates = response.data.templates
-
-            // Re-Init selection array with all unselected
-            $scope.selection = []
-            $scope.templates.forEach(function () {
-                $scope.selection.push(false)
-            })
-        },
-        function (error) {
-            $rootScope.hideWaitingDialog()
-
-            ToastService.toast("Unable to load forms templates !!!")
-        }
-    )
+    // Init Templates
+    $scope.templates = TemplateDataService.cache.data.leads
 })

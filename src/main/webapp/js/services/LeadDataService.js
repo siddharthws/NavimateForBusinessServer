@@ -1,7 +1,7 @@
 /**
  * Created by aroha on 13-01-2017.
  */
-app.service('LeadDataService', function($rootScope, $http, $localStorage) {
+app.service('LeadDataService', function($rootScope, $http, $localStorage, ToastService) {
 
     /* ----------------------------- INIT --------------------------------*/
     var vm = this

@@ -14,6 +14,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $
     TeamDataService.sync()
     LeadDataService.sync()
     TemplateDataService.syncForms()
+    TemplateDataService.syncLeads()
     TaskDataService.sync()
 
     /*------------------------------------ APIs --------------------------------*/
