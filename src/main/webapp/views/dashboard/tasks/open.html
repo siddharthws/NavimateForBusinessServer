@@ -39,6 +39,7 @@
         </th>
         </thead>
         <tr ng-repeat="task in $ctrl.tasks" ng-click="$ctrl.selection[$index] = !$ctrl.selection[$index]"
+            ng-if="task.status == 'OPEN'"
             ng-class="{'active': $ctrl.selection[$index]}">
             <td class="text-center">
                 <md-checkbox ng-model="$ctrl.selection[$index]" ng-click="$root.Statics.absorbEvent($event)"></md-checkbox>

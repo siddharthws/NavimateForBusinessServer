@@ -64,7 +64,9 @@ Constants.DashboardNav = {
     OPTION_REPORT   : 1,
     OPTION_FORM     : 2,
     OPTION_LEAD     : 3,
-    OPTION_PROFILE  : 4
+    OPTION_PROFILE  : 4,
+    OPTION_OPEN     : 5,
+    OPTION_CLOSE    : 6
 }
 
 /*-----------------------------Dashboard user role-------------------------------------*/
@@ -100,6 +102,16 @@ Constants.DashboardNav.Options = [
         id:         Constants.DashboardNav.OPTION_PROFILE,
         name:       'Profile',
         state:      'profile'
+    },
+    {
+        id:         Constants.DashboardNav.OPTION_OPEN,
+        name:       'Open',
+        state:      'open'
+    },
+    {
+        id:         Constants.DashboardNav.OPTION_CLOSE,
+        name:       'Close',
+        state:      'close'
     }
 ]
 
@@ -128,7 +140,8 @@ Constants.DashboardNav.Menu = [
         state:      "tasks",
         accessLevel:Constants.Role.MANAGER,
         options:    [
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_OPEN],
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_CLOSE]
         ]
     },
     {

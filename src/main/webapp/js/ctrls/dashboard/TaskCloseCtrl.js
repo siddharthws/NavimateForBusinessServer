@@ -1,8 +1,8 @@
 /**
- * Created by Siddharth on 22-08-2017.
+ * Created by Sandeep on 18-01-2018.
  */
 
-app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TaskDataService) {
+app.controller("TaskCloseCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService ,TaskDataService) {
     var vm = this
 
     /*-------------------------------- Scope APIs --------------------------------*/
@@ -29,51 +29,10 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
         return selectedItems
     }
 
-    vm.close = function () {
-        //Launch confirm Dialog box
-        DialogService.confirm("Are you sure you want to close these " + vm.getSelectedItems().length + " tasks ?",
-            function () {
-                //http call to close tasks
-                $rootScope.showWaitingDialog("Closing Tasks...")
-                $http({
-                    method: 'POST',
-                    url:    '/api/users/task/close',
-                    headers: {
-                        'X-Auth-Token': $localStorage.accessToken
-                    },
-                    data: {
-                        tasks : vm.getSelectedItems()
-                    }
-                })
-                .then(
-                    function (response) {
-                        $rootScope.hideWaitingDialog()
-
-                        //Re-sync Task data since Task has been closed
-                        TaskDataService.sync()
-
-                        // Show Toast
-                        ToastService.toast("Tasks closed...")
-
-                        // re-initialize tasks
-                        initTasks()
-
-                    },
-                    function (error) {
-                        $rootScope.hideWaitingDialog()
-                        ToastService.toast("Failed to close tasks!!!")
-
-                        // re-initialize tasks
-                        initTasks()
-                    })
-            })
-    }
-
     vm.remove = function () {
         //Launch confirm Dialog box
         DialogService.confirm("Are you sure you want to remove these " + vm.getSelectedItems().length + " tasks ?",
             function () {
-
                 //http call to close tasks
                 $rootScope.showWaitingDialog("Removing Tasks...")
                 $http({
@@ -90,26 +49,19 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                     function (response) {
                         $rootScope.hideWaitingDialog()
 
-                        //Re-sync Task data since Task has been Removed.
+                        //Re-sync Task data since Task renewal has been updated.
                         TaskDataService.sync()
 
                         // Show Toast
                         ToastService.toast("Tasks removed successfully...")
-
-                        // re-initialize tasks
-                        initTasks()
-
                     },
                     function (error) {
                         $rootScope.hideWaitingDialog()
                         ToastService.toast("Failed to remove tasks!!!")
-
-                        // re-initialize tasks
-                        initTasks()
                     })
             })
     }
-    
+
     vm.stopRenewal = function () {
         //Launch confirm Dialog box
         DialogService.confirm("Are you sure you want to stop renewal for " + vm.getSelectedItems().length + " tasks ?",
@@ -135,16 +87,10 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
 
                         // Show Toast
                         ToastService.toast("renewal period stopped...")
-
-                        // re-initialize tasks
-                        initTasks()
                     },
                     function (error) {
                         $rootScope.hideWaitingDialog()
                         ToastService.toast("Failed to stop renewal!!!")
-
-                        // re-initialize tasks
-                        initTasks()
                     })
             })
     }
@@ -162,13 +108,12 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                 vm.selection.push(false)
             })
         }
-
     }
 
     /*-------------------------------- INIT --------------------------------*/
     // Set menu and option
     $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_TASKS]
-    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
+    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_CLOSE]
 
     // Init Objects
     vm.tasks = []
