@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, taskAddedCb, tasks, TeamDataService, LeadDataService, TemplateDataService) {
+app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, taskAddedCb, tasks, TeamDataService, LeadDataService, TemplateDataService, TaskDataService) {
 
     /* ----------------------------- INIT --------------------------------*/
     $scope.tasks = tasks
@@ -38,6 +38,9 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
                     $rootScope.hideWaitingDialog()
                     // Dismiss Dialog
                     $mdDialog.hide()
+
+                    //Re-sync Task data since Task has been Created.
+                    TaskDataService.sync()
 
                     // Show Toast
                     ToastService.toast("Tasks Created successfully...")
