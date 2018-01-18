@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService) {
+app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TaskDataService) {
     var vm = this
 
     /*-------------------------------- Scope APIs --------------------------------*/
@@ -48,6 +48,10 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                 .then(
                     function (response) {
                         $rootScope.hideWaitingDialog()
+
+                        //Re-sync Task data since Task has been closed
+                        TaskDataService.sync()
+
                         // Show Toast
                         ToastService.toast("Tasks closed...")
 
@@ -85,6 +89,10 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                 .then(
                     function (response) {
                         $rootScope.hideWaitingDialog()
+
+                        //Re-sync Task data since Task has been Removed.
+                        TaskDataService.sync()
+
                         // Show Toast
                         ToastService.toast("Tasks removed successfully...")
 
@@ -121,6 +129,10 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                 .then(
                     function (response) {
                         $rootScope.hideWaitingDialog()
+
+                        //Re-sync Task data since Task renewal has been updated.
+                        TaskDataService.sync()
+
                         // Show Toast
                         ToastService.toast("renewal period stopped...")
 
@@ -139,31 +151,18 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
 
     /*-------------------------------- Local APIs --------------------------------*/
     function initTasks () {
-        $rootScope.showWaitingDialog("Please wait while we are fetching tasks...")
-        $http({
-            method:     'GET',
-            url:        '/api/users/task',
-            headers:    {
-                'X-Auth-Token':    $localStorage.accessToken
-            }
-        })
-            .then(
-                function (response) {
-                    $rootScope.hideWaitingDialog()
-                    vm.tasks = response.data
+        // Get Task Data
+        vm.tasks = TaskDataService.cache.data
 
-                    // Re-Init selection array with all unselected
-                    vm.selection = []
-                    vm.tasks.forEach(function () {
-                        vm.selection.push(false)
-                    })
-                },
-                function (error) {
-                    $rootScope.hideWaitingDialog()
+        // Re-Init selection array with all unselected
+        vm.selection = []
 
-                    ToastService.toast("Unable to load tasks !!!")
-                }
-            )
+        if(vm.tasks){
+            vm.tasks.forEach(function () {
+                vm.selection.push(false)
+            })
+        }
+
     }
 
     /*-------------------------------- INIT --------------------------------*/
@@ -176,5 +175,12 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     vm.selection = []
     vm.bCheckAll = false
 
+    // Add event listeners
+    // Listener for Task data ready event
+    $scope.$on(Constants.Events.TASK_DATA_READY, function (event, data) {
+        initTasks()
+    })
+
+    // Init View
     initTasks()
 })

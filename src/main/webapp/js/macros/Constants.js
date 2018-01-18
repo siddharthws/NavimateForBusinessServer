@@ -20,9 +20,10 @@ Constants.Events = {
     MAP_MARKER_DRAGEND:     "evt-marker-dragend",
 
     // Data Service Related events
-    TEAM_DATA_READY:         "evt-team-data-ready",
-    LEAD_DATA_READY:         "evt-lead-data-ready",
-    FORM_TEMPLATE_DATA_READY:     "evt-form-template-data-ready"
+    TEAM_DATA_READY:              "evt-team-data-ready",
+    LEAD_DATA_READY:              "evt-lead-data-ready",
+    FORM_TEMPLATE_DATA_READY:     "evt-form-template-data-ready",
+    TASK_DATA_READY:              "evt-task-data-ready"
 }
 
 /* ------------------------------- Tracking -----------------------------------*/
