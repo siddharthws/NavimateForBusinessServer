@@ -58,4 +58,64 @@ app.service('TemplateDataService', function($rootScope, $http, $localStorage, To
             })
     }
 
+    // API to get template object by id
+    vm.getTemplateById = function (id) {
+        // Iterate through all form templates
+        for (var i = 0; i < vm.cache.data.forms.length; i++) {
+            // Get template
+            var template = vm.cache.data.forms[i]
+            if (template.id == id) {
+                return template
+            }
+        }
+
+        // Iterate through all lead templates
+        for (var i = 0; i < vm.cache.data.leads.length; i++) {
+            // Get template
+            var template = vm.cache.data.leads[i]
+            if (template.id == id) {
+                return template
+            }
+        }
+
+        return null
+    }
+
+    // API to get field object by id
+    vm.getFieldById = function (id) {
+        // Iterate through all form templates
+        for (var i = 0; i < vm.cache.data.forms.length; i++) {
+            // Get template
+            var template = vm.cache.data.forms[i]
+
+            for (var j = 0; j < template.fields.length; j++) {
+                // Get field
+                var field = template.fields[j]
+
+                // Check for id
+                if (id == field.id) {
+                    return field
+                }
+            }
+        }
+
+        // Iterate through all lead templates
+        for (var i = 0; i < vm.cache.data.leads.length; i++) {
+            // Get template
+            var template = vm.cache.data.leads[i]
+
+            for (var j = 0; j < template.fields.length; j++) {
+                // Get field
+                var field = template.fields[j]
+
+                // Check for id
+                if (id == field.id) {
+                    return field
+                }
+            }
+        }
+
+        return null
+    }
+
 })
