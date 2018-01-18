@@ -7,6 +7,22 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
     var vm = this
 
     /*------------------------------------ HTML APIs --------------------------------*/
+    // API to select / unselect a row
+    vm.toggleRow = function (idx) {
+        // Send selection event
+        emitSelectionEvent()
+    }
+
+    vm.toggleAll = function () {
+        // Update selection array
+        for (var i = 0; i < vm.selection.length; i++) {
+            vm.selection[i] = vm.bCheckAll
+        }
+
+        // Send selection event
+        emitSelectionEvent()
+    }
+
     // Filter Related APIs
     vm.resetFilters = function () {
         // Init Blank Filter
@@ -155,6 +171,14 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
             }
         }
 
+        // Reset selection array
+        vm.selection = []
+        vm.filteredValues.forEach(function (row) {
+            vm.selection.push(false)
+        })
+        emitSelectionEvent()
+
+
         // Apply sorting
         applySorting()
     }
@@ -299,8 +323,25 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
             return
         }
 
+        // Get selected rows
+        var selectedRows = []
+        if (vm.style.bSelectable) {
+            vm.selection.forEach(function (bSelected, i) {
+                if (bSelected) {
+                    selectedRows.push(vm.filteredValues[i])
+                }
+            })
+        } else {
+            selectedRows = vm.filteredValues
+        }
+
+        // Export all data if no rows are selected
+        if (!selectedRows.length) {
+            selectedRows = vm.filteredValues
+        }
+
         // Call Excel Service to perform export
-        ExcelService.export(vm.filteredValues, vm.columns, filename)
+        ExcelService.export(selectedRows, vm.columns, filename)
     }
 
     // API to show / hide columns
@@ -326,12 +367,33 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
         vm.filteredValues = $filter('orderBy')(vm.filteredValues, sortingArray)
     }
 
+    // Method to send event when selection has updated
+    function emitSelectionEvent() {
+        console.log(vm.selection)
+        // Get indexes of selected rows
+        var selectedIdx = []
+        for (var i = 0; i < vm.selection.length; i++) {
+            if (vm.selection[i]) {
+                // Get index in original values
+                var origIdx = vm.values.indexOf(vm.filteredValues[i])
+
+                // Add to selected rows
+                selectedIdx.push(origIdx)
+            }
+        }
+
+        // Emit event
+        $scope.$emit( Constants.Events.TABLE_ROW_SELECT, { selectedIndexes: selectedIdx })
+    }
+
     /*------------------------------------ INIT --------------------------------*/
     // Init Objects
     vm.columns           = []
     vm.values            = []
     vm.filteredValues    = []
     vm.style             = $scope.tableParams.style
+    vm.bCheckAll = false
+    vm.selection = []
     vm.pageSize          = $rootScope.Constants.Table.DEFAULT_COUNT_PER_PAGE
     vm.pagerParams       = new NgTableParams(   {count:   vm.pageSize},
                                                 {dataset: vm.filteredValues})

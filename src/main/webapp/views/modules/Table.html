@@ -5,13 +5,18 @@
                ng-class="{  'table-bordered': $ctrl.style.bBordered,
                             'table-striped': $ctrl.style.bStriped}">
             <thead>
-                <th>
+                <th ng-if="!$ctrl.style.bSelectable" >
                     #
+                </th>
+
+                <!-- Row Selection Header -->
+                <th ng-if="$ctrl.style.bSelectable" >
+                    <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
                 </th>
 
                 <!-- Table Header with filter dropdown -->
                 <th ng-repeat="column in $ctrl.columns" ng-show="column.show">
-                    <div class="dropdown dropdown-multiselect">
+                    <div class="dropdown dropdown-multiselect w-100">
                         <!-- Dropdown Button -->
                         <button class="dropdown-toggle-button d-flex align-items-center justify-content-center w-100" data-toggle="dropdown">
                             <!-- Column Title -->
@@ -98,9 +103,15 @@
                 </th>
             </thead>
 
-            <tr ng-repeat="row in $data">
-                <td class="text-center">
+            <tr ng-repeat="row in $data" ng-class="{'active': $ctrl.selection[$index]}"
+                ng-click="$ctrl.selection[$index] = !$ctrl.selection[$index]; $ctrl.toggleRow($index)">
+                <td class="text-center" ng-if="!$ctrl.style.bSelectable" >
                     {{$ctrl.filteredValues.indexOf(row) + 1}}
+                </td>
+
+                <td class="text-center" ng-if="$ctrl.style.bSelectable" >
+                    <md-checkbox ng-model="$ctrl.selection[$index]" ng-change="$ctrl.toggleRow($index)"
+                                 ng-click="$root.Statics.absorbEvent($event)"></md-checkbox>
                 </td>
 
                 <!-- Table Data -->

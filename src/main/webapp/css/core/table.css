@@ -12,7 +12,8 @@ tr:focus {
 }
 
 .table-striped tr.active:nth-of-type(odd),
-.table-striped tr.active {
+.table-striped tr.active,
+.table-bordered tr.active {
     background-color: #37bcf2;
     color: white;
  }
@@ -22,16 +23,6 @@ tr:focus {
     vertical-align: middle;
     max-width: 25em;
     font-size: 0.9rem;
-}
-
-.table-striped td {
-    border-color: #dddddd;
-    border-width: 0px 1px;
-    border-style: solid;
-}
-
-.table-striped tr td:first-child, .table-striped tr td:last-child {
-    border-width: 0px;
 }
 
 .table th {
