@@ -135,8 +135,8 @@ class LeadService {
                     id: lead.id,
                     title: lead.title,
                     address: lead.address,
-                    lat: lead.latitude,
-                    lng: lead.longitude,
+                    latitude: lead.latitude,
+                    longitude: lead.longitude,
                     templateData: [
                         id: lead.templateData.template.id,
                         values: []
