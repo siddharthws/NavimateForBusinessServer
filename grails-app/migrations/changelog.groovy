@@ -23,4 +23,5 @@ databaseChangeLog = {
     include file: 'lead-is-remove-column-add.groovy'
     include file: 'templating-bugfix.groovy'
     include file: 'task-templating-support.groovy'
+    include file: 'templating-post-cleanup.groovy'
 }

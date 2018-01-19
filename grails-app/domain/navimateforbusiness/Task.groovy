@@ -42,11 +42,7 @@ class Task {
     ]
 
     static constraints = {
-        manager         nullable: true
-        rep             nullable: true
-        lead            nullable: true
         extId           nullable: true
-        templateData    nullable: true
     }
 
     static mapping = {
