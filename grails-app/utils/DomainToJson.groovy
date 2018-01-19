@@ -51,9 +51,8 @@ class DomainToJson {
                 id:             lead.id,
                 ver:            lead.version,
                 title:          lead.title,
-                description:    lead.description,
-                phoneNumber:    lead.phone,
-                email:          lead.email,
+                templateId:     lead.templateData.template.id,
+                dataId:         lead.templateData.id,
                 address:        lead.address,
                 latitude:       lead.latitude,
                 longitude:      lead.longitude
