@@ -33,6 +33,7 @@ class Constants {
         // Template Types
         public static final int TYPE_FORM                 = 1
         public static final int TYPE_LEAD                 = 2
+        public static final int TYPE_TASK                 = 3
 
         // Field types
         public static final int FIELD_TYPE_NONE           = 0
