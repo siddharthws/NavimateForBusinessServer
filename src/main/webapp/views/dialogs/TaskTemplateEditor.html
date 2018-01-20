@@ -1,0 +1,19 @@
+<!-- HTML template for Form Editor Dialog -->
+<md-dialog class="dialog-container h-100 w-75">
+    <div class="d-flex flex-column h-100 w-100">
+        <!-- Dialog Title -->
+        <div class="container-fluid">
+            <h4><b>Task Template Editor</b></h4>
+            <hr>
+        </div>
+
+        <!-- Include Template Editor View -->
+        <ng-include src="'/static/views/modules/TemplateEditor.html'"></ng-include>
+
+        <!-- Dialog Buttons -->
+        <div class="container-fluid d-flex justify-content-end flex-shrink-0">
+            <button class="btn btn-primary" ng-click="$ctrl.save()">Save</button>
+            <button class="btn" ng-click="$ctrl.close()">Close</button>
+        </div>
+    </div>
+</md-dialog>

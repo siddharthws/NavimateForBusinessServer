@@ -102,6 +102,16 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
+    // Launch Task Template Editor Dialog
+    this.taskTemplateEditor = function (template) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/TaskTemplateEditor.html',
+                            controller: 'TaskTemplateEditorCtrl as $ctrl',
+                            clickOutsideToClose: true,
+                            locals: { template: template }
+        })
+    }
+
     // Launch Live Tracking Dialog
     this.liveTracking = function (reps) {
         // Show Dialog
