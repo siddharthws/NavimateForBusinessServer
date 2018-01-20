@@ -24,6 +24,9 @@ class Task {
     navimateforbusiness.TaskStatus status = TaskStatus.OPEN
     int period
 
+    // Templated data for task information
+    Data templateData
+
     // Form template to be used
     Template formTemplate
 
@@ -43,6 +46,7 @@ class Task {
         rep             nullable: true
         lead            nullable: true
         extId           nullable: true
+        templateData    nullable: true
     }
 
     static mapping = {
