@@ -24,6 +24,7 @@ Constants.Events = {
     LEAD_DATA_READY:              "evt-lead-data-ready",
     FORM_TEMPLATE_DATA_READY:     "evt-form-template-data-ready",
     LEAD_TEMPLATE_DATA_READY:     "evt-lead-template-data-ready",
+    TASK_TEMPLATE_DATA_READY:     "evt-task-template-data-ready",
     TASK_DATA_READY:              "evt-task-data-ready"
 }
 
@@ -64,9 +65,10 @@ Constants.DashboardNav = {
     OPTION_REPORT   : 1,
     OPTION_FORM     : 2,
     OPTION_LEAD     : 3,
-    OPTION_PROFILE  : 4,
-    OPTION_OPEN     : 5,
-    OPTION_CLOSE    : 6
+    OPTION_TASK     : 4,
+    OPTION_PROFILE  : 5,
+    OPTION_OPEN     : 6,
+    OPTION_CLOSE    : 7
 }
 
 /*-----------------------------Dashboard user role-------------------------------------*/
@@ -97,6 +99,11 @@ Constants.DashboardNav.Options = [
         id:         Constants.DashboardNav.OPTION_LEAD,
         name:       'Lead',
         state:      'lead'
+    },
+    {
+        id:         Constants.DashboardNav.OPTION_TASK,
+        name:       'Task',
+        state:      'task'
     },
     {
         id:         Constants.DashboardNav.OPTION_PROFILE,
@@ -160,7 +167,8 @@ Constants.DashboardNav.Menu = [
         accessLevel:Constants.Role.MANAGER,
         options:    [
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_FORM],
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_LEAD]
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_LEAD],
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_TASK]
         ]
     },
     {
@@ -218,6 +226,13 @@ Constants.Template.FORM_FIELD_TYPES = [
 ]
 
 Constants.Template.LEAD_FIELD_TYPES = [
+    Constants.Template.FIELD_TYPE_TEXT,
+    Constants.Template.FIELD_TYPE_NUMBER,
+    Constants.Template.FIELD_TYPE_RADIOLIST,
+    Constants.Template.FIELD_TYPE_CHECKLIST
+]
+
+Constants.Template.TASK_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_TEXT,
     Constants.Template.FIELD_TYPE_NUMBER,
     Constants.Template.FIELD_TYPE_RADIOLIST,

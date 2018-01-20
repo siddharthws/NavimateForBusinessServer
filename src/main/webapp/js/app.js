@@ -210,6 +210,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/templates/lead.html',
         controller: 'LeadTemplatesCtrl as $ctrl'
     })
+    .state('dashboard.templates-task', {
+        url: '/templates/task',
+        templateUrl: '/static/views/dashboard/templates/task.html',
+        controller: 'TaskTemplatesCtrl as $ctrl'
+    })
     .state('dashboard.company-profile', {
         url: '/company/profile',
         templateUrl: '/static/views/dashboard/company/profile.html',
