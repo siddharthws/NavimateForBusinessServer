@@ -256,6 +256,11 @@ class ExtApiController {
     private def addReps(Account account, JSONArray usersJson) {
         // Iterate through users
         usersJson.each {userJson ->
+            // Update Phone number with country code if not already present
+            if (!userJson.phone.contains('+')) {
+                userJson.phone = "+91" + userJson.phone
+            }
+
             // Get existing user by email
             def user = User.findByPhoneNumberAndRole(userJson.phone, Role.REP)
 

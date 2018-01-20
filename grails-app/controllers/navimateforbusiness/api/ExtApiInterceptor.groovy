@@ -30,6 +30,8 @@ class ExtApiInterceptor {
             } catch (JSONException ex) {
                 throw new ApiException("Invalid input.", Constants.HttpCodes.BAD_REQUEST)
             }
+
+            println("Incoming JSON = " + request.JSON.toString())
         }
 
         // Key Validation Success
