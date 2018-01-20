@@ -46,6 +46,7 @@ class AuthService {
             // Save default templates for this user
             getDefaultTemplate(user).save(flush: true, failOnError: true)
             createDefaultLeadTemplate(user).save(flush: true, failOnError: true)
+            createDefaultTaskTemplate(user).save(flush: true, failOnError: true)
         }
 
         //register a new manager
@@ -252,6 +253,29 @@ class AuthService {
         data.addToValues(descValue)
         data.addToValues(phoneValue)
         data.addToValues(emailValue)
+        template.defaultData = data
+
+        template
+    }
+
+    Template createDefaultTaskTemplate(User admin) {
+        // Create a default Task template
+        Template template = new Template(account: admin.account, owner: admin, name: "Default", type: navimateforbusiness.Constants.Template.TYPE_TASK)
+
+        // Create default data for this template
+        Data data = new Data(account: admin.account, owner: admin, template: template)
+
+        // Create Fields for the template
+        Field descField     = new Field(account: admin.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false)
+
+        // Create Values for the fields
+        Value descValue = new Value(account: admin.account, field: descField, value: "")
+
+        // Add fields to template
+        template.addToFields(descField)
+
+        // Add default data to template
+        data.addToValues(descValue)
         template.defaultData = data
 
         template
