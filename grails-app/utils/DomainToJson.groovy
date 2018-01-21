@@ -68,7 +68,9 @@ class DomainToJson {
                 leadId:             task.lead.id,
                 formTemplateId:     task.formTemplate.id,
                 period:             task.period,
-                status:             task.status.name()
+                status:             task.status.name(),
+                templateId:         task.templateData.template.id,
+                dataId:             task.templateData.id
         ]
     }
 
