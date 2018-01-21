@@ -36,4 +36,37 @@ class TaskService {
             fcmService.notifyApp(fcm)
         }
     }
+
+    def getTaskData (List<Task> tasks) {
+        def tasksJson = []
+
+        tasks.each {task ->
+            // Create lead JSON object
+            def taskJson = [
+                    id:             task.id,
+                    repId:          task.rep.id,
+                    leadId:         task.lead.id,
+                    period:         task.period,
+                    status:         task.status.name(),
+                    formTemplateId: task.formTemplate.id,
+                    templateData: [
+                            id: task.templateData.template.id,
+                            values: []
+                    ]
+            ]
+
+            // Add values to templated data
+            task.templateData.values.each {value ->
+                taskJson.templateData.values.push([
+                        fieldId: value.fieldId,
+                        value: value.value
+                ])
+            }
+
+            // Add to JSON Array
+            tasksJson.push(taskJson)
+        }
+
+        tasksJson
+    }
 }

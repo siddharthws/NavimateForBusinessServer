@@ -237,14 +237,8 @@ class UserApiController {
         // Get Task List
         List<Task> tasks = Task.findAllByManagerAndIsRemoved(user, false)
 
-        // Sort in descending order of ID
-        tasks.sort(true) {-it.id}
-
         //Serialize the tasks into a JSON object and send the response to frontend
-        def resp = new JSONArray()
-        tasks.each { task ->
-            resp.add(navimateforbusiness.Marshaller.serializeTask(task))
-        }
+        def resp = taskService.getTaskData(tasks)
         render resp as JSON
     }
 
