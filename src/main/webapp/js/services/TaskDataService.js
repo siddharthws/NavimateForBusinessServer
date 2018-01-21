@@ -33,4 +33,16 @@ app.service('TaskDataService', function($rootScope, $http, $localStorage) {
             })
     }
 
+    // APi to get lead by ID
+    vm.getById = function (id) {
+        for (var i = 0; i < vm.cache.data.length; i++) {
+            var task = vm.cache.data[i]
+            if (task.id == id) {
+                return task
+            }
+        }
+
+        return null
+    }
+
 })

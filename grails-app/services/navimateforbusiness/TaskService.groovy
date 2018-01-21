@@ -44,6 +44,7 @@ class TaskService {
             // Create lead JSON object
             def taskJson = [
                     id:             task.id,
+                    cId:            task.account.id + String.format("%08d", task.id),
                     repId:          task.rep.id,
                     leadId:         task.lead.id,
                     period:         task.period,
