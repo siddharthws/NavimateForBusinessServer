@@ -192,6 +192,7 @@ Constants.Template = {
     // Template Types
     TYPE_FORM:          1,
     TYPE_LEAD:          2,
+    TYPE_TASK:          3,
 
     // Template Field types
     FIELD_TYPE_TEXT:            1,
