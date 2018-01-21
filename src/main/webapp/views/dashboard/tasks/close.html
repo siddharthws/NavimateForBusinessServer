@@ -1,10 +1,8 @@
 <!-- Tasks Manage HTML -->
 <div class="bg-toolbar d-flex">
-    <button class="btn btn-primary" ng-click="$ctrl.add()">Add</button>
-
     <div class="dropdown">
         <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
-                ng-disabled="!$ctrl.getSelectedItems().length">
+                ng-disabled="!$ctrl.selection.length">
             <span>Actions | </span>
             <img class="img-icon" src="/static/images/dropdown.png"/>
         </button>
@@ -13,51 +11,11 @@
             <button class="dropdown-item" ng-click="$ctrl.stopRenewal()">Stop Renewal</button>
         </div>
     </div>
+
+    <button class="btn btn-primary" ng-click="$ctrl.clearFilters()">Clear Filters</button>
+    <button class="btn btn-primary" ng-click="$ctrl.export()">Export</button>
+    <button class="btn btn-primary" ng-click="$ctrl.sync()">Sync</button>
+    <button class="btn btn-primary" ng-click="$ctrl.toggleColumns()">Customize Columns</button>
 </div>
 
-<div class="overflow-auto mt-1 flex-1">
-    <table class="table table-striped" ng-table="">
-        <thead>
-        <th>
-            <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
-        </th>
-        <th class="text-left">
-            ID
-        </th>
-        <th class="text-left">
-            Company
-        </th>
-        <th class="text-left">
-            Rep
-        </th>
-        <th class="text-left">
-            Renewal Period
-        </th>
-        <th class="text-left">
-            Status
-        </th>
-        </thead>
-        <tr ng-repeat="task in $ctrl.tasks" ng-click="$ctrl.selection[$index] = !$ctrl.selection[$index]"
-            ng-if="task.status == 'CLOSED'"
-            ng-class="{'active': $ctrl.selection[$index]}">
-            <td class="text-center">
-                <md-checkbox ng-model="$ctrl.selection[$index]" ng-click="$root.Statics.absorbEvent($event)"></md-checkbox>
-            </td>
-            <td>
-                {{task.cId}}
-            </td>
-            <td>
-                {{task.lead}}
-            </td>
-            <td>
-                {{task.rep}}
-            </td>
-            <td>
-                {{task.period}}
-            </td>
-            <td>
-                {{task.status}}
-            </td>
-        </tr>
-    </table>
-</div>
+<ng-include src="'/static/views/modules/Table.html'" class="d-flex flex-1"></ng-include>

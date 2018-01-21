@@ -33,4 +33,15 @@ app.service('LeadDataService', function($rootScope, $http, $localStorage, ToastS
                 })
     }
 
+    // APi to get lead by ID
+    vm.getById = function (id) {
+        for (var i = 0; i < vm.cache.data.length; i++) {
+            var lead = vm.cache.data[i]
+            if (lead.id == id) {
+                return lead
+            }
+        }
+
+        return null
+    }
 })

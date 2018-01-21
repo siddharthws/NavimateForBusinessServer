@@ -33,4 +33,16 @@ app.service('TeamDataService', function($rootScope, $http, $localStorage) {
             })
     }
 
+    // APi to get lead by ID
+    vm.getById = function (id) {
+        for (var i = 0; i < vm.cache.data.length; i++) {
+            var rep = vm.cache.data[i]
+            if (rep.id == id) {
+                return rep
+            }
+        }
+
+        return null
+    }
+
 })
