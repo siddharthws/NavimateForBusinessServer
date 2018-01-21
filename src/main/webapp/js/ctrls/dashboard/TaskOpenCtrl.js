@@ -8,7 +8,7 @@ app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorag
     /*-------------------------------- Scope APIs --------------------------------*/
     vm.add = function () {
         // Launch Task Creator dialog
-        DialogService.taskCreator([{}], initTasks)
+        DialogService.taskCreator(null)
     }
 
     // Full List Selection Toggling

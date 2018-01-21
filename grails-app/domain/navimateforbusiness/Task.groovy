@@ -21,7 +21,7 @@ class Task {
     Lead lead
 
     // Task properties
-    navimateforbusiness.TaskStatus status = TaskStatus.OPEN
+    navimateforbusiness.TaskStatus status = navimateforbusiness.TaskStatus.OPEN
     int period
 
     // Templated data for task information

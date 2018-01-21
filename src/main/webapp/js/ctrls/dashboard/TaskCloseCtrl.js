@@ -8,7 +8,7 @@ app.controller("TaskCloseCtrl", function ($scope, $rootScope, $http, $localStora
     /*-------------------------------- Scope APIs --------------------------------*/
     vm.add = function () {
         // Launch Task Creator dialog
-        DialogService.taskCreator([{}], initTasks)
+        DialogService.taskCreator(null)
     }
 
     // Full List Selection Toggling

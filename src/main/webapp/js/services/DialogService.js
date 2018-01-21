@@ -63,12 +63,12 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Task Creator Dialog
-    this.taskCreator = function (tasks, taskAddedCb) {
+    this.taskCreator = function (tasks) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/TaskCreator.html',
                             controller: 'TaskCreatorCtrl',
                             clickOutsideToClose: true,
-                            locals: {tasks: tasks, taskAddedCb: taskAddedCb}
+                            locals: {tasks: tasks}
         })
     }
 

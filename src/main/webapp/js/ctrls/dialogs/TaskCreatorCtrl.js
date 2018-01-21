@@ -3,22 +3,52 @@
  */
 
 // Controller for Alert Dialog
-app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, taskAddedCb, tasks, TeamDataService, LeadDataService, TemplateDataService, TaskDataService) {
-
-    /* ----------------------------- INIT --------------------------------*/
-    $scope.tasks = tasks
-    $scope.leads = LeadDataService.cache.data
-    $scope.team = TeamDataService.cache.data
-    $scope.formTemplates = TemplateDataService.cache.data.forms
+app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, TeamDataService, LeadDataService, TemplateDataService, TaskDataService, tasks) {
 
     /* ----------------------------- APIs --------------------------------*/
     // Button Click APIs
     $scope.add = function () {
         // Add empty task to array
         $scope.tasks.push({})
+
+        // Update template data
+        $scope.updateTemplate($scope.tasks.length - 1, 0)
+
+        // Simulate a click on the new item
+        $scope.listItemClick(task)
     }
 
-    $scope.create = function () {
+    $scope.updateTemplate = function (taskIdx, templateIdx) {
+        var task = $scope.tasks[taskIdx]
+        var template = $scope.taskTemplates[templateIdx]
+
+        // Ignore if same template is selected
+        if (task.templateId == template.id) return
+
+        // Create template data object from given template's default data
+        var templateData = {}
+        templateData.values = []
+        template.defaultData.values.forEach(function (value) {
+            templateData.values.push({
+                fieldId: value.fieldId,
+                value: value.value
+            })
+        })
+
+        // Update lead's template data
+        task.templateData = templateData
+        task.templateId = template.id
+    }
+
+    $scope.getTemplateById = TemplateDataService.getTemplateById
+    $scope.getFieldById = TemplateDataService.getFieldById
+
+    $scope.listItemClick = function (task) {
+        // Select this lead
+        $scope.selectedTask = task
+    }
+
+    $scope.save = function () {
         // Validate Entered Data
         if (validate()) {
             $rootScope.showWaitingDialog("Please wait while task is created...")
@@ -32,8 +62,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
                 data:       {
                     tasks:      JSON.stringify($scope.tasks)
                 }
-            })
-            .then(
+            }).then(
                 function (response) {
                     $rootScope.hideWaitingDialog()
                     // Dismiss Dialog
@@ -44,9 +73,6 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
 
                     // Show Toast
                     ToastService.toast("Tasks Created successfully...")
-
-                    // Trigger callback
-                    taskAddedCb()
                 },
                 function (error) {
                     $rootScope.hideWaitingDialog()
@@ -86,7 +112,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         // Validate Task data
         else {
             $scope.tasks.forEach(function (task) {
-                if (!task.lead || !task.rep || !task.template)
+                if (!task.lead || !task.rep || !task.formTemplate)
                 {
                     bValid = false
                     $scope.bShowError = true
@@ -100,4 +126,32 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
 
         return bValid
     }
+
+    /* ----------------------------- INIT --------------------------------*/
+    $scope.tasks = []
+    $scope.selectedTask = {}
+    $scope.bShowError = false
+
+    // Init data from services
+    $scope.leads = LeadDataService.cache.data
+    $scope.team = TeamDataService.cache.data
+    $scope.formTemplates = TemplateDataService.cache.data.forms
+    $scope.taskTemplates = TemplateDataService.cache.data.tasks
+
+    // Init tasks
+    if (tasks) {
+        // Assign the passed leads & mark the first one as selected
+        $scope.tasks = tasks
+
+        // Update task templates
+        $scope.tasks.forEach(function (task, i) {
+            if (!task.templateId) {
+                $scope.updateTemplate(i, 0)
+            }
+        })
+    } else {
+        $scope.tasks.push({})
+        $scope.updateTemplate(0, 0)
+    }
+    $scope.selectedTask = $scope.tasks[0]
 })

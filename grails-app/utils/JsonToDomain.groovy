@@ -35,6 +35,37 @@ class JsonToDomain {
         lead
     }
 
+    static Task Task(def taskJson, def manager) {
+        navimateforbusiness.Task task = null
+
+        // Check for existing objects
+        if (taskJson.id) {
+            task = Task.findById(taskJson.id)
+
+            // Throw exception if invalid id / owner
+            if (!task) {
+                throw new navimateforbusiness.ApiException("Invalid Task Id for this user",
+                        navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            }
+        } else {
+            // Create new task
+            task = new Task(manager: manager,
+                            account: manager.account)
+        }
+
+        // Update lead info from JSON received
+        task.period = taskJson.period ? taskJson.period : 0
+        task.rep = User.findById(taskJson.rep.id)
+        task.lead = User.findById(taskJson.lead.id)
+        task.formTemplate = Template.findById(taskJson.formTemplate.id)
+
+        navimateforbusiness.Template template = navimateforbusiness.Template.findById(taskJson.templateId)
+        Data data = Data(taskJson.templateData, manager, template)
+        task.templateData = data
+
+        task
+    }
+
     static Form Form(def formJson, User owner) {
         navimateforbusiness.Form form = null
         // Check for existing objects

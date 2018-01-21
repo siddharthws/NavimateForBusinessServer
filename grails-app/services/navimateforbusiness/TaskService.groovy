@@ -14,46 +14,26 @@ class TaskService {
 
         // Create Task Objects from JSONArray
         tasksJson.each {taskJson ->
-            // Get Rep, lead and template for the new task
-            User rep = User.findById(taskJson.rep.id)
-            Lead lead = Lead.findById(taskJson.lead.id)
-            Template template = Template.findById(taskJson.template.id)
-            def period = taskJson.period
-            if (!period) {
-                period = 0
-            }
+            // Parse JSOn to task Object
+            Task task = navimateforbusiness.JsonToDomain.Task(taskJson, manager)
 
-            // Validate JSON data
-            if (!rep || !lead || !template){
-                throw new navimateforbusiness.ApiException("Invalid Data", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-            }
-
-            // Create Task Object
-            Task task = new Task(
-                    account:        manager.account,
-                    manager:        manager,
-                    rep:            rep,
-                    lead:           lead,
-                    formTemplate:   template,
-                    period:         period,
-                    status:         navimateforbusiness.TaskStatus.OPEN
-            )
+            // Add to array
             tasks.push(task)
 
             // Collect FCM IDs to which notification needs to be sent
-            if (!fcms.contains(rep.fcmId)) {
-                fcms.add(rep.fcmId)
+            if (!fcms.contains(task.rep.fcmId)) {
+                fcms.add(task.rep.fcmId)
             }
-        }
-
-        // Send notifications to all reps
-        fcms.each {fcm ->
-            fcmService.notifyApp(fcm)
         }
 
         // Save Task Objects in database
         tasks.each {task ->
             task.save(flush: true, failOnError: true)
+        }
+
+        // Send notifications to all reps
+        fcms.each {fcm ->
+            fcmService.notifyApp(fcm)
         }
     }
 }
