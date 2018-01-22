@@ -3,15 +3,14 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, ExcelService, LeadDataService, TemplateDataService, leads, leadUpdateCb) {
+app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, ExcelService, LeadDataService, TemplateDataService, leads) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function () {
         // Add a lead to current center of map with first template's default data
         var lead = {
             latitude: googleMap.getCenter().lat(),
-            longitude: googleMap.getCenter().lng(),
-            templateId: 0
+            longitude: googleMap.getCenter().lng()
         }
 
         // Add lead to array
@@ -49,36 +48,8 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
         lead.templateId = template.id
     }
 
-    $scope.getTemplateById = function (templateId) {
-        // Iterate through all templates
-        for (var i  = 0; i < $scope.templates.length; i++) {
-            var template = $scope.templates[i]
-
-            if (template.id == templateId) {
-                return template
-            }
-        }
-
-        return null
-    }
-
-    $scope.getFieldById = function (fieldId) {
-        // Iterate through all templates
-        for (var i  = 0; i < $scope.templates.length; i++) {
-            var template = $scope.templates[i]
-
-            // Iterate through all fields
-            for (var j  = 0; j < template.fields.length; j++) {
-                var field = template.fields[j]
-
-                if (field.id == fieldId) {
-                    return field
-                }
-            }
-        }
-
-        return null
-    }
+    $scope.getTemplateById = TemplateDataService.getTemplateById
+    $scope.getFieldById = TemplateDataService.getFieldById
 
     $scope.listItemClick = function (lead) {
         // Select this lead
@@ -168,9 +139,6 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
 
                     //Re-sync Lead data since new member has been added
                     LeadDataService.sync()
-
-                    // Trigger Callback
-                    leadUpdateCb()
                 },
                 function (error) {
                     $rootScope.hideWaitingDialog()

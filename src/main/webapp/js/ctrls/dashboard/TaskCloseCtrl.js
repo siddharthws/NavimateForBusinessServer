@@ -211,13 +211,11 @@ app.controller("TaskCloseCtrl", function ($scope, $rootScope, $http, $localStora
                         break
                     }
                     case Constants.Template.FIELD_TYPE_RADIOLIST: {
-                        var valueJson = JSON.parse(value.value)
-                        row[colIdx] = valueJson.options[valueJson.selection]
+                        row[colIdx] = value.value.options[value.value.selection]
                         break
                     }
                     case Constants.Template.FIELD_TYPE_CHECKLIST: {
-                        var optionsJson = JSON.parse(value.value)
-                        optionsJson.forEach(function (optionJson) {
+                        value.value.forEach(function (optionJson) {
                             if (optionJson.selection) {
                                 if (row[colIdx] == '-') {
                                     row[colIdx] = optionJson.name

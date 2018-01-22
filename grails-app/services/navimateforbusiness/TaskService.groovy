@@ -1,5 +1,6 @@
 package navimateforbusiness
 
+import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import org.grails.web.json.JSONArray
 
@@ -50,17 +51,26 @@ class TaskService {
                     period:         task.period,
                     status:         task.status.name(),
                     formTemplateId: task.formTemplate.id,
+                    templateId:     task.templateData.template.id,
                     templateData: [
-                            id: task.templateData.template.id,
+                            id: task.templateData.id,
                             values: []
                     ]
             ]
 
             // Add values to templated data
             task.templateData.values.each {value ->
+
+                def val = value.value
+                if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST ||
+                    value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST) {
+                    val = JSON.parse(value.value)
+                }
+
                 taskJson.templateData.values.push([
+                        id: value.id,
                         fieldId: value.fieldId,
-                        value: value.value
+                        value: val
                 ])
             }
 
