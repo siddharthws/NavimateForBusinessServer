@@ -1,5 +1,6 @@
 package navimateforbusiness
 
+import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import org.grails.web.json.JSONArray
 
@@ -137,17 +138,26 @@ class LeadService {
                     address: lead.address,
                     latitude: lead.latitude,
                     longitude: lead.longitude,
+                    templateId: lead.templateData.template.id,
                     templateData: [
-                        id: lead.templateData.template.id,
+                        id: lead.templateData.id,
                         values: []
                     ]
             ]
 
             // Add values to templated data
             lead.templateData.values.each {value ->
+
+                def val = value.value
+                if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST ||
+                    value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST) {
+                    val = JSON.parse(value.value)
+                }
+
                 leadJson.templateData.values.push([
+                        id: value.id,
                         fieldId: value.fieldId,
-                        value: value.value
+                        value: val
                 ])
             }
 
