@@ -8,11 +8,16 @@ import navimateforbusiness.Constants
 import navimateforbusiness.DomainToJson
 import navimateforbusiness.Data
 import navimateforbusiness.Form
+import navimateforbusiness.Lead
 import navimateforbusiness.Role
+import navimateforbusiness.Template
 import navimateforbusiness.User
+import navimateforbusiness.Value
 import org.grails.web.json.JSONArray
 
 class ExtApiController {
+
+    def googleApiService
 
     def syncManagers() {
         // Get account for this request
@@ -49,6 +54,27 @@ class ExtApiController {
         if (validateReps(account, users)) {
             // Add all users to database
             addReps(account, users)
+        }
+
+        // Send success response
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def syncLeads() {
+        // Get account for this request
+        def account = ApiKey.findByKey(request.getHeader("X-Api-Key")).account
+
+        // Validate leads array
+        def leads = request.JSON.leads
+        if( !leads || !DomainToJson.isJsonArrayValid(leads.toString())) {
+            throw new ApiException("Invalid leads data. Please check input.", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Validate data
+        if (validateLeads(account, leads)) {
+            // Add all users to database
+            addLeads(account, leads)
         }
 
         // Send success response
@@ -221,6 +247,123 @@ class ExtApiController {
         }
     }
 
+    // Method to validate leads data
+    private def validateLeads(Account account, JSONArray leadsJson) {
+        // Iterate through data
+        leadsJson.eachWithIndex {leadJson, i ->
+            // Validate JSON object type
+            if (!DomainToJson.isJsonObjectValid(leadJson.toString())) {
+                throw new ApiException("Invalid JSON at index " + i, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Check for valid ID
+            if (!leadJson.id || !(leadJson.id instanceof String) || !leadJson.id.length()) {
+                throw new ApiException("Invalid ID " + leadJson.id + " at index " + i, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Check for mandatory parameters & their data types
+            if (!leadJson.title || !(leadJson.title instanceof String)) {
+                throw new ApiException("Invalid parameter 'title' for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+            if (!leadJson.address || !(leadJson.address instanceof String)) {
+                throw new ApiException("Invalid parameter 'address' for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+            if (!leadJson.template || !(leadJson.template instanceof String)) {
+                throw new ApiException("Invalid parameter 'template' for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Check for optional parameters & their data types
+            if (leadJson.ownerId && !(leadJson.ownerId instanceof String)) {
+                throw new ApiException("Invalid parameter 'ownerId' for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Check if owner exists
+            if (leadJson.ownerId) {
+                def owner = User.findByExtIdAndAccountAndRoleGreaterThanEquals(leadJson.ownerId, account, Role.MANAGER)
+                if (!owner) {
+                    throw new ApiException("Owner ID " + leadJson.ownerId + " not found for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                }
+            }
+
+            // Check if template exists
+            def template = Template.findByNameAndTypeAndAccount(leadJson.template, Constants.Template.TYPE_LEAD, account)
+            if (!template) {
+                throw new ApiException("Template " + leadJson.template + " not found for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Validate template data
+            def templateKeys = leadJson.templateData.keySet()
+            templateKeys.each {key ->
+                // Ensure passed value is string
+                if (leadJson.templateData[key] && !(leadJson.templateData[key] instanceof String)) {
+                    throw new ApiException("Invalid value for field " + key + " in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                }
+
+                // Ensure that field by this name exists in templaye
+                def field = template.fields.find {it -> it.title == key}
+                if (!field) {
+                    throw new ApiException("Field " + key + " not found in template " + template.name + " for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                }
+
+                // Validate value type against field type
+                def valueString = leadJson.templateData[key]
+                switch (field.type) {
+                    case Constants.Template.FIELD_TYPE_NUMBER:
+                        // Values should be parseable to long
+                        long numValue
+                        try {
+                            numValue = Long.parseLong(valueString)
+                        } catch (Exception e) {
+                            throw new ApiException("Unable to parse value for field " + key + " to long in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+                        break
+
+                    case Constants.Template.FIELD_TYPE_RADIOLIST:
+                        // Values should be parseable to integer
+                        int numValue
+                        try {
+                            numValue = Integer.parseInt(valueString)
+                        } catch (Exception e) {
+                            throw new ApiException("Unable to parse value for field " + key + " to integer in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+
+                        // Value should be less than radio list length
+                        String defaultValue = template.defaultData.values.find {it -> it.field.id == field.id}.value
+                        def defValueJson = JSON.parse(defaultValue)
+                        if (numValue >= defValueJson.options.length() || numValue < 0) {
+                            throw new ApiException("Invalid index " + numValue + " for field " + key + " in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+                        break
+
+                    case Constants.Template.FIELD_TYPE_CHECKLIST:
+                        // Split array of booleans
+                        ArrayList<String> selections
+                        try {
+                            selections = valueString.split ()
+                        } catch (Exception e) {
+                            throw new ApiException("Unable to parse values for field " + key + " to booleans in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+
+                        // Ensure each selection is a boolean string
+                        selections.each {selection ->
+                            if ((selection != 'true') && (selection != 'false')) {
+                                throw new ApiException("Invalid checklist value for field " + key + " in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                            }
+                        }
+
+                        // Ensure number of booleans are equal to default value length
+                        String defaultValue = template.defaultData.values.find {it -> it.field.id == field.id}.value
+                        def defValueJson = JSON.parse(defaultValue)
+                        if (defValueJson.length() != selections.size()) {
+                            throw new ApiException("Mismatch in number of items for field " + key + " in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+                        break
+                }
+
+            }
+        }
+    }
+
     // Method to add managers to database
     private def addManagers(Account account, JSONArray usersJson) {
         // Iterate through users
@@ -280,6 +423,123 @@ class ExtApiController {
 
             // Save user
             user.save(flush: true, failOnError: true)
+        }
+    }
+
+    // Method to add reps to database
+    private def addLeads(Account account, JSONArray leadsJson) {
+        // Iterate through users
+        leadsJson.each {leadJson ->
+            // Get existing lead by ext ID
+            def lead = Lead.findByExtIdAndAccount(leadJson.id, account)
+
+            // If lead not found by ext Id, create a new one
+            if (!lead) {
+                lead  = new Lead(account:    account)
+            }
+
+            // Populate extID and title
+            lead.extId          = leadJson.id
+            lead.title          = leadJson.title
+
+            // Populate owner
+            if (leadJson.ownerId) {
+                lead.manager = User.findByExtIdAndAccountAndRoleGreaterThanEquals(leadJson.ownerId, account, Role.MANAGER)
+            } else {
+                lead.manager = account.admin
+            }
+
+            // Populate address and latlng
+            lead.address          = leadJson.address
+            String[] addresses = [lead.address]
+            def latlngs = googleApiService.geocode(addresses)
+            lead.latitude          = latlngs[0].latitude
+            lead.longitude         = latlngs[0].longitude
+
+            // Get template to be used
+            def template = Template.findByNameAndTypeAndAccount(leadJson.template, Constants.Template.TYPE_LEAD, account)
+
+            // Check if lead has an existing data object
+            Data templateData = lead.templateData
+            if (!templateData) {
+                // Create new data object
+                templateData = new Data(account: account)
+            }
+
+            // Update owner and template
+            templateData.owner = lead.manager
+            templateData.template = template
+
+            // Get values
+            def dataJsonKeys = leadJson.templateData.keySet()
+            def values = []
+            template.fields.each {field ->
+                // Check if values for this field exists in template Data
+                Value value = templateData.values.find {it -> it.field.id == field.id}
+
+                // Create new value if not existing
+                if (!value) {
+                    value = new Value(account: account, data: templateData, field: field)
+                }
+
+                // Get default value from template for this field
+                String defaultValue = template.defaultData.values.find {it -> it.field.id == field.id}.value
+
+                // Find this field name in passed params
+                if (dataJsonKeys.contains(field.title)) {
+                    // Get string value
+                    def valueString = leadJson.templateData[field.title]
+
+                    // Check for value type
+                    switch (field.type) {
+                        case Constants.Template.FIELD_TYPE_TEXT:
+                        case Constants.Template.FIELD_TYPE_NUMBER:
+                            value.value = valueString
+                            break
+
+                        case Constants.Template.FIELD_TYPE_RADIOLIST:
+                            // Parse to number
+                            int selectionIndex = Integer.parseInt(valueString)
+
+                            // Parse default value to JSON
+                            def defValueJson = JSON.parse(defaultValue)
+
+                            // Update selection index
+                            defValueJson.selection = selectionIndex
+
+                            // Save value as string
+                            value.value = defValueJson.toString()
+                            break
+
+                        case Constants.Template.FIELD_TYPE_CHECKLIST:
+                            // Get array of booleans
+                            ArrayList<String> selections = valueString.split ()
+
+                            // Parse default value as JSON
+                            def defValueJson = JSON.parse(defaultValue)
+
+                            // Iterate through array and update default values
+                            selections.eachWithIndex {selection, i ->
+                                defValueJson[i].selection = Boolean.valueOf(selection)
+                            }
+
+                            // Save value as string
+                            value.value = defValueJson
+                            break
+                    }
+                } else if (!value.id) {
+                    // Assign default value if value was not pre-populated
+                    value.value = defaultValue
+                }
+
+                // Add to values
+                values.push(value)
+            }
+            templateData.values = values
+            lead.templateData = templateData
+
+            // Save lead
+            lead.save(flush: true, failOnError: true)
         }
     }
 }

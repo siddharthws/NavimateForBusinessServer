@@ -10,7 +10,7 @@ class Lead {
     String extId
 
     // Remove Flag
-    boolean isRemoved
+    boolean isRemoved = false
 
     // Lead Name
     String title
