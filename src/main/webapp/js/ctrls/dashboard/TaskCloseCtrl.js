@@ -226,6 +226,14 @@ app.controller("TaskCloseCtrl", function ($scope, $rootScope, $http, $localStora
                         })
                         break
                     }
+                    case Constants.Template.FIELD_TYPE_CHECKBOX: {
+                        if (value.value) {
+                            row[colIdx] = "Yes"
+                        } else {
+                            row[colIdx] = "No"
+                        }
+                        break
+                    }
                 }
             })
 
@@ -250,7 +258,8 @@ app.controller("TaskCloseCtrl", function ($scope, $rootScope, $http, $localStora
                 filterType = Constants.Filter.TYPE_NUMBER
                 break
             }
-            case Constants.Template.FIELD_TYPE_RADIOLIST: {
+            case Constants.Template.FIELD_TYPE_RADIOLIST:
+            case Constants.Template.FIELD_TYPE_CHECKBOX: {
                 filterType = Constants.Filter.TYPE_SELECTION
                 break
             }

@@ -234,6 +234,7 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
             (column.type == $rootScope.Constants.Template.FIELD_TYPE_NUMBER) ||
             (column.type == $rootScope.Constants.Template.FIELD_TYPE_RADIOLIST) ||
             (column.type == $rootScope.Constants.Template.FIELD_TYPE_CHECKLIST) ||
+            (column.type == $rootScope.Constants.Template.FIELD_TYPE_CHECKBOX) ||
             (column.type == $rootScope.Constants.Template.FIELD_TYPE_DATE)) {
             return true
         }

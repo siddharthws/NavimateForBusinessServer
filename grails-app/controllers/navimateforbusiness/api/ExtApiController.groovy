@@ -358,6 +358,12 @@ class ExtApiController {
                             throw new ApiException("Mismatch in number of items for field " + key + " in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
                         }
                         break
+                    case Constants.Template.FIELD_TYPE_CHECKBOX:
+                        // Value should be true or false
+                        if ((valueString != 'true') && (valueString != 'false')) {
+                            throw new ApiException("Invalid checkbox value for field " + key + " in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+                        break
                 }
 
             }
@@ -494,6 +500,7 @@ class ExtApiController {
                     switch (field.type) {
                         case Constants.Template.FIELD_TYPE_TEXT:
                         case Constants.Template.FIELD_TYPE_NUMBER:
+                        case Constants.Template.FIELD_TYPE_CHECKBOX:
                             value.value = valueString
                             break
 

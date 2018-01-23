@@ -209,6 +209,8 @@ class ReportService {
                             def valueJson = JSON.parse(value.value)
                             def selection = valueJson.options.getString(valueJson.selection)
                             row[columnIdx] = selection
+                        } else if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX) {
+                            row[columnIdx] = Boolean.valueOf(value.value)
                         } else if (value.value.length()) {
                             row[columnIdx] = value.value
                         }
@@ -233,6 +235,7 @@ class ReportService {
             case navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER :
                 return navimateforbusiness.Constants.Filter.TYPE_NUMBER
             case navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST :
+            case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX :
                 return navimateforbusiness.Constants.Filter.TYPE_SELECTION
         }
 

@@ -53,6 +53,8 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
             }
         } else if (newType == vm.Const.FIELD_TYPE_CHECKLIST) {
             value = []
+        } else if (newType == vm.Const.FIELD_TYPE_CHECKBOX) {
+            value = false
         }
 
         // Update field type

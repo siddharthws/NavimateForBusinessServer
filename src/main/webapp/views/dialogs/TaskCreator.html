@@ -117,6 +117,15 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Check box Field -->
+                        <div ng-if="getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_CHECKBOX"
+                             class="d-flex align-items-center">
+                            <span>{{getFieldById(value.fieldId).title}}</span>
+                            <md-checkbox ng-value="getFieldById(value.fieldId).title" class="ml-1"
+                                         ng-model="value.value" ng-class="{'cb-white': selectedLead == lead}">
+                            </md-checkbox>
+                        </div>
                     </div>
                 </div>
             </div>

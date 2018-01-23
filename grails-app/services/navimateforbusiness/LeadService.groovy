@@ -152,6 +152,8 @@ class LeadService {
                 if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST ||
                     value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST) {
                     val = JSON.parse(value.value)
+                } else if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX) {
+                    val = Boolean.valueOf(value.value)
                 }
 
                 leadJson.templateData.values.push([

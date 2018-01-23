@@ -107,6 +107,14 @@
                     </a>
                 </div>
 
+                <!-- Check box Field -->
+                <div ng-if="field.type == $ctrl.Const.FIELD_TYPE_CHECKBOX"
+                     class="d-flex flex-column align-items-center">
+                    <md-checkbox ng-value="field.title"
+                                 ng-model="$ctrl.data.values[$index].value">
+                    </md-checkbox>
+                </div>
+
                 <!-- Invalid Default Value Fields -->
                 <div ng-if="  field.type == $ctrl.Const.FIELD_TYPE_PHOTO ||
                                 field.type == $ctrl.Const.FIELD_TYPE_SIGN">

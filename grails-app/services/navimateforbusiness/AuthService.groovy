@@ -44,9 +44,26 @@ class AuthService {
             account.save(flush: true, failOnError: true)
 
             // Save default templates for this user
-            getDefaultTemplate(user).save(flush: true, failOnError: true)
-            createDefaultLeadTemplate(user).save(flush: true, failOnError: true)
-            createDefaultTaskTemplate(user).save(flush: true, failOnError: true)
+            Template defFormTemplate = getDefaultTemplate(user)
+            Data defData = defFormTemplate.defaultData
+            defFormTemplate.save(flush: true, failOnError: true)
+            defFormTemplate.defaultData = defData
+            defData.template = defFormTemplate
+            defFormTemplate.save(flush: true, failOnError: true)
+
+            Template defLeadTemplate = createDefaultLeadTemplate(user)
+            defData = defLeadTemplate.defaultData
+            defLeadTemplate.save(flush: true, failOnError: true)
+            defLeadTemplate.defaultData = defData
+            defData.template = defLeadTemplate
+            defLeadTemplate.save(flush: true, failOnError: true)
+
+            Template defTaskTemplate = createDefaultTaskTemplate(user)
+            defData = defTaskTemplate.defaultData
+            defTaskTemplate.save(flush: true, failOnError: true)
+            defTaskTemplate.defaultData = defData
+            defData.template = defTaskTemplate
+            defTaskTemplate.save(flush: true, failOnError: true)
         }
 
         //register a new manager

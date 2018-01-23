@@ -382,8 +382,10 @@ class UserApiController {
                     if (value.fieldId == field.id) {
                         def valueJson = DomainToJson.Value(value)
                         if (value.field.type == Constants.Template.FIELD_TYPE_RADIOLIST ||
-                                value.field.type == Constants.Template.FIELD_TYPE_CHECKLIST) {
+                            value.field.type == Constants.Template.FIELD_TYPE_CHECKLIST) {
                             valueJson.value = JSON.parse(valueJson.value)
+                        } else if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX) {
+                            valueJson.value = Boolean.valueOf(valueJson.value)
                         }
                         defaultData.values.push(valueJson)
                     }
@@ -415,6 +417,7 @@ class UserApiController {
 
             // Save template with default data
             template.defaultData = defaultData
+            defaultData.template = template
             template.save(flush: true, failOnError: true)
         } else {
             // Save Template Object

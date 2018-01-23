@@ -202,6 +202,7 @@ Constants.Template = {
     FIELD_TYPE_PHOTO:           5,
     FIELD_TYPE_SIGN:            6,
     FIELD_TYPE_LOCATION:        7,
+    FIELD_TYPE_CHECKBOX:        8,
 
     // Field Names
     FIELD_NAMES:    [
@@ -213,6 +214,7 @@ Constants.Template = {
         'Photo',
         'Signature',
         'Location',
+        'Checkbox'
     ]
 }
 
@@ -223,21 +225,24 @@ Constants.Template.FORM_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_RADIOLIST,
     Constants.Template.FIELD_TYPE_CHECKLIST,
     Constants.Template.FIELD_TYPE_PHOTO,
-    Constants.Template.FIELD_TYPE_SIGN
+    Constants.Template.FIELD_TYPE_SIGN,
+    Constants.Template.FIELD_TYPE_CHECKBOX
 ]
 
 Constants.Template.LEAD_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_TEXT,
     Constants.Template.FIELD_TYPE_NUMBER,
     Constants.Template.FIELD_TYPE_RADIOLIST,
-    Constants.Template.FIELD_TYPE_CHECKLIST
+    Constants.Template.FIELD_TYPE_CHECKLIST,
+    Constants.Template.FIELD_TYPE_CHECKBOX
 ]
 
 Constants.Template.TASK_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_TEXT,
     Constants.Template.FIELD_TYPE_NUMBER,
     Constants.Template.FIELD_TYPE_RADIOLIST,
-    Constants.Template.FIELD_TYPE_CHECKLIST
+    Constants.Template.FIELD_TYPE_CHECKLIST,
+    Constants.Template.FIELD_TYPE_CHECKBOX
 ]
 
 /* ------------------------------- Filters -----------------------------------*/
