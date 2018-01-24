@@ -158,7 +158,7 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
             row[2] = lead.latitude + "," + lead.longitude
 
             // Get template data
-            var template = TemplateDataService.getTemplateById(lead.templateData.id)
+            var template = TemplateDataService.getTemplateById(lead.templateId)
             if (template) {
                 row[3] = template.name
             }
