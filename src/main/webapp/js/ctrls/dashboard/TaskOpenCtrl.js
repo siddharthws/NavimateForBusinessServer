@@ -213,7 +213,7 @@ app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorag
             row[3] = task.status
             row[4] = task.period
             row[5] = TemplateDataService.getTemplateById(task.formTemplateId).name
-            row[6] = TemplateDataService.getTemplateById(task.templateData.id).name
+            row[6] = TemplateDataService.getTemplateById(task.templateId).name
 
             // iterate through template data
             task.templateData.values.forEach(function (value) {
