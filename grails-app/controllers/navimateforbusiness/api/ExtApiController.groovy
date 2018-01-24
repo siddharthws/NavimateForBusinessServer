@@ -220,6 +220,11 @@ class ExtApiController {
                 throw new ApiException("Invalid parameter 'managerId' for user id " + userJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
 
+            // Add default country code to phone number if no country code was sent
+            if (!userJson.phone.contains('+')) {
+                userJson.phone = "+91" + userJson.phone
+            }
+
             // Check for optional parameters & their data types
             if (userJson.email && !(userJson.email instanceof String)) {
                 throw new ApiException("Invalid parameter 'email' for user id " + userJson.id, Constants.HttpCodes.BAD_REQUEST)

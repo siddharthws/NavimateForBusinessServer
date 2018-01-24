@@ -3,6 +3,7 @@ package navimateforbusiness.api
 import navimateforbusiness.ApiException
 import navimateforbusiness.ApiKey
 import navimateforbusiness.Constants
+import navimateforbusiness.DomainToJson
 import org.grails.web.json.JSONException
 
 
@@ -28,6 +29,14 @@ class ExtApiInterceptor {
             try {
                 def input = request.JSON
             } catch (JSONException ex) {
+                throw new ApiException("Invalid input.", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Print JSON for debugging
+            println("Incoming JSON from External API = " + request.JSON.toString())
+
+            // Input should always be a valid JSON
+            if (!DomainToJson.isJsonObjectValid(request.JSON.toString())) {
                 throw new ApiException("Invalid input.", Constants.HttpCodes.BAD_REQUEST)
             }
         }
