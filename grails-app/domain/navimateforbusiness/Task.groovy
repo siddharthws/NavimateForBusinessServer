@@ -42,6 +42,7 @@ class Task {
     ]
 
     static constraints = {
+        rep             nullable: true
         extId           nullable: true
     }
 

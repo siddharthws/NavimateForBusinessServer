@@ -24,4 +24,5 @@ databaseChangeLog = {
     include file: 'templating-bugfix.groovy'
     include file: 'task-templating-support.groovy'
     include file: 'templating-post-cleanup.groovy'
+    include file: 'task-rep-nullable.groovy'
 }
