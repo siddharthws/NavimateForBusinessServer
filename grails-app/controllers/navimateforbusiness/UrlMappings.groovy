@@ -68,6 +68,9 @@ class UrlMappings {
         "/api/ext/sync/leads"       (controller: "ExtApi") {action = [POST: "syncLeads"]}
         //"/api/ext/report/forms"     (controller: "ExtApi") {action = [GET: "getFormReport"]}
 
+        // Porting APIs
+        "/api/port/leadVisibility"    (controller: "PortingApi") {action = [GET: "leadVisibility"]}
+
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
 
