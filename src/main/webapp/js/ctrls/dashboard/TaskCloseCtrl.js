@@ -31,6 +31,10 @@ app.controller("TaskCloseCtrl", function ($scope, $rootScope, $http, $localStora
         TaskDataService.sync()
     }
 
+    vm.edit = function () {
+        DialogService.taskCreator(vm.selection)
+    }
+
     vm.remove = function () {
         //Launch confirm Dialog box
         DialogService.confirm("Are you sure you want to remove these " + vm.selection.length + " tasks ?",
