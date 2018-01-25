@@ -36,9 +36,19 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
 
     // List Actions
     vm.remove = function() {
+        // Get owned leads from selection
+        var ownedLeads = getOwnedLeadsFromSelection()
+
+        if (!ownedLeads.length) {
+            ToastService.toast("You do not have permission to remove any of the selected leads.")
+            return
+        } else if (vm.selection.length > ownedLeads.selection) {
+            ToastService.toast("You do not have permission to remove some of the selected leads. Removing from selection.")
+        }
+
         // Launch Confirm Dialog
         DialogService.confirm(
-            "Are you sure you want to remove these " + vm.selection.length + " leads ?",
+            "Are you sure you want to remove " + ownedLeads.length + " leads ?",
             function () {
                 $rootScope.showWaitingDialog("Please wait while we are removing leads...")
                 // Make Http call to remove leads
@@ -49,7 +59,7 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        leads: vm.selection
+                        leads: ownedLeads
                     }
                 }).then(
                     function (response) {
@@ -69,8 +79,18 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
     
     vm.edit = function () {
+        // Get owned leads from selection
+        var ownedLeads = getOwnedLeadsFromSelection()
+
+        if (!ownedLeads.length) {
+            ToastService.toast("You do not have permission to edit any of the selected leads.")
+            return
+        } else if (vm.selection.length > ownedLeads.selection) {
+            ToastService.toast("You do not have permission to edit some of the selected leads. Removing from selection.")
+        }
+
         //Launch Leads-Editor dialog
-        DialogService.leadEditor(vm.selection)
+        DialogService.leadEditor(ownedLeads)
     }
 
     vm.createtasks = function () {
@@ -247,6 +267,18 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
         }
 
         return filterType
+    }
+
+    function getOwnedLeadsFromSelection() {
+        var ownedLeads = []
+        vm.selection.forEach(function (selection) {
+            if ((selection.ownerId == $localStorage.id) ||
+                ($localStorage.role == Constants.Role.ADMIN)) {
+                ownedLeads.push(selection)
+            }
+        })
+
+        return ownedLeads
     }
 
     /* ------------------------------- INIT -----------------------------------*/

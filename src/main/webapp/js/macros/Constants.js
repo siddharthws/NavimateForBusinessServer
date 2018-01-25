@@ -79,6 +79,11 @@ Constants.Role = {
     NVM_ADMIN:  4
 }
 
+Constants.Visibility = {
+    PUBLIC :       1,
+    PRIVATE:       2
+}
+
 Constants.DashboardNav.Options = [
     {
         id:         Constants.DashboardNav.OPTION_MANAGE,

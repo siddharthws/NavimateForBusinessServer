@@ -449,7 +449,8 @@ class ExtApiController {
 
             // If lead not found by ext Id, create a new one
             if (!lead) {
-                lead  = new Lead(account:    account)
+                lead  = new Lead(account:    account,
+                                 visibility: navimateforbusiness.Visibility.PUBLIC)
             }
 
             // Populate extID and title
