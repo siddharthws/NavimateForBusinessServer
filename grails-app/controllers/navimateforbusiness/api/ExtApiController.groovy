@@ -276,6 +276,9 @@ class ExtApiController {
             if (!leadJson.template || !(leadJson.template instanceof String)) {
                 throw new ApiException("Invalid parameter 'template' for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
+            if (!leadJson.templateData || !DomainToJson.isJsonObjectValid(leadJson.templateData)) {
+                throw new ApiException("Invalid parameter 'templateData' for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
 
             // Check for optional parameters & their data types
             if (leadJson.ownerId && !(leadJson.ownerId instanceof String)) {
