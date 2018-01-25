@@ -176,7 +176,15 @@ app.controller("TaskCloseCtrl", function ($scope, $rootScope, $http, $localStora
             // Add mandatory data to row
             row[0] = task.cId
             row[1] = LeadDataService.getById(task.leadId).title
-            row[2] = TeamDataService.getById(task.repId).name
+
+            // Add rep Data
+            var rep = TeamDataService.getById(task.repId)
+            if (rep) {
+                row[2] = rep.name
+            } else {
+                row[2] = 'Unassigned'
+            }
+
             row[3] = task.status
             row[4] = task.period
             row[5] = TemplateDataService.getTemplateById(task.formTemplateId).name
