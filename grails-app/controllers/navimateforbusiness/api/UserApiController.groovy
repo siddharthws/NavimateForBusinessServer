@@ -252,7 +252,7 @@ class UserApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Update tasks using service
-        JSONArray tasksJson = JSON.parse(request.JSON.tasks)
+        JSONArray tasksJson = request.JSON.tasks
         taskService.addTasks(user, tasksJson)
 
         // return resposne

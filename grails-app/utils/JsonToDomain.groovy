@@ -55,9 +55,9 @@ class JsonToDomain {
 
         // Update lead info from JSON received
         task.period = taskJson.period ? taskJson.period : 0
-        task.rep = User.findById(taskJson.rep.id)
-        task.lead = Lead.findById(taskJson.lead.id)
-        task.formTemplate = Template.findById(taskJson.formTemplate.id)
+        task.rep = User.findById(taskJson.repId)
+        task.lead = Lead.findById(taskJson.leadId)
+        task.formTemplate = Template.findById(taskJson.formTemplateId)
 
         navimateforbusiness.Template template = navimateforbusiness.Template.findById(taskJson.templateId)
         Data data = Data(taskJson.templateData, manager, template)

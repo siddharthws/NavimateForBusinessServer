@@ -18,7 +18,14 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $
     TemplateDataService.syncTasks()
     TaskDataService.sync()
 
-    /*------------------------------------ APIs --------------------------------*/
+    // Attach Data service methods
+    $rootScope.getRepById = TeamDataService.getById
+    $rootScope.getLeadById = LeadDataService.getById
+    $rootScope.getTaskById = TaskDataService.getById
+    $rootScope.getTemplateById = TemplateDataService.getTemplateById
+    $rootScope.getFieldById = TemplateDataService.getFieldById
+
+        /*------------------------------------ APIs --------------------------------*/
     // Button Click APIs
     $scope.logout = function(){
         $rootScope.showWaitingDialog("Please wait while you are being logged out...")

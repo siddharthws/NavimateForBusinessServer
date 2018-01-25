@@ -31,6 +31,10 @@ app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorag
         TaskDataService.sync()
     }
 
+    vm.edit = function () {
+        DialogService.taskCreator(vm.selection)
+    }
+
     vm.close = function () {
         //Launch confirm Dialog box
         DialogService.confirm("Are you sure you want to close these " + vm.selection.length + " tasks ?",

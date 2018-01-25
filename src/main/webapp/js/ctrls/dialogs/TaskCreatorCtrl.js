@@ -60,7 +60,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
                     'X-Auth-Token':    $localStorage.accessToken
                 },
                 data:       {
-                    tasks:      JSON.stringify($scope.tasks)
+                    tasks:      $scope.tasks
                 }
             }).then(
                 function (response) {
@@ -112,7 +112,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         // Validate Task data
         else {
             $scope.tasks.forEach(function (task) {
-                if (!task.lead || !task.rep || !task.formTemplate)
+                if (!task.leadId || !task.repId || !task.formTemplateId)
                 {
                     bValid = false
                     $scope.bShowError = true
