@@ -6,6 +6,9 @@ class Lead {
     Date dateCreated
     Date lastUpdated
 
+    // Visibility of Lead
+    navimateforbusiness.Visibility visibility
+
     // External ID for API access
     String extId
 
