@@ -19,7 +19,8 @@ class JsonToDomain {
             // Create new lead
             lead = new Lead(manager: owner,
                     account: owner.account,
-                    isRemoved: false)
+                    isRemoved: false,
+                    visibility: navimateforbusiness.Visibility.PRIVATE)
         }
 
         // Update lead info from JSON received

@@ -91,7 +91,8 @@ class LeadService {
                           email:          email,
                           latitude:       lat,
                           longitude:      lng,
-                          isRemoved:      false)
+                          isRemoved:      false,
+                          visibility:     navimateforbusiness.Visibility.PRIVATE)
             }
 
             leads.push(lead)
@@ -134,10 +135,12 @@ class LeadService {
             // Create lead JSON object
             def leadJson = [
                     id: lead.id,
+                    ownerId: lead.manager.id,
                     title: lead.title,
                     address: lead.address,
                     latitude: lead.latitude,
                     longitude: lead.longitude,
+                    visibility: lead.visibility.value,
                     templateId: lead.templateData.template.id,
                     templateData: [
                         id: lead.templateData.id,

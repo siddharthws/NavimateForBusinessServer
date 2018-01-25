@@ -14,6 +14,7 @@ import navimateforbusiness.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.User
 import navimateforbusiness.UserStatus
+import navimateforbusiness.Visibility
 import org.grails.web.json.JSONArray
 
 class UserApiController {
@@ -133,20 +134,23 @@ class UserApiController {
      * After fetching the data the response is sent to the frontend in form of JSON format.
      */
     def getLead() {
-        List<Lead> leads
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
+        // Get all leads of the company
+        List<Lead> leads = Lead.findAllByAccount(user.account)
+        def respLeads
+
         if(user.role==navimateforbusiness.Role.ADMIN) {
-            //Get Lead List of Admin
-            leads = Lead.findAllByAccountAndIsRemoved(user.account, false)
+            // Add all leads that are not removed
+            respLeads = leads.findAll {it -> !it.isRemoved}
         } else {
-            // Get Lead List of Manager
-            leads = Lead.findAllByManagerAndIsRemoved(user, false)
+            // Add all non removed leads wich are either owned by this manager or publicly visible
+            respLeads = leads.findAll {it -> (!it.isRemoved && (it.visibility == Visibility.PUBLIC) || (it.manager.id == user.id))}
         }
 
         //Serialize the leads into a JSON object and send the response to frontend
         // Get Table type data form leads
-        def resp = leadService.getLeadData(leads)
+        def resp = leadService.getLeadData(respLeads)
 
         render resp as JSON
     }
