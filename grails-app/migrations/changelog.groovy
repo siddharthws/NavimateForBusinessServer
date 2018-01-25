@@ -25,4 +25,5 @@ databaseChangeLog = {
     include file: 'task-templating-support.groovy'
     include file: 'templating-post-cleanup.groovy'
     include file: 'task-rep-nullable.groovy'
+    include file: 'lead-visibility-add.groovy'
 }
