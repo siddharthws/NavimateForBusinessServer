@@ -453,9 +453,10 @@ class ExtApiController {
                                  visibility: navimateforbusiness.Visibility.PUBLIC)
             }
 
-            // Populate extID and title
+            // Populate extID, title and isRemoved Status
             lead.extId          = leadJson.id
             lead.title          = leadJson.title
+            lead.isRemoved      = false
 
             // Populate owner
             if (leadJson.ownerId) {
