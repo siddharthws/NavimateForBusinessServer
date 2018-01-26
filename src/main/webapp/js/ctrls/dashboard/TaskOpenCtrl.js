@@ -212,7 +212,14 @@ app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorag
 
             // Add mandatory data to row
             row[0] = task.cId
-            row[1] = LeadDataService.getById(task.leadId).title
+
+            // Add lead data
+            var lead = LeadDataService.getById(task.leadId)
+            // Ignore task if lead is not available
+            if (!lead) {
+                return
+            }
+            row[1] = lead.title
 
             // Add rep Data
             var rep = TeamDataService.getById(task.repId)
