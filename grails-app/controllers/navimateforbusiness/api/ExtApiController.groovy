@@ -10,6 +10,8 @@ import navimateforbusiness.Data
 import navimateforbusiness.Form
 import navimateforbusiness.Lead
 import navimateforbusiness.Role
+import navimateforbusiness.Task
+import navimateforbusiness.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.User
 import navimateforbusiness.Value
@@ -18,6 +20,7 @@ import org.grails.web.json.JSONArray
 class ExtApiController {
 
     def googleApiService
+    def fcmService
 
     def syncManagers() {
         // Get account for this request
@@ -75,6 +78,27 @@ class ExtApiController {
         if (validateLeads(account, leads)) {
             // Add all users to database
             addLeads(account, leads)
+        }
+
+        // Send success response
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def syncTasks() {
+        // Get account for this request
+        def account = ApiKey.findByKey(request.getHeader("X-Api-Key")).account
+
+        // Validate leads array
+        def tasks = request.JSON.tasks
+        if( !tasks || !DomainToJson.isJsonArrayValid(tasks.toString())) {
+            throw new ApiException("Invalid tasks data. Please check input.", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Validate data
+        if (validateTasks(account, tasks)) {
+            // Add all users to database
+            addTasks(account, tasks)
         }
 
         // Send success response
@@ -276,7 +300,7 @@ class ExtApiController {
             if (!leadJson.template || !(leadJson.template instanceof String)) {
                 throw new ApiException("Invalid parameter 'template' for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
-            if (!leadJson.templateData || !DomainToJson.isJsonObjectValid(leadJson.templateData)) {
+            if (!leadJson.templateData || !DomainToJson.isJsonObjectValid(leadJson.templateData.toString())) {
                 throw new ApiException("Invalid parameter 'templateData' for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
 
@@ -370,6 +394,169 @@ class ExtApiController {
                         // Value should be true or false
                         if ((valueString != 'true') && (valueString != 'false')) {
                             throw new ApiException("Invalid checkbox value for field " + key + " in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+                        break
+                }
+
+            }
+        }
+    }
+
+    // Method to validate leads data
+    private def validateTasks(Account account, JSONArray tasksJson) {
+        // Iterate through data
+        tasksJson.eachWithIndex {taskJson, i ->
+            // Validate JSON object type
+            if (!DomainToJson.isJsonObjectValid(taskJson.toString())) {
+                throw new ApiException("Invalid JSON at index " + i, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Check for valid ID
+            if (!taskJson.id || !(taskJson.id instanceof String) || !taskJson.id.length()) {
+                throw new ApiException("Invalid ID " + taskJson.id + " at index " + i, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Check for mandatory parameters & their data types
+            if (!taskJson.leadId || !(taskJson.leadId instanceof String)) {
+                throw new ApiException("Invalid parameter 'leadId' for id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+            if (!taskJson.formTemplate || !(taskJson.formTemplate instanceof String)) {
+                throw new ApiException("Invalid parameter 'formTemplate' for id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+            if (!taskJson.taskTemplate || !(taskJson.taskTemplate instanceof String)) {
+                throw new ApiException("Invalid parameter 'taskTemplate' for id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+            if (!taskJson.templateData || !DomainToJson.isJsonObjectValid(taskJson.templateData.toString())) {
+                throw new ApiException("Invalid parameter 'templateData' for id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Check for optional parameters & their data types
+            if (taskJson.managerId && !(taskJson.managerId instanceof String)) {
+                throw new ApiException("Invalid parameter 'managerId' for id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+            if (taskJson.repId && !(taskJson.repId instanceof String)) {
+                throw new ApiException("Invalid parameter 'repId' for id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+            if (taskJson.status && !(taskJson.status instanceof Integer)) {
+                throw new ApiException("Invalid parameter 'status' for id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+            if (taskJson.peiod && !(taskJson.period instanceof Integer)) {
+                throw new ApiException("Invalid parameter 'period' for id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Check if manager exists
+            if (taskJson.managerId) {
+                def manager = User.findByExtIdAndAccountAndRoleGreaterThanEquals(taskJson.managerId, account, Role.MANAGER)
+                if (!manager) {
+                    throw new ApiException("Manager ID " + taskJson.managerId + " not found for task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                }
+            }
+
+            // Check if rep exists
+            if (taskJson.repId) {
+                def rep = User.findByExtIdAndAccountAndRole(taskJson.repId, account, Role.REP)
+                if (!rep) {
+                    throw new ApiException("Rep ID " + taskJson.repId + " not found for task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                }
+            }
+
+            // Check if lead exists
+            if (taskJson.leadId) {
+                def lead = Lead.findByExtIdAndAccount(taskJson.leadId, account)
+                if (!lead) {
+                    throw new ApiException("Lead ID " + taskJson.leadId + " not found for task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                }
+            }
+
+            // Ensure status is valid
+            if (taskJson.status) {
+                if (taskJson.status != 1 && taskJson.status != 2) {
+                    throw new ApiException("Status " + taskJson.status + " is not valid for task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                }
+            }
+
+            // Check if templates exists
+            def formTemplate = Template.findByNameAndTypeAndAccount(taskJson.formTemplate, Constants.Template.TYPE_FORM, account)
+            if (!formTemplate) {
+                throw new ApiException("Form Template " + taskJson.formTemplate + " not found for task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            def taskTemplate = Template.findByNameAndTypeAndAccount(taskJson.taskTemplate, Constants.Template.TYPE_TASK, account)
+            if (!taskTemplate) {
+                throw new ApiException("Task Template " + taskJson.taskTemplate + " not found for task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Validate template data
+            def templateKeys = taskJson.templateData.keySet()
+            templateKeys.each {key ->
+                // Ensure passed value is string
+                if (taskJson.templateData[key] && !(taskJson.templateData[key] instanceof String)) {
+                    throw new ApiException("Invalid value for field " + key + " in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                }
+
+                // Ensure that field by this name exists in template
+                def field = taskTemplate.fields.find {it -> it.title == key}
+                if (!field) {
+                    throw new ApiException("Field " + key + " not found in template " + taskTemplate.name + " for task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                }
+
+                // Validate value type against field type
+                def valueString = taskJson.templateData[key]
+                switch (field.type) {
+                    case Constants.Template.FIELD_TYPE_NUMBER:
+                        // Values should be parseable to long
+                        long numValue
+                        try {
+                            numValue = Long.parseLong(valueString)
+                        } catch (Exception e) {
+                            throw new ApiException("Unable to parse value for field " + key + " to long in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+                        break
+
+                    case Constants.Template.FIELD_TYPE_RADIOLIST:
+                        // Values should be parseable to integer
+                        int numValue
+                        try {
+                            numValue = Integer.parseInt(valueString)
+                        } catch (Exception e) {
+                            throw new ApiException("Unable to parse value for field " + key + " to integer in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+
+                        // Value should be less than radio list length
+                        String defaultValue = taskTemplate.defaultData.values.find {it -> it.field.id == field.id}.value
+                        def defValueJson = JSON.parse(defaultValue)
+                        if (numValue >= defValueJson.options.length() || numValue < 0) {
+                            throw new ApiException("Invalid index " + numValue + " for field " + key + " in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+                        break
+
+                    case Constants.Template.FIELD_TYPE_CHECKLIST:
+                        // Split array of booleans
+                        ArrayList<String> selections
+                        try {
+                            selections = valueString.split ()
+                        } catch (Exception e) {
+                            throw new ApiException("Unable to parse values for field " + key + " to booleans in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+
+                        // Ensure each selection is a boolean string
+                        selections.each {selection ->
+                            if ((selection != 'true') && (selection != 'false')) {
+                                throw new ApiException("Invalid checklist value for field " + key + " in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                            }
+                        }
+
+                        // Ensure number of booleans are equal to default value length
+                        String defaultValue = taskTemplate.defaultData.values.find {it -> it.field.id == field.id}.value
+                        def defValueJson = JSON.parse(defaultValue)
+                        if (defValueJson.length() != selections.size()) {
+                            throw new ApiException("Mismatch in number of items for field " + key + " in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+                        break
+                    case Constants.Template.FIELD_TYPE_CHECKBOX:
+                        // Value should be true or false
+                        if ((valueString != 'true') && (valueString != 'false')) {
+                            throw new ApiException("Invalid checkbox value for field " + key + " in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
                         }
                         break
                 }
@@ -557,6 +744,146 @@ class ExtApiController {
 
             // Save lead
             lead.save(flush: true, failOnError: true)
+        }
+    }
+
+    // Method to add reps to database
+    private def addTasks(Account account, JSONArray tasksJson) {
+        def fcms = []
+
+        // Iterate through users
+        tasksJson.each {taskJson ->
+            // Get existing lead by ext ID
+            def task = Task.findByExtIdAndAccount(taskJson.id, account)
+
+            // If lead not found by ext Id, create a new one
+            if (!task) {
+                task  = new Task(account:    account)
+            }
+
+            // Populate extID, title and isRemoved Status
+            task.extId          = taskJson.id
+            task.period         = taskJson.period ? taskJson.period : 0
+            task.isRemoved      = false
+
+            // Populate lead
+            task.lead = Lead.findByExtIdAndAccount(taskJson.leadId, account)
+
+            // Populate manager
+            if (taskJson.managerId) {
+                task.manager = User.findByExtIdAndAccountAndRoleGreaterThanEquals(taskJson.managerId, account, Role.MANAGER)
+            } else {
+                task.manager = account.admin
+            }
+
+            // Populate Rep
+            if (taskJson.repId) {
+                task.rep = User.findByExtIdAndAccountAndRole(taskJson.repId, account, Role.REP)
+
+                // Add FCM ID to send notification
+                if (!fcms.contains(task.rep.fcmId)) {
+                    fcms.push(task.rep.fcmId)
+                }
+            }
+
+            // Add task status
+            if (taskJson.status) {
+                task.status = (taskJson.status == 1) ? TaskStatus.OPEN : TaskStatus.CLOSED
+            } else {
+                task.status = TaskStatus.OPEN
+            }
+
+            // Get template to be used
+            task.formTemplate = Template.findByNameAndTypeAndAccount(taskJson.formTemplate, Constants.Template.TYPE_FORM, account)
+            def taskTemplate = Template.findByNameAndTypeAndAccount(taskJson.taskTemplate, Constants.Template.TYPE_TASK, account)
+
+            // Check if lead has an existing data object
+            Data templateData = task.templateData
+            if (!templateData) {
+                // Create new data object
+                templateData = new Data(account: account)
+            }
+
+            // Update owner and template
+            templateData.owner = task.manager
+            templateData.template = taskTemplate
+
+            // Get values
+            def dataJsonKeys = taskJson.templateData.keySet()
+            def values = []
+            taskTemplate.fields.each {field ->
+                // Check if values for this field exists in template Data
+                Value value = templateData.values.find {it -> it.field.id == field.id}
+
+                // Create new value if not existing
+                if (!value) {
+                    value = new Value(account: account, data: templateData, field: field)
+                }
+
+                // Get default value from template for this field
+                String defaultValue = taskTemplate.defaultData.values.find {it -> it.field.id == field.id}.value
+
+                // Find this field name in passed params
+                if (dataJsonKeys.contains(field.title)) {
+                    // Get string value
+                    def valueString = taskJson.templateData[field.title]
+
+                    // Check for value type
+                    switch (field.type) {
+                        case Constants.Template.FIELD_TYPE_TEXT:
+                        case Constants.Template.FIELD_TYPE_NUMBER:
+                        case Constants.Template.FIELD_TYPE_CHECKBOX:
+                            value.value = valueString
+                            break
+
+                        case Constants.Template.FIELD_TYPE_RADIOLIST:
+                            // Parse to number
+                            int selectionIndex = Integer.parseInt(valueString)
+
+                            // Parse default value to JSON
+                            def defValueJson = JSON.parse(defaultValue)
+
+                            // Update selection index
+                            defValueJson.selection = selectionIndex
+
+                            // Save value as string
+                            value.value = defValueJson.toString()
+                            break
+
+                        case Constants.Template.FIELD_TYPE_CHECKLIST:
+                            // Get array of booleans
+                            ArrayList<String> selections = valueString.split ()
+
+                            // Parse default value as JSON
+                            def defValueJson = JSON.parse(defaultValue)
+
+                            // Iterate through array and update default values
+                            selections.eachWithIndex {selection, i ->
+                                defValueJson[i].selection = Boolean.valueOf(selection)
+                            }
+
+                            // Save value as string
+                            value.value = defValueJson
+                            break
+                    }
+                } else if (!value.id) {
+                    // Assign default value if value was not pre-populated
+                    value.value = defaultValue
+                }
+
+                // Add to values
+                values.push(value)
+            }
+            templateData.values = values
+            task.templateData = templateData
+
+            // Save lead
+            task.save(flush: true, failOnError: true)
+        }
+
+        // Send Notifications
+        fcms.each {fcm ->
+            fcmService.notifyApp(fcm)
         }
     }
 }
