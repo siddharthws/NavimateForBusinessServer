@@ -50,8 +50,22 @@ app.controller('MapCtrl', function ($scope) {
             // Check if map is centered on 0,0
             var mapCenter = googleMap.getCenter()
             if (!mapCenter.lat() && !mapCenter.lng()) {
-                // Check if current location is available
-                if (currentLatLng) {
+                if (vm.markers.length) {
+                    // Center using markers
+                    if (vm.markers.length == 1) {
+                        // Center on marker if only 1 is present
+                        centerMap(new google.maps.LatLng(   vm.markers[0].latitude,
+                                                            vm.markers[0].longitude))
+                    } else {
+                        // Center using bounds
+                        var bounds = new google.maps.LatLngBounds()
+                        for (var i = 0; i < vm.markers.length; i++) {
+                            bounds.extend(new google.maps.LatLng(   vm.markers[i].latitude,
+                                                                    vm.markers[i].longitude))
+                        }
+                        googleMap.fitBounds(bounds)
+                    }
+                } else if (currentLatLng) {
                     // Center map on current latlng
                     centerMap(currentLatLng)
                 }
