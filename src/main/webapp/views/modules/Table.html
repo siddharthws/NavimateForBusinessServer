@@ -103,10 +103,10 @@
                 </th>
             </thead>
 
-            <tr ng-repeat="row in $data" ng-class="{'active': $ctrl.selection[$index]}"
+            <tr ng-repeat="row in $data" ng-init="$index = $ctrl.filteredValues.indexOf(row)" ng-class="{'active': $ctrl.selection[$index]}"
                 ng-click="$ctrl.selection[$index] = !$ctrl.selection[$index]; $ctrl.toggleRow($index)">
                 <td class="text-center" ng-if="!$ctrl.style.bSelectable" >
-                    {{$ctrl.filteredValues.indexOf(row) + 1}}
+                    {{$index + 1}}
                 </td>
 
                 <td class="text-center" ng-if="$ctrl.style.bSelectable" >

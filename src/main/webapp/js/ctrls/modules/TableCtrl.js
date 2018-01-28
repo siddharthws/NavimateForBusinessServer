@@ -287,6 +287,9 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
 
     // Data Init Callback. Triggered by parent when data syncing is complete
     var init = function () {
+        // Re-init selection to blank
+        vm.selection = []
+
         // Init Columns
         vm.columns = []
         for (var i = 0; i < $scope.tableParams.columns.length; i++) {
@@ -305,6 +308,7 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
             }
 
             vm.values.push(row)
+            vm.selection.push(false)
         }
         vm.filteredValues = vm.values
 
@@ -381,7 +385,6 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
 
     // Method to send event when selection has updated
     function emitSelectionEvent() {
-        console.log(vm.selection)
         // Get indexes of selected rows
         var selectedIdx = []
         for (var i = 0; i < vm.selection.length; i++) {

@@ -65,7 +65,7 @@ class RepApiController {
         }
 
         // Get Task List
-        List<Task> tasks = Task.findAllByRepAndManagerAndStatus(rep, rep.manager, TaskStatus.OPEN)
+        List<Task> tasks = Task.findAllByRepAndAccount(rep, rep.account)
 
         // Get Sync data form request
         def syncData = request.JSON.syncData
@@ -73,12 +73,14 @@ class RepApiController {
         // Check which tasks need to be sent back to app
         def tasksJson = []
         tasks.each {task ->
-            // Mark task as synced if version and id are same
-            boolean bSynced = false
+            // Assume all OPEN tasks as unsynced and closed tasks as synced
+            boolean bSynced = (task.status == TaskStatus.CLOSED)
+
+            // Change sync flag as per the sync data versions
             for (int i = 0; i < syncData.size(); i++) {
                 def syncObject = syncData.get(i)
-                if ((syncObject.id == task.id) && (syncObject.ver == task.version)) {
-                    bSynced = true
+                if (syncObject.id == task.id) {
+                    bSynced = (syncObject.ver == task.version)
                     break
                 }
             }
@@ -110,7 +112,7 @@ class RepApiController {
         def leadsJson = []
         syncData.each {syncObject ->
             // Get lead with this id
-            Lead lead = Lead.findByIdAndManager(syncObject.id, rep.manager)
+            Lead lead = Lead.findByIdAndAccount(syncObject.id, rep.account)
 
             // Add to response if version mismatch
             if (lead && (lead.version > syncObject.ver)) {
@@ -139,7 +141,7 @@ class RepApiController {
         def templatesJson = []
         syncData.each {syncObject ->
             // Get lead with this id
-            Template template = Template.findByIdAndOwner(syncObject.id, rep.manager)
+            Template template = Template.findByIdAndAccount(syncObject.id, rep.account)
 
             // Add to response if version mismatch
             if (template && (template.version > syncObject.ver)) {
