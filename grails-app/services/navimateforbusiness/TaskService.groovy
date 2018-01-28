@@ -46,7 +46,7 @@ class TaskService {
             def taskJson = [
                     id:             task.id,
                     cId:            task.account.id + String.format("%08d", task.id),
-                    repId:          task.rep.id,
+                    repId:          task.rep ? task.rep.id : -1,
                     leadId:         task.lead.id,
                     period:         task.period,
                     status:         task.status.name(),
