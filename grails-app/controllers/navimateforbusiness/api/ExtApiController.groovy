@@ -111,23 +111,36 @@ class ExtApiController {
         def account = ApiKey.findByKey(request.getHeader("X-Api-Key")).account
 
         // Validate to & from parameters
-        if (!params.from || !(params.from instanceof long )) {
+        if (!params.from) {
             throw new ApiException("Invalid 'from' date parameter", Constants.HttpCodes.BAD_REQUEST)
         }
-        if (!params.to || !(params.to instanceof long )) {
+        if (!params.to) {
+            throw new ApiException("Invalid 'to' date parameter", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Parse from and to to Long
+        Long fromMs, toMs
+        try {
+            fromMs = Long.parseLong(params.from)
+        } catch (Exception e) {
+            throw new ApiException("Invalid 'from' date parameter", Constants.HttpCodes.BAD_REQUEST)
+        }
+        try {
+            toMs = Long.parseLong(params.to)
+        } catch (Exception e) {
             throw new ApiException("Invalid 'to' date parameter", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Get from and to dates
-        Date from = new Date(params.from)
-        Date to = new Date(params.to)
+        Date from = new Date(fromMs)
+        Date to = new Date(toMs)
 
         // Filter data submissions
         List<Data> submissions = Data.findAll().findAll {it ->
-            (it.account.id == account.id) &&        // Submission for this account
-            (it.dateCreated >= from) &&             // Submission after from date
-            (it.dateCreated <= to) &&               // Submissions before to date
-            (it.owner.role == Role.REP)             // Submissions done by representative users
+            (it.account.id == account.id) &&       // Submission for this account
+            (it.owner.role == Role.REP) &&         // Submissions done by representative users
+            (it.dateCreated >= from) &&            // Submission after from date
+            (it.dateCreated <= to)                 // Submissions before to date
         }
 
         // Create JSON Array for report
@@ -149,27 +162,60 @@ class ExtApiController {
 
             // Create report row for this submission
             def row = [
+                    taskId: taskId,
                     managerId: managerId,
                     userId: userId,
                     leadId: leadId,
-                    taskId: taskId,
                     status: form.taskStatus.value,
                     date: submission.dateCreated.time,
-                    location: [ lat: form.latitude, lng: form.longitude],
-                    template: submission.template.name
+                    latitude: form.latitude,
+                    longitude: form.longitude,
+                    template: submission.template.name,
+                    templateData: [:]
             ]
 
             // Add submission values
             submission.values.each {value ->
-                row += [(value.field.title): value.value]
+                String valueString = ""
+                // Parse value based on field type
+                switch (value.field.type) {
+                    case Constants.Template.FIELD_TYPE_TEXT:
+                    case Constants.Template.FIELD_TYPE_NUMBER:
+                    case Constants.Template.FIELD_TYPE_CHECKBOX:
+                        valueString = value.value
+                        break
+                    case Constants.Template.FIELD_TYPE_CHECKLIST:
+                        def valueJson = JSON.parse(value.value)
+                        valueJson.eachWithIndex {optionJson, i ->
+                            if (i == 0) {
+                                valueString += optionJson.selection
+                            } else {
+                                valueString += " " + optionJson.selection
+                            }
+                        }
+                        break
+                    case Constants.Template.FIELD_TYPE_RADIOLIST:
+                        def valueJson = JSON.parse(value.value)
+                        valueString = String.valueOf(valueJson.selection)
+                        break
+                    case Constants.Template.FIELD_TYPE_SIGN:
+                    case Constants.Template.FIELD_TYPE_PHOTO:
+                        if (value.value) {
+                            valueString = "https://biz.navimateapp.com/#/photos?name=" + value.value
+                        }
+                        break
+                }
+
+                // Add key-value pair to templateData for this value
+                row.templateData += [(value.field.title): valueString]
             }
 
             // Add element to report
-            report.push()
+            report.push(row)
         }
 
         // Send success response
-        def resp = [success: true]
+        def resp = [report: report]
         render resp as JSON
     }
 
