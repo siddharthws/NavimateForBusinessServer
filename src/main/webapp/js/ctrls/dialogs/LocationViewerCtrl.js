@@ -3,7 +3,7 @@
  */
 
 // Controller for Location Viewer Dialog
-app.controller('LocationViewerCtrl', function ($scope, latitude, longitude) {
+app.controller('LocationViewerCtrl', function ($scope, locations) {
     var vm = this
 
     /* ------------------------------- Html APIs -----------------------------------*/
@@ -15,9 +15,11 @@ app.controller('LocationViewerCtrl', function ($scope, latitude, longitude) {
     $scope.mapParams.markers = []
 
     // Add markers using parameters
-    $scope.mapParams.markers.push({
-        title: "Temporary Title",
-        latitude: latitude,
-        longitude: longitude
+    locations.forEach(function (location) {
+        $scope.mapParams.markers.push({
+            title: location.title,
+            latitude: location.latitude,
+            longitude: location.longitude
+        })
     })
 })
