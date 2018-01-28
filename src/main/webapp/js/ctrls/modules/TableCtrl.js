@@ -268,8 +268,19 @@ app.controller('TableCtrl', function ($scope, $rootScope, $state, $window, $filt
 
     // API to show location on map
     vm.showLocation = function (latlng) {
+        // Split location into lat & lng
         var latLngArr = latlng.split(',')
-        DialogService.locationViewer(latLngArr[0], latLngArr[1])
+
+        // Prepare Location array to send to location viewer
+        var locations = []
+        locations.push({
+            title:      "Submitted Here",
+            latitude:   latLngArr[0],
+            longitude:  latLngArr[1]
+        })
+
+        // Open Location Viewer dialog
+        DialogService.locationViewer(locations)
     }
 
     /*------------------------------------ Local APIs --------------------------------*/
