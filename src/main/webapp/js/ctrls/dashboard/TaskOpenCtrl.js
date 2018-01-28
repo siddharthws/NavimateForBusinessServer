@@ -134,6 +134,25 @@ app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorag
             })
     }
 
+    vm.showMap = function () {
+        // Prepare location array for each task
+        var locations = []
+        vm.selection.forEach(function (task) {
+            // Get lead of this task
+            var lead = LeadDataService.getById(task.leadId)
+
+            // Add lead title, lat and lng
+            locations.push({
+                title:      lead.title,
+                latitude:   lead.latitude,
+                longitude:  lead.longitude
+            })
+        })
+
+        // Open Location Viewer dialog
+        DialogService.locationViewer(locations)
+    }
+
     /*-------------------------------- Local APIs --------------------------------*/
     function initTasks () {
         // Reset data
