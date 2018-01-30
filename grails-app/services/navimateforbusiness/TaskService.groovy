@@ -59,7 +59,8 @@ class TaskService {
             ]
 
             // Add values to templated data
-            task.templateData.values.each {value ->
+            def values = task.templateData.values.sort {it -> it.id}
+            values.each {value ->
 
                 def val = value.value
                 if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST ||

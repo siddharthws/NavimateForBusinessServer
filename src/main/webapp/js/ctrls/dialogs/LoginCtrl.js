@@ -4,9 +4,6 @@
 
 app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $http, $localStorage, $cookies, AuthService, DialogService, ToastService) {
 
-    var COOKIE_EMAIL = "Navm8Email"
-    var COOKIE_PASSWORD = "Navm8Password"
-
     /* ------------------------------- Scope APIs -----------------------------------*/
     // Button Click APIs
     $scope.login = function(){
@@ -37,13 +34,17 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
 
                         // Check if user wants to be remembered
                         if ($scope.bRemember) {
+                            // Expiration date of cookies
+                            var expireDate = new Date()
+                            expireDate.setDate(expireDate.getDate() + 7)
+
                             // Add username and password to cookies
-                            $cookies.put(COOKIE_EMAIL, $scope.email)
-                            $cookies.put(COOKIE_PASSWORD, $scope.password)
+                            $cookies.put(Constants.Cookie.KEY_EMAIL, $scope.email, {expires: expireDate})
+                            $cookies.put(Constants.Cookie.KEY_PASSWORD, $scope.password, {expires: expireDate})
                         } else {
                             // Remove username and password cookies
-                            $cookies.remove(COOKIE_EMAIL)
-                            $cookies.remove(COOKIE_PASSWORD)
+                            $cookies.remove(Constants.Cookie.KEY_EMAIL)
+                            $cookies.remove(Constants.Cookie.KEY_PASSWORD)
                         }
 
                         // Hide waiting dialog
@@ -126,8 +127,8 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
     $scope.password = ""
 
     // Retrieve saved username and password
-    var savedEmail = $cookies.get(COOKIE_EMAIL)
-    var savedPassword = $cookies.get(COOKIE_PASSWORD)
+    var savedEmail = $cookies.get(Constants.Cookie.KEY_EMAIL)
+    var savedPassword = $cookies.get(Constants.Cookie.KEY_PASSWORD)
     if (savedEmail || savedPassword) {
         $scope.bRemember = true
         $scope.email = savedEmail

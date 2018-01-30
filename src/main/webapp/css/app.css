@@ -45,6 +45,6 @@ md-toast.md-center {
     overflow: auto;
 }
 
-td.has-error, div.has-error {
+td.has-error, div.has-error, select.has-error {
     border: 1px solid red;
 }

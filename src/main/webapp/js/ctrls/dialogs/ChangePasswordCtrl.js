@@ -2,7 +2,7 @@
  * Created by Siddharth on 21-11-2017.
  */
 
-app.controller('ChangePasswordCtrl', function ($scope, $rootScope, $mdDialog, $localStorage, $http, ToastService) {
+app.controller('ChangePasswordCtrl', function ($scope, $rootScope, $mdDialog, $localStorage, $http, $cookies, ToastService) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     // Button Click APIs
@@ -24,6 +24,16 @@ app.controller('ChangePasswordCtrl', function ($scope, $rootScope, $mdDialog, $l
             .then(
                 function (response) {
                     $rootScope.hideWaitingDialog()
+
+                    // Update saved password is any
+                    var savedPassword = $cookies.get(Constants.Cookie.KEY_PASSWORD)
+                    if (savedPassword) {
+                        // Expiration date of cookies
+                        var expireDate = new Date()
+                        expireDate.setDate(expireDate.getDate() + 7)
+
+                        $cookies.put(Constants.Cookie.KEY_PASSWORD, $scope.newPassword, {expires: expireDate})
+                    }
 
                     // Hide dialog and show toast
                     $mdDialog.hide()

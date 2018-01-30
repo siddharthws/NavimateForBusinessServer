@@ -2,6 +2,12 @@
 // Constants available throughout app
 var Constants = {}
 
+/* ------------------------------- Cookie Info -------------------------------------*/
+Constants.Cookie = {
+    KEY_EMAIL:      "Navm8Email",
+    KEY_PASSWORD:   "Navm8Password"
+}
+
 /* ------------------------------- Events -------------------------------------*/
 Constants.Events = {
     // Table Module Related events

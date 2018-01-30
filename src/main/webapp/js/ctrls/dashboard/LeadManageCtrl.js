@@ -98,7 +98,7 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
         var task = []
         vm.selection.forEach(function (lead) {
             task.push({
-                lead: lead
+                leadId: lead.id
             })
         })
 

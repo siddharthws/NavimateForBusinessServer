@@ -49,7 +49,7 @@ app.service("ExcelService", function ($http, $localStorage, $filter, FileSaver, 
             json.push({})
             for (var j = 0; j < columns.length; j++) {
                 var column = columns[j]
-                var value = row['Col' + j]
+                var value = row['Col' + column.id]
                 if (column.show) {
                     if (value != '-') {
                         if (column.type == Constants.Template.FIELD_TYPE_LOCATION) {

@@ -40,7 +40,7 @@
                     </div>
 
                     <div class="dropdown ml-1" ng-class="{'has-error': !task.formTemplateId && bShowError}">
-                        <button class="dropdown-toggle-button d-flex" data-toggle="dropdown" ng-disabled="task.id">
+                        <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
                             <span class="flex-1">Form Template : {{$root.getTemplateById(task.formTemplateId).name}}</span>
                             <img src="/static/images/icon_dropdown.png"/>
                         </button>
@@ -92,7 +92,7 @@
                         <div ng-if="$root.getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_RADIOLIST"
                              class="d-flex align-items-center">
                             <span>{{$root.getFieldById(value.fieldId).title}}</span>
-                            <md-radio-group ng-model="lead.templateData.values[$index].value.selection">
+                            <md-radio-group ng-model="task.templateData.values[$index].value.selection">
                                 <div class="d-flex flex-column ml-2">
                                     <div class="d-flex align-items-center"
                                          ng-repeat="option in task.templateData.values[$index].value.options track by $index">

@@ -149,7 +149,8 @@ class LeadService {
             ]
 
             // Add values to templated data
-            lead.templateData.values.each {value ->
+            def values = lead.templateData.values.sort {it -> it.id}
+            values.each {value ->
 
                 def val = value.value
                 if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST ||

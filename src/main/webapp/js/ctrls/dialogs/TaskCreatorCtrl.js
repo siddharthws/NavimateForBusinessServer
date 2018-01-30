@@ -29,10 +29,20 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         var templateData = {}
         templateData.values = []
         template.defaultData.values.forEach(function (value) {
-            templateData.values.push({
-                fieldId: value.fieldId,
-                value: value.value
-            })
+            var field = $rootScope.getFieldById(value.fieldId)
+
+            if (field.type == Constants.Template.FIELD_TYPE_CHECKLIST ||
+                field.type == Constants.Template.FIELD_TYPE_RADIOLIST) {
+                templateData.values.push({
+                    fieldId: value.fieldId,
+                    value: JSON.parse(JSON.stringify(value.value))
+                })
+            } else {
+                templateData.values.push({
+                    fieldId: value.fieldId,
+                    value: value.value
+                })
+            }
         })
 
         // Update lead's template data

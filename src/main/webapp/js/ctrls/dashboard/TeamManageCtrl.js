@@ -80,7 +80,7 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
         {
             if (bSelected) {
                 task.push({
-                    rep: vm.team[i]
+                    repId: vm.team[i].id
                 })
             }
         })

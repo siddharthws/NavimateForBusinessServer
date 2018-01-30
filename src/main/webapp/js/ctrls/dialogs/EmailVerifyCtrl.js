@@ -39,7 +39,8 @@ app.controller('EmailVerifyCtrl', function ($scope, $rootScope, $mdDialog, AuthS
     }
 
         $scope.cancel = function () {
-        $mdDialog.hide()
+            // Re-open Register dialog
+            DialogService.register(name, email, password, role, companyName)
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/

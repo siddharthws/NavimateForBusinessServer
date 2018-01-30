@@ -21,7 +21,7 @@ app.controller('MapCtrl', function ($scope) {
     }
 
     // Marker click event
-    vm.markerClick = function (idx) {
+    vm.markerClick = function (event, idx) {
         // Emit marker click event to be handled by parent
         $scope.$emit(Constants.Events.MAP_MARKER_CLICK, {idx: idx})
     }

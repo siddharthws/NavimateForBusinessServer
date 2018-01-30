@@ -50,9 +50,9 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
     }
     /* ------------------------------- Init -----------------------------------*/
     // Attach template to scope to pass to child template editor view
-    $scope.template = template
-    $scope.availableFieldTypes = Constants.Template.FORM_FIELD_TYPES
-    if (!$scope.template) {
+    if (template) {
+        $scope.template = JSON.parse(JSON.stringify(template))
+    } else {
         // Create empty template object
         $scope.template = {
             type: Constants.Template.TYPE_FORM,
@@ -63,6 +63,7 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
             }
         }
     }
+    $scope.availableFieldTypes = Constants.Template.FORM_FIELD_TYPES
 
     // Add event listener
     // Event listener for Template validation success
