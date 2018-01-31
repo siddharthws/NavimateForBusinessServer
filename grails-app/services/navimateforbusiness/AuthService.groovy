@@ -24,6 +24,12 @@ class AuthService {
             account = new Account(name: input.companyName)
             account.save(flush: true, failOnError: true)
 
+            // Create and save account settings
+            AccountSettings accSettings = new AccountSettings(account: account,
+                                                              startHr: 10,
+                                                              endHr: 18)
+            accSettings.save(flush: true, failOnError: true)
+
             // Create and save an api key for this account
             ApiKey apiKey = new ApiKey(key: generateApiKey(), account: account)
             apiKey.save(flush: true, failOnError: true)

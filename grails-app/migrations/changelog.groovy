@@ -27,4 +27,5 @@ databaseChangeLog = {
     include file: 'task-rep-nullable.groovy'
     include file: 'lead-visibility-add.groovy'
     include file: 'location-report-add.groovy'
+    include file: 'account-settings-add.groovy'
 }
