@@ -31,13 +31,13 @@ class AuthApiController {
     def register() {
         def input = request.JSON
 
-        //parsing the role as Enum
-        Role role = input.role as Role
-
         // Validate User
         if (!input.name || !input.email || !input.password || !input.role || !input.companyName) {
             throw new ApiException("Please check input", Constants.HttpCodes.BAD_REQUEST)
         }
+
+        //parsing the role as Enum
+        Role role = input.role as Role
 
         //check if company already exist for admin
         def existingCompany=Account.findByName(input.companyName)
