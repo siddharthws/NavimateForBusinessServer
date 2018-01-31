@@ -37,6 +37,43 @@ app.controller("TaskTemplatesCtrl", function ($scope, $rootScope, $http, $localS
         return selectedItems
     }
 
+    //API to delete templates
+    vm.remove = function () {
+        DialogService.confirm("Are you sure you want to remove these " + vm.getSelectedItems().length + " templates ?",
+            function () {
+                //creating array for template array
+                var templateId = []
+                vm.getSelectedItems().forEach(function (template) {
+                    templateId.push(template.id)
+                })
+
+                //http call to close tasks
+                $rootScope.showWaitingDialog("Removing Templates...")
+                $http({
+                    method: 'POST',
+                    url:    '/api/users/template/remove',
+                    headers: {
+                        'X-Auth-Token': $localStorage.accessToken
+                    },
+                    data: {
+                        templateIds : templateId
+                    }
+                }).then(
+                    function (response) {
+                        $rootScope.hideWaitingDialog()
+                        // Show Toast
+                        ToastService.toast("Templates removed successfully...")
+
+                        // Re-sync Template data since template has been removed
+                        TemplateDataService.syncTasks()
+                    },
+                    function (error) {
+                        $rootScope.hideWaitingDialog()
+                        ToastService.toast(error.data.error)
+                    })
+            })
+    }
+
     /*------------------------------- Local APIs -------------------------------*/
 
     function init() {
