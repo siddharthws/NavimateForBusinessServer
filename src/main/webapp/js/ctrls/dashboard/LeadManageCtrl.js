@@ -177,11 +177,12 @@ app.controller("LeadManageCtrl", function ($scope, $rootScope, $http, $localStor
             row[1] = lead.address
             row[2] = lead.latitude + "," + lead.longitude
 
-            // Get template data
+            // Ignore lead if it's template was removed
             var template = TemplateDataService.getTemplateById(lead.templateId)
-            if (template) {
-                row[3] = template.name
+            if (!template) {
+                return
             }
+            row[3] = template.name
 
             // iterate through template data
             lead.templateData.values.forEach(function (value) {

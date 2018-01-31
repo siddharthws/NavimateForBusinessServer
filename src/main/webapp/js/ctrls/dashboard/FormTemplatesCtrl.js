@@ -70,9 +70,6 @@ app.controller("FormTemplatesCtrl", function ($scope, $rootScope, $http, $localS
                         function (error) {
                             $rootScope.hideWaitingDialog()
                             ToastService.toast(error.data.error)
-
-                            // re-initialize tasks
-                            initTasks()
                         })
             })
     }

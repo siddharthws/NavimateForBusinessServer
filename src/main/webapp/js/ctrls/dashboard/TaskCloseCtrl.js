@@ -192,10 +192,23 @@ app.controller("TaskCloseCtrl", function ($scope, $rootScope, $http, $localStora
                 row[2] = 'Unassigned'
             }
 
+            // Add status and period
             row[3] = task.status
             row[4] = task.period
-            row[5] = TemplateDataService.getTemplateById(task.formTemplateId).name
-            row[6] = TemplateDataService.getTemplateById(task.templateId).name
+
+            // Ignore task if it's form template was removed
+            var formTemplate = TemplateDataService.getTemplateById(task.formTemplateId)
+            if (!formTemplate) {
+                return
+            }
+            row[5] = formTemplate.name
+
+            // Ignore task if it's form template was removed
+            var taskTemplate = TemplateDataService.getTemplateById(task.templateId)
+            if (!taskTemplate) {
+                return
+            }
+            row[6] = taskTemplate.name
 
             // iterate through template data
             task.templateData.values.forEach(function (value) {
