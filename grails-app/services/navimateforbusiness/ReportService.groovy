@@ -101,12 +101,18 @@ class ReportService {
         columns.push([title: 'Lead',
                       type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
                       filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION])
-        columns.push([title: 'Form Template',
-                      type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
-                      filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION])
         columns.push([title: 'Date',
                       type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
                       filterType: navimateforbusiness.Constants.Filter.TYPE_DATE])
+        columns.push([title: 'Task ID',
+                      type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                      filterType: navimateforbusiness.Constants.Filter.TYPE_TEXT])
+        columns.push([title: 'Task Status',
+                      type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                      filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION])
+        columns.push([title: 'Form Template',
+                      type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                      filterType: navimateforbusiness.Constants.Filter.TYPE_SELECTION])
         columns.push([title: 'Location',
                       type: navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION,
                       filterType: navimateforbusiness.Constants.Filter.TYPE_NONE])
@@ -162,19 +168,23 @@ class ReportService {
                 row[2] = element.lead.title
             }
 
-            // Feed template
-            if (element.template) {
-                row[3] = element.template.name
-            }
-
             // Feed date
-            row[4] = element.date.format(FORMAT_TIME, IST)
+            row[3] = element.date.format(FORMAT_TIME, IST)
 
             // Feed form data
             if (element.form?.submittedData) {
+                // Add ID
+                row[4] = "T" + String.format("%08d", element.form.task.id)
+
+                // Add status
+                row[5] = element.form.taskStatus.name()
+
+                // Add form template name
+                row[6] = element.template.name
+
                 // Feed location if valid
                 if (element.form.latitude || element.form.longitude) {
-                    row[5] = element.form.latitude + ',' + element.form.longitude
+                    row[7] = element.form.latitude + ',' + element.form.longitude
                 }
 
                 // Iterate through each value in this dataset
