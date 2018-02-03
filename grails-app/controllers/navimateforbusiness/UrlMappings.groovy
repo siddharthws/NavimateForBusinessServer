@@ -28,6 +28,7 @@ class UrlMappings {
         "/api/users/template"       (controller: "UserApi") {action = [GET: "getTemplates", POST: "saveTemplate"]}
         "/api/users/template/remove"(controller: "UserApi") {action = [POST: "removeTemplates"]}
         "/api/users/report"         (controller: "UserApi") {action = [GET: "getReport"]}
+        "/api/users/locationReport" (controller: "UserApi") {action = [GET: "getLocationReport"]}
         "/api/leads/upload"         (controller: "UserApi") {action = [POST: "uploadLeads"]}
 
         // App APIs
@@ -46,6 +47,7 @@ class UrlMappings {
         "/api/reps/sync/values"     (controller: "RepApi") {action = [POST: "syncValues"]}
         "/api/reps/fcm"             (controller: "RepApi") {action = [POST: "updateFcm"]}
         "/api/reps/otp"             (controller: "RepApi") {action = [POST: "sendOtpSms"]}
+        "/api/reps/locationReport"  (controller: "RepApi") {action = [POST: "synclocationReport"]}
 
         // Photo APIs
         "/api/photos/upload"        (controller: "PhotoApi") {action = [POST: "upload"]}

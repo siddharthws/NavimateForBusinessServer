@@ -20,6 +20,8 @@ import navimateforbusiness.Value
 
 class RepApiController {
 
+    def reportService
+
     def getMyProfile() {
         // Check if the rep is registered. (Rep is registered from the dashboard)
         User rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
@@ -315,5 +317,38 @@ class RepApiController {
 
         def resp = [success: true]
         render resp as JSON
+    }
+
+    def synclocationReport() {
+        // Get rep
+        User rep = authenticate()
+
+        // Get report elements from request
+        def reportJson = request.JSON.report
+
+        // Extract and save location report objects
+        reportService.saveLocationReport(rep, reportJson)
+
+        // Send success response
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    private def authenticate() {
+        // Get id from request
+        long id = 0L
+        try {
+            id = Long.parseLong(request.getHeader("id"))
+        } catch (Exception e) {
+            id = 0
+        }
+
+        // Find representative with this ID
+        User rep = User.findByRoleAndId(Role.REP, id)
+        if (!rep) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        rep
     }
 }
