@@ -490,6 +490,19 @@ class UserApiController {
         render resp as JSON
     }
 
+    def getLocationReport() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get rep from params
+        def rep = User.findByAccountAndId(user.account, params.long('repId'))
+
+        // Get Report for this rep
+        def resp = reportService.getLocationReport(rep)
+
+        // Send response
+        render resp as JSON
+    }
+
     def uploadLeads() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 

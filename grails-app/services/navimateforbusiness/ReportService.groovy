@@ -251,4 +251,46 @@ class ReportService {
 
         return navimateforbusiness.Constants.Filter.TYPE_NONE
     }
+
+    def getLocationReport(User rep) {
+        def report = []
+
+        // Get all report data submitted by this rep
+        def locReport = LocationReport.findByAccountAndOwner(rep.account, rep)
+
+        // Iterate through each report item
+        locReport.each {row ->
+            // Prepare JSON for row
+            def rowJson = [
+                    timestamp: row.timestamp,
+                    latitude: row.latitude,
+                    longitude: row.longitude,
+                    status: row.status
+            ]
+
+            // Add to report
+            report.push(rowJson)
+        }
+
+        // Send report
+        report
+    }
+
+    def saveLocationReport(User rep, def reportJson) {
+        // Iterate through report
+        reportJson.each {rowJson ->
+            // Create report object
+            LocationReport locReport = new LocationReport(
+                    account: rep.account,
+                    owner: rep,
+                    latitude: rowJson.latitude ? rowJson.latitude : 0,
+                    longitude: rowJson.longitude ? rowJson.longitude : 0,
+                    timestamp: rowJson.timestamp,
+                    status: rowJson.status
+            )
+
+            // Save to database
+            locReport.save(flush: true, failOnError: true)
+        }
+    }
 }
