@@ -26,4 +26,5 @@ databaseChangeLog = {
     include file: 'templating-post-cleanup.groovy'
     include file: 'task-rep-nullable.groovy'
     include file: 'lead-visibility-add.groovy'
+    include file: 'location-report-add.groovy'
 }
