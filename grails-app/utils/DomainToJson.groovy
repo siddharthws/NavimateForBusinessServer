@@ -35,6 +35,13 @@ class DomainToJson {
         return true
     }
 
+    static def AccountSettings(AccountSettings accSettings) {
+        return [
+                startHr: accSettings.startHr,
+                endHr: accSettings.endHr,
+        ]
+    }
+
     static def User(User user) {
         return [
                 id:             user.id,

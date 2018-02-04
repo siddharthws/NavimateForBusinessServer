@@ -1,6 +1,7 @@
 package navimateforbusiness.api
 
 import grails.converters.JSON
+import navimateforbusiness.AccountSettings
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
 import navimateforbusiness.Data
@@ -316,6 +317,19 @@ class RepApiController {
         }
 
         def resp = [success: true]
+        render resp as JSON
+    }
+
+    // API to get init data on app start
+    def appStart() {
+        // Get rep
+        def rep = authenticate()
+
+        // Get account settings
+        def accSettings = AccountSettings.findByAccount(rep.account)
+
+        // Return JSON response
+        def resp = DomainToJson.AccountSettings(accSettings)
         render resp as JSON
     }
 

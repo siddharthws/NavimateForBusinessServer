@@ -6,6 +6,7 @@ import navimateforbusiness.AccountSettings
 import navimateforbusiness.ApiException
 import navimateforbusiness.ApiKey
 import navimateforbusiness.Constants
+import navimateforbusiness.DomainToJson
 import navimateforbusiness.Role
 import navimateforbusiness.User
 
@@ -87,8 +88,7 @@ class AuthApiController {
 
             // Add account settings
             AccountSettings settings = AccountSettings.findByAccount(user.account)
-            resp += [startHr: settings.startHr]
-            resp += [endHr: settings.endHr]
+            resp += DomainToJson.AccountSettings(settings)
         }
         render resp as JSON
     }
