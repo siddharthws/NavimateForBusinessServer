@@ -47,7 +47,9 @@ class UrlMappings {
         "/api/reps/sync/values"     (controller: "RepApi") {action = [POST: "syncValues"]}
         "/api/reps/fcm"             (controller: "RepApi") {action = [POST: "updateFcm"]}
         "/api/reps/otp"             (controller: "RepApi") {action = [POST: "sendOtpSms"]}
-        "/api/reps/locationReport"  (controller: "RepApi") {action = [POST: "synclocationReport"]}
+        "/api/reps/locationReport"  (controller: "RepApi") {action = [POST: "syncLocationReport"]}
+        "/api/reps/addTask"         (controller: "RepApi") {action = [POST: "addTask"]}
+        "/api/reps/addLead"         (controller: "RepApi") {action = [POST: "addLead"]}
 
         // Photo APIs
         "/api/photos/upload"        (controller: "PhotoApi") {action = [POST: "upload"]}

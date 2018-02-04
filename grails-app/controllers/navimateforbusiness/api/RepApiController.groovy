@@ -319,7 +319,7 @@ class RepApiController {
         render resp as JSON
     }
 
-    def synclocationReport() {
+    def syncLocationReport() {
         // Get rep
         User rep = authenticate()
 
@@ -332,6 +332,65 @@ class RepApiController {
         // Send success response
         def resp = [success: true]
         render resp as JSON
+    }
+
+    def addTask() {
+        // Get rep
+        User rep = authenticate()
+
+        // Add rep ID to task json
+        request.JSON.taskJson.repId = rep.id
+
+        // Parse to Task
+        Task task = JsonToDomain.Task(request.JSON.taskJson, rep.manager)
+        task.save(failOnError: true, flush: true)
+
+        // prepare response JSOn with IDs and version
+        def valuesResp = []
+        task.templateData.values.each {value ->
+            valuesResp.push([
+                    id: value.id,
+                    ver: value.version
+            ])
+        }
+        def taskResp = [
+                id: task.id,
+                ver: task.version,
+                data: [
+                        id: task.templateData.id,
+                        ver: task.templateData.version,
+                        values: valuesResp
+                ]
+        ]
+        render taskResp as JSON
+    }
+
+    def addLead() {
+        // Get rep
+        User rep = authenticate()
+
+        // Parse to Lead
+        Lead lead = JsonToDomain.Lead(request.JSON.leadJson, rep)
+        lead.save(failOnError: true, flush: true)
+
+        // prepare response JSOn with IDs and version
+        def valuesResp = []
+        lead.templateData.values.each {value ->
+            valuesResp.push([
+                    id: value.id,
+                    ver: value.version
+            ])
+        }
+        def leadResp = [
+                id: lead.id,
+                ver: lead.version,
+                data: [
+                        id: lead.templateData.id,
+                        ver: lead.templateData.version,
+                        values: valuesResp
+                ]
+        ]
+        render leadResp as JSON
     }
 
     private def authenticate() {
