@@ -1,7 +1,7 @@
 /**
  * Created by aroha on 13-01-2017.
  */
-app.service('LeadDataService', function($rootScope, $http, $localStorage, ToastService) {
+app.service('LeadDataService', function($rootScope, $http, $localStorage) {
 
     /* ----------------------------- INIT --------------------------------*/
     var vm = this
@@ -12,7 +12,6 @@ app.service('LeadDataService', function($rootScope, $http, $localStorage, ToastS
     /* ----------------------------- APIs --------------------------------*/
     //API to get Lead data
     vm.sync = function (){
-        $rootScope.showWaitingDialog("Please wait while we are fetching lead details...")
         $http({
             method:     'GET',
             url:        '/api/users/lead',
@@ -21,15 +20,12 @@ app.service('LeadDataService', function($rootScope, $http, $localStorage, ToastS
             }
         }).then(
                 function (response) {
-                    $rootScope.hideWaitingDialog()
-
                     // Update cache data
                     vm.cache.data = response.data
                     $rootScope.$broadcast(Constants.Events.LEAD_DATA_READY)
                 },
                 function (error) {
-                    $rootScope.hideWaitingDialog()
-                    ToastService.toast("Unable to load leads !!!")
+                    $rootScope.$broadcast(Constants.Events.DATA_LOAD_ERROR)
                 })
     }
 

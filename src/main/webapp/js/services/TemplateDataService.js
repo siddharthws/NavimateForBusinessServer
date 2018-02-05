@@ -1,7 +1,7 @@
 /**
  * Created by aroha on 14-01-2018.
  */
-app.service('TemplateDataService', function($rootScope, $http, $localStorage, ToastService) {
+app.service('TemplateDataService', function($rootScope, $http, $localStorage) {
 
     /* ----------------------------- INIT --------------------------------*/
     var vm = this
@@ -15,7 +15,6 @@ app.service('TemplateDataService', function($rootScope, $http, $localStorage, To
     /* ----------------------------- APIs --------------------------------*/
     //API to get Template data
     vm.syncForms = function (){
-        $rootScope.showWaitingDialog("Please wait while we are fetching forms...")
         $http({
             method:     'GET',
             url:        '/api/users/template',
@@ -27,15 +26,12 @@ app.service('TemplateDataService', function($rootScope, $http, $localStorage, To
             }
         }).then(
                 function (response) {
-                    $rootScope.hideWaitingDialog()
-
                     // Update cache data
                     vm.cache.data.forms = response.data.templates
                     $rootScope.$broadcast(Constants.Events.FORM_TEMPLATE_DATA_READY)
                 },
                 function (error) {
-                    $rootScope.hideWaitingDialog()
-                    ToastService.toast("Unable to load forms templates !!!")
+                    $rootScope.$broadcast(Constants.Events.DATA_LOAD_ERROR)
                 })
     }
 
@@ -59,7 +55,7 @@ app.service('TemplateDataService', function($rootScope, $http, $localStorage, To
                 $rootScope.$broadcast(Constants.Events.LEAD_TEMPLATE_DATA_READY)
             },
             function (error) {
-                ToastService.toast("Unable to load lead templates !!!")
+                $rootScope.$broadcast(Constants.Events.DATA_LOAD_ERROR)
             })
     }
 
@@ -83,7 +79,7 @@ app.service('TemplateDataService', function($rootScope, $http, $localStorage, To
                 $rootScope.$broadcast(Constants.Events.TASK_TEMPLATE_DATA_READY)
             },
             function (error) {
-                ToastService.toast("Unable to load task templates !!!")
+                $rootScope.$broadcast(Constants.Events.DATA_LOAD_ERROR)
             })
     }
 
