@@ -20,7 +20,9 @@ app.service('TemplateDataService', function($rootScope, $http, $localStorage, To
             method:     'GET',
             url:        '/api/users/template',
             headers:    {
-                'X-Auth-Token':    $localStorage.accessToken,
+                'X-Auth-Token':    $localStorage.accessToken
+            },
+            params:     {
                 'templateType':    Constants.Template.TYPE_FORM
             }
         }).then(
@@ -43,7 +45,9 @@ app.service('TemplateDataService', function($rootScope, $http, $localStorage, To
             method:     'GET',
             url:        '/api/users/template',
             headers:    {
-                'X-Auth-Token':    $localStorage.accessToken,
+                'X-Auth-Token':    $localStorage.accessToken
+            },
+            params:     {
                 'templateType':    Constants.Template.TYPE_LEAD
             }
         }).then(
@@ -65,7 +69,9 @@ app.service('TemplateDataService', function($rootScope, $http, $localStorage, To
             method:     'GET',
             url:        '/api/users/template',
             headers:    {
-                'X-Auth-Token':    $localStorage.accessToken,
+                'X-Auth-Token':    $localStorage.accessToken
+            },
+            params:     {
                 'templateType':    Constants.Template.TYPE_TASK
             }
         }).then(
