@@ -175,7 +175,7 @@ Constants.DashboardNav.Menu = [
         id:         Constants.DashboardNav.ITEM_TEMPLATES,
         name:       "Templates",
         state:      "templates",
-        accessLevel:Constants.Role.MANAGER,
+        accessLevel:Constants.Role.ADMIN,
         options:    [
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_FORM],
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_LEAD],
