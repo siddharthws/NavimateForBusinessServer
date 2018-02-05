@@ -360,7 +360,7 @@ class UserApiController {
 
     def getTemplates() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-        int type = Integer.parseInt(request.getHeader("templateType"))
+        int type = Integer.parseInt(params.templateType)
         List<Template> templates
 
         // Get List of Form templates of admin for this user
