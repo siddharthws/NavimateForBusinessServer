@@ -12,7 +12,6 @@ app.service('TeamDataService', function($rootScope, $http, $localStorage) {
     /* ----------------------------- APIs --------------------------------*/
     //API to get team data
     vm.sync = function (){
-        $rootScope.showWaitingDialog("Please wait while we are fetching team details...")
         $http({
             method:     'GET',
             url:        '/api/users/team',
@@ -21,15 +20,12 @@ app.service('TeamDataService', function($rootScope, $http, $localStorage) {
             }
         }).then(
             function (response) {
-                    $rootScope.hideWaitingDialog()
-
                     // Update cache data
                     vm.cache.data = response.data
                     $rootScope.$broadcast(Constants.Events.TEAM_DATA_READY)
             },
             function (error) {
-                    $rootScope.hideWaitingDialog()
-                    ToastService.toast("Unable to load team !!!")
+                    $rootScope.$broadcast(Constants.Events.DATA_LOAD_ERROR)
             })
     }
 

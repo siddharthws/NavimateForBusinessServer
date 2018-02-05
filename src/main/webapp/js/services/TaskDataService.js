@@ -12,7 +12,6 @@ app.service('TaskDataService', function($rootScope, $http, $localStorage) {
     /* ----------------------------- APIs --------------------------------*/
     //API to get task data
     vm.sync = function (){
-        $rootScope.showWaitingDialog("Please wait while we are fetching Tasks...")
         $http({
             method:     'GET',
             url:        '/api/users/task',
@@ -21,15 +20,12 @@ app.service('TaskDataService', function($rootScope, $http, $localStorage) {
             }
         }).then(
             function (response) {
-                $rootScope.hideWaitingDialog()
-
                 // Update cache data
                 vm.cache.data = response.data
                 $rootScope.$broadcast(Constants.Events.TASK_DATA_READY)
             },
             function (error) {
-                $rootScope.hideWaitingDialog()
-                ToastService.toast("Unable to load Tasks !!!")
+                $rootScope.$broadcast(Constants.Events.DATA_LOAD_ERROR)
             })
     }
 
