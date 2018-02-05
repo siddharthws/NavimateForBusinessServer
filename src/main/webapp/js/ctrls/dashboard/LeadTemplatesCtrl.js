@@ -51,7 +51,7 @@ app.controller("LeadTemplatesCtrl", function ($scope, $rootScope, $http, $localS
                 $rootScope.showWaitingDialog("Removing Templates...")
                 $http({
                     method: 'POST',
-                    url:    '/api/users/template/remove',
+                    url:    '/api/admin/removeTemplates',
                     headers: {
                         'X-Auth-Token': $localStorage.accessToken
                     },

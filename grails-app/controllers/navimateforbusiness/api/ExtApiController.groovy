@@ -364,7 +364,7 @@ class ExtApiController {
             }
 
             // Check if template exists
-            def template = Template.findByNameAndTypeAndAccount(leadJson.template, Constants.Template.TYPE_LEAD, account)
+            def template = Template.findByAccountAndNameAndType(account, leadJson.template, Constants.Template.TYPE_LEAD)
             if (!template) {
                 throw new ApiException("Template " + leadJson.template + " not found for lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
@@ -522,12 +522,12 @@ class ExtApiController {
             }
 
             // Check if templates exists
-            def formTemplate = Template.findByNameAndTypeAndAccount(taskJson.formTemplate, Constants.Template.TYPE_FORM, account)
+            def formTemplate = Template.findByAccountAndNameAndType(account, taskJson.formTemplate, Constants.Template.TYPE_FORM)
             if (!formTemplate) {
                 throw new ApiException("Form Template " + taskJson.formTemplate + " not found for task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
 
-            def taskTemplate = Template.findByNameAndTypeAndAccount(taskJson.taskTemplate, Constants.Template.TYPE_TASK, account)
+            def taskTemplate = Template.findByAccountAndNameAndType(account, taskJson.taskTemplate, Constants.Template.TYPE_TASK)
             if (!taskTemplate) {
                 throw new ApiException("Task Template " + taskJson.taskTemplate + " not found for task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
@@ -706,7 +706,7 @@ class ExtApiController {
             lead.longitude         = latlngs[0].longitude
 
             // Get template to be used
-            def template = Template.findByNameAndTypeAndAccount(leadJson.template, Constants.Template.TYPE_LEAD, account)
+            def template = Template.findByAccountAndNameAndType(account, leadJson.template, Constants.Template.TYPE_LEAD)
 
             // Check if lead has an existing data object
             Data templateData = lead.templateData
@@ -840,8 +840,8 @@ class ExtApiController {
             }
 
             // Get template to be used
-            task.formTemplate = Template.findByNameAndTypeAndAccount(taskJson.formTemplate, Constants.Template.TYPE_FORM, account)
-            def taskTemplate = Template.findByNameAndTypeAndAccount(taskJson.taskTemplate, Constants.Template.TYPE_TASK, account)
+            task.formTemplate = Template.findByAccountAndNameAndType(account, taskJson.formTemplate, Constants.Template.TYPE_FORM)
+            def taskTemplate = Template.findByAccountAndNameAndType(account, taskJson.taskTemplate, Constants.Template.TYPE_TASK)
 
             // Check if lead has an existing data object
             Data templateData = task.templateData

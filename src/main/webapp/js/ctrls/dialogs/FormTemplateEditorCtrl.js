@@ -24,7 +24,7 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
         $rootScope.showWaitingDialog("Please wait while template is being saved...")
         $http({
             method:     'POST',
-            url:        '/api/users/template',
+            url:        '/api/admin/template',
             headers:    {
                 'X-Auth-Token':    $localStorage.accessToken
             },

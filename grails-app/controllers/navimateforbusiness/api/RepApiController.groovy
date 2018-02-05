@@ -131,23 +131,29 @@ class RepApiController {
     }
 
     def syncTemplates() {
-        def id = request.getHeader("id")
-        User rep = User.findById(id)
-        if (!rep) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
+        User rep = authenticate()
 
         // Get Sync data form request
         def syncData = request.JSON.syncData
 
+        // Get Template with this id
+        def templates = Template.findAllByAccountAndIsRemoved(rep.account, false)
+
         // Check which templates need to be sent back to app
         def templatesJson = []
-        syncData.each {syncObject ->
-            // Get lead with this id
-            Template template = Template.findByIdAndAccount(syncObject.id, rep.account)
+        templates.each {template ->
+            boolean bSynced = false
+
+            //Check for Version
+            for (int i = 0; i < syncData.size(); i++) {
+                def syncObject = syncData.get(i)
+                if (syncObject.id == template.id) {
+                    bSynced = (syncData.ver == template.version)
+                }
+            }
 
             // Add to response if version mismatch
-            if (template && (template.version > syncObject.ver)) {
+            if (!bSynced) {
                 templatesJson.push(DomainToJson.Template(template))
             }
         }

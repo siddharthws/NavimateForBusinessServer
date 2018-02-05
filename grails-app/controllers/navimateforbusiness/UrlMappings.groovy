@@ -17,6 +17,8 @@ class UrlMappings {
 
         // Admin Related APIs
         "/api/admin/accSettings"    (controller: "AdminApi") {action = [POST: "updateSettings"]}
+        "/api/admin/template"       (controller: "AdminApi") {action = [POST: "saveTemplate"]}
+        "/api/admin/removeTemplates"(controller: "AdminApi") {action = [POST: "removeTemplates"]}
 
         // User Info APIs
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
@@ -28,8 +30,7 @@ class UrlMappings {
         "/api/users/task/close"     (controller: "UserApi") {action = [POST: "closeTasks"]}
         "/api/users/task/remove"    (controller: "UserApi") {action = [POST: "removeTasks"]}
         "/api/users/task/stoprenew" (controller: "UserApi") {action = [POST: "stopTaskRenewal"]}
-        "/api/users/template"       (controller: "UserApi") {action = [GET: "getTemplates", POST: "saveTemplate"]}
-        "/api/users/template/remove"(controller: "UserApi") {action = [POST: "removeTemplates"]}
+        "/api/users/template"       (controller: "UserApi") {action = [GET: "getTemplates"]}
         "/api/users/report"         (controller: "UserApi") {action = [GET: "getReport"]}
         "/api/users/locationReport" (controller: "UserApi") {action = [GET: "getLocationReport"]}
         "/api/leads/upload"         (controller: "UserApi") {action = [POST: "uploadLeads"]}
