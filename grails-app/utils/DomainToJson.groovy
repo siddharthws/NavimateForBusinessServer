@@ -92,6 +92,7 @@ class DomainToJson {
                 id:                 template.id,
                 ver:                template.version,
                 name:               template.name,
+                type:               template.type,
                 defaultDataId:      template.defaultData.id,
                 fieldIds:           fieldIds
         ]
