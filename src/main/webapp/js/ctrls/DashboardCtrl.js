@@ -58,7 +58,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $
     }
 
     function checkSync(){
-        if(!bLeadSync && !bTeamSync && !bTaskSync && !bFormTemplateSync && !bLeadTemplateSync && !bTaskTemplateSync ){
+        if(bLeadSync && bTeamSync && bTaskSync && bFormTemplateSync && bLeadTemplateSync && bTaskTemplateSync){
             $rootScope.hideWaitingDialog()
         }
     }
