@@ -2,7 +2,7 @@
  * Created by Chandel on 06-02-2018.
  */
 
-app.controller("CompanySettingsCtrl", function ($scope, $localStorage) {
+app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScope, ToastService, $http) {
     var vm = this
 
     /*------------------------------------ INIT --------------------------------*/
@@ -49,5 +49,28 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage) {
         else {
             vm.endHr--
         }
+    }
+
+    vm.update = function () {
+        $rootScope.showWaitingDialog("Please wait while settings are updating...")
+        $http({
+            method:     'POST',
+            url:        '/api/admin/accSettings',
+            headers:    {
+                'X-Auth-Token':    $localStorage.accessToken
+            },
+            data:       {
+                startHr  : vm.startHr,
+                endHr    : vm.endHr
+            }
+        }).then(
+            function (response) {
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Settings Successfully Updated!!!")
+            },
+            function (error) {
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Failed to Update settings!!!")
+            })
     }
 });
