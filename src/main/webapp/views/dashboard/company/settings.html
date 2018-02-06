@@ -1,0 +1,24 @@
+<!-- Company Settings HTML -->
+<div class="d-flex flex-column p-4">
+    <span class="centered">Set the Working Hours</span>
+    <div class="d-flex align-items-center ml-2">
+        <span>Start Time</span>
+        <button type="button" class="btn" ng-click="$ctrl.decrementStartHr()">
+            -
+        </button>
+        <span>{{$ctrl.startHr + ": 00"}}</span>
+        <button type="button" class="btn btn-primary" ng-click="$ctrl.incrementStartHr()">
+            +
+        </button>
+    </div>
+    <div class="d-flex align-items-center  ml-2">
+        <span>End Time</span>
+        <button type="button" class="btn" ng-click="$ctrl.decrementEndHr()">
+            -
+        </button>
+        <span>{{$ctrl.endHr + ": 00"}}</span>
+        <button type="button" class="btn btn-primary" ng-click="$ctrl.incrementEndHr()">
+            +
+        </button>
+    </div>
+</div>

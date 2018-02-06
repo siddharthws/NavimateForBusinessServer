@@ -75,7 +75,8 @@ Constants.DashboardNav = {
     OPTION_TASK     : 4,
     OPTION_PROFILE  : 5,
     OPTION_OPEN     : 6,
-    OPTION_CLOSE    : 7
+    OPTION_CLOSE    : 7,
+    OPTION_SETTINGS : 8
 }
 
 /*-----------------------------Dashboard user role-------------------------------------*/
@@ -131,6 +132,11 @@ Constants.DashboardNav.Options = [
         id:         Constants.DashboardNav.OPTION_CLOSE,
         name:       'Close',
         state:      'close'
+    },
+    {
+        id:         Constants.DashboardNav.OPTION_SETTINGS,
+        name:       'Settings',
+        state:      'settings'
     }
 ]
 
@@ -189,7 +195,8 @@ Constants.DashboardNav.Menu = [
         state:      "company",
         accessLevel:Constants.Role.ADMIN,
         options:    [
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_PROFILE]
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_PROFILE],
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_SETTINGS]
         ]
     }
 ]
