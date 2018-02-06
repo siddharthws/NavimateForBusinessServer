@@ -220,6 +220,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/company/profile.html',
         controller: 'CompanyProfileCtrl as $ctrl'
     })
+    .state('dashboard.company-settings', {
+        url: '/company/settings',
+        templateUrl: '/static/views/dashboard/company/settings.html',
+        controller: 'CompanySettingsCtrl as $ctrl'
+      })
     .state('photos', {
           url: '/photos?name',
           templateUrl: '/static/views/photos.html',

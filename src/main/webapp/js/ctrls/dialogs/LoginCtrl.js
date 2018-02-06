@@ -30,6 +30,8 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
                         // Save Admin Specific Information
                         if ($localStorage.role == Constants.Role.ADMIN) {
                             $localStorage.apiKey = response.data.apiKey
+                            $localStorage.startHr = response.data.startHr
+                            $localStorage.endHr = response.data.endHr
                         }
 
                         // Check if user wants to be remembered
