@@ -28,6 +28,8 @@ class Form {
     ]
 
     static constraints = {
+        task        nullable: true
+        taskStatus  nullable: true
     }
 
     static mapping = {

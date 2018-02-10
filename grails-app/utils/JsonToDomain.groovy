@@ -79,7 +79,7 @@ class JsonToDomain {
                         navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
             }
         } else {
-            Task task = Task.findById(formJson.taskId)
+            Task task = formJson.taskId ? Task.findById(formJson.taskId) : null
             double lat = formJson.latitude
             double lng = formJson.longitude
             Date date = new Date(formJson.timestamp)
@@ -87,7 +87,10 @@ class JsonToDomain {
             Data data = Data(formJson.data, owner, template)
 
             // Get Taks status form close task boolean
-            navimateforbusiness.TaskStatus submitStatus = formJson.closeTask ? navimateforbusiness.TaskStatus.CLOSED : navimateforbusiness.TaskStatus.OPEN
+            navimateforbusiness.TaskStatus submitStatus = null
+            if (task!= null) {
+                submitStatus = formJson.closeTask ? navimateforbusiness.TaskStatus.CLOSED : navimateforbusiness.TaskStatus.OPEN
+            }
 
             // Create form object
             form = new Form(owner: owner,
