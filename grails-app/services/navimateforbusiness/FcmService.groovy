@@ -7,6 +7,8 @@ import grails.plugins.rest.client.RestBuilder
 class FcmService {
 
     def notifyApp (fcmId) {
+        def bSent = false
+
         if (fcmId) {
             // Send request to FCM server
             def request = new RestBuilder(connectTimeout:1000, readTimeout:20000)
@@ -24,8 +26,12 @@ class FcmService {
             // Validate response
             if (!resp.json.success) {
                 log.error("Error while sending FCM : " + resp.json)
+            } else {
+                bSent = true
             }
         }
+
+        bSent
     }
 
     def trackApp (fcmId) {

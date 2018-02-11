@@ -93,11 +93,14 @@ class UserApiController {
                     phoneNumber: request.JSON.phoneNumber,
                     role: Role.REP,
                     status: UserStatus.INACTIVE)
+        }
+        rep.save(flush: true, failOnError: true)
 
+        // Send either FCM or SMS to app
+        if (!fcmService.notifyApp(rep.fcmId)) {
             // Send SMS to new user
             SmsHelper.SendSms(rep.phoneNumber, user.name + " has added you to navimate. Join on https://play.google.com/store/apps/details?id=com.biz.navimate")
         }
-        rep.save(flush: true, failOnError: true)
 
         def resp = [success: true]
         render resp as JSON
