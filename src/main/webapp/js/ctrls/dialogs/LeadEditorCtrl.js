@@ -9,18 +9,18 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
     $scope.add = function () {
         // Add a lead to current center of map with first template's default data
         var lead = {
-            latitude: googleMap.getCenter().lat(),
-            longitude: googleMap.getCenter().lng()
+            latitude: 0,
+            longitude: 0
         }
 
-        // Add lead to array
+        // Add lead to leads array
         $scope.leads.push(lead)
 
         // Add template data to the lead
         $scope.updateTemplate($scope.leads.length - 1, 0)
 
         // Simulate a click on the new item
-        $scope.listItemClick(lead)
+        $scope.listItemClick($scope.leads.indexOf(lead))
 
         // Scroll to bottom
         scrollList($scope.leads.length)
@@ -61,18 +61,18 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
     $scope.getTemplateById = TemplateDataService.getTemplateById
     $scope.getFieldById = TemplateDataService.getFieldById
 
-    $scope.listItemClick = function (lead) {
+    $scope.listItemClick = function (idx) {
         // Select this lead
-        $scope.selectedLead = lead
+        $scope.selectedLead = $scope.leads[idx]
 
         // Refresh Address Search
         $scope.searchResults = []
 
-        // Center map on this lead
-        if (googleMap){
-            googleMap.panTo(new google.maps.LatLng(lead.latitude, lead.longitude))
+        // Scroll list ot place this item on top
+        scrollList(idx)
 
-        }
+        // Center map on selected lead marker
+        $scope.$broadcast(Constants.Events.MAP_CENTER, {latitude: $scope.selectedLead.latitude, longitude: $scope.selectedLead.longitude})
     }
 
     $scope.remove = function(lead) {
@@ -120,8 +120,8 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
                     $scope.selectedLead.latitude = lat
                     $scope.selectedLead.longitude = lng
 
-                    // Recenter map on the selected lead
-                    googleMap.panTo(new google.maps.LatLng(lat, lng))
+                    // Center map
+                    $scope.$broadcast(Constants.Events.MAP_CENTER, {latitude: lat, longitude: lng})
                 })
     }
 
@@ -160,54 +160,6 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
 
     $scope.isLeadValid = function (lead) {
         return (lead.title && lead.latitude && lead.longitude && lead.address)
-    }
-
-    // Map Init Callback from ngMap
-    $scope.mapInitialized = function (map) {
-        // Set map object
-        googleMap = map
-
-        if ($scope.leads.length) {
-            // Center map on added leads
-            var bounds = new google.maps.LatLngBounds()
-            $scope.leads.forEach(function (lead) {
-                bounds.extend(new google.maps.LatLng(lead.latitude, lead.longitude))
-            })
-            googleMap.fitBounds(bounds)
-        }
-
-        // Trigger resize event (Hack since map is not loaded correctly second time)
-        google.maps.event.trigger(googleMap, 'resize')
-
-        // Run angular digest cycle since this is async callback
-        $scope.$apply()
-    }
-
-    // API to get marker icon based on conditions
-    $scope.getMarkerIcon = function (lead) {
-        // Blue marker for selected lead
-        if ($scope.selectedLead == lead) {
-            return {
-                url: "/static/images/marker_selected.png",
-                scaledSize: [40, 40]
-            }
-        }
-        // Default green icon
-        else {
-            return {
-                url: "/static/images/marker_default.png",
-                scaledSize: [40, 40]
-            }
-        }
-    }
-
-    // Marker Click Events
-    $scope.markerClicked = function(e, lead) {
-        // Perform a list item click
-        $scope.listItemClick(lead)
-
-        // Scroll list ot place this item on top
-        scrollList($scope.leads.indexOf(lead))
     }
 
     // Marker drag events
@@ -327,10 +279,18 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
     $scope.searchResults = []
     $scope.bSearchWaiting = false
 
-    $scope.mapCenter = [21, 79]
-    $scope.mapZoom   = 4
-    var googleMap = null
-    var markerIconDefault, markerIconSelected, markerIconError = null
+    // Init Map Parameters
+    $scope.mapParams = {}
+    $scope.mapParams.markers = []
+
+    // Init Templates
+    $scope.templates = TemplateDataService.cache.data.leads
+
+    // Set event listeners
+    $scope.$on(Constants.Events.MAP_MARKER_CLICK, function (event, params) {
+        // Perform List click action
+        $scope.listItemClick(params.idx)
+    })
 
     // Init leads
     if (leads) {
@@ -338,7 +298,10 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
         $scope.leads = leads
         $scope.selectedLead = $scope.leads[0]
     }
+    else {
+     $scope.add()
+    }
 
-    // Init Templates
-    $scope.templates = TemplateDataService.cache.data.leads
+    // Add markers using parameters
+    $scope.mapParams.markers  = $scope.leads
 })

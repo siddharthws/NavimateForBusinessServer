@@ -22,7 +22,7 @@
                      class="list-group-item list-group-item-action"
                      ng-class="{'list-group-item-danger': bShowError && !isLeadValid(lead),
                               'active': selectedLead == lead}"
-                     ng-click="listItemClick(lead)">
+                     ng-click="listItemClick($index)">
 
                     <div class="d-flex align-items-center">
                         <span>
@@ -126,14 +126,7 @@
             </div>
         </div>
 
-        <div class="map-box flex-1" map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
-            <ng-map class="w-100 h-100"
-                    center="{{mapCenter}}" zoom="{{mapZoom}}" map-initialized="mapInitialized(map)">
-                <marker ng-repeat="lead in leads" icon="{{getMarkerIcon(lead)}}" title="{{lead.title}}"
-                        position="[{{lead.latitude}}, {{lead.longitude}}]"
-                        draggable="true" on-click="markerClicked(lead)" on-dragend="markerDragged(lead)"/>
-            </ng-map>
-            <div class="map-box-shadow"></div>
-        </div>
+        <!-- Include Map View -->
+        <ng-include class="flex-1" src="'/static/views/modules/Map.html'"></ng-include>
     </div>
 </md-dialog>
