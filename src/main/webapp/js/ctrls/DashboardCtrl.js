@@ -90,8 +90,19 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $state, $window, $
     })
 
     // Listener for data load error
+    var bError = false
     $scope.$on(Constants.Events.DATA_LOAD_ERROR, function (event, params) {
-       DialogService.alert("Unable to load data !!!")
+        // Ignore if error flag is already marker
+        if (bError) {
+            return
+        }
+        bError = true
+
+        // Hide Waiting dialog
+        $rootScope.hideWaitingDialog()
+
+        // Show Error Toast
+       ToastService.toast("Unable to load data !!!")
     })
 
 })
