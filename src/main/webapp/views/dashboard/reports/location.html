@@ -1,0 +1,12 @@
+<!-- Location Report HTML -->
+<!-- Toolbar -->
+<div class="bg-toolbar d-flex">
+    <select class="btn btn-default" ng-model="$ctrl.selectedRep" ng-options="rep.name for rep in $ctrl.team">
+        <option value="" ng-disabled="true">-- Select Rep --</option>
+    </select>
+    <md-datepicker ng-model="repDate" md-placeholder="-- Select Date --"></md-datepicker>
+</div>
+
+<!-- Include Map View -->
+<ng-include class="flex-1" src="'/static/views/modules/Map.html'"></ng-include>
+
