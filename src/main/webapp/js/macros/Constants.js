@@ -76,7 +76,8 @@ Constants.DashboardNav = {
     OPTION_PROFILE  : 5,
     OPTION_OPEN     : 6,
     OPTION_CLOSE    : 7,
-    OPTION_SETTINGS : 8
+    OPTION_SETTINGS : 8,
+    OPTION_LOCATION : 9,
 }
 
 /*-----------------------------Dashboard user role-------------------------------------*/
@@ -137,6 +138,11 @@ Constants.DashboardNav.Options = [
         id:         Constants.DashboardNav.OPTION_SETTINGS,
         name:       'Settings',
         state:      'settings'
+    },
+    {
+        id:         Constants.DashboardNav.OPTION_LOCATION,
+        name:       'Location',
+        state:      'location'
     }
 ]
 
@@ -175,7 +181,8 @@ Constants.DashboardNav.Menu = [
         state:      "reports",
         accessLevel:Constants.Role.MANAGER,
         options:    [
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT]
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT],
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_LOCATION]
         ]
     },
     {

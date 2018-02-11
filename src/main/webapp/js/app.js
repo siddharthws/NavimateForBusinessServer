@@ -200,6 +200,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/reports/report.html',
         controller: 'ReportCtrl as $ctrl'
     })
+    .state('dashboard.reports-location', {
+        url: '/location',
+        templateUrl: '/static/views/dashboard/reports/location.html',
+        controller: 'LocReportCtrl as $ctrl'
+    })
     .state('dashboard.templates-form', {
         url: '/templates/form',
         templateUrl: '/static/views/dashboard/templates/form.html',
