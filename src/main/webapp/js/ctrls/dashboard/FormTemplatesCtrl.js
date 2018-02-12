@@ -9,7 +9,7 @@ app.controller("FormTemplatesCtrl", function ($scope, $rootScope, $http, $localS
     vm.edit = function () {
         var selectedItems = vm.getSelectedItems()
         if (selectedItems.length != 1) {
-            ToastService.toast("Please select a single form to edit...")
+            ToastService.toast("Please select a single template to edit...")
         } else {
             DialogService.formTemplateEditor(selectedItems[0], init)
         }

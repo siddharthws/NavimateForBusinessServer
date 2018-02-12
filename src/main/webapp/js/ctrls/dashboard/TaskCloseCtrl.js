@@ -126,7 +126,6 @@ app.controller("TaskCloseCtrl", function ($scope, $rootScope, $http, $localStora
         columns.push({title: "ID",          type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
         columns.push({title: "Lead",        type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
         columns.push({title: "Rep",         type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
-        columns.push({title: "Status",      type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
         columns.push({title: "Period",      type: Constants.Template.FIELD_TYPE_NUMBER, filterType: Constants.Filter.TYPE_NUMBER})
         columns.push({title: "Form",        type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
         columns.push({title: "Template",    type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
@@ -193,22 +192,21 @@ app.controller("TaskCloseCtrl", function ($scope, $rootScope, $http, $localStora
             }
 
             // Add status and period
-            row[3] = task.status
-            row[4] = task.period
+            row[3] = task.period
 
             // Ignore task if it's form template was removed
             var formTemplate = TemplateDataService.getTemplateById(task.formTemplateId)
             if (!formTemplate) {
                 return
             }
-            row[5] = formTemplate.name
+            row[4] = formTemplate.name
 
             // Ignore task if it's form template was removed
             var taskTemplate = TemplateDataService.getTemplateById(task.templateId)
             if (!taskTemplate) {
                 return
             }
-            row[6] = taskTemplate.name
+            row[5] = taskTemplate.name
 
             // iterate through template data
             task.templateData.values.forEach(function (value) {
