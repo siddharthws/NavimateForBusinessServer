@@ -359,10 +359,10 @@ class RepApiController {
         User rep = authenticate()
 
         // Add rep ID to task json
-        request.JSON.taskJson.repId = rep.id
+        request.JSON.repId = rep.id
 
         // Parse to Task
-        Task task = JsonToDomain.Task(request.JSON.taskJson, rep.manager)
+        Task task = JsonToDomain.Task(request.JSON, rep.manager)
         task.save(failOnError: true, flush: true)
 
         // prepare response JSOn with IDs and version

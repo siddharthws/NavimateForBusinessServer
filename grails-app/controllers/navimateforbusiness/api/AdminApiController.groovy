@@ -16,8 +16,9 @@ class AdminApiController {
     // Service dependencies
     def authService
     def userService
+    def fcmService
 
-    def updateAccountSettings() {
+    def updateSettings() {
         // Get user
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
