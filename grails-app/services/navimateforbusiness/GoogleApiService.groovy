@@ -65,7 +65,8 @@ class GoogleApiService {
                 ))
             }
             else {
-                throw new navimateforbusiness.ApiException("Google API call failed with status : " + respJson.status)
+                // Push empty LatLng into the list
+                latlngs.push(new navimateforbusiness.LatLng(latitude: 0, longitude: 0))
             }
 
             // Mandatory 50 second delay between suucessive requests (recommended by google)
