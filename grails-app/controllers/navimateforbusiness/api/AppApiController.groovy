@@ -3,7 +3,7 @@ package navimateforbusiness.api
 import grails.converters.JSON
 
 class AppApiController {
-    static final int MIN_APP_VERSION_CODE = 13
+    static final int MIN_APP_VERSION_CODE = 17
 
     def checkForUpdate() {
         int appVersionCode = request.JSON.versionCode
