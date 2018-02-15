@@ -144,9 +144,7 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
 
         if (!vm.template.name) {
             toastMessage = "Please fill template name..."
-        } else if (!vm.fields.length) {
-            toastMessage = "Please add atleast 1 field..."
-        } else {
+        } else if (vm.fields.length)  {
             for (var i = 0; i < vm.fields.length; i++) {
                 var field = vm.fields[i]
                 var value = vm.data.values[i].value
