@@ -158,9 +158,22 @@ class RepApiController {
             }
         }
 
+        // Push templates which are to be removed
+        def removedTemplateIds = []
+        syncData.each { syncObj ->
+            // Get template by ID
+            def template = Template.findByAccountAndId(rep.account, syncObj.id)
+
+            // Check if template has been removed
+            if (!template || template.isRemoved) {
+                removedTemplateIds.push(template.id)
+            }
+        }
+
         // Send response
         def resp = [
-                "templates" : templatesJson
+                "templates" : templatesJson,
+                "removedIds": removedTemplateIds
         ]
         render resp as JSON
     }
