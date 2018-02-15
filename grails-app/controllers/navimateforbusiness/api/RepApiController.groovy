@@ -166,7 +166,7 @@ class RepApiController {
 
             // Check if template has been removed
             if (!template || template.isRemoved) {
-                removedTemplateIds.push(template.id)
+                removedTemplateIds.push(syncObj.id)
             }
         }
 

@@ -132,7 +132,7 @@ class ReportService {
             row[5] = form.taskStatus ? form.taskStatus.name() : "-"
 
             // Add form template name
-            row[6] = form.submittedData.template.name
+            row[6] = form.submittedData.template ? form.submittedData.template.name : "-"
 
             // Feed location if valid
             row[7] = (form.latitude || form.longitude) ? form.latitude + ',' + form.longitude : "-"
