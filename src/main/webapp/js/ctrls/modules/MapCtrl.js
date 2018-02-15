@@ -79,6 +79,7 @@ app.controller('MapCtrl', function ($scope) {
 
     // Add map params
     $scope.mapParams.zoom = 14
+    $scope.mapParams.polylines = []
 
     // Add properties to vm
     vm.markers = $scope.mapParams.markers

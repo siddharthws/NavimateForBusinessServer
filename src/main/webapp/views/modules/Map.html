@@ -4,6 +4,16 @@
     <!-- Map UI using ng-maps -->
     <ng-map class="w-100 h-100" center="[0, 0]" zoom="{{mapParams.zoom}}"
             map-initialized="$ctrl.mapInitialized(map)">
+        <!-- Polyline's on map -->
+        <shape ng-repeat="polyline in mapParams.polylines"
+               name="polyline"
+               path="{{polyline.path}}"
+               geodesic="true"
+               stroke-color="{{polyline.color}}"
+               stroke-opacity="1.0"
+               stroke-weight="2">
+        </shape>
+
         <!-- Markers on map -->
         <custom-marker  ng-repeat="marker in $ctrl.markers" ng-if="marker.latitude && marker.longitude"
                         title="{{marker.title}}" position="[{{marker.latitude}}, {{marker.longitude}}]" draggable="mapParams.draggable"
