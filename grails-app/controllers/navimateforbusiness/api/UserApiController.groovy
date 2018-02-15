@@ -122,6 +122,7 @@ class UserApiController {
 
             // Remove Rep's Manager
             rep.manager = null
+            rep.account = null
             rep.save(flush: true, failOnError: true)
         }
 

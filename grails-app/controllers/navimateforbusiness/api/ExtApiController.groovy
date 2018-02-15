@@ -310,7 +310,7 @@ class ExtApiController {
             def existingUser = User.findByPhoneNumberAndRole(userJson.phone, Role.REP)
             if (existingUser) {
                 // Check if user belongs to another account
-                if (existingUser.account != account) {
+                if (existingUser.account && existingUser.account != account) {
                     throw new ApiException("Unauthorized access to User with phone " + existingUser.phoneNumber, Constants.HttpCodes.BAD_REQUEST)
                 }
 
@@ -656,13 +656,13 @@ class ExtApiController {
 
             // If user not found by ext Id or Email, create a new one
             if (!user) {
-                user  = new User(   account:    account,
-                        role:       navimateforbusiness.Role.REP,
-                        status:     navimateforbusiness.UserStatus.ACTIVE)
+                user  = new User(   role:       navimateforbusiness.Role.REP,
+                                    status:     navimateforbusiness.UserStatus.ACTIVE)
             }
 
             // Update user info
             user.extId          = userJson.id
+            user.account        = account
             user.name           = userJson.name
             user.phoneNumber    = userJson.phone
             user.manager        = User.findByAccountAndExtIdAndRoleGreaterThanEquals(account, userJson.managerId, Role.MANAGER)
