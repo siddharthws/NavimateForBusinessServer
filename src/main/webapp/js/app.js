@@ -8,7 +8,8 @@ var app = angular.module("navimate", [
   'ngCookies',
   'angularjs-dropdown-multiselect',
   'ngFileSaver',
-  'angular.filter'
+  'angular.filter',
+  'chart.js'
 ]);
 
 // Http Response interceptor to parse certain types of error codes
