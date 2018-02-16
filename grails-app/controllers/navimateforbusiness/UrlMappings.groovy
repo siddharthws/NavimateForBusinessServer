@@ -37,6 +37,7 @@ class UrlMappings {
 
         // App APIs
         "/api/app/update"           (controller: "AppApi") {action = [POST: "checkForUpdate"]}
+        "/api/app/acra"             (controller: "AppApi") {action = [POST: "acra"]}
 
         // Rep APIs
         "/api/reps/appStart"        (controller: "RepApi") {action = [GET: "appStart"]}
