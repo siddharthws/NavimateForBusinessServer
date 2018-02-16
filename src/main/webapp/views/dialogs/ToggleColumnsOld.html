@@ -7,36 +7,36 @@
         </div>
 
         <div class="flex-1 overflow-auto">
-            <table class="table table-striped">
+            <table class="table tbl-old table-striped">
                 <thead>
-                    <th class="text-center">
-                        <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
-                    </th>
-                    <th class="text-left">
-                        Name
-                    </th>
-                    <th class="text-left">
-                        Re-order
-                    </th>
+                <th class="text-center">
+                    <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
+                </th>
+                <th class="text-left">
+                    Name
+                </th>
+                <th class="text-left">
+                    Re-order
+                </th>
                 </thead>
                 <tr ng-repeat="column in $ctrl.columns track by $index">
                     <td class="text-center">
-                        <md-checkbox ng-value="column.name" ng-model="column.bShow"></md-checkbox>
+                        <md-checkbox ng-value="column.title" ng-model="column.show"></md-checkbox>
                     </td>
                     <td>
-                        {{column.name}}
+                        {{column.title}}
                     </td>
                     <td>
-                        <input type="button" value="" class="ib-base ib-hover ib-s ib-up"
+                        <input type="button" value="" class="image-button ib-up"
                                ng-click="$ctrl.moveUp($index)" ng-show="$index > 0"/>
-                        <input type="button" value="" class="ib-base ib-hover ib-s ib-down"
+                        <input type="button" value="" class="image-button ib-down"
                                ng-click="$ctrl.moveDown($index)" ng-show="$index < ($ctrl.columns.length - 1)"/>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <div class="container-fluid d-flex justify-content-end">
+        <div class="container-fluid d-flex justify-content-end flex-shrink-0">
             <button class="btn btn-primary" ng-click="$ctrl.done()">Done</button>
         </div>
     </div>

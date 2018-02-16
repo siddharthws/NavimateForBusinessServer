@@ -141,15 +141,25 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Toggle Columns Dialog
-    this.toggleColumns = function (columns, resultCb) {
+    this.toggleColumnsOld = function (columns, resultCb) {
         // Show Dialog
-        $mdDialog.show({    templateUrl: '/static/views/dialogs/ToggleColumns.html',
-                            controller: 'ToggleColumnsCtrl as $ctrl',
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/ToggleColumnsOld.html',
+                            controller: 'ToggleColumnsOldCtrl as $ctrl',
                             clickOutsideToClose: true,
                             locals: {
                                 columns: columns,
                                 resultCb: resultCb
                             }
+        })
+    }
+    this.toggleColumns = function (columns) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/ToggleColumns.html',
+            controller: 'ToggleColumnsCtrl as $ctrl',
+            clickOutsideToClose: true,
+            locals: {
+                columns: columns
+            }
         })
     }
 
