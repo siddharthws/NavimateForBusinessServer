@@ -9,18 +9,21 @@ class UrlMappings {
             }
         }
 
+        /*------------------------- Authentication APIs --------------------------*/
         "/api/auth/register"        (controller: "AuthApi") { action = [POST: "register"] }
         "/api/auth/login"           (controller: "AuthApi") { action = [POST: "login"] }
         "/api/auth/logout"          (controller: "AuthApi") { action = [GET: "logout"] }
         "/api/auth/email"           (controller: "AuthApi") { action = [POST: "email"] }
         "/api/auth/forgotPassword"  (controller: "AuthApi") { action = [POST: "forgotPassword"] }
 
-        // Admin Related APIs
+        /*------------------------- Admin APIs --------------------------*/
         "/api/admin/accSettings"    (controller: "AdminApi") {action = [POST: "updateSettings"]}
         "/api/admin/template"       (controller: "AdminApi") {action = [POST: "saveTemplate"]}
         "/api/admin/removeTemplates"(controller: "AdminApi") {action = [POST: "removeTemplates"]}
 
-        // User Info APIs
+        /*------------------------- Manager APIs --------------------------*/
+
+        /*------------------------- User APIs to be removed --------------------------*/
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
         "/api/users/team"           (controller: "UserApi") {action = [GET: "getTeam",      POST: "addRep"]}
         "/api/users/team/remove"    (controller: "UserApi") {action = [POST: "removeReps"]}
@@ -35,11 +38,7 @@ class UrlMappings {
         "/api/users/locationReport" (controller: "UserApi") {action = [GET: "getLocationReport"]}
         "/api/leads/upload"         (controller: "UserApi") {action = [POST: "uploadLeads"]}
 
-        // App APIs
-        "/api/app/update"           (controller: "AppApi") {action = [POST: "checkForUpdate"]}
-        "/api/app/acra"             (controller: "AppApi") {action = [POST: "acra"]}
-
-        // Rep APIs
+        /*------------------------- Rep APIs --------------------------*/
         "/api/reps/appStart"        (controller: "RepApi") {action = [GET: "appStart"]}
         "/api/reps/profile"         (controller: "RepApi") {action = [POST: "getMyProfile"]}
         "/api/reps/register"        (controller: "RepApi") {action = [POST: "register"]}
@@ -57,33 +56,35 @@ class UrlMappings {
         "/api/reps/addTask"         (controller: "RepApi") {action = [POST: "addTask"]}
         "/api/reps/addLead"         (controller: "RepApi") {action = [POST: "addLead"]}
 
-        // Photo APIs
-        "/api/photos/upload"        (controller: "PhotoApi") {action = [POST: "upload"]}
-        "/api/photos/get"           (controller: "PhotoApi") {action = [GET: "get"]}
-
-        // Tracking APIs
-        "/api/track/start"          (controller: "TrackingApi") {action = [POST: "start"]}
-        "/api/track/refresh"        (controller: "TrackingApi") {action = [POST: "refresh"]}
-        "/api/track/stop"           (controller: "TrackingApi") {action = [POST: "stop"]}
-        "/api/track/data"           (controller: "TrackingApi") {action = [GET: "getData", POST: "postData"]}
-
-        // Google API access
-        "/api/googleapis/autocomplete"      (controller: "GoogleApi") {action = [GET: "autocomplete"]}
-        "/api/googleapis/geocode"           (controller: "GoogleApi") {action = [GET: "geocode"]}
-        "/api/googleapis/geocode/reverse"   (controller: "GoogleApi") {action = [GET: "reverseGeocode"]}
-
-        // External APIs
+        /*------------------------- External APIs --------------------------*/
         "/api/ext/sync/managers"        (controller: "ExtApi") {action = [POST: "syncManagers"]}
         "/api/ext/sync/reps"            (controller: "ExtApi") {action = [POST: "syncReps"]}
         "/api/ext/sync/leads"           (controller: "ExtApi") {action = [POST: "syncLeads"]}
         "/api/ext/sync/tasks"           (controller: "ExtApi") {action = [POST: "syncTasks"]}
         "/api/ext/report/forms"         (controller: "ExtApi") {action = [GET: "getFormReport"]}
 
-        // Porting APIs
+        /*------------------------- Other APIs --------------------------*/
+        // Tracking related APIs
+        "/api/track/start"          (controller: "TrackingApi") {action = [POST: "start"]}
+        "/api/track/refresh"        (controller: "TrackingApi") {action = [POST: "refresh"]}
+        "/api/track/stop"           (controller: "TrackingApi") {action = [POST: "stop"]}
+        "/api/track/data"           (controller: "TrackingApi") {action = [GET: "getData", POST: "postData"]}
+
+        // Google related APIs
+        "/api/googleapis/autocomplete"      (controller: "GoogleApi") {action = [GET: "autocomplete"]}
+        "/api/googleapis/geocode"           (controller: "GoogleApi") {action = [GET: "geocode"]}
+        "/api/googleapis/geocode/reverse"   (controller: "GoogleApi") {action = [GET: "reverseGeocode"]}
+
+        // App related APIs
+        "/api/app/update"           (controller: "AppApi") {action = [POST: "checkForUpdate"]}
+        "/api/app/acra"             (controller: "AppApi") {action = [POST: "acra"]}
+
+        // Photo Related APIs
+        "/api/photos/upload"        (controller: "PhotoApi") {action = [POST: "upload"]}
+        "/api/photos/get"           (controller: "PhotoApi") {action = [GET: "get"]}
 
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
-
         "/"(uri: '/static/index.html')
     }
 }
