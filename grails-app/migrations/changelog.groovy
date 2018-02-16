@@ -29,4 +29,5 @@ databaseChangeLog = {
     include file: 'location-report-add.groovy'
     include file: 'account-settings-add.groovy'
     include file: 'form-task-nullable.groovy'
+    include file: 'acra-add.groovy'
 }
