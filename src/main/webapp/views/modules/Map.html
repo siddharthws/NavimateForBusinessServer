@@ -15,13 +15,20 @@
         </shape>
 
         <!-- Markers on map -->
-        <custom-marker  ng-repeat="marker in $ctrl.markers" ng-if="marker.latitude && marker.longitude"
-                        title="{{marker.title}}" position="[{{marker.latitude}}, {{marker.longitude}}]" draggable="mapParams.draggable"
-                        on-click="$ctrl.markerClick($index)" on-dragend="$ctrl.markerDragend($index)">
-            <div class="tracker-marker">
-                {{marker.title}}
-            </div>
-        </custom-marker>
+        <div ng-if="!mapParams.bDraggable">
+            <custom-marker  ng-repeat="marker in $ctrl.markers" ng-if="marker.latitude && marker.longitude"
+                            title="{{marker.title}}" position="[{{marker.latitude}}, {{marker.longitude}}]" draggable="mapParams.draggable"
+                            on-click="$ctrl.markerClick($index)" on-dragend="$ctrl.markerDragend($index)">
+                            <div class="tracker-marker">
+                                {{marker.title}}
+                            </div>
+             </custom-marker>
+        </div>
+        <div ng-if="mapParams.bDraggable">
+            <marker ng-repeat="marker in $ctrl.markers" title="{{marker.title}}" ng-if="marker.latitude && marker.longitude"
+                    position="[{{marker.latitude}}, {{marker.longitude}}]" draggable="mapParams.bDraggable" on-click="$ctrl.markerClick($index)"
+                    on-dragend="$ctrl.markerDragend($index)"/>
+        </div>
     </ng-map>
 
     <!-- Shadowed Box around the map -->
