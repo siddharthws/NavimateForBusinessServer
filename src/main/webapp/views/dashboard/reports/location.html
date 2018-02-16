@@ -1,12 +1,23 @@
 <!-- Location Report HTML -->
 <!-- Toolbar -->
-<div class="bg-toolbar d-flex">
-    <select class="btn btn-default" ng-model="$ctrl.selectedRep" ng-options="rep.name for rep in $ctrl.team">
-        <option value="" ng-disabled="true">-- Select Rep --</option>
-    </select>
-    <md-datepicker ng-model="repDate" md-placeholder="-- Select Date --"></md-datepicker>
+<div class="bg-toolbar d-flex justify-content-around">
+    <div class="d-flex flex-column justify-content-around">
+        <select class="btn btn-default" ng-model="$ctrl.selectedRep" ng-options="rep.name for rep in $ctrl.team">
+            <option value="" ng-disabled="true">-- Select Rep --</option>
+        </select>
+        <md-datepicker ng-model="repDate" md-placeholder="-- Select Date --"></md-datepicker>
+    </div>
+
+    <div class="doughnut-container">
+        <canvas class="chart chart-doughnut" chart-data="$ctrl.data" chart-labels="$ctrl.labels"
+                chart-colors="$ctrl.colors" chart-options="$ctrl.options">
+        </canvas>
+        <div class="doughnut-label w-100 h-100 d-flex flex-1 justify-content-center align-items-center flex-column">
+            <h3 class="font-weight-bold">50%</h3>
+            <span class="font-weight-bold">ACTIVE</span>
+        </div>
+    </div>
 </div>
 
 <!-- Include Map View -->
 <ng-include class="flex-1" src="'/static/views/modules/Map.html'"></ng-include>
-

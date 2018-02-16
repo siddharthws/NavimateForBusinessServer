@@ -1,0 +1,11 @@
+.doughnut-container {
+    position: relative;
+    width: 15em;
+}
+
+.doughnut-label {
+    position: absolute;
+    top:0px;
+    left:0px;
+}
+

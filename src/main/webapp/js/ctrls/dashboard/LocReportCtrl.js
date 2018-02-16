@@ -19,4 +19,10 @@ app.controller("LocReportCtrl", function ($scope, TeamDataService) {
 
     // Get Team Data
     vm.team =  TeamDataService.cache.data
+
+    //Set chart Properties
+    vm.labels = ["Active", "Inactive"];
+    vm.data = [50, 50];
+    vm.colors = ['#4CAF50','#CFD8DC'];
+    vm.options = {cutoutPercentage: 85}
 })
