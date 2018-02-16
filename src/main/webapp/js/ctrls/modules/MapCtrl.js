@@ -26,6 +26,15 @@ app.controller('MapCtrl', function ($scope) {
         $scope.$emit(Constants.Events.MAP_MARKER_CLICK, {idx: idx})
     }
 
+    // Marker drag events
+    vm.markerDragend = function(event, idx) {
+        // Update marker's latitude and longitude
+        marker.latitude   = event.latLng.lat()
+        marker.longitude  = event.latLng.lng()
+
+        // Emit marker Dragged event to be handled by parent
+        $scope.$emit(Constants.Events.MAP_MARKER_DRAGEND, {idx:idx})
+    }
     /*------------------------------------ Local APIs --------------------------------*/
     // API to re-center the map on added markers
     function centerMap(latLng) {

@@ -162,22 +162,6 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
         return (lead.title && lead.latitude && lead.longitude && lead.address)
     }
 
-    // Marker drag events
-    $scope.markerDragged = function(e, lead) {
-        // Update lead's latitude and longitude
-        lead.latitude   = e.latLng.lat()
-        lead.longitude  = e.latLng.lng()
-        lead.address = ""
-
-        // Get address using reverse geocoding
-        GoogleApiService.latlngToAddress(
-            lead.latitude, lead.longitude,
-            function (address) { // Result Callback
-                // Assign address to lead
-                lead.address = address
-            })
-    }
-
     // Excel related APIs
     $scope.excelRead = function (workbook) {
         $rootScope.showWaitingDialog("Please wait while we are reading from excel file...")
@@ -292,6 +276,26 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
         $scope.listItemClick(params.idx)
     })
 
+    $scope.$on(Constants.Events.MAP_MARKER_DRAGEND, function (event, params) {
+
+        //Get the lead from marker Id
+        var lead = $scope.leads[params.idx]
+
+        // Update Lead's latitude and longitude
+        lead.latitude = params.marker.latitude
+        lead.longitude = params.marker.longitude
+        lead.address = ""
+
+        // Get address using reverse geocoding
+        GoogleApiService.latlngToAddress(
+            lead.latitude, lead.longitude,
+            function (address) { // Result Callback
+                // Assign address to marker
+                lead.address = address
+            })
+        $scope.listItemClick(leadIdx)
+    })
+
     // Init leads
     if (leads) {
         // Assign the passed leads & mark the first one as selected
@@ -301,6 +305,9 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
     else {
      $scope.add()
     }
+
+    // Set markers as draggable
+    $scope.mapParams.bDraggable = true
 
     // Add markers using parameters
     $scope.mapParams.markers  = $scope.leads
