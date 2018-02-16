@@ -1,24 +1,21 @@
 /**
- * Created by Siddharth on 19-11-2017.
+ * Created by Siddharth on 20-02-2018.
  */
 
 // Controller for Toggle Columns Dialog
-app.controller('ToggleColumnsCtrl', function ($scope, $mdDialog, columns) {
-    /* ------------------------------- INIT -----------------------------------*/
+app.controller('ToggleColumnsOldCtrl', function ($scope, $mdDialog, columns, resultCb) {
     var vm = this
-
-    // Init columns using arguments
-    vm.columns = columns
 
     /* ------------------------------- Html APIs -----------------------------------*/
     vm.done = function () {
+        resultCb(vm.columns)
         $mdDialog.hide()
     }
 
     // Full List Selection Toggling
     vm.toggleAll = function () {
         for (var i = 0; i < vm.columns.length; i++) {
-            vm.columns[i].bShow = vm.bCheckAll
+            vm.columns[i].show = vm.bCheckAll
         }
     }
 
@@ -36,4 +33,7 @@ app.controller('ToggleColumnsCtrl', function ($scope, $mdDialog, columns) {
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/
+    /* ------------------------------- INIT -----------------------------------*/
+    // Init objects
+    vm.columns = columns
 })
