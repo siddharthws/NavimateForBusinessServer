@@ -6,11 +6,19 @@ button:focus {
 /* -- Nav Buttons -- */
 .nav-btn {
     color: white;
-    text-align: left;
-    padding: 0.5em 3.0em;
     margin: 0px;
     background-color: transparent;
     border: none;
+}
+
+.nav-menu-btn {
+    text-align: right;
+    padding: 0.5em 1.5em 0.5em 0em;
+}
+
+.nav-tab-btn {
+    text-align: center;
+    padding: 0.5em 3.0em;
 }
 
 .nav-btn:hover, .nav-btn.active {

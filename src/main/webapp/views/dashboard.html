@@ -1,26 +1,26 @@
 <!-- Dahsboard -->
 
 <div class="dashboard d-flex">
-    <div class="bg-black d-flex flex-column">
+    <div class="bg-black d-flex flex-column w-10">
         <div class="logo-container align-self-center">
             <img class="ic-large align-self-center" src="/static/images/logo.png">
         </div>
-        <button class="nav-btn" ng-repeat="item in $root.Constants.DashboardNav.Menu"
+        <button class="nav-btn nav-menu-btn" ng-repeat="item in $root.Constants.DashboardNav.Menu"
                 ng-if="role >= item.accessLevel"
                 ng-class="{'active': item.id == nav.item.id}"
                 ui-sref="{{'dashboard.' + item.state + '-' + item.options[0].state}}">
             {{item.name}}
         </button>
-        <button class="nav-btn" ng-click="openHelp()">
+        <button class="nav-btn nav-menu-btn" ng-click="openHelp()">
             Help
         </button>
     </div>
 
-    <div class="d-flex flex-column flex-1">
+    <div class="d-flex flex-column flex-1 w-90">
         <div class="dashboard-header d-flex align-items-center">
             <button ng-repeat="option in nav.item.options"
                     ng-click="optionClicked('dashboard.' + nav.item.state + '-' + option.state)"
-                    class="nav-btn h-50 align-self-end"
+                    class="nav-btn nav-tab-btn h-50 align-self-end"
                     ng-class="{'active': nav.option.id == option.id}">
                 {{option.name}}
             </button>
