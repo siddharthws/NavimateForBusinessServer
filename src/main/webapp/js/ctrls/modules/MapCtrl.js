@@ -22,18 +22,40 @@ app.controller('MapCtrl', function ($scope) {
 
     // Marker click event
     vm.markerClick = function (event, idx) {
+        // update Selected marker
+        selectedMarker = $scope.mapParams.markers[idx]
+
         // Emit marker click event to be handled by parent
         $scope.$emit(Constants.Events.MAP_MARKER_CLICK, {idx: idx})
     }
 
     // Marker drag events
     vm.markerDragend = function(event, idx) {
+        //Get selected Marker
+        var marker = $scope.mapParams.markers[idx]
+
         // Update marker's latitude and longitude
         marker.latitude   = event.latLng.lat()
         marker.longitude  = event.latLng.lng()
 
         // Emit marker Dragged event to be handled by parent
         $scope.$emit(Constants.Events.MAP_MARKER_DRAGEND, {idx:idx})
+    }
+
+    //Map Marker Icon Update
+    vm.getMarkerIcon = function (idx) {
+        if(idx ==$scope.mapParams.markers.indexOf(selectedMarker)) {
+            return {
+                url: "/static/images/marker_selected.png",
+                scaledSize: [40, 40]
+            }
+        }
+        else {
+            return {
+                url: "/static/images/marker_default.png",
+                scaledSize: [40, 40]
+            }
+        }
     }
     /*------------------------------------ Local APIs --------------------------------*/
     // API to re-center the map on added markers
@@ -85,10 +107,15 @@ app.controller('MapCtrl', function ($scope) {
     /*------------------------------------ Init --------------------------------*/
     var googleMap = null
     var currentLatLng = null
+    var selectedMarker = null
 
     // Add map params
     $scope.mapParams.zoom = 14
     $scope.mapParams.polylines = []
+
+    if($scope.mapParams.markers.length){
+        selectedMarker = $scope.mapParams.markers[0]
+    }
 
     // Add properties to vm
     vm.markers = $scope.mapParams.markers
@@ -97,6 +124,11 @@ app.controller('MapCtrl', function ($scope) {
     // Listener for map center event
     $scope.$on(Constants.Events.MAP_CENTER, function (event, param) {
         centerMap(new google.maps.LatLng(param.latitude, param.longitude))
+    })
+
+    // Listener to update Selected marker
+    $scope.$on(Constants.Events.MAP_MARKER_SELECTED, function (event, param) {
+      selectedMarker = $scope.mapParams.markers[param.idx]
     })
 
     // Get current location to center map

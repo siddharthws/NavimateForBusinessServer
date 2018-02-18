@@ -1,6 +1,6 @@
 <!-- Map View -->
 <div class="map-box h-100 w-100" ng-controller="MapCtrl as $ctrl"
-     map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
+     map-lazy-load="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
     <!-- Map UI using ng-maps -->
     <ng-map class="w-100 h-100" center="[0, 0]" zoom="{{mapParams.zoom}}"
             map-initialized="$ctrl.mapInitialized(map)">
@@ -17,7 +17,7 @@
         <!-- Markers on map -->
         <div ng-if="!mapParams.bDraggable">
             <custom-marker  ng-repeat="marker in $ctrl.markers" ng-if="marker.latitude && marker.longitude"
-                            title="{{marker.title}}" position="[{{marker.latitude}}, {{marker.longitude}}]" draggable="mapParams.draggable"
+                            title="{{marker.title}}" position="[{{marker.latitude}}, {{marker.longitude}}]" draggable="{{mapParams.bDraggable}}"
                             on-click="$ctrl.markerClick($index)" on-dragend="$ctrl.markerDragend($index)">
                             <div class="tracker-marker">
                                 {{marker.title}}
@@ -26,8 +26,8 @@
         </div>
         <div ng-if="mapParams.bDraggable">
             <marker ng-repeat="marker in $ctrl.markers" title="{{marker.title}}" ng-if="marker.latitude && marker.longitude"
-                    position="[{{marker.latitude}}, {{marker.longitude}}]" draggable="mapParams.bDraggable" on-click="$ctrl.markerClick($index)"
-                    on-dragend="$ctrl.markerDragend($index)"/>
+                    position="[{{marker.latitude}}, {{marker.longitude}}]" draggable="{{mapParams.bDraggable}}" on-click="$ctrl.markerClick($index)"
+                    on-dragend="$ctrl.markerDragend($index)" icon="{{$ctrl.getMarkerIcon($index)}}"/>
         </div>
     </ng-map>
 

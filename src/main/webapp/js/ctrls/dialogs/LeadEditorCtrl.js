@@ -71,6 +71,9 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
         // Scroll list ot place this item on top
         scrollList(idx)
 
+        // Send the selected list item index
+        $scope.$broadcast(Constants.Events.MAP_MARKER_SELECTED, {idx:idx})
+
         // Center map on selected lead marker
         $scope.$broadcast(Constants.Events.MAP_CENTER, {latitude: $scope.selectedLead.latitude, longitude: $scope.selectedLead.longitude})
     }
@@ -278,12 +281,15 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
 
     $scope.$on(Constants.Events.MAP_MARKER_DRAGEND, function (event, params) {
 
-        //Get the lead from marker Id
+        //Get the lead from marker Id//Get the lead from marker Id
+        var marker = $scope.mapParams.markers[params.idx]
+
+        //Get the marker from marker Id
         var lead = $scope.leads[params.idx]
 
-        // Update Lead's latitude and longitude
-        lead.latitude = params.marker.latitude
-        lead.longitude = params.marker.longitude
+        // Update Lead's latitude and longitude With that of Markers
+        lead.latitude = marker.latitude
+        lead.longitude = marker.longitude
         lead.address = ""
 
         // Get address using reverse geocoding
@@ -293,13 +299,13 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
                 // Assign address to marker
                 lead.address = address
             })
-        $scope.listItemClick(leadIdx)
+        $scope.listItemClick(params.idx)
     })
 
     // Init leads
     if (leads) {
         // Assign the passed leads & mark the first one as selected
-        $scope.leads = leads
+        $scope.leads = JSON.parse(JSON.stringify(leads))
         $scope.selectedLead = $scope.leads[0]
     }
     else {
