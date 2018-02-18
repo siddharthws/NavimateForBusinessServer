@@ -100,10 +100,16 @@ class TableService {
 
     // Method to create a column using type and name
     private def createColumn(int id, int type, String name) {
+        // Set sort status of column
+        boolean bSortable = !(  type == navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO ||
+                                type == navimateforbusiness.Constants.Template.FIELD_TYPE_SIGN ||
+                                type == navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION)
+
         return [
                 id:     id,
                 type:   type,
-                name:   name
+                name:   name,
+                bSortable: bSortable
         ]
     }
 }

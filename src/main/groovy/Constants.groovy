@@ -55,5 +55,10 @@ class Constants {
         public static final int TYPE_TEXT           = 2
         public static final int TYPE_NUMBER         = 3
         public static final int TYPE_DATE           = 4
+
+        // Sort Types
+        public static final int SORT_NONE          = 0
+        public static final int SORT_ASC           = 1
+        public static final int SORT_DESC          = 2
     }
 }

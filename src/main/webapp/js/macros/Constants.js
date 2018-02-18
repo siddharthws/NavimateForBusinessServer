@@ -199,7 +199,7 @@ Constants.DashboardNav.Menu = [
     }
 ]
 
-/* ------------------------------- Pagination -----------------------------------*/
+/* ------------------------------- Table -----------------------------------*/
 Constants.Table = {
     // Table types
     TYPE_INVALID:   0,
@@ -209,11 +209,17 @@ Constants.Table = {
     COL_SIZE_M:         2,
     COL_SIZE_L:         3,
 
+    // Sorting Types
+    SORT_NONE:          0,
+    SORT_ASC:           1,
+    SORT_DESC:          2,
+
     // URL prefix
     URL_PREFIX: [
         'invalid'
     ],
 
+    // Default rows per page
     DEFAULT_COUNT_PER_PAGE:     10
 }
 

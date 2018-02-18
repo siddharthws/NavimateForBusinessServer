@@ -20,6 +20,7 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
             startIdx:   0,
             count:      Constants.Table.DEFAULT_COUNT_PER_PAGE
         }
+        vm.sortOrder = []
 
         // Sync request serializing logic
         var syncCanceller = null
@@ -90,6 +91,9 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
             if (data.columns) {
                 // Reset current columns
                 vm.columns = data.columns
+
+                // Re-initialize filters
+                initFilters()
             }
 
             // Set rows
@@ -101,9 +105,23 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
 
         // Method to get filter to be sent to server
         function getFilter () {
+            // Prepare sort list for server
+            var sortList = []
+            vm.sortOrder.forEach(function (colId) {
+                // Get column filter
+                var column = getColumnById(colId)
+
+                // Push a sort object into sort list
+                sortList.push({
+                    colId: colId,
+                    type: column.sortType
+                })
+            })
+
             // Return filter object
             return {
-                pager: vm.pager
+                pager: vm.pager,
+                sortList: sortList
             }
         }
 
@@ -137,6 +155,26 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
                     }
                 }
             })
+        }
+
+        // Method to init column filters
+        function initFilters () {
+            // Iterate through column
+            vm.columns.forEach(function (column) {
+                // Set properties
+                column.sortType = Constants.Table.SORT_NONE
+            })
+        }
+
+        // Method to get column by id
+        function getColumnById (id) {
+            for (var i = 0; i < vm.columns.length; i++) {
+                if (vm.columns[i].id == id) {
+                    return vm.columns[i]
+                }
+            }
+
+            return null
         }
     }
 
