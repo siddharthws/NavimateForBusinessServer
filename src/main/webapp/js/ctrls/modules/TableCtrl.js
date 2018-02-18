@@ -81,6 +81,36 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
         sync(false)
     }
 
+    // Method to toggle sort status of a column
+    vm.toggleSorting = function (colIdx) {
+        // Get filter object of column
+        var column = vm.table.columns[colIdx]
+        var colId = column.id
+
+        switch (column.sortType) {
+            case Constants.Table.SORT_NONE: {
+                // Add ascending sortign for this column
+                vm.table.sortOrder.push(colId)
+                column.sortType = Constants.Table.SORT_ASC
+                break
+            }
+            case Constants.Table.SORT_ASC: {
+                // Update sorting to descing order
+                column.sortType = Constants.Table.SORT_DESC
+                break
+            }
+            case Constants.Table.SORT_DESC: {
+                // Remove sorting for table
+                vm.table.sortOrder.splice(vm.table.sortOrder.indexOf(colId), 1)
+                column.sortType = Constants.Table.SORT_NONE
+                break
+            }
+        }
+
+        // Sync Data
+        sync(false)
+    }
+
     /* ----------------------------- Private APIs --------------------------------*/
     // Method to re-initialize data
     function sync(bColumns) {

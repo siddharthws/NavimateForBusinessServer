@@ -13,9 +13,21 @@
 
                 <!-- Columns returned by server -->
                 <th ng-repeat="column in vm.table.columns">
-                    <span class="flex-1 text-nowrap">
-                        {{column.name}}
-                    </span>
+                    <div class="d-flex flex-column justify-content-center">
+                        <!-- Header Top -->
+                        <div class="d-flex">
+                            <!-- Column Name -->
+                            <span class="flex-1 text-nowrap">
+                                {{column.name}}
+                            </span>
+
+                            <!-- Sorting Button -->
+                            <input type="button" value="" class="ib-base ib-s ib-sort" title="Toggle Sorting"
+                                   ng-if="column.bSortable" ng-click="vm.toggleSorting($index)"
+                                   ng-class="{  'sort-asc'  : column.sortType == vm.TableConst.SORT_ASC,
+                                                'sort-desc' : column.sortType == vm.TableConst.SORT_DESC}"/>
+                        </div>
+                    </div>
                 </th>
             </thead>
 
