@@ -73,6 +73,14 @@
     background-image: url("/static/images/ic_sort_desc.png");
 }
 
+.ib-blank {
+    background-image: url("/static/images/ic_blank.png");
+}
+
+.ib-blank.active {
+    background-image: url("/static/images/ic_blank_active.png");
+}
+
 .ib-edit {
     background-image: url("/static/images/icon_edit.png");
 }

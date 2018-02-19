@@ -83,7 +83,7 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
 
     // Method to toggle sort status of a column
     vm.toggleSorting = function (colIdx) {
-        // Get filter object of column
+        // Get column object
         var column = vm.table.columns[colIdx]
         var colId = column.id
 
@@ -106,6 +106,18 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
                 break
             }
         }
+
+        // Sync Data
+        sync(false)
+    }
+
+    // method to toggle blanks filter for given column
+    vm.toggleBlanks = function (colIdx) {
+        // Get column object
+        var column = vm.table.columns[colIdx]
+
+        // Toggle blank filter
+        column.bNoBlanks = !column.bNoBlanks
 
         // Sync Data
         sync(false)
