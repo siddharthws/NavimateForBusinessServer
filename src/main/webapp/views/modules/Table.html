@@ -26,6 +26,11 @@
                                    ng-if="column.bSortable" ng-click="vm.toggleSorting($index)"
                                    ng-class="{  'sort-asc'  : column.sortType == vm.TableConst.SORT_ASC,
                                                 'sort-desc' : column.sortType == vm.TableConst.SORT_DESC}"/>
+
+                            <!-- Blanks Filter Button -->
+                            <input type="button" value="" class="ib-base ib-s ib-blank"
+                                   title="Show / Hide Blanks" ng-click="vm.toggleBlanks($index)"
+                                   ng-class="{'active' : column.bNoBlanks}"/>
                         </div>
                     </div>
                 </th>

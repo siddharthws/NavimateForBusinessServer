@@ -105,6 +105,15 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
 
         // Method to get filter to be sent to server
         function getFilter () {
+            // Prepare column filters for server
+            var colFilters = []
+            vm.columns.forEach(function (column) {
+                colFilters.push({
+                    colId: column.id,
+                    bNoBlanks: column.bNoBlanks
+                })
+            })
+
             // Prepare sort list for server
             var sortList = []
             vm.sortOrder.forEach(function (colId) {
@@ -121,7 +130,8 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
             // Return filter object
             return {
                 pager: vm.pager,
-                sortList: sortList
+                sortList: sortList,
+                colFilters: colFilters
             }
         }
 
@@ -163,6 +173,7 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
             vm.columns.forEach(function (column) {
                 // Set properties
                 column.sortType = Constants.Table.SORT_NONE
+                column.bNoBlanks = false
             })
         }
 
