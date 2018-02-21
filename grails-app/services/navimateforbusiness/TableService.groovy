@@ -7,6 +7,60 @@ import grails.gorm.transactions.Transactional
 class TableService {
     // ----------------------- Dependencies ---------------------------//
     // ----------------------- Public APIs ---------------------------//
+    // APi to get export data
+    def getExportData(def table, def params) {
+        List objects    = []
+        List fields     = []
+        Map labels      = [:]
+
+        // Validate data
+        if (!table.rows.size()) {
+            throw new navimateforbusiness.ApiException("No rows to export", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        } else if (!params.order) {
+            throw new navimateforbusiness.ApiException("No columns to export", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Create array of selected rows that need to be exported
+        def selectedRows = []
+        if (params.selection) {
+            // HACK since findAll is not working
+            table.rows.each {row ->
+                // Check if row id is present in selection array
+                def selectedId = params.selection.find {it -> it == row.id}
+                if (selectedId == row.id) {
+                    selectedRows.push(row)
+                }
+            }
+        } else {
+            selectedRows = table.rows
+        }
+
+        // Create one export object for each selected row
+        selectedRows.each {it -> objects.push([:])}
+
+        // Add key value pairs to objects as per column order
+        params.order.each {colId ->
+            // Get column
+            def column = table.columns.find {it -> it.id == colId}
+
+            // Add field and label
+            fields.push(column.name)
+            labels.put(column.name, column.name)
+
+            // Iterate through each selected row
+            selectedRows.eachWithIndex {row, i ->
+                // Add row to objects
+                objects[i][column.name] =  row.values[column.id]
+            }
+        }
+
+        return [
+                objects: objects,
+                fields: fields,
+                labels: labels
+        ]
+    }
+
     // ----------------------- Private APIs ---------------------------//
     // Method to get list of columns from template list
     private def getTemplatedColumns(List<Template> templates, int startId) {
