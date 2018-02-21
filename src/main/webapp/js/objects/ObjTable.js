@@ -2,7 +2,7 @@
  * Created by Siddharth on 25-02-2018.
  */
 
-app.factory('ObjTable', function($http, $q, $localStorage) {
+app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
     ObjTable = function (type) {
         // ----------------------------------- INIT ------------------------------------//
         var vm = this
@@ -73,6 +73,39 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
 
                     // Reject promise
                     deferred.reject(null)
+                })
+
+            // Return promise
+            return deferred.promise
+        }
+
+        // Method to export data to excel
+        vm.export = function () {
+            // Defer object to resolve request
+            var deferred = $q.defer()
+
+            // Trigger http request to export
+            $http({
+                method:     'POST',
+                url:        "/api/manager/" + Constants.Table.URL_PREFIX[vm.type] + "/export",
+                headers:    {
+                    'X-Auth-Token':    $localStorage.accessToken
+                },
+                responseType: 'arraybuffer',
+                data:       {
+                    filter: getFilter(),
+                    exportParams: getExportParams()
+                }
+            }).then(
+                function (response) {
+                    FileService.download(response, "Navimate-" + Constants.Table.URL_PREFIX[vm.type])
+
+                    // Resolve promise
+                    deferred.resolve(null)
+                },
+                function (error) {
+                    // Reject promise
+                    deferred.reject(error)
                 })
 
             // Return promise
@@ -216,6 +249,21 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
             }
 
             return filter
+        }
+
+        // Method to get export parameters
+        function getExportParams () {
+            var order = []
+
+            vm.columns.forEach(function (column) {
+                if (column.bShow) {
+                    order.push(column.id)
+                }
+            })
+
+            return {
+                order: order
+            }
         }
 
         // Method to get column by id

@@ -3,7 +3,7 @@
  */
 
 app.controller('TableCtrl', function (  $scope, $window, $state,
-                                        TableService, DialogService) {
+                                        TableService, DialogService, ToastService) {
     /* ----------------------------- INIT --------------------------------*/
     var vm  = this
 
@@ -185,5 +185,21 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
     // Toggle columns event
     $scope.$on(Constants.Events.TABLE_TOGGLE_COLUMNS, function (event, args) {
         DialogService.toggleColumns(vm.table.columns)
+    })
+
+    // Toggle columns event
+    $scope.$on(Constants.Events.TABLE_EXPORT, function (event, args) {
+        $rootScope.showWaitingDialog("Exporting...")
+        vm.table.export().then(
+            // Success Callback
+            function (success) {
+                $rootScope.hideWaitingDialog()
+            },
+            // Error Callback
+            function (error) {
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Error : " + error.data.error + " !!!")
+            }
+        )
     })
 })
