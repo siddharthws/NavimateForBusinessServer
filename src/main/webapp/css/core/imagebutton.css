@@ -1,28 +1,40 @@
 
 /* General Image button properties */
-.image-button {
-    height: 40px;
-    width: 40px;
-    margin: 5px;
+.ib-base {
+    height: 2.25em;
+    width: 2.25em;
+    margin: 0.25em;
     background: transparent no-repeat center;
-    background-size: 75%;
+    background-size: 60%;
     border: none;
-    border-radius: 5px;
+    border-radius: 0.25em;
 }
 
-.image-button:hover, .image-button.active {
+/* Image button sizing */
+.ib-s {
+    height: 1.5em;
+    width: 1.5em;
+    background-size: 80%;
+    margin: 0em;
+}
+
+.ib-l {
+    height: 3em;
+    width: 3em;
+    background-size: 50%;
+}
+
+/* Hoverable Image buttons */
+.ib-hover:hover {
     background-color: #37bcf2;
-}
-
-.image-button:hover {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
 }
 
-.ib-small {
-    height: 25px;
-    width: 25px;
+.ib-hover:active {
+    box-shadow: none;
 }
 
+/* --------- Selector classes for different icons on image buttons ------ */
 /* Bin icon image button */
 .ib-bin {
     background-image: url("/static/images/icon_bin.png");

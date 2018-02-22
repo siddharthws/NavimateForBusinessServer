@@ -40,10 +40,10 @@
                                         column.filterType != $root.Constants.Filter.TYPE_NONE">
                                 <span>Sort:</span>
                                 <div class="d-flex justify-content-center">
-                                    <input type="button" value="" class="image-button ib-sort-down"
+                                    <input type="button" value="" class="ib-base ib-hover ib-sort-down"
                                            ng-click="$ctrl.sortDown($index)"
                                            ng-class="{'active' : column.filter.sort.down}"/>
-                                    <input type="button" value="" class="image-button ib-sort-up"
+                                    <input type="button" value="" class="ib-base ib-hover ib-sort-up"
                                            ng-click="$ctrl.sortUp($index)"
                                            ng-class="{'active' : column.filter.sort.up}"/>
                                 </div>
@@ -121,11 +121,11 @@
                     </div>
                     <input type="button" value=""
                            ng-if="$ctrl.isImageValue(column, row['Col' + column.id])"
-                           class="image-button ib-small ib-link"
+                           class="ib-base ib-hover ib-s ib-link"
                            ng-click="$ctrl.showImage(row['Col' + column.id])"/>
                     <input type="button" value=""
                            ng-if="$ctrl.isLocationValue(column, row['Col' + column.id])"
-                           class="image-button ib-small ib-map"
+                           class="ib-base ib-hover ib-s ib-map"
                            ng-click="$ctrl.showLocation(row['Col' + column.id])"/>
                 </td>
             </tr>
