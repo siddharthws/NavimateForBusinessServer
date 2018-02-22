@@ -14,6 +14,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
         vm.columns = []
         vm.rows = []
         vm.totalRows    = 0
+        vm.selectedRows = []
 
         // Pagination parameters
         vm.pager = {
@@ -109,6 +110,39 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
                 })
 
             // Return promise
+            return deferred.promise
+        }
+
+        // Method to get all IDs for given filter
+        vm.selectAll = function () {
+            var deferred = $q.defer()
+
+            // Trigger http request to get lead IDs
+            $http({
+                method:     'POST',
+                url:        "/api/manager/" + Constants.Table.URL_PREFIX[vm.type] + "/getIds",
+                headers:    {
+                    'X-Auth-Token':    $localStorage.accessToken
+                },
+                data:       {
+                    filter: getFilter()
+                }
+            }).then(
+                function (response) {
+                    // Add all IDs to selected Row IDs
+                    vm.selectedRows = []
+                    response.data.ids.forEach(function (id) {
+                        vm.selectedRows.push(id)
+                    })
+
+                    // Resolve promise
+                    deferred.resolve(null)
+                },
+                function (error) {
+                    // Reject promise
+                    deferred.reject(error)
+                })
+
             return deferred.promise
         }
 
@@ -262,6 +296,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
             })
 
             return {
+                selection: vm.selectedRows,
                 order: order
             }
         }

@@ -12,8 +12,8 @@
 }
 
 .ic-small {
-    height: 15px;
-    width: auto;
+    height: 20px;
+    width: 20px;
 }
 
 /* -- Filter icon classes -- */
@@ -23,4 +23,13 @@
 
 .ic-filter.active{
     background-image: url("/static/images/icon_filter_active.png");
+}
+
+/* -- Tick Image selectors --*/
+.ic-tick {
+    background: url("/static/images/ic_tick_grey.png") center / cover no-repeat;
+}
+
+.active .ic-tick{
+    background-image: url("/static/images/ic_tick_white.png");
 }
