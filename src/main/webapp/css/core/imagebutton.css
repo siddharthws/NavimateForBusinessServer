@@ -12,8 +12,8 @@
 
 /* Image button sizing */
 .ib-s {
-    height: 1.5em;
-    width: 1.5em;
+    height: 1.25em;
+    width: 1.25em;
     background-size: 80%;
     margin: 0em;
 }
@@ -79,6 +79,46 @@
 
 .ib-blank.active {
     background-image: url("/static/images/ic_blank_active.png");
+}
+
+.ib-sync {
+    background-image: url("/static/images/ic_sync_grey.png");
+}
+
+.ib-sync:hover {
+    background-image: url("/static/images/ic_sync_white.png");
+}
+
+.ib-add {
+    background-image: url("/static/images/ic_add_grey.png");
+}
+
+.ib-add:hover {
+    background-image: url("/static/images/ic_add_white.png");
+}
+
+.ib-clear-filter {
+    background-image: url("/static/images/ic_clear_filter_grey.png");
+}
+
+.ib-clear-filter:hover {
+    background-image: url("/static/images/ic_clear_filter_white.png");
+}
+
+.ib-customize-table {
+    background-image: url("/static/images/ic_customize_table_grey.png");
+}
+
+.ib-customize-table:hover {
+    background-image: url("/static/images/ic_customize_table_white.png");
+}
+
+.ib-export {
+    background-image: url("/static/images/ic_export_grey.png");
+}
+
+.ib-export:hover {
+    background-image: url("/static/images/ic_export_white.png");
 }
 
 .ib-edit {
