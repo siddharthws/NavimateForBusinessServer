@@ -125,6 +125,9 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
         // Reset start Index in pager
         vm.table.pager.startIdx = 0
 
+        // Reset selected rows
+        vm.table.selectedRows = []
+
         // Sync Data
         sync(false)
     }
@@ -134,8 +137,43 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
         // Reset start Index in pager
         vm.table.pager.startIdx = 0
 
+        // Reset selected rows
+        vm.table.selectedRows = []
+
         // Sync data
         sync(false)
+    }
+
+    // Method to toggle row selection status
+    vm.toggleRowSelection = function (id) {
+        var selectionIdx = vm.table.selectedRows.indexOf(id)
+        if (selectionIdx == -1) {
+            vm.table.selectedRows.push(id)
+        } else {
+            vm.table.selectedRows.splice(selectionIdx, 1)
+        }
+    }
+
+    // Method to select all rows
+    vm.toggleAll = function () {
+        // Check if all rows are selected
+        var bAllChecked = (vm.table.selectedRows.length == vm.table.totalRows)
+
+        if (!bAllChecked) {
+            // Get all IDs from backend for given filter
+            vm.bToggleWaiting = true
+            vm.table.selectAll().then(
+                function (response) {
+                    vm.bToggleWaiting = false
+                },
+                function (error) {
+                    vm.bToggleWaiting = false
+                }
+            )
+        } else {
+            // Reset selection array
+            vm.table.selectedRows = []
+        }
     }
 
     /* ----------------------------- Private APIs --------------------------------*/
@@ -174,6 +212,9 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
     $scope.$on(Constants.Events.TABLE_CLEAR_FILTERS, function (event, args) {
         // Reset selection / paging etc...
         vm.table.pager.startIdx = 0
+
+        // Reset selected rows
+        vm.table.selectedRows = []
 
         // Re-initialize filters
         vm.table.clearFilters()

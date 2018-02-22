@@ -6,9 +6,13 @@
         <table class="table table-striped" ng-if="vm.table.columns.length">
             <!-- Table Headers -->
             <thead>
-                <!-- Serial Number column header -->
-                <th>
-                    #
+                <!-- Select All column header -->
+                <th ng-click="vm.toggleAll()"
+                    ng-class="{'active': vm.table.totalRows && (vm.table.selectedRows.length == vm.table.totalRows)}">
+                    <div class="d-flex flex-column justify-content-around align-items-center">
+                        <div class="img-icon ic-tick ic-small" title="Select All"></div>
+                        <loader class="loader-s" ng-if="vm.bToggleWaiting"></loader>
+                    </div>
                 </th>
 
                 <!-- Columns returned by server -->
@@ -71,7 +75,8 @@
             <!-- Table Body -->
             <tbody  ng-if="vm.table.rows.length && !vm.bWaiting && !vm.bError">
                 <!-- Table Row -->
-                <tr ng-repeat="row in vm.table.rows">
+                <tr ng-repeat="row in vm.table.rows" ng-click="vm.toggleRowSelection(row.id)"
+                    ng-class="{'active' : vm.table.selectedRows.indexOf(row.id) != -1}">
                     <!-- Serial Number -->
                     <td>
                         {{(vm.table.pager.startIdx + $index + 1) + "."}}
