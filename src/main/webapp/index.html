@@ -61,6 +61,7 @@
   <link rel="stylesheet" href="/static/css/core/flex.css">
   <link rel="stylesheet" href="/static/css/core/width.css">
   <link rel="stylesheet" href="/static/css/core/charts.css">
+  <link rel="stylesheet" href="/static/css/core/loader.css">
 
   <link rel="stylesheet" href="/static/css/index.css">
   <link rel="stylesheet" href="/static/css/home.css">
@@ -137,7 +138,7 @@
   <div class="waiting-cover h-100 w-100 d-flex align-items-center justify-content-center"
        ng-show="waiting.bShow">
     <div class="waiting-dialog p-4 d-flex justify-content-around align-items-center">
-      <span class="waiting-spinner mr-3"></span>
+      <loader class="mr-3"></loader>
       <span>{{waiting.message}}</span>
     </div>
   </div>

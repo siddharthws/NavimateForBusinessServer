@@ -32,3 +32,11 @@ app.directive('datepicker', function () {
         }
     }
 })
+
+// Loader directive
+app.directive('loader', function () {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/views/directives/loader.html'
+    }
+})
