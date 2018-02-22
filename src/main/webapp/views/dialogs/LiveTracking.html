@@ -28,8 +28,8 @@
                         <span class="ml-auto">
                              {{rep.phoneNumber}}
                          </span>
-                        <span class="waiting-spinner waiting-spinner-small ml-2 flex-shrink-0"
-                              ng-show="rep.status == $root.Constants.Tracking.ERROR_WAITING"></span>
+                        <loader class="ml-2 flex-shrink-0" ng-if="rep.status == $root.Constants.Tracking.ERROR_WAITING">
+                        </loader>
                     </div>
 
                     <!-- Tracking info becomes visible on click -->
