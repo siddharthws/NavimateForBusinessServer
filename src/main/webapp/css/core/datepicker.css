@@ -1,3 +1,21 @@
 .md-datepicker-calendar-pane {
     z-index: 1001 !important;
 }
+
+datepicker {
+    padding: 0.25em;
+    background-color: transparent;
+    border: solid 1px lightgray;
+    border-radius: 0.25em;
+}
+
+datepicker.active {
+    border-color: #37bcf2;
+    background-color: #37bcf244;
+    box-shadow: 1px 2px 5px 0px lightgray;
+}
+
+datepicker md-datepicker {
+    height: 0px;
+    width: 0px;
+}
