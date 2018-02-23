@@ -2,6 +2,11 @@
     border: #7ce1f2 1px solid;
 }
 
+.bdr-bottom-lighgrey {
+    border: none;
+    border-bottom: solid 1px lightgray;
+}
+
 .bdr-round {
     border-radius: 0.25em;
 }

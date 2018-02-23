@@ -2,33 +2,66 @@
 .table {
     max-width: none;
     min-width: 100%;
-    width: max-content;
-    width: -moz-max-content;
-    width: -webkit-max-content;
 }
 
+/* Header Styling */
+.table thead {
+    box-shadow: 0px 0px 5px 0px grey;
+    background-color: whitesmoke;
+    border: none;
+}
+
+.table thead th {
+    max-width: 25em;
+    padding: 0.1em 0.5em;
+    vertical-align: middle;
+    border: none;
+    border-right: solid 1px lightgray;
+}
+
+.table thead th.active {
+    background-color: #37bcf2;
+    color: white;
+}
+
+.table thead th:focus {
+    outline: 0px;
+}
+
+/* Row / Cell Styling */
 tr:focus {
     outline: none;
 }
 
 .table-striped tr.active:nth-of-type(odd),
 .table-striped tr.active,
-.table-bordered tr.active {
+.table tr.active {
     background-color: #37bcf2;
     color: white;
- }
+}
 
 .table td {
-    padding: 0.25em;
-    vertical-align: middle;
+    padding: 0.1em 0.5em;
     max-width: 25em;
-    font-size: 0.9rem;
+    vertical-align: middle;
 }
 
-.table th {
-    padding: 0.5em 0.25em;
+/* Page numbers styling */
+ul.pagination {
+    margin-bottom: 0px;
 }
 
+.page-link {
+    color: #37bcf2;
+    padding: 0.5em;
+}
+
+.page-item.active .page-link {
+    background-color: #37bcf2;
+    border-color: #37bcf2;
+}
+
+/* TODO: Remove as DSO cleanup */
 .ng-table-counts {
     display: none;
 }

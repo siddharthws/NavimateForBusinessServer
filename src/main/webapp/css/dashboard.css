@@ -6,15 +6,6 @@
     min-height: 100%;
 }
 
-.dashboard-header{
-    height: 90px;
-    background-color: black;
-}
-
-.dashboard-content{
-    padding: 10px;
-}
-
 .logo-container {
     padding: 10px;
 }
