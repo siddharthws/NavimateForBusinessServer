@@ -4,7 +4,7 @@
         <div class="p-1 d-flex flex-1 flex-column">
             <h4><b>Edit Leads</b></h4>
 
-            <div class="container-fluid d-flex flex-shrink-0">
+            <div class="container-fluid d-flex">
                 <label for="file-upload" class="btn btn-primary flex-1">
                     Upload
                 </label>
@@ -33,7 +33,7 @@
                                ng-model="lead.title"
                                ng-class="{'has-error': bShowError && !lead.title, 'input-white': selectedLead == lead}">
 
-                        <input type="button" value="" class="ib-base ib-hover ib-cross flex-shrink-0" ng-click="remove(lead)"/>
+                        <input type="button" value="" class="ib-base ib-hover ib-cross" ng-click="remove(lead)"/>
                     </div>
 
                     <div class="d-flex flex-column" ng-show="selectedLead == lead">

@@ -54,7 +54,7 @@
                     <input type="number" ng-model="task.period" value="0" class="input-underlined width-sm"
                            onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"/>
 
-                    <input type="button" value="" class="ib-base ib-hover ib-cross flex-shrink-0" ng-click="remove(task)" ng-disabled="task.id"/>
+                    <input type="button" value="" class="ib-base ib-hover ib-cross" ng-click="remove(task)" ng-disabled="task.id"/>
                 </div>
 
                 <div class="d-flex flex-wrap align-items-center" ng-show="selectedTask == task">
@@ -131,7 +131,7 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-end dialog-buttons flex-shrink-0">
+        <div class="d-flex justify-content-end dialog-buttons">
             <button class="btn btn-primary" ng-click="save()">Save</button>
             <button class="btn" ng-click="cancel()">Cancel</button>
         </div>
