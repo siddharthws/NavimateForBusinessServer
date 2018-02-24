@@ -1,6 +1,6 @@
 <div ng-controller="TemplateEditorCtrl as $ctrl">
     <!-- Template Name -->
-    <div class="d-flex align-items-center flex-shrink-0">
+    <div class="d-flex align-items-center">
         <span>Template Name :</span>
         <input class="input-underlined flex-1 ml-2" type="text" placeholder="Enter name for template..."
                ng-class="{'has-error': !$ctrl.template.name && $ctrl.bShowError}"
@@ -8,7 +8,7 @@
     </div>
 
     <!-- Add Field Button -->
-    <a href class="mt-1 flex-shrink-0" ng-click="$ctrl.addNewField()">
+    <a href class="mt-1" ng-click="$ctrl.addNewField()">
         + Add New Field
     </a>
 

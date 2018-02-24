@@ -4,7 +4,7 @@
         <div class="flex-2 d-flex flex-column">
             <h4><b>Live Tracking</b></h4>
             <!-- Control Buttons -->
-            <div class="container-fluid d-flex justify-content-around flex-shrink-0">
+            <div class="container-fluid d-flex justify-content-around">
                 <button class="btn btn-primary" ng-click="$ctrl.refreshAll()">Refresh</button>
                 <button class="btn" ng-click="$ctrl.close()">Cancel</button>
             </div>
@@ -16,7 +16,7 @@
 
                     <!-- Basic rep info -->
                     <div class="d-flex align-items-center">
-                        <div class="bg-status flex-shrink-0"
+                        <div class="bg-status"
                              ng-class="{'bg-status-yellow':     (rep.status == $root.Constants.Tracking.ERROR_NO_UPDATES ||
                                                                  rep.status == $root.Constants.Tracking.ERROR_WAITING),
                                         'bg-status-red':        (rep.status == $root.Constants.Tracking.ERROR_OFFLINE),
@@ -28,7 +28,7 @@
                         <span class="ml-auto">
                              {{rep.phoneNumber}}
                          </span>
-                        <loader class="ml-2 flex-shrink-0" ng-if="rep.status == $root.Constants.Tracking.ERROR_WAITING">
+                        <loader class="ml-2" ng-if="rep.status == $root.Constants.Tracking.ERROR_WAITING">
                         </loader>
                     </div>
 

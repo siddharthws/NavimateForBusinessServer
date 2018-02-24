@@ -5,7 +5,7 @@
 .flex-4{  flex: 4;  }
 .flex-5{  flex: 5;  }
 
-/* Disable shrinking */
-.flex-shrink-0 {
+/* Add flex shrink 0 to all components */
+.d-flex, input, div, button, loader, a {
     flex-shrink: 0;
 }

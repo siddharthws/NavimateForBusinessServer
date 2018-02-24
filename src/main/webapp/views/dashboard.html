@@ -5,7 +5,7 @@
         <div class="logo-container align-self-center">
             <img class="ic-large align-self-center" src="/static/images/logo.png">
         </div>
-        <button class="nav-btn flex-shrink-0" ng-repeat="item in $root.Constants.DashboardNav.Menu"
+        <button class="nav-btn" ng-repeat="item in $root.Constants.DashboardNav.Menu"
                 ng-if="role >= item.accessLevel"
                 ng-class="{'active': item.id == nav.item.id}"
                 ui-sref="{{'dashboard.' + item.state + '-' + item.options[0].state}}">
