@@ -6,7 +6,8 @@ import org.grails.web.json.JSONArray
 
 @Transactional
 class ReportService {
-    static String FORMAT_TIME = "yyyy-MM-dd HH:mm:ss"
+    static String FORMAT_DATE = "yyyy-MM-dd"
+    static String FORMAT_TIME = "HH:mm:ss"
     static TimeZone IST = TimeZone.getTimeZone('Asia/Calcutta')
 
     // API to get report
@@ -27,6 +28,9 @@ class ReportService {
             // Get all forms submitted by this rep
             forms.addAll(Form.findAllByAccountAndOwner(rep.account, rep))
         }
+
+        // Remove forms with removed templates
+        forms = forms.findAll {it -> it.submittedData.template && !it.submittedData.template.isRemoved}
 
         // Sort elements in descending order of date
         forms.sort{it.dateCreated}
@@ -60,6 +64,9 @@ class ReportService {
         columns.push([title: 'Date',
                       type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
                       filterType: navimateforbusiness.Constants.Filter.TYPE_DATE])
+        columns.push([title: 'Time',
+                      type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
+                      filterType: navimateforbusiness.Constants.Filter.TYPE_NONE])
         columns.push([title: 'Task ID',
                       type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
                       filterType: navimateforbusiness.Constants.Filter.TYPE_TEXT])
@@ -123,19 +130,22 @@ class ReportService {
             row[2] = form.task ? form.task.lead.title : "-"
 
             // Add date
-            row[3] = form.dateCreated.format(FORMAT_TIME, IST)
+            row[3] = form.dateCreated.format(FORMAT_DATE, IST)
+
+            // Add date
+            row[4] = form.dateCreated.format(FORMAT_TIME, IST)
 
             // Add Task ID
-            row[4] = form.task ? "T" + String.format("%08d", form.task.id) : "-"
+            row[5] = form.task ? "T" + String.format("%08d", form.task.id) : "-"
 
             // Add status
-            row[5] = form.taskStatus ? form.taskStatus.name() : "-"
+            row[6] = form.taskStatus ? form.taskStatus.name() : "-"
 
             // Add form template name
-            row[6] = form.submittedData.template ? form.submittedData.template.name : "-"
+            row[7] = form.submittedData.template ? form.submittedData.template.name : "-"
 
             // Feed location if valid
-            row[7] = (form.latitude || form.longitude) ? form.latitude + ',' + form.longitude : "-"
+            row[8] = (form.latitude || form.longitude) ? form.latitude + ',' + form.longitude : "-"
 
             // Iterate through each value in this dataset
             form.submittedData.values.each {value ->
