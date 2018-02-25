@@ -6,9 +6,40 @@ import org.grails.web.json.JSONArray
 
 @Transactional
 class LeadService {
-
+    // ----------------------- Dependencies ---------------------------//
     def googleApiService
 
+    // ----------------------- Public APIs ---------------------------//
+    // Method to get leads for a specific user
+    def getForUser(User user) {
+        def leads = []
+
+        // Get role as per access level
+        switch (user.role) {
+            case navimateforbusiness.Role.ADMIN:
+                // Get all unremoved leads of the account
+                leads = Lead.findAllByAccountAndIsRemoved(user.account, false)
+                break
+
+            case navimateforbusiness.Role.MANAGER:
+                // Get all leads owned by this manager
+                leads = Lead.findAllByAccountAndIsRemovedAndManager(user.account, false, user)
+
+                // Add all public leads of the company
+                leads.addAll(Lead.findAllByAccountAndIsRemovedAndVisibility(user.account, false, navimateforbusiness.Visibility.PUBLIC))
+                break
+        }
+
+        // Sort leads in ascending order of title by default
+        leads = leads.sort {it -> it.title}
+
+        // Return leads
+        leads
+    }
+
+    // ----------------------- Private APIs ---------------------------//
+
+    // ----------------------- Unclean APIs ---------------------------//
     def parseExcel(User manager, JSONArray excelJson) {
         // Parse JSON to Lead Object
         def leads = parseToLeads(manager, excelJson)
