@@ -9,10 +9,13 @@ module.exports = function(grunt) {
                 mangle: false
             },
             my_target: {
-                files: {'src/main/webapp/app.min.js' : ['src/main/webapp/js/app.js' ,
+                files: {'src/main/webapp/app.min.js' : [
+                    'src/main/webapp/js/app.js',
+                    'src/main/webapp/js/directives.js',
                     'src/main/webapp/js/ctrls/**/*.js',
                     'src/main/webapp/js/macros/*.js',
-                    'src/main/webapp/js/services/*.js']}
+                    'src/main/webapp/js/services/*.js',
+                    'src/main/webapp/js/objects/*.js']}
             }
         },
         cssmin: {

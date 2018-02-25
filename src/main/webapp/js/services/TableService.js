@@ -1,12 +1,13 @@
 /**
- * Created by Siddharth on 24-02-2018.
+ * Created by Siddharth on 25-02-2018.
+ *
+ * Service to cache table data
  */
 
-app.controller('TableCtrl', function (TableService) {
+app.service('TableService', function(ObjTable) {
     /* ----------------------------- INIT --------------------------------*/
     var vm  = this
 
     /* ----------------------------- Public APIs --------------------------------*/
     /* ----------------------------- Private APIs --------------------------------*/
-    /* ----------------------------- Event Listeners --------------------------------*/
 })
