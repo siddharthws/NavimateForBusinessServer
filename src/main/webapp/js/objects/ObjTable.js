@@ -13,12 +13,20 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
         // Rows and columns
         vm.columns = []
         vm.rows = []
+        vm.totalRows    = 0
+
+        // Pagination parameters
+        vm.pager = {
+            startIdx:   0,
+            count:      Constants.Table.DEFAULT_COUNT_PER_PAGE
+        }
 
         // Sync request serializing logic
         var syncCanceller = null
         var bSyncOngoing = false
 
         // ----------------------------------- Public Methods ------------------------------------//
+        // Method to sync tabular data with filters from backend
         vm.sync = function (bColumns) {
             // Cancel ongoing sync & create new canceller
             if (bSyncOngoing) {
@@ -39,7 +47,8 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
                     'X-Auth-Token':    $localStorage.accessToken
                 },
                 data:       {
-                    bColumns: bColumns
+                    bColumns: bColumns,
+                    filter: getFilter()
                 }
             }).then(
                 function (response) {
@@ -69,6 +78,11 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
             return deferred.promise
         }
 
+        // Method to get number of pages based on data
+        vm.pageCount = function () {
+            return Math.ceil(vm.totalRows / vm.pager.count)
+        }
+
         // ----------------------------------- Private Methods ------------------------------------//
         // Method to handle server data after sync request
         function handleSyncResult(data) {
@@ -83,6 +97,14 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
 
             // Update column sizes
             refreshColSizes()
+        }
+
+        // Method to get filter to be sent to server
+        function getFilter () {
+            // Return filter object
+            return {
+                pager: vm.pager
+            }
         }
 
         // Method to refresh column sizes as per latest data

@@ -25,7 +25,7 @@
                 <tr ng-repeat="row in vm.table.rows">
                     <!-- Serial Number -->
                     <td>
-                        {{($index + 1) + "."}}
+                        {{(vm.table.pager.startIdx + $index + 1) + "."}}
                     </td>
 
                     <!-- Data returned by server -->
@@ -73,5 +73,25 @@
                 <h4 class="ml-1 text-grey">Nothing to show...</h4>
             </div>
         </div>
+    </div>
+
+    <!-- Pager -->
+    <div class="d-flex align-items-center justify-content-between mx-3 my-1"
+         ng-init="pager = vm.table.pager">
+        <!-- Page numbers using bootstrap pagination -->
+        <ul class="pagination">
+            <li ng-repeat="page in $root.getArray(vm.table.pageCount()) track by $index" class="page-item"
+                ng-class="{'active': pager.startIdx == ($index * pager.count)}">
+                <a href ng-click="vm.openPage($index + 1)" class="page-link">{{$index + 1}}</a>
+            </li>
+        </ul>
+
+        <!-- Rows per page -->
+        <span>
+            Showing
+            <input type="number" class="input-box active width-sm" ng-model="pager.count"
+                   ng-model-options="{debounce: 500}" ng-change="vm.updateCount()">
+            rows per page out of {{vm.table.totalRows}} rows
+        </span>
     </div>
 </div>

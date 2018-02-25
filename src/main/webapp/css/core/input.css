@@ -65,3 +65,18 @@ input[type=number]::-webkit-outer-spin-button {
 input.img-icon:hover {
     border: 1px solid grey;
 }
+
+/* -- Box Styling for input elements -- */
+.input-box {
+    text-align: center;
+    border: solid lightgray 1px;
+    border-radius: 0.25em;
+    padding: 0em;
+    background-color: transparent;
+}
+
+.input-box.active {
+    border-color: #37bcf2;
+    background-color: #37bcf244;
+    box-shadow: 1px 2px 5px 0px lightgray;
+}
