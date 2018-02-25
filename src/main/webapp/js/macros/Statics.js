@@ -4,6 +4,11 @@
 // Static APIs available throughout frontend
 var Statics = {}
 
+// APi to create array using size
+Statics.getArray = function (size) {
+    return new Array(size)
+}
+
 // API to absorb UI event
 Statics.absorbEvent = function (event) {
     event.stopPropagation()

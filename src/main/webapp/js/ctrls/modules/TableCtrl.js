@@ -25,7 +25,6 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
     }
 
     /* ----------------------------- Public APIs --------------------------------*/
-
     // API to show photo on new page
     vm.showImage = function (filename) {
         $window.open($state.href('photos', {name: filename}), "_blank")
@@ -46,6 +45,40 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
 
         // Open Location Viewer dialog
         DialogService.locationViewer(locations)
+    }
+
+    /*
+     * Paging related methods
+     */
+    // Method to update rows per page
+    vm.updateCount = function () {
+        // Get pager
+        var pager = vm.table.pager
+
+        // Ensure count is with min - max range
+        if (pager.count < 5) {
+            pager.count = 5
+        } else if (pager.count > 50) {
+            pager.count = 50
+        }
+
+        // Reset start index
+        pager.startIdx = 0
+
+        // Sync Data
+        sync(false)
+    }
+
+    // Method to open a certain page number
+    vm.openPage = function (pageNum) {
+        // Get pager
+        var pager = vm.table.pager
+
+        // Set start index appropriately
+        pager.startIdx = (pageNum - 1) * pager.count
+
+        // Sync data
+        sync(false)
     }
 
     /* ----------------------------- Private APIs --------------------------------*/
