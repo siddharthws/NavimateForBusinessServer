@@ -6,8 +6,13 @@
 .text-white{
     color: white;
 }
+
 .text-black{
     color: black;
+}
+
+.text-grey{
+    color: grey;
 }
 
 .text-bold{
