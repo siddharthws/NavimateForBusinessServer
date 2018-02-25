@@ -12,6 +12,10 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
     vm.FilterConst = Constants.Filter
     vm.TemplateConst = Constants.Template
 
+    // Error / Waiting flags
+    vm.bError = false
+    vm.bWaiting = false
+
     // Get table object from service
     vm.table = TableService.activeTable
 
@@ -47,13 +51,24 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
     /* ----------------------------- Private APIs --------------------------------*/
     // Method to re-initialize data
     function sync(bColumns) {
+        // Set flags
+        vm.bError = false
+        vm.bWaiting = true
+
         // Start Async Request to get data
         vm.table.sync(bColumns).then(
             // Success Callback
             function (success) {
+                // Reset Waiting flag
+                vm.bWaiting = false
             },
             // Error Callback
             function (error) {
+                // Reset Waiting flag
+                vm.bWaiting = false
+
+                // Set Error flag
+                vm.bError = true
             }
         )
     }

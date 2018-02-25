@@ -20,7 +20,7 @@
             </thead>
 
             <!-- Table Body -->
-            <tbody>
+            <tbody  ng-if="vm.table.rows.length && !vm.bWaiting && !vm.bError">
                 <!-- Table Row -->
                 <tr ng-repeat="row in vm.table.rows">
                     <!-- Serial Number -->
@@ -51,5 +51,27 @@
                 </tr>
             </tbody>
         </table>
+
+        <!-- Waiting / Error UI -->
+        <div class="d-flex align-items-center justify-content-center mt-1 p-4"
+             ng-if="vm.bError || vm.bWaiting || !vm.table.rows.length">
+            <!-- Waiting Spinner -->
+            <div class="d-flex align-items-center" ng-if="vm.bWaiting">
+                <loader ng-if="vm.bWaiting" class="loader-l"></loader>
+                <h4 class="ml-2 text-grey">Getting data...</h4>
+            </div>
+
+            <!-- Error UI -->
+            <div class="d-flex align-items-center" ng-if="vm.bError">
+                <img src="/static/images/ic_smiley_sad.png">
+                <h4 class="ml-1 text-grey">Could not sync data...</h4>
+            </div>
+
+            <!-- No data UI -->
+            <div class="d-flex align-items-center" ng-if="!vm.bError && !vm.bWaiting && !vm.table.rows.length">
+                <img src="/static/images/ic_smiley_neutral.png">
+                <h4 class="ml-1 text-grey">Nothing to show...</h4>
+            </div>
+        </div>
     </div>
 </div>
