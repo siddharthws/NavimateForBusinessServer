@@ -4,9 +4,12 @@
  * Service to cache table data
  */
 
-app.service('TableService', function(ObjTable) {
+app.service('TableService', function() {
     /* ----------------------------- INIT --------------------------------*/
     var vm  = this
+
+    // Set currently active table to null on init
+    vm.activeTable = null
 
     /* ----------------------------- Public APIs --------------------------------*/
     /* ----------------------------- Private APIs --------------------------------*/

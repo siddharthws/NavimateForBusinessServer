@@ -46,6 +46,19 @@ tr:focus {
     vertical-align: middle;
 }
 
+/* Table Column Sizing */
+.tbl-col-s {
+    min-width: 3em;
+}
+
+.tbl-col-m {
+    min-width: 15em;
+}
+
+.tbl-col-l {
+    min-width: 25em;
+}
+
 /* Page numbers styling */
 ul.pagination {
     margin-bottom: 0px;

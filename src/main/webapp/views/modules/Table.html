@@ -1,4 +1,55 @@
 <!-- Html view for Table -->
 <div ng-controller="TableCtrl as vm" class="h-100 w-100 d-flex flex-column">
-    
+    <!-- Table Container -->
+    <div class="overflow-auto p-2 bdr-bottom-lighgrey">
+        <!-- Table -->
+        <table class="table table-striped" ng-if="vm.table.columns.length">
+            <!-- Table Headers -->
+            <thead>
+                <!-- Serial Number column header -->
+                <th>
+                    #
+                </th>
+
+                <!-- Columns returned by server -->
+                <th ng-repeat="column in vm.table.columns">
+                    <span class="flex-1 text-nowrap">
+                        {{column.name}}
+                    </span>
+                </th>
+            </thead>
+
+            <!-- Table Body -->
+            <tbody>
+                <!-- Table Row -->
+                <tr ng-repeat="row in vm.table.rows">
+                    <!-- Serial Number -->
+                    <td>
+                        {{($index + 1) + "."}}
+                    </td>
+
+                    <!-- Data returned by server -->
+                    <td ng-repeat="column in vm.table.columns"  ng-init="value = row.values[column.id]">
+                        <!-- Simple Text Value -->
+                        <span ng-if="(value == '-') || (column.type != vm.TemplateConst.FIELD_TYPE_PHOTO &&
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_SIGN &&
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_LOCATION)">
+                            {{value}}
+                        </span>
+
+                        <!-- Button to open image -->
+                        <input type="button" value="" class="ib-base ib-s ib-hover ib-link" title="Open Image"
+                               ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_PHOTO ||
+                                                         column.type == vm.TemplateConst.FIELD_TYPE_SIGN)"
+                               ng-click="$root.Statics.absorbEvent($event); vm.showImage(value)"/>
+
+                        <!-- Button to open location -->
+                        <input type="button" value="" class="ib-base ib-s ib-hover ib-map" title="Open Location"
+                               ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_LOCATION)"
+                               ng-click="$root.Statics.absorbEvent($event); vm.showLocation(value)"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

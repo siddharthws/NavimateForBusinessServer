@@ -15,6 +15,7 @@ Constants.Events = {
     TABLE_EXPORT:           "event_table_export",
     TABLE_TOGGLE_COLUMNS:   "event_table_toggle_columns",
     TABLE_CLEAR_FILTERS:    "event_table_clear_filters",
+    TABLE_SYNC:             "event_table_sync",
 
     // Template Editor Module related events
     TEMPLATE_VALIDATE:          "event_template_validate",
@@ -211,6 +212,19 @@ Constants.DashboardNav.Menu = [
 
 /* ------------------------------- Pagination -----------------------------------*/
 Constants.Table = {
+    // Table types
+    TYPE_INVALID:   0,
+
+    // Column size types
+    COL_SIZE_S:         1,
+    COL_SIZE_M:         2,
+    COL_SIZE_L:         3,
+
+    // URL prefix
+    URL_PREFIX: [
+        'invalid'
+    ],
+
     DEFAULT_COUNT_PER_PAGE:     10
 }
 
