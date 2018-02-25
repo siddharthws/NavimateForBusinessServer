@@ -6,9 +6,28 @@ import org.grails.web.json.JSONArray
 
 @Transactional
 class TaskService {
-
+    // ----------------------- Dependencies ---------------------------//
     def fcmService
 
+    // ----------------------- Public APIs ---------------------------//
+    // Method to get all tasks for a user
+    def getForUser(User user) {
+        def tasks = []
+
+        // Get all unremoved tasks created by this user
+        tasks = Task.findAllByAccountAndIsRemovedAndManager(user.account, false, user)
+
+        // Sort tasks in descending order of create date
+        tasks = tasks.sort {it -> it.dateCreated}
+        tasks.reverse(true)
+
+        // Return tasks
+        tasks
+    }
+
+    // ----------------------- Private APIs ---------------------------//
+
+    // ----------------------- Unclean APIs ---------------------------//
     def addTasks(User manager, JSONArray tasksJson) {
         def tasks = []
         def fcms = []

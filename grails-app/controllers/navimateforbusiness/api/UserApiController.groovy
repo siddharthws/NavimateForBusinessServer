@@ -24,6 +24,7 @@ class UserApiController {
     def fcmService
     def reportService
     def leadService
+    def templateService
 
     def changePassword() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -140,21 +141,11 @@ class UserApiController {
     def getLead() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get all leads of the company
-        List<Lead> leads = Lead.findAllByAccount(user.account)
-        def respLeads
+        // Get all leads for this user
+        List<Lead> leads = leadService.getForUser(user)
 
-        if(user.role==navimateforbusiness.Role.ADMIN) {
-            // Add all leads that are not removed
-            respLeads = leads.findAll {it -> !it.isRemoved}
-        } else {
-            // Add all non removed leads wich are either owned by this manager or publicly visible
-            respLeads = leads.findAll {it -> (!it.isRemoved && (it.visibility == Visibility.PUBLIC) || (it.manager.id == user.id))}
-        }
-
-        //Serialize the leads into a JSON object and send the response to frontend
-        // Get Table type data form leads
-        def resp = leadService.getLeadData(respLeads)
+        //Serialize the leads into a JSON list
+        def resp = leadService.getLeadData(leads)
 
         render resp as JSON
     }
@@ -243,7 +234,7 @@ class UserApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get Task List
-        List<Task> tasks = Task.findAllByManagerAndIsRemoved(user, false)
+        List<Task> tasks = taskService.getForUser(user)
 
         //Serialize the tasks into a JSON object and send the response to frontend
         def resp = taskService.getTaskData(tasks)
@@ -368,7 +359,7 @@ class UserApiController {
         List<Template> templates
 
         // Get List of Form templates of admin for this user
-        templates = Template.findAllByAccountAndTypeAndIsRemoved(user.account, type, false)
+        templates = templateService.getForUser(user, type)
 
         // Serialize into response
         def templatesJson = []
