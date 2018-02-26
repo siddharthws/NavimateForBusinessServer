@@ -6,7 +6,56 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class TableService {
     // ----------------------- Dependencies ---------------------------//
+    def templateService
+
     // ----------------------- Public APIs ---------------------------//
+    // API parse lead objects to table format
+    def parseLeads(User user, List<Lead> leads) {
+        def rows = []
+
+        // Get all lead columns for this user
+        def columns = getLeadColumns(user)
+
+        // Iterate through leads
+        leads.each {lead ->
+            def values = []
+
+            // Push blank identifier for each column in values
+            columns.each {it -> values.push('-')}
+
+            // Add row data for mandatory columns
+            values[0] = lead.title
+            values[1] = lead.address
+            values[2] = lead.latitude + "," + lead.longitude
+            values[3] = lead.templateData.template.name
+
+            // Iterate through template values
+            lead.templateData.values.each {value ->
+                // Get column for the field
+                def column = getColumnForField(columns, value.field)
+
+                if (column) {
+                    // Get column index
+                    int colIdx = columns.indexOf(column)
+
+                    // Update value
+                    values[colIdx] = getStringFromValue(value)
+                }
+            }
+
+            // Add row to table
+            rows.push([
+                    id:         lead.id,
+                    values:     values
+            ])
+        }
+
+        return [
+                columns: columns,
+                rows: rows
+        ]
+    }
+
     // APi to get export data
     def getExportData(def table, def params) {
         List objects    = []
@@ -62,6 +111,23 @@ class TableService {
     }
 
     // ----------------------- Private APIs ---------------------------//
+    // Method to get lead columns for a given user
+    private def getLeadColumns(User user) {
+        def columns = []
+
+        // Add mandatory columns for leads
+        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Title"))
+        columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Address"))
+        columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
+        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
+
+        // Add templated columns through lead templates
+        List<Template> templates = templateService.getForUser(user, navimateforbusiness.Constants.Template.TYPE_LEAD)
+        columns += getTemplatedColumns(templates, 4)
+
+        columns
+    }
+
     // Method to get list of columns from template list
     private def getTemplatedColumns(List<Template> templates, int startId) {
         def columns = []

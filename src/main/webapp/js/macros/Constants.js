@@ -203,6 +203,7 @@ Constants.DashboardNav.Menu = [
 Constants.Table = {
     // Table types
     TYPE_INVALID:   0,
+    TYPE_LEAD:      1,
 
     // Column size types
     COL_SIZE_S:         1,
@@ -216,7 +217,8 @@ Constants.Table = {
 
     // URL prefix
     URL_PREFIX: [
-        'invalid'
+        'invalid',
+        'leads'
     ],
 
     // Default rows per page
