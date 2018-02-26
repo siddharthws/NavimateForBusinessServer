@@ -1,6 +1,10 @@
 <!-- Tasks Manage HTML -->
-<div class="bg-toolbar d-flex">
-    <button class="btn btn-primary" ng-click="$ctrl.add()">Add</button>
+<div class="d-flex align-items-center">
+    <input type="button" value="" class="ib-base ib-hover ib-add"               ng-click="$ctrl.add()"              title="Add Leads"/>
+    <input type="button" value="" class="ib-base ib-hover ib-sync"              ng-click="$ctrl.sync()"             title="Refresh Table"/>
+    <input type="button" value="" class="ib-base ib-hover ib-clear-filter"      ng-click="$ctrl.clearFilters()"     title="Clear Filters"/>
+    <input type="button" value="" class="ib-base ib-hover ib-customize-table"   ng-click="$ctrl.toggleColumns()"    title="Customize Table"/>
+    <input type="button" value="" class="ib-base ib-hover ib-export"            ng-click="$ctrl.export()"           title="Export to file"/>
 
     <div class="dropdown">
         <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
@@ -16,11 +20,6 @@
             <button class="dropdown-item" ng-click="$ctrl.stopRenewal()">Stop Renewal</button>
         </div>
     </div>
-
-    <button class="btn btn-primary" ng-click="$ctrl.clearFilters()">Clear Filters</button>
-    <button class="btn btn-primary" ng-click="$ctrl.export()">Export</button>
-    <button class="btn btn-primary" ng-click="$ctrl.sync()">Sync</button>
-    <button class="btn btn-primary" ng-click="$ctrl.toggleColumns()">Customize Columns</button>
 </div>
 
 <ng-include src="'/static/views/modules/TableOld.html'" class="d-flex flex-1"></ng-include>
