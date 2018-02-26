@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TaskDataService, LeadDataService, TeamDataService, TemplateDataService) {
+app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TaskDataService, LeadDataService, TeamDataService, TemplateDataService) {
     var vm = this
 
     /*-------------------------------- Scope APIs --------------------------------*/
@@ -100,7 +100,7 @@ app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorag
                     })
             })
     }
-    
+
     vm.stopRenewal = function () {
         //Launch confirm Dialog box
         DialogService.confirm("Are you sure you want to stop renewal for " + vm.selection.length + " tasks ?",
@@ -161,9 +161,7 @@ app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorag
         // Get open Tasks
         var tasks = TaskDataService.cache.data
         tasks.forEach(function (task) {
-            if (task.status == 'OPEN') {
                 vm.tasks.push(task)
-            }
         })
 
         // Parse lead data into tabular format
@@ -185,6 +183,7 @@ app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorag
         columns.push({title: "Period",      type: Constants.Template.FIELD_TYPE_NUMBER, filterType: Constants.Filter.TYPE_NUMBER})
         columns.push({title: "Form",        type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
         columns.push({title: "Template",    type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
+        columns.push({title: "Status",      type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
 
         // Add columns using templated data
         // Iterate through all leads
@@ -263,6 +262,8 @@ app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorag
                 return
             }
             row[5] = taskTemplate.name
+
+            row[6] = task.status
 
             // iterate through template data
             task.templateData.values.forEach(function (value) {
@@ -353,7 +354,7 @@ app.controller("TaskOpenCtrl", function ($scope, $rootScope, $http, $localStorag
     /*-------------------------------- INIT --------------------------------*/
     // Set menu and option
     $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_TASKS]
-    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_OPEN]
+    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
 
     // Init Objects
     vm.tasks = []

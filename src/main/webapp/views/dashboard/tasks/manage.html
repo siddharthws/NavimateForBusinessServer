@@ -1,0 +1,26 @@
+<!-- Tasks Manage HTML -->
+<div class="bg-toolbar d-flex">
+    <button class="btn btn-primary" ng-click="$ctrl.add()">Add</button>
+
+    <div class="dropdown">
+        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
+                ng-disabled="!$ctrl.selection.length">
+            <span>Actions | </span>
+            <img class="img-icon" src="/static/images/dropdown.png"/>
+        </button>
+        <div class="dropdown-menu">
+            <button class="dropdown-item" ng-click="$ctrl.edit()">Edit</button>
+            <button class="dropdown-item" ng-click="$ctrl.showMap()">Show on map</button>
+            <button class="dropdown-item" ng-click="$ctrl.close()">Close</button>
+            <button class="dropdown-item" ng-click="$ctrl.remove()">Remove</button>
+            <button class="dropdown-item" ng-click="$ctrl.stopRenewal()">Stop Renewal</button>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" ng-click="$ctrl.clearFilters()">Clear Filters</button>
+    <button class="btn btn-primary" ng-click="$ctrl.export()">Export</button>
+    <button class="btn btn-primary" ng-click="$ctrl.sync()">Sync</button>
+    <button class="btn btn-primary" ng-click="$ctrl.toggleColumns()">Customize Columns</button>
+</div>
+
+<ng-include src="'/static/views/modules/Table.html'" class="d-flex flex-1"></ng-include>
