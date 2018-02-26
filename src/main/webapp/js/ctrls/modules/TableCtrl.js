@@ -181,4 +181,9 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
         // Sync data
         sync(false)
     })
+
+    // Toggle columns event
+    $scope.$on(Constants.Events.TABLE_TOGGLE_COLUMNS, function (event, args) {
+        DialogService.toggleColumns(vm.table.columns)
+    })
 })

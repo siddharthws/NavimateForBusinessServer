@@ -184,6 +184,7 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
                 // Set properties
                 column.sortType = Constants.Table.SORT_NONE
                 column.bNoBlanks = false
+                column.bShow = true
             })
         }
 
