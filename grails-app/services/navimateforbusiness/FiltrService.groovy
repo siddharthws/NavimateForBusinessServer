@@ -43,6 +43,63 @@ class FiltrService {
         // Apply Blank filter
         if (filter.bNoBlanks && value == '-') {
             bFiltered = false
+        } else {
+            // Apply filters using filter types
+            switch (filter.type) {
+                case navimateforbusiness.Constants.Filter.TYPE_TEXT:
+                    // Check if filter is applied
+                    if (filter.value) {
+                        // Check if value passes the filter
+                        if (!value.toLowerCase().contains(filter.value.toLowerCase())) {
+                            bFiltered = false
+                        }
+                    }
+                    break
+                case navimateforbusiness.Constants.Filter.TYPE_NUMBER:
+                    // Check if 'from' filter is applied
+                    if (filter.value.from) {
+                        // Check if value passes the filter
+                        if (value == '-') {
+                            bFiltered = false
+                        } else {
+                            Double val = Double.parseDouble(value)
+                            if (filter.value.from > val) {
+                                bFiltered = false
+                            }
+                        }
+                    }
+
+                    // Check if 'to' filter is applied
+                    if (filter.value.to) {
+                        // Check if value passes the filter
+                        if (value == '-') {
+                            bFiltered = false
+                        } else {
+                            Double val = Double.parseDouble(value)
+                            if (filter.value.to < val) {
+                                bFiltered = false
+                            }
+                        }
+                    }
+                    break
+                case navimateforbusiness.Constants.Filter.TYPE_DATE:
+                    // Check if 'from' filter is applied
+                    if (filter.value.from) {
+                        // Check if value passes the filter
+                        if (value == '-' || filter.value.from > value) {
+                            bFiltered = false
+                        }
+                    }
+
+                    // Check if 'to' filter is applied
+                    if (filter.value.to) {
+                        // Check if value passes the filter
+                        if (value == '-' || filter.value.to < value) {
+                            bFiltered = false
+                        }
+                    }
+                    break
+            }
         }
 
         return bFiltered

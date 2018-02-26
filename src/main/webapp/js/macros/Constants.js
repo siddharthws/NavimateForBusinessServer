@@ -250,6 +250,7 @@ Constants.Template = {
     FIELD_TYPE_SIGN:            6,
     FIELD_TYPE_LOCATION:        7,
     FIELD_TYPE_CHECKBOX:        8,
+    FIELD_TYPE_DATE:            9,
 
     // Field Names
     FIELD_NAMES:    [
@@ -261,7 +262,8 @@ Constants.Template = {
         'Photo',
         'Signature',
         'Location',
-        'Checkbox'
+        'Checkbox',
+        'Date'
     ]
 }
 

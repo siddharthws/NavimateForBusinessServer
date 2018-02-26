@@ -107,6 +107,9 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
             }
         }
 
+        // Reset start Index in pager
+        vm.table.pager.startIdx = 0
+
         // Sync Data
         sync(false)
     }
@@ -119,7 +122,19 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
         // Toggle blank filter
         column.bNoBlanks = !column.bNoBlanks
 
+        // Reset start Index in pager
+        vm.table.pager.startIdx = 0
+
         // Sync Data
+        sync(false)
+    }
+
+    // Method to perform action when any filters are changed
+    vm.filterUpdated = function () {
+        // Reset start Index in pager
+        vm.table.pager.startIdx = 0
+
+        // Sync data
         sync(false)
     }
 
@@ -151,6 +166,18 @@ app.controller('TableCtrl', function (  $scope, $window, $state,
     /* ----------------------------- Event Listeners --------------------------------*/
     // Re sync data when Sync Event is triggered
     $scope.$on(Constants.Events.TABLE_SYNC, function (event, args) {
+        // Sync data
+        sync(false)
+    })
+
+    // Clear Filter Event
+    $scope.$on(Constants.Events.TABLE_CLEAR_FILTERS, function (event, args) {
+        // Reset selection / paging etc...
+        vm.table.pager.startIdx = 0
+
+        // Re-initialize filters
+        vm.table.clearFilters()
+
         // Sync data
         sync(false)
     })
