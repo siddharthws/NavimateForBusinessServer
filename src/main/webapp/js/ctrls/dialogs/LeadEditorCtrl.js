@@ -3,7 +3,9 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, GoogleApiService, ExcelService, LeadDataService, TemplateDataService, leads) {
+app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog, $http, $localStorage, ToastService,
+                                            GoogleApiService, ExcelService, LeadDataService, TemplateDataService,
+                                            leads, editCb) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     $scope.add = function () {
@@ -150,13 +152,12 @@ app.controller('LeadEditorCtrl', function ($scope, $rootScope, $mdDialog, $http,
                     $mdDialog.hide()
                     ToastService.toast("Leads added succesfully...")
 
-                    //Re-sync Lead data since new member has been added
-                    LeadDataService.sync()
+                    // Trigger callback
+                    editCb()
                 },
                 function (error) {
                     $rootScope.hideWaitingDialog()
                     ToastService.toast("Unable to update leads !!!")
-                    console.log(error)
                 })
         }
     }

@@ -22,6 +22,8 @@ class UrlMappings {
         "/api/admin/removeTemplates"(controller: "AdminApi") {action = [POST: "removeTemplates"]}
 
         /*------------------------- Manager APIs --------------------------*/
+        // Lead Related APIs
+        "/api/manager/leads/getTable"    (controller: "ManagerApi") {action = [POST: "getLeadTable"]}
 
         /*------------------------- User APIs to be removed --------------------------*/
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
