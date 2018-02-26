@@ -79,6 +79,11 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
             return deferred.promise
         }
 
+        // Method to clear all filters
+        vm.clearFilters = function () {
+            initFilters()
+        }
+
         // Method to get number of pages based on data
         vm.pageCount = function () {
             return Math.ceil(vm.totalRows / vm.pager.count)
@@ -110,6 +115,8 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
             vm.columns.forEach(function (column) {
                 colFilters.push({
                     colId: column.id,
+                    type: column.filter.type,
+                    value: column.filter.value,
                     bNoBlanks: column.bNoBlanks
                 })
             })
@@ -171,10 +178,43 @@ app.factory('ObjTable', function($http, $q, $localStorage) {
         function initFilters () {
             // Iterate through column
             vm.columns.forEach(function (column) {
+                // Add column filter
+                column.filter = getFilterForColumn(column)
+
                 // Set properties
                 column.sortType = Constants.Table.SORT_NONE
                 column.bNoBlanks = false
             })
+        }
+
+        // Method to init filter for a given column
+        function getFilterForColumn(column) {
+            var filter = {
+                type: Constants.Filter.TYPE_NONE
+            }
+
+            switch (column.type) {
+                case Constants.Template.FIELD_TYPE_TEXT:
+                case Constants.Template.FIELD_TYPE_RADIOLIST:
+                case Constants.Template.FIELD_TYPE_CHECKLIST:
+                case Constants.Template.FIELD_TYPE_CHECKBOX: {
+                    filter.type = Constants.Filter.TYPE_TEXT
+                    filter.value = ""
+                    break
+                }
+                case Constants.Template.FIELD_TYPE_NUMBER: {
+                    filter.type = Constants.Filter.TYPE_NUMBER
+                    filter.value = {from: null, to: null}
+                    break
+                }
+                case Constants.Template.FIELD_TYPE_DATE: {
+                    filter.type = Constants.Filter.TYPE_DATE
+                    filter.value = {from: null, to: null}
+                    break
+                }
+            }
+
+            return filter
         }
 
         // Method to get column by id

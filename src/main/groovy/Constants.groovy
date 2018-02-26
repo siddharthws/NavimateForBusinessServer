@@ -45,6 +45,7 @@ class Constants {
         public static final int FIELD_TYPE_SIGN           = 6
         public static final int FIELD_TYPE_LOCATION       = 7
         public static final int FIELD_TYPE_CHECKBOX       = 8
+        public static final int FIELD_TYPE_DATE           = 9
     }
 
     // Filter related constants
