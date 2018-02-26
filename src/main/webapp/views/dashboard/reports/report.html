@@ -1,10 +1,10 @@
 <!-- Lead Report HTML -->
 <!-- Toolbar -->
 <div class="bg-toolbar d-flex">
-    <button class="btn btn-primary" ng-click="$ctrl.clearFilters()">Clear Filters</button>
-    <button class="btn btn-primary" ng-click="$ctrl.export()">Export</button>
-    <button class="btn btn-primary" ng-click="$ctrl.syncTable()">Sync</button>
-    <button class="btn btn-primary" ng-click="$ctrl.toggleColumns()">Customize Columns</button>
+    <input type="button" value="" class="ib-base ib-hover ib-clear-filter"      ng-click="$ctrl.clearFilters()"     title="Clear Filters"/>
+    <input type="button" value="" class="ib-base ib-hover ib-export"            ng-click="$ctrl.export()"           title="Export to file"/>
+    <input type="button" value="" class="ib-base ib-hover ib-sync"              ng-click="$ctrl.sync()"             title="Refresh Table"/>
+    <input type="button" value="" class="ib-base ib-hover ib-customize-table"   ng-click="$ctrl.toggleColumns()"    title="Customize Columns"/>
 </div>
 
 <!-- Table -->
