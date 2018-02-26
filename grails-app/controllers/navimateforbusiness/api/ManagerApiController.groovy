@@ -46,5 +46,33 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    def getLeadIds() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+
+        // get leads for this user
+        def leads = leadService.getForUser(user)
+
+        // Convert leads to tabular format
+        def table = tableService.parseLeads(user, leads)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+
+        // Prepare response as list of IDs
+        def respIds = []
+        table.rows.each {row ->
+            respIds.push(row.id)
+        }
+        // Send response
+        def resp = [
+                ids: respIds
+        ]
+        render resp as JSON
+    }
+
     // ----------------------- Private methods ----------------------- //
 }
