@@ -2,7 +2,7 @@
  * Created by Siddharth on 24-02-2018.
  */
 
-app.controller('TableCtrl', function (  $scope, $window, $state,
+app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
                                         TableService, DialogService, ToastService) {
     /* ----------------------------- INIT --------------------------------*/
     var vm  = this
