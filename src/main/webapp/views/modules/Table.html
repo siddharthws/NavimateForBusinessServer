@@ -12,7 +12,7 @@
                 </th>
 
                 <!-- Columns returned by server -->
-                <th ng-repeat="column in vm.table.columns">
+                <th ng-repeat="column in vm.table.columns"  ng-if="column.bShow">
                     <div class="d-flex flex-column justify-content-center">
                         <!-- Header Top -->
                         <div class="d-flex">
@@ -78,7 +78,8 @@
                     </td>
 
                     <!-- Data returned by server -->
-                    <td ng-repeat="column in vm.table.columns"  ng-init="value = row.values[column.id]">
+                    <td ng-repeat="column in vm.table.columns"  ng-if="column.bShow"
+                        ng-init="value = row.values[column.id]">
                         <!-- Simple Text Value -->
                         <span ng-if="(value == '-') || (column.type != vm.TemplateConst.FIELD_TYPE_PHOTO &&
                                                         column.type != vm.TemplateConst.FIELD_TYPE_SIGN &&
