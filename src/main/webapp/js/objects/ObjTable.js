@@ -8,7 +8,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
         var vm = this
 
         // Type fo table
-        vm.type = Constants.Table.TYPE_INVALID
+        vm.type = type
 
         // Rows and columns
         vm.columns = []
@@ -152,8 +152,9 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
         }
 
         // Method to get number of pages based on data
-        vm.pageCount = function () {
-            return Math.ceil(vm.totalRows / vm.pager.count)
+        vm.getPages = function () {
+            var numPages = Math.ceil(vm.totalRows / vm.pager.count)
+            return Statics.getArray(numPages)
         }
 
         // ----------------------------------- Private Methods ------------------------------------//
@@ -170,6 +171,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
 
             // Set rows
             vm.rows         = data.rows
+            vm.totalRows    = data.totalRows
 
             // Update column sizes
             refreshColSizes()

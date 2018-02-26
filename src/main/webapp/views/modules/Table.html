@@ -78,13 +78,16 @@
                 <tr ng-repeat="row in vm.table.rows" ng-click="vm.toggleRowSelection(row.id)"
                     ng-class="{'active' : vm.table.selectedRows.indexOf(row.id) != -1}">
                     <!-- Serial Number -->
-                    <td>
+                    <td class="tbl-col-s">
                         {{(vm.table.pager.startIdx + $index + 1) + "."}}
                     </td>
 
                     <!-- Data returned by server -->
                     <td ng-repeat="column in vm.table.columns"  ng-if="column.bShow"
-                        ng-init="value = row.values[column.id]">
+                        ng-init="value = row.values[column.id]"
+                        ng-class="{ 'tbl-col-s' : column.size == vm.TableConst.COL_SIZE_S,
+                                    'tbl-col-m' : column.size == vm.TableConst.COL_SIZE_M,
+                                    'tbl-col-l' : column.size == vm.TableConst.COL_SIZE_L}">
                         <!-- Simple Text Value -->
                         <span ng-if="(value == '-') || (column.type != vm.TemplateConst.FIELD_TYPE_PHOTO &&
                                                         column.type != vm.TemplateConst.FIELD_TYPE_SIGN &&
@@ -135,7 +138,7 @@
          ng-init="pager = vm.table.pager">
         <!-- Page numbers using bootstrap pagination -->
         <ul class="pagination">
-            <li ng-repeat="page in $root.getArray(vm.table.pageCount()) track by $index" class="page-item"
+            <li ng-repeat="page in vm.table.getPages() track by $index" class="page-item"
                 ng-class="{'active': pager.startIdx == ($index * pager.count)}">
                 <a href ng-click="vm.openPage($index + 1)" class="page-link">{{$index + 1}}</a>
             </li>
