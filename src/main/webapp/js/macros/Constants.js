@@ -126,16 +126,6 @@ Constants.DashboardNav.Options = [
         state:      'profile'
     },
     {
-        id:         Constants.DashboardNav.OPTION_OPEN,
-        name:       'Open',
-        state:      'open'
-    },
-    {
-        id:         Constants.DashboardNav.OPTION_CLOSE,
-        name:       'Close',
-        state:      'close'
-    },
-    {
         id:         Constants.DashboardNav.OPTION_SETTINGS,
         name:       'Settings',
         state:      'settings'
@@ -172,8 +162,7 @@ Constants.DashboardNav.Menu = [
         state:      "tasks",
         accessLevel:Constants.Role.MANAGER,
         options:    [
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_OPEN],
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_CLOSE]
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
         ]
     },
     {

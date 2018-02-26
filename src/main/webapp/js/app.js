@@ -186,15 +186,10 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/leads/manage.html',
         controller: 'LeadManageCtrl as $ctrl'
     })
-    .state('dashboard.tasks-open', {
-        url: '/tasks/open',
-        templateUrl: '/static/views/dashboard/tasks/open.html',
-        controller: 'TaskOpenCtrl as $ctrl'
-    })
-    .state('dashboard.tasks-close', {
-        url: '/tasks/close',
-        templateUrl: '/static/views/dashboard/tasks/close.html',
-        controller: 'TaskCloseCtrl as $ctrl'
+    .state('dashboard.tasks-manage', {
+        url: '/tasks/manage',
+        templateUrl: '/static/views/dashboard/tasks/manage.html',
+        controller: 'TaskManageCtrl as $ctrl'
     })
     .state('dashboard.reports-report', {
         url: '/report',
