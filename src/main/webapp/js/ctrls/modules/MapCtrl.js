@@ -1,7 +1,7 @@
 /**
  * Created by Siddharth on 19-12-2017.
  */
-app.controller('MapCtrl', function ($scope) {
+app.controller('MapCtrl', function ($scope, ObjCluster, $timeout) {
     var vm = this
 
     /*------------------------------------ HTML APIs --------------------------------*/
@@ -18,6 +18,9 @@ app.controller('MapCtrl', function ($scope) {
 
         // Run angular digest cycle since this is async callback
         $scope.$apply()
+
+        // initialize ideal event listeners
+        vm.initListeners()
     }
 
     // Marker click event
@@ -57,6 +60,71 @@ app.controller('MapCtrl', function ($scope) {
             }
         }
     }
+
+    //Map idle listeners
+    vm.initListeners = function() {
+        if(!googleMap) {
+            return
+        }
+        google.maps.event.addListener(googleMap, 'idle', function () {
+            $timeout(function(){
+                if(!$scope.mapParams.bDraggable) {
+                    vm.updateCluster()
+                }
+            },0)
+        });
+    }
+
+    //update cluster event
+    vm.updateCluster = function(){
+        if(!googleMap) {
+            return
+        }
+        clusters.length = 0
+
+        //hide all markers as default in idle state
+        for (var i = 0; i < vm.markers.length; i++) {
+            vm.markers[i].bshow = false
+        }
+
+        //recreate clusters
+        for(var i = 0; i < vm.markers.length; i++) {
+            var latlng = new google.maps.LatLng(vm.markers[i].latitude, vm.markers[i].longitude)
+
+            //skip the markers that are not inside the map-view
+            if(!googleMap.getBounds().contains(latlng)) {
+                continue
+            }
+
+            if(clusters.length != 0) {
+                var bPresent = false
+                for (var j = 0; j < clusters.length; j++) {
+                    var cluster = clusters[j]
+                    if (cluster.isMarkerInClusterBounds(latlng)) {
+                        bPresent = true
+                        break
+                    }
+                }
+
+                if (!bPresent) {
+                    var newcluster = new ObjCluster(googleMap)
+                    newcluster.addMarker(vm.markers[i])
+                    clusters.push(newcluster)
+                }
+            } else{
+                var newcluster;
+                newcluster = new ObjCluster(googleMap)
+                newcluster.addMarker(vm.markers[i])
+                clusters.push(newcluster)
+            }
+        }
+
+        //display only one marker from each cluster
+        for(var i = 0;i < clusters.length;i++) {
+            clusters[i].markers_[0].bshow = true;
+        }
+    }
+
     /*------------------------------------ Local APIs --------------------------------*/
     // API to re-center the map on added markers
     function centerMap(latLng) {
@@ -108,10 +176,21 @@ app.controller('MapCtrl', function ($scope) {
     var googleMap = null
     var currentLatLng = null
     var selectedMarker = null
+    var clusters = [];
 
     // Add map params
     $scope.mapParams.zoom = 14
     $scope.mapParams.polylines = []
+    if(!$scope.mapParams.markers) {
+        $scope.mapParams.markers = []
+    }
+
+    vm.markers = $scope.mapParams.markers
+
+    //watch for marker array length changes from outside sources
+    $scope.$watch('mapParams.markers.length',function(){
+        vm.updateCluster();
+    });
 
     if($scope.mapParams.markers.length){
         selectedMarker = $scope.mapParams.markers[0]

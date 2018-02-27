@@ -16,7 +16,7 @@
 
         <!-- Markers on map -->
         <div ng-if="!mapParams.bDraggable">
-            <custom-marker  ng-repeat="marker in $ctrl.markers" ng-if="marker.latitude && marker.longitude"
+            <custom-marker  ng-repeat="marker in $ctrl.markers" ng-if="marker.latitude && marker.longitude && marker.bshow"
                             title="{{marker.title}}" position="[{{marker.latitude}}, {{marker.longitude}}]" draggable="{{mapParams.bDraggable}}"
                             on-click="$ctrl.markerClick($index)" on-dragend="$ctrl.markerDragend($index)">
                             <div class="tracker-marker">
