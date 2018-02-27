@@ -76,10 +76,8 @@ Constants.DashboardNav = {
     OPTION_LEAD     : 3,
     OPTION_TASK     : 4,
     OPTION_PROFILE  : 5,
-    OPTION_OPEN     : 6,
-    OPTION_CLOSE    : 7,
-    OPTION_SETTINGS : 8,
-    OPTION_LOCATION : 9,
+    OPTION_SETTINGS : 6,
+    OPTION_LOCATION : 7,
 }
 
 /*-----------------------------Dashboard user role-------------------------------------*/
