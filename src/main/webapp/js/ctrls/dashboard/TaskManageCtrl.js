@@ -2,19 +2,27 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TaskDataService, LeadDataService, TeamDataService, TemplateDataService) {
+app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TableService) {
     var vm = this
+
+    // Set menu and option
+    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_TASKS]
+    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
+
+    // Set task table as active
+    TableService.activeTable = TableService.taskTable
+    vm.table = TableService.activeTable
 
     /*-------------------------------- Scope APIs --------------------------------*/
     vm.add = function () {
         // Launch Task Creator dialog
-        DialogService.taskCreator(null)
+        DialogService.taskCreator(null, vm.sync())
     }
 
     // APIs for table based actions
     vm.export = function () {
         // Broadcast Toggle Columns Event
-        $scope.$broadcast(Constants.Events.TABLE_EXPORT, {filename: 'Navimate-Tasks'})
+        $scope.$broadcast(Constants.Events.TABLE_EXPORT)
     }
 
     vm.clearFilters = function () {
@@ -28,16 +36,23 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.sync = function () {
-        TaskDataService.sync()
+        // Broadcast Toggle Columns Event
+        $scope.$broadcast(Constants.Events.TABLE_SYNC)
     }
 
     vm.edit = function () {
-        DialogService.taskCreator(vm.selection)
+        // Get selected tasks from selection
+        var selectedTasks = getTaskFromSelection()
+
+        DialogService.taskCreator(selectedTasks)
     }
 
     vm.close = function () {
+        // Get selected tasks from selection
+        var selectedTasks = getTaskFromSelection()
+
         //Launch confirm Dialog box
-        DialogService.confirm("Are you sure you want to close these " + vm.selection.length + " tasks ?",
+        DialogService.confirm("Are you sure you want to close these " + vm.table.selectedRows.length + " tasks ?",
             function () {
                 //http call to close tasks
                 $rootScope.showWaitingDialog("Closing Tasks...")
@@ -48,7 +63,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : vm.selection
+                        tasks : selectedTasks
                     }
                 })
                 .then(
@@ -56,7 +71,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         $rootScope.hideWaitingDialog()
 
                         //Re-sync Task data since Task has been closed
-                        TaskDataService.sync()
+                        vm.sync()
 
                         // Show Toast
                         ToastService.toast("Tasks closed...")
@@ -69,8 +84,11 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.remove = function () {
+        // Get selected tasks from selection
+        var selectedTasks = getTaskFromSelection()
+
         //Launch confirm Dialog box
-        DialogService.confirm("Are you sure you want to remove these " + vm.selection.length + " tasks ?",
+        DialogService.confirm("Are you sure you want to remove these " + vm.table.selectedRows.length + " tasks ?",
             function () {
                 //http call to close tasks
                 $rootScope.showWaitingDialog("Removing Tasks...")
@@ -81,7 +99,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : vm.selection
+                        tasks : selectedTasks
                     }
                 })
                 .then(
@@ -89,7 +107,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         $rootScope.hideWaitingDialog()
 
                         //Re-sync Task data since Task has been Removed.
-                        TaskDataService.sync()
+                        vm.sync()
 
                         // Show Toast
                         ToastService.toast("Tasks removed successfully...")
@@ -102,8 +120,11 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.stopRenewal = function () {
+        // Get selected tasks from selection
+        var selectedTasks = getTaskFromSelection()
+
         //Launch confirm Dialog box
-        DialogService.confirm("Are you sure you want to stop renewal for " + vm.selection.length + " tasks ?",
+        DialogService.confirm("Are you sure you want to stop renewal for " + vm.table.selectedRows.length + " tasks ?",
             function () {
                 //http call to stop task renewal
                 $rootScope.showWaitingDialog("Stopping renewal period...")
@@ -114,7 +135,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : vm.selection
+                        tasks : selectedTasks
                     }
                 })
                 .then(
@@ -122,7 +143,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         $rootScope.hideWaitingDialog()
 
                         //Re-sync Task data since Task renewal has been updated.
-                        TaskDataService.sync()
+                        vm.sync()
 
                         // Show Toast
                         ToastService.toast("renewal period stopped...")
@@ -137,10 +158,11 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     vm.showMap = function () {
         // Prepare location array for each task
         var locations = []
-        vm.selection.forEach(function (task) {
+        vm.table.selectedRows.forEach(function (selectedId) {
+            // Get task of this selectedId
+            var task = $rootScope.getTaskById(selectedId)
             // Get lead of this task
-            var lead = LeadDataService.getById(task.leadId)
-
+            var lead = $rootScope.getLeadById(task.leadId)
             // Add lead title, lat and lng
             locations.push({
                 title:      lead.title,
@@ -154,251 +176,18 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     /*-------------------------------- Local APIs --------------------------------*/
-    function initTasks () {
-        // Reset data
-        vm.tasks = []
 
-        // Get open Tasks
-        var tasks = TaskDataService.cache.data
-        tasks.forEach(function (task) {
-                vm.tasks.push(task)
+    function getTaskFromSelection() {
+        var selectedTasks = []
+        // get task object for the selected tasks
+        vm.table.selectedRows.forEach(function (selectedId) {
+            // Get task of this Id
+            var task = $rootScope.getTaskById(selectedId)
+            selectedTasks.push(task)
         })
 
-        // Parse lead data into tabular format
-        $scope.tableParams.columns = getColumns()
-        $scope.tableParams.values  = getValues($scope.tableParams.columns)
-
-        // Broadcast Table Init Event
-        $scope.$broadcast(Constants.Events.TABLE_INIT)
+        return selectedTasks
     }
 
-    // Method to create column array from lead information
-    function getColumns() {
-        var columns = []
 
-        // Add mandatory columns
-        columns.push({title: "ID",          type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
-        columns.push({title: "Lead",        type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
-        columns.push({title: "Rep",         type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
-        columns.push({title: "Period",      type: Constants.Template.FIELD_TYPE_NUMBER, filterType: Constants.Filter.TYPE_NUMBER})
-        columns.push({title: "Form",        type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
-        columns.push({title: "Template",    type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
-        columns.push({title: "Status",      type: Constants.Template.FIELD_TYPE_TEXT, filterType: Constants.Filter.TYPE_SELECTION})
-
-        // Add columns using templated data
-        // Iterate through all leads
-        vm.tasks.forEach(function (task) {
-            // Iterate through all values in this lead
-            task.templateData.values.forEach(function (value) {
-                // Get field of this value
-                var field = TemplateDataService.getFieldById(value.fieldId)
-
-                // Ignore value if field is not available
-                if (!field) {
-                    return
-                }
-
-                // Check if this field has been added to column
-                var bColumnFound = false
-                for (var  i = 0; i < columns.length; i++) {
-                    var column = columns[i]
-                    if ((column.title == field.title) && (column.type == field.type)) {
-                        bColumnFound = true
-                        break
-                    }
-                }
-
-                // Add new column if not found
-                if (!bColumnFound) {
-                    columns.push({title: field.title, type: field.type, filterType: getFilterFromType(field.type)})
-                }
-            })
-        })
-
-        return columns
-    }
-
-    // Method to get values array
-    function getValues(columns) {
-        var values = []
-
-        // Iterate through all leads
-        vm.tasks.forEach(function (task) {
-            // Create a row of empty entries
-            var row = Array.apply(null, Array(columns.length)).map(function() { return '-' })
-
-            // Add mandatory data to row
-            row[0] = task.cId
-
-            // Add lead data
-            var lead = LeadDataService.getById(task.leadId)
-            // Ignore task if lead is not available
-            if (!lead) {
-                return
-            }
-            row[1] = lead.title
-
-            // Add rep Data
-            var rep = TeamDataService.getById(task.repId)
-            if (rep) {
-                row[2] = rep.name
-            } else {
-                row[2] = 'Unassigned'
-            }
-
-            // Add status and period
-            row[3] = task.period
-
-            // Ignore task if it's form template was removed
-            var formTemplate = TemplateDataService.getTemplateById(task.formTemplateId)
-            if (!formTemplate) {
-                return
-            }
-            row[4] = formTemplate.name
-
-            // Ignore task if it's task template was removed
-            var taskTemplate = TemplateDataService.getTemplateById(task.templateId)
-            if (!taskTemplate) {
-                return
-            }
-            row[5] = taskTemplate.name
-
-            row[6] = task.status
-
-            // iterate through template data
-            task.templateData.values.forEach(function (value) {
-                // Get field of this value
-                var field = TemplateDataService.getFieldById(value.fieldId)
-
-                // Ignore value if field is not available
-                if (!field) {
-                    return
-                }
-
-                // Find column index for this field
-                var colIdx
-                for (colIdx = 0; colIdx < columns.length; colIdx++) {
-                    var column = columns[colIdx]
-                    if ((column.title == field.title) && (column.type == field.type)) {
-                        break
-                    }
-                }
-
-                // Add value to this cell depending on it's type
-                switch (field.type) {
-                    case Constants.Template.FIELD_TYPE_TEXT:
-                    case Constants.Template.FIELD_TYPE_NUMBER:
-                    case Constants.Template.FIELD_TYPE_SIGN:
-                    case Constants.Template.FIELD_TYPE_PHOTO: {
-                        row[colIdx] = value.value
-                        break
-                    }
-                    case Constants.Template.FIELD_TYPE_RADIOLIST: {
-                        row[colIdx] = value.value.options[value.value.selection]
-                        break
-                    }
-                    case Constants.Template.FIELD_TYPE_CHECKLIST: {
-                        value.value.forEach(function (optionJson) {
-                            if (optionJson.selection) {
-                                if (row[colIdx] == '-') {
-                                    row[colIdx] = optionJson.name
-                                } else {
-                                    row[colIdx] += ', ' + optionJson.name
-                                }
-                            }
-                        })
-                        break
-                    }
-                    case Constants.Template.FIELD_TYPE_CHECKBOX: {
-                        if (value.value) {
-                            row[colIdx] = "Yes"
-                        } else {
-                            row[colIdx] = "No"
-                        }
-                        break
-                    }
-                }
-            })
-
-            // Add row to values
-            values.push(row)
-        })
-
-        return values
-    }
-
-    // Method to return filter type based on field type
-    function getFilterFromType(type) {
-        var filterType = Constants.Filter.TYPE_NONE
-
-        switch (type) {
-            case Constants.Template.FIELD_TYPE_TEXT:
-            case Constants.Template.FIELD_TYPE_CHECKLIST: {
-                filterType = Constants.Filter.TYPE_TEXT
-                break
-            }
-            case Constants.Template.FIELD_TYPE_NUMBER: {
-                filterType = Constants.Filter.TYPE_NUMBER
-                break
-            }
-            case Constants.Template.FIELD_TYPE_RADIOLIST:
-            case Constants.Template.FIELD_TYPE_CHECKBOX: {
-                filterType = Constants.Filter.TYPE_SELECTION
-                break
-            }
-        }
-
-        return filterType
-    }
-
-    /*-------------------------------- INIT --------------------------------*/
-    // Set menu and option
-    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_TASKS]
-    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
-
-    // Init Objects
-    vm.tasks = []
-    vm.selection = []
-    vm.bCheckAll = false
-
-    // Init Table Parameters
-    $scope.tableParams = {}
-    $scope.tableParams.columns = []
-    $scope.tableParams.values = []
-    $scope.tableParams.style = {bStriped: true, bSelectable: true}
-
-    // Add event listeners
-    // Listener for Task data ready event
-    $scope.$on(Constants.Events.TASK_DATA_READY, function (event, data) {
-        initTasks()
-    })
-
-    // Listener for Lead data ready event
-    $scope.$on(Constants.Events.LEAD_DATA_READY, function (event, data) {
-        initTasks()
-    })
-
-    // Listener for Team data ready event
-    $scope.$on(Constants.Events.TEAM_DATA_READY, function (event, data) {
-        initTasks()
-    })
-
-    // Listener for Lead template data ready event
-    $scope.$on(Constants.Events.TASK_TEMPLATE_DATA_READY, function (event, data) {
-        initTasks()
-    })
-
-    // Listener for table row selection / unselection events
-    $scope.$on(Constants.Events.TABLE_ROW_SELECT, function (event, params) {
-        // Clear selection array
-        vm.selection = []
-
-        // Push all seelcted leads
-        params.selectedIndexes.forEach(function (selectedIdx) {
-            vm.selection.push(vm.tasks[selectedIdx])
-        })
-    })
-
-    // Init View
-    initTasks()
 })

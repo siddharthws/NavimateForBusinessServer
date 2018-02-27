@@ -204,6 +204,7 @@ Constants.Table = {
     // Table types
     TYPE_INVALID:   0,
     TYPE_LEAD:      1,
+    TYPE_TASK:      2,
 
     // Column size types
     COL_SIZE_S:         1,
@@ -218,7 +219,8 @@ Constants.Table = {
     // URL prefix
     URL_PREFIX: [
         'invalid',
-        'leads'
+        'leads',
+        'tasks'
     ],
 
     // Default rows per page
