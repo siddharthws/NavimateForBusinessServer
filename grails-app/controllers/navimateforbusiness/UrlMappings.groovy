@@ -27,6 +27,9 @@ class UrlMappings {
         "/api/manager/leads/getIds"      (controller: "ManagerApi") {action = [POST: "getLeadIds"]}
         "/api/manager/leads/export"      (controller: "ManagerApi") {action = [POST: "exportLeads"]}
 
+        // Task Related APIs
+        "/api/manager/tasks/getTable"    (controller: "ManagerApi") {action = [POST: "getTaskTable"]}
+
         /*------------------------- User APIs to be removed --------------------------*/
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
         "/api/users/team"           (controller: "UserApi") {action = [GET: "getTeam",      POST: "addRep"]}
