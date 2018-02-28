@@ -5,6 +5,12 @@ import grails.gorm.transactions.Transactional
 
 @Transactional
 class TableService {
+
+    // ----------------------- Constants ---------------------------//
+    static String FORMAT_DATE = "yyyy-MM-dd"
+    static String FORMAT_TIME = "HH:mm:ss"
+    static TimeZone IST = TimeZone.getTimeZone('Asia/Calcutta')
+
     // ----------------------- Dependencies ---------------------------//
     def templateService
 
@@ -104,6 +110,59 @@ class TableService {
         ]
     }
 
+    // API to parse form objects to table format
+    def parseForms(User user, List<Form> forms) {
+        def rows = []
+
+        // Get all form columns for this user
+        def columns = getFormColumns(user)
+
+        // Iterate through leads
+        forms.each { form ->
+            def values = []
+
+            // Push blank identifier for each column in values
+            columns.each { it -> values.push('-') }
+
+            // Add row data for mandatory columns
+            values[0] = form.owner.manager.name
+            values[1] = form.owner.name
+            values[2] = form.submittedData.template.name
+            values[3] = form.dateCreated.format(FORMAT_DATE, IST)
+            values[4] = form.dateCreated.format(FORMAT_TIME, IST)
+            values[5] = form.latitude + "," + form.longitude
+            values[6] = form.task ? form.task.lead.title : "-"
+            values[7] = form.task ? String.valueOf(form.task.id) : "-"
+            values[8] = form.taskStatus ? form.taskStatus.name() : "-"
+
+            // Iterate through template values
+            form.submittedData.values.each {value ->
+                // Get column for the field
+                def column = getColumnForField(columns, value.field)
+
+                if (column) {
+                    // Get column index
+                    int colIdx = columns.indexOf(column)
+
+                    // Update value
+                    values[colIdx] = getStringFromValue(value)
+                }
+            }
+
+            // Add row to table
+            rows.push([
+                    id:         form.id,
+                    values:     values
+            ])
+        }
+
+        return [
+                columns: columns,
+                rows: rows
+        ]
+
+    }
+
     // APi to get export data
     def getExportData(def table, def params) {
         List objects    = []
@@ -196,6 +255,26 @@ class TableService {
         columns
     }
 
+    private def getFormColumns(User user) {
+        def columns = []
+
+        // Add mandatory columns for forms
+        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Manager"))
+        columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Representative"))
+        columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
+        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_DATE, "Date"))
+        columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_NONE, "Time"))
+        columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
+        columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Lead"))
+        columns.push(createColumn(7, navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER, "Task ID"))
+        columns.push(createColumn(8, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Task Status"))
+
+        // Add templated columns through form templates
+        List<Template> templates = templateService.getForUser(user, navimateforbusiness.Constants.Template.TYPE_FORM)
+        columns += getTemplatedColumns(templates, 9)
+
+        columns
+    }
     // Method to get list of columns from template list
     private def getTemplatedColumns(List<Template> templates, int startId) {
         def columns = []
