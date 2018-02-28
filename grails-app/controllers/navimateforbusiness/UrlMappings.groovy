@@ -30,6 +30,9 @@ class UrlMappings {
         // Task Related APIs
         "/api/manager/tasks/getTable"    (controller: "ManagerApi") {action = [POST: "getTaskTable"]}
 
+        // Form Related APIs
+        "/api/manager/forms/getTable"    (controller: "ManagerApi") {action = [POST: "getFormTable"]}
+
         /*------------------------- User APIs to be removed --------------------------*/
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
         "/api/users/team"           (controller: "UserApi") {action = [GET: "getTeam",      POST: "addRep"]}

@@ -9,6 +9,7 @@ class ManagerApiController {
     def authService
     def leadService
     def taskService
+    def formService
     def tableService
     def filtrService
     def sortingService
@@ -126,6 +127,40 @@ class ManagerApiController {
 
         // Convert tasks to tabular format
         def table = tableService.parseTasks(user, tasks)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+        int totalRows = table.rows.size()
+
+        // Apply sorting to table
+        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+
+        // Apply paging to table
+        table.rows = pagingService.apply(table.rows, filter.pager)
+
+        // Send response
+        def resp = [
+                rows: table.rows,
+                columns: request.JSON.bColumns ? table.columns : null,
+                totalRows: totalRows
+        ]
+        render resp as JSON
+    }
+
+    // ----------------------- FORM APIs ----------------------- //
+
+    def getFormTable() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+
+        // Get forms for this user
+        def forms = formService.getForUser(user)
+
+        // Convert forms to tabular format
+        def table = tableService.parseForms(user, forms)
 
         // Apply column filters to table
         table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
