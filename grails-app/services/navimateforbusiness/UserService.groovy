@@ -4,8 +4,30 @@ import grails.gorm.transactions.Transactional
 
 @Transactional
 class UserService {
+    /* ------------------------------------ Dependencies ------------------------------------ */
+    /* ------------------------------------ Public APIs ------------------------------------ */
+    // Method to get all tasks for a user
+    def getRepsForUser(User user) {
+        List<User> reps
 
-    /* ------------------------------------ Settings ------------------------------------ */
+        switch (user.role) {
+            case navimateforbusiness.Role.ADMIN:
+                // Get all reps of company
+                reps = User.findAllByAccountAndRole(user.account, navimateforbusiness.Role.REP)
+                break
+            case navimateforbusiness.Role.MANAGER:
+                // Get all reps under this manager
+                reps = User.findAllByAccountAndRoleAndManager(user.account, navimateforbusiness.Role.REP, user)
+                break
+        }
+
+        // Sort reps in increasing order of name
+        reps.sort{it.name}
+
+        // Return tasks
+        reps
+    }
+
     // API to update account settings
     def updateAccountSettings(User user, def settingsJson) {
         // Validate JSON
@@ -26,5 +48,5 @@ class UserService {
         accSettings.save(failOnError: true, flush: true)
     }
 
-    /* ------------------------------------ End -------------------------------------- */
+    /* ------------------------------------ Private APIs ------------------------------------ */
 }
