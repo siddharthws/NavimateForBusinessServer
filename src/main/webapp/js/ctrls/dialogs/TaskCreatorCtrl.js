@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, TeamDataService, LeadDataService, TemplateDataService, TaskDataService, tasks) {
+app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, TeamDataService, LeadDataService, TemplateDataService, TaskDataService, tasks, editCb) {
 
     /* ----------------------------- APIs --------------------------------*/
     // Button Click APIs
@@ -78,8 +78,8 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
                     // Dismiss Dialog
                     $mdDialog.hide()
 
-                    //Re-sync Task data since Task has been Created.
-                    TaskDataService.sync()
+                    // Trigger callback
+                    editCb()
 
                     // Show Toast
                     ToastService.toast("Tasks Created successfully...")

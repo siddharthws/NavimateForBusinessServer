@@ -8,6 +8,7 @@ class ManagerApiController {
     // ----------------------- Dependencies ---------------------------//
     def authService
     def leadService
+    def taskService
     def tableService
     def filtrService
     def sortingService
@@ -17,6 +18,9 @@ class ManagerApiController {
     GrailsApplication grailsApplication
 
     // ----------------------- APIs ----------------------- //
+
+    // ----------------------- LEAD APIs ----------------------- //
+
     def getLeadTable() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -106,6 +110,40 @@ class ManagerApiController {
 
         // Export data
         exportService.export('csv', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+    }
+
+    // ----------------------- TASK APIs ----------------------- //
+
+    def getTaskTable() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+
+        // get tasks for this user
+        def tasks = taskService.getForUser(user)
+
+        // Convert tasks to tabular format
+        def table = tableService.parseTasks(user, tasks)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+        int totalRows = table.rows.size()
+
+        // Apply sorting to table
+        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+
+        // Apply paging to table
+        table.rows = pagingService.apply(table.rows, filter.pager)
+
+        // Send response
+        def resp = [
+                rows: table.rows,
+                columns: request.JSON.bColumns ? table.columns : null,
+                totalRows: totalRows
+        ]
+        render resp as JSON
     }
 
     // ----------------------- Private methods ----------------------- //
