@@ -147,6 +147,34 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    def getTaskIds() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+
+        // get tasks for this user
+        def tasks = taskService.getForUser(user)
+
+        // Convert tasks to tabular format
+        def table = tableService.parseTasks(user, tasks)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+
+        // Prepare response as list of IDs
+        def respIds = []
+        table.rows.each {row ->
+            respIds.push(row.id)
+        }
+        // Send response
+        def resp = [
+                ids: respIds
+        ]
+        render resp as JSON
+    }
+
     // ----------------------- FORM APIs ----------------------- //
 
     def getFormTable() {
