@@ -62,7 +62,7 @@ class FiltrService {
                         if (value == '-') {
                             bFiltered = false
                         } else {
-                            Double val = Double.parseDouble(value)
+                            Double val = Double.parseDouble(String.valueOf(value))
                             if (filter.value.from > val) {
                                 bFiltered = false
                             }
@@ -75,7 +75,7 @@ class FiltrService {
                         if (value == '-') {
                             bFiltered = false
                         } else {
-                            Double val = Double.parseDouble(value)
+                            Double val = Double.parseDouble(String.valueOf(value))
                             if (filter.value.to < val) {
                                 bFiltered = false
                             }
