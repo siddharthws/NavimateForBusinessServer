@@ -56,6 +56,61 @@ class TableService {
         ]
     }
 
+    // API to parse task objects to table format
+    def parseTasks(User user, List<Task> tasks) {
+        def rows = []
+        // Get all task columns for this user
+        def columns = getTaskColumns(user)
+
+        // Iterate through tasks
+        tasks.each {task ->
+            def values = []
+            // Push blank identifier for each column in values
+            columns.each {it -> values.push('-')}
+
+            // Add row data for mandatory columns
+            values[0] = task.id
+            values[1] = task.lead.title
+            values[2] = task.rep.name
+            values[3] = task.period
+            values[4] = task.formTemplate.name
+            values[5] = task.templateData.template.name
+
+            if(navimateforbusiness.TaskStatus.OPEN==task.status.name()) {
+                values[6] = "OPEN"
+            }
+            else{
+                values[6] = "CLOSED"
+            }
+
+
+            // Iterate through template values
+            task.templateData.values.each {value ->
+                // Get column for the field
+                def column = getColumnForField(columns, value.field)
+
+                if (column) {
+                    // Get column index
+                    int colIdx = columns.indexOf(column)
+
+                    // Update value
+                    values[colIdx] = getStringFromValue(value)
+                }
+            }
+
+            // Add row to table
+            rows.push([
+                    id:         task.id,
+                    values:     values
+            ])
+        }
+
+        return [
+                columns: columns,
+                rows: rows
+        ]
+    }
+
     // APi to get export data
     def getExportData(def table, def params) {
         List objects    = []
@@ -124,6 +179,26 @@ class TableService {
         // Add templated columns through lead templates
         List<Template> templates = templateService.getForUser(user, navimateforbusiness.Constants.Template.TYPE_LEAD)
         columns += getTemplatedColumns(templates, 4)
+
+        columns
+    }
+
+    // Method to get task columns for a given user
+    private def getTaskColumns(User user) {
+        def columns = []
+
+        // Add mandatory columns for tasks
+        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "ID"))
+        columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Lead"))
+        columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Rep"))
+        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER, "Period"))
+        columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Form"))
+        columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
+        columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Status"))
+
+        // Add templated columns through task templates
+        List<Template> templates = templateService.getForUser(user, navimateforbusiness.Constants.Template.TYPE_TASK)
+        columns += getTemplatedColumns(templates, 7)
 
         columns
     }

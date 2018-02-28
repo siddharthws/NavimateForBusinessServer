@@ -50,7 +50,7 @@ class FiltrService {
                     // Check if filter is applied
                     if (filter.value) {
                         // Check if value passes the filter
-                        if (!value.toLowerCase().contains(filter.value.toLowerCase())) {
+                        if (!String.valueOf(value).toLowerCase().contains(filter.value.toLowerCase())) {
                             bFiltered = false
                         }
                     }
@@ -62,7 +62,7 @@ class FiltrService {
                         if (value == '-') {
                             bFiltered = false
                         } else {
-                            Double val = Double.parseDouble(value)
+                            double val = (double) value
                             if (filter.value.from > val) {
                                 bFiltered = false
                             }
@@ -75,7 +75,7 @@ class FiltrService {
                         if (value == '-') {
                             bFiltered = false
                         } else {
-                            Double val = Double.parseDouble(value)
+                            double val = (double) value
                             if (filter.value.to < val) {
                                 bFiltered = false
                             }

@@ -1,6 +1,6 @@
 <!-- Tasks Manage HTML -->
 <div class="d-flex align-items-center">
-    <input type="button" value="" class="ib-base ib-hover ib-add"               ng-click="$ctrl.add()"              title="Add Leads"/>
+    <input type="button" value="" class="ib-base ib-hover ib-add"               ng-click="$ctrl.add()"              title="Add Tasks"/>
     <input type="button" value="" class="ib-base ib-hover ib-sync"              ng-click="$ctrl.sync()"             title="Refresh Table"/>
     <input type="button" value="" class="ib-base ib-hover ib-clear-filter"      ng-click="$ctrl.clearFilters()"     title="Clear Filters"/>
     <input type="button" value="" class="ib-base ib-hover ib-customize-table"   ng-click="$ctrl.toggleColumns()"    title="Customize Table"/>
@@ -8,7 +8,7 @@
 
     <div class="dropdown">
         <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
-                ng-disabled="!$ctrl.selection.length">
+                ng-disabled="!$ctrl.table.selectedRows.length">
             <span>Actions | </span>
             <img class="img-icon" src="/static/images/dropdown.png"/>
         </button>
@@ -22,4 +22,4 @@
     </div>
 </div>
 
-<ng-include src="'/static/views/modules/TableOld.html'" class="d-flex flex-1"></ng-include>
+<ng-include src="'/static/views/modules/Table.html'" class="d-flex flex-1"></ng-include>
