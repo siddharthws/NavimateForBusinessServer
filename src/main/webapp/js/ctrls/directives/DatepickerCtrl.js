@@ -4,28 +4,39 @@
  * Controller for Date Picker Directive
  */
 
-app.controller('datepickerCtrl', function ($scope, $filter) {
+app.controller('datepickerCtrl', function ($scope, $filter, $timeout) {
     /* ------------------------------ INIT --------------------------------- */
-    var vm = this
-
-    // Init function triggered after linking is complete
-    vm.init = function () {
-        // Init formatted date if initialized with valid date
-        if (vm.pickedDate) {
-            vm.formattedDate = $filter('date')(new Date(vm.pickedDate), 'dd/MM')
-        }
-    }
+    $scope.rawDate = null
 
     /* ------------------------------ Public APIs --------------------------------- */
-    // Method to handle new date picked by user
-    vm.datePicked = function () {
-        // Get date in different formats
-        vm.pickedDate = $filter('date')(vm.rawDate, 'yyyy-MM-dd HH:mm:ss')
-        vm.formattedDate = $filter('date')(vm.rawDate, 'dd/MM')
+    $scope.dateChanged = function () {
+        // Update date model to required format
+        $scope.dateModel = $filter('date')($scope.rawDate, $scope.modelFormat)
 
-        // Trigger date change callback
-        $scope.dateChange({pickedDate: vm.pickedDate})
+        // Trigger callback on next digest cycle
+        $timeout(function () {
+            $scope.dateChange()
+        })
     }
 
     /* ------------------------------ Private APIs --------------------------------- */
+    // Update displayed text using date model
+    function updateFromModel () {
+        if ($scope.dateModel) {
+            // Update display text in required format
+            $scope.displayText = $filter('date')(new Date($scope.dateModel), $scope.displayFormat)
+        } else {
+            // Update display text to empty
+            $scope.displayText = ""
+        }
+    }
+
+    /* ------------------------------ Listeners --------------------------------- */
+    $scope.$watch('dateModel', function () {
+        updateFromModel()
+    })
+
+    /* ------------------------------ Post INIT --------------------------------- */
+    // Update display text from model
+    updateFromModel()
 })

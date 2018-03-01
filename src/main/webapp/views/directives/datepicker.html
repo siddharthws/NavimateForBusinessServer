@@ -1,12 +1,12 @@
 <!-- View for date picker directive -->
-<div class="d-flex align-items-center" ng-click="vm.openPicker = true">
+<div class="d-flex align-items-center justify-content-center" ng-click="bOpenPicker = true">
     <!-- Calendar Icon -->
     <img src="/static/images/ic_calendar.png" class="ib-base ib-s">
 
     <!-- Date Text -->
-    <span ng-if="!vm.formattedDate" class="ml-1">{{vm.hint}}</span>
-    <span ng-if="vm.formattedDate" class="ml-1">{{vm.formattedDate}}</span>
+    <span ng-if="!dateModel" class="ml-1 text-nowrap">{{hint}}</span>
+    <span ng-if="dateModel" class="ml-1 text-nowrap">{{displayText}}</span>
 
     <!-- Hidden date picker to actually pick the date -->
-    <md-datepicker ng-model="vm.rawDate" md-placeholder="" md-is-open="vm.openPicker" ng-change="vm.datePicked()"></md-datepicker>
+    <md-datepicker ng-model="rawDate" md-placeholder="" md-is-open="bOpenPicker" ng-change="dateChanged()"></md-datepicker>
 </div>

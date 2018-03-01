@@ -59,13 +59,14 @@
                             </div>
 
                             <!-- Date filter -->
-                            <div class="d-flex align-items-center" ng-if="column.filter.type == vm.FilterConst.TYPE_DATE"
-                                 ng-init="filterValue = column.filter.value">
-                                <datepicker hint="From" ng-class="{'active' : filterValue.from}" picked-date="{{filterValue.from}}"
-                                            date-change="filterValue.from = pickedDate; vm.filterUpdated()"></datepicker>
-                                <span class="ml-1"> - </span>
-                                <datepicker class="ml-1" hint="Till" ng-class="{'active' : filterValue.to}" picked-date="{{filterValue.to}}"
-                                            date-change="filterValue.to = pickedDate; vm.filterUpdated()"></datepicker>
+                            <div class="d-flex flex-1 align-items-center" ng-if="column.filter.type == vm.FilterConst.TYPE_DATE">
+                                <datepicker class="flex-1" ng-class="{'active' : column.filter.value.from}"
+                                            hint="From" model-format="yyyy-MM-dd HH:mm:ss" display-format="MM/dd"
+                                            date-model="column.filter.value.from" date-change="vm.filterUpdated()"></datepicker>
+                                <span class="mx-1">-</span>
+                                <datepicker class="flex-1" ng-class="{'active' : column.filter.value.to}"
+                                            hint="Till" model-format="yyyy-MM-dd HH:mm:ss" display-format="MM/dd"
+                                            date-model="column.filter.value.to" date-change="vm.filterUpdated()"></datepicker>
                             </div>
                         </div>
                     </div>

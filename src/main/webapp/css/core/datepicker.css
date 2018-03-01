@@ -2,17 +2,28 @@
     z-index: 1001 !important;
 }
 
+.md-datepicker-input-mask {
+    display: none;
+}
+
 datepicker {
-    padding: 0.25em;
+    padding: 0em 0.25em;
     background-color: transparent;
     border: solid 1px lightgray;
     border-radius: 0.25em;
+    cursor: pointer;
 }
 
+/* Date picker in active state */
 datepicker.active {
     border-color: #37bcf2;
     background-color: #37bcf244;
     box-shadow: 1px 2px 5px 0px lightgray;
+}
+
+/* Remove focus outline from div */
+datepicker div:focus {
+    outline: 0;
 }
 
 datepicker md-datepicker {
