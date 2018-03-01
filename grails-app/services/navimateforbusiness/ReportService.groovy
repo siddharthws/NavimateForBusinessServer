@@ -8,6 +8,7 @@ import org.grails.web.json.JSONArray
 class ReportService {
     static String FORMAT_DATE = "yyyy-MM-dd"
     static String FORMAT_TIME = "HH:mm:ss"
+    static String FORMAT_TIME_12_HR = "hh:mm a"
     static TimeZone IST = TimeZone.getTimeZone('Asia/Calcutta')
 
     // API to get report
@@ -211,17 +212,23 @@ class ReportService {
         return navimateforbusiness.Constants.Filter.TYPE_NONE
     }
 
-    def getLocationReport(User rep) {
+    def getLocationReport(User rep, String date) {
         def report = []
 
         // Get all report data submitted by this rep
         def locReport = LocationReport.findByAccountAndOwner(rep.account, rep)
 
+        // Get all report objects submitted on given date
+        locReport = locReport.findAll {it -> (date == it.dateSubmitted.format(FORMAT_DATE, IST))}
+
+        // Sort items in increasing order of time
+        locReport = locReport.sort {it -> it.dateSubmitted.format(FORMAT_TIME, IST)}
+
         // Iterate through each report item
         locReport.each {row ->
             // Prepare JSON for row
             def rowJson = [
-                    timestamp: row.timestamp,
+                    time: row.dateSubmitted.format(FORMAT_TIME_12_HR, IST),
                     latitude: row.latitude,
                     longitude: row.longitude,
                     status: row.status
@@ -244,7 +251,7 @@ class ReportService {
                     owner: rep,
                     latitude: rowJson.latitude ? rowJson.latitude : 0,
                     longitude: rowJson.longitude ? rowJson.longitude : 0,
-                    timestamp: rowJson.timestamp,
+                    dateSubmitted: new Date((long) rowJson.timestamp),
                     status: rowJson.status
             )
 

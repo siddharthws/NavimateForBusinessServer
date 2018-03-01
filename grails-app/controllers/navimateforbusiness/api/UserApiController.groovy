@@ -412,11 +412,15 @@ class UserApiController {
     def getLocationReport() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
+        // Get and validate params
+        long repId = params.long('repId')
+        String date = params.selectedDate
+
         // Get rep from params
-        def rep = User.findByAccountAndId(user.account, params.long('repId'))
+        def rep = User.findByAccountAndId(user.account, repId)
 
         // Get Report for this rep
-        def resp = reportService.getLocationReport(rep)
+        def resp = reportService.getLocationReport(rep, date)
 
         // Send response
         render resp as JSON

@@ -14,7 +14,7 @@ class LocationReport {
     int status
     double latitude
     double longitude
-    long timestamp
+    Date dateSubmitted
 
     static constraints = {
     }
