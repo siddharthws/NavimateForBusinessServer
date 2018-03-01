@@ -107,10 +107,10 @@ class ManagerApiController {
 
         // Set response parameters
         response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
-        response.contentType = grailsApplication.config.getProperty("grails.mime.types.xls")
+        response.contentType = grailsApplication.config.getProperty("grails.mime.types.excel")
 
         // Export data
-        exportService.export('csv', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+        exportService.export('excel', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
     }
 
     // ----------------------- TASK APIs ----------------------- //
@@ -200,10 +200,10 @@ class ManagerApiController {
 
         // Set response parameters
         response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
-        response.contentType = grailsApplication.config.getProperty("grails.mime.types.xls")
+        response.contentType = grailsApplication.config.getProperty("grails.mime.types.excel")
 
         // Export data
-        exportService.export('csv', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+        exportService.export('excel', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
     }
 
     // ----------------------- FORM APIs ----------------------- //
@@ -265,10 +265,10 @@ class ManagerApiController {
 
         // Set response parameters
         response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
-        response.contentType = grailsApplication.config.getProperty("grails.mime.types.xls")
+        response.contentType = grailsApplication.config.getProperty("grails.mime.types.excel")
 
         // Export data
-        exportService.export('csv', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+        exportService.export('excel', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
     }
 
     // ----------------------- Private methods ----------------------- //
