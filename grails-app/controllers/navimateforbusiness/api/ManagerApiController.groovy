@@ -181,5 +181,36 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    def exportForms() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+        def exportParams = request.JSON.exportParams
+
+        // get forms for this user
+        def forms = formService.getForUser(user)
+
+        // Convert forms to tabular format
+        def table = tableService.parseForms(user, forms)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+
+        // Apply sorting to table
+        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+
+        // Export table
+        def exportData = tableService.getExportData(table, exportParams)
+
+        // Set response parameters
+        response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
+        response.contentType = grailsApplication.config.getProperty("grails.mime.types.xls")
+
+        // Export data
+        exportService.export('csv', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+    }
+
     // ----------------------- Private methods ----------------------- //
 }
