@@ -2,10 +2,10 @@
 <!-- Toolbar -->
 <div class="bg-toolbar d-flex justify-content-around">
     <div class="d-flex flex-column justify-content-around">
-        <select class="btn btn-default" ng-model="$ctrl.selectedRep" ng-options="rep.name for rep in $ctrl.team">
+        <select class="btn btn-default" ng-model="$ctrl.selectedRep" ng-options="rep.name for rep in $ctrl.team" ng-change="$ctrl.showReport()">
             <option value="" ng-disabled="true">-- Select Rep --</option>
         </select>
-        <md-datepicker ng-model="repDate" md-placeholder="-- Select Date --"></md-datepicker>
+        <md-datepicker ng-model="$ctrl.selectedDate" md-placeholder="-- Select Date --" ng-change="$ctrl.showReport()"></md-datepicker>
     </div>
 
     <div class="doughnut-container">
