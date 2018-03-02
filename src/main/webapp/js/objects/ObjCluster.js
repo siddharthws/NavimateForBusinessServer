@@ -17,6 +17,8 @@ app.factory('ObjCluster', function() {
         //Extends a bounds object by the grid size.
         vm.getExtendedBounds = function(bounds) {
             var projection = overlay.getProjection();
+            if(projection == null)
+                return bounds
 
             // Turn the bounds into latlng.
             var tr = new google.maps.LatLng(bounds.getNorthEast().lat(),

@@ -9,7 +9,7 @@ app.service('LocReportDS', function($http, $localStorage, $q) {
 
     /* ----------------------------- APIs --------------------------------*/
     //API to get Lead data
-    vm.sync = function (repId){
+    vm.sync = function (repId, date){
         var deferred = $q.defer()
         $http({
             method:     'GET',
@@ -18,7 +18,8 @@ app.service('LocReportDS', function($http, $localStorage, $q) {
                 'X-Auth-Token':    $localStorage.accessToken
             },
             params:     {
-                'repId':    repId
+                'repId':    repId,
+                'selectedDate': date
             }
         }).then(
             function (response) {
