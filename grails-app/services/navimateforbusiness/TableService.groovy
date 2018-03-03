@@ -32,7 +32,7 @@ class TableService {
             // Add row data for mandatory columns
             values[0] = lead.title
             values[1] = lead.address
-            values[2] = lead.latitude + "," + lead.longitude
+            values[2] = (lead.latitude || lead.longitude) ? lead.latitude + "," + lead.longitude : '-'
             values[3] = lead.templateData.template.name
 
             // Iterate through template values
@@ -130,7 +130,7 @@ class TableService {
             values[2] = form.submittedData.template.name
             values[3] = form.dateCreated.format(FORMAT_DATE, IST)
             values[4] = form.dateCreated.format(FORMAT_TIME, IST)
-            values[5] = form.latitude + "," + form.longitude
+            values[5] = (form.latitude || form.longitude) ? form.latitude + "," + form.longitude : '-'
             values[6] = form.task ? form.task.lead.title : "-"
             values[7] = form.task ? String.valueOf(form.task.id) : "-"
             values[8] = form.taskStatus ? form.taskStatus.name() : "-"
