@@ -14,12 +14,6 @@
     background-color: #FAFAFA;
 }
 
-.bg-toolbar {
-    background-color: #eeeeee;
-    border-radius: 0.25em;
-    padding: 0.5em;
-}
-
 /* Classes for setting background image as per status */
 
 /* -- Classes to put a status icon as background for an empty div -- */

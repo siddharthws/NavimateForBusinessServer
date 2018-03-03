@@ -1,8 +1,8 @@
 <!-- Team Manage HTML -->
-<div class="bg-toolbar d-flex">
-    <button class="btn btn-primary" ng-click="$ctrl.add()">Add Rep</button>
+<div class="d-flex align-items-center p-2">
+    <imagebutton image="/static/images/ic_add_white.png" text="Add New" ng-click="$ctrl.add()"></imagebutton>
 
-    <div class="dropdown">
+    <div class="dropdown ml-2">
         <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
                 ng-disabled="!$ctrl.getSelectedItems().length">
             <span>Actions | </span>
