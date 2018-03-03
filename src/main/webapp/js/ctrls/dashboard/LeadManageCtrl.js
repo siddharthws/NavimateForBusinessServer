@@ -3,7 +3,7 @@
  */
 
 app.controller("LeadManageCtrl", function ( $scope, $rootScope, $http, $localStorage, $state,
-                                            DialogService, ToastService, TableService) {
+                                            DialogService, ToastService, TableService, ImportService) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
@@ -18,6 +18,31 @@ app.controller("LeadManageCtrl", function ( $scope, $rootScope, $http, $localSto
     /* ------------------------------- Scope APIs -----------------------------------*/
     vm.add = function() {
         DialogService.leadEditor(null, vm.sync)
+    }
+
+    // API to import leads
+    vm.import = function (file) {
+        // Show waiting dialog
+        $rootScope.showWaitingDialog("Importing leads. This may take some time...")
+
+        // Perform import
+        ImportService.import("/api/manager/leads/import", file).then(
+            // Success callback
+            function () {
+                // Sync data again
+                vm.sync()
+
+                // Notify user about success
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Leads imported successfully...")
+            },
+            // Error callback
+            function (message) {
+                // Notify user about error
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Upload Error : " + message)
+            }
+        )
     }
 
     // APIs for table based actions
