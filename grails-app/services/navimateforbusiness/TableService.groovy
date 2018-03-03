@@ -205,8 +205,25 @@ class TableService {
 
             // Iterate through each selected row
             selectedRows.eachWithIndex {row, i ->
-                // Add row to objects
-                objects[i][column.name] =  row.values[column.id]
+                String value = row.values[column.id]
+
+                // Parse special values as per column type
+                switch (column.type) {
+                    case navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION:
+                        if (value != '-') {
+                            value = "https://www.google.com/maps/search/?api=1&query=" + value
+                        }
+                        break
+                    case navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO:
+                    case navimateforbusiness.Constants.Template.FIELD_TYPE_SIGN:
+                        if (value != '-') {
+                            value = "https://biz.navimateapp.com/#/photos?name=" + value
+                        }
+                        break
+                }
+
+                // Add value to objects
+                objects[i][column.name] = value
             }
         }
 
