@@ -30,3 +30,19 @@ app.directive('loader', function () {
         templateUrl: '/static/views/directives/loader.html'
     }
 })
+
+// Directive for binding file read
+app.directive("fileread", function () {
+    return {
+        scope: {
+            fileread: "&"
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                scope.$apply(function () {
+                    scope.fileread({file: changeEvent.target.files[0]})
+                });
+            });
+        }
+    }
+})

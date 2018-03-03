@@ -6,6 +6,10 @@
     <input type="button" value="" class="ib-base ib-hover ib-customize-table"   ng-click="$ctrl.toggleColumns()"    title="Customize Table"/>
     <input type="button" value="" class="ib-base ib-hover ib-export"            ng-click="$ctrl.export()"           title="Export to file"/>
 
+    <!-- Import button -->
+    <label for="file-upload" class="ib-base ib-hover ib-import" title="Import form excel"></label>
+    <input type="file" value="" id="file-upload" class="hidden-element" fileread="$ctrl.import(file)"/>
+
     <div class="dropdown">
         <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
                 ng-disabled="!$ctrl.table.selectedRows.length">
