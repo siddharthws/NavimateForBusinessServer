@@ -60,11 +60,9 @@
                        ng-model="$ctrl.data.values[$index].value">
 
                 <!-- Number Field -->
-                <input ng-if="field.type == $ctrl.Const.FIELD_TYPE_NUMBER"
-                       string-to-number class="input-underlined w-75" type="number" placeholder="Enter default value..."
-                       ng-model="$ctrl.data.values[$index].value"
-                       ng-class="{'has-error':  $ctrl.bShowError &&
-                                               ($ctrl.data.values[$index].value == 'null')}">
+                <input string-to-number required value="0" type="number" placeholder="Enter default value..." class="input-underlined w-75"
+                       ng-if="field.type == $ctrl.Const.FIELD_TYPE_NUMBER" ng-model="$ctrl.data.values[$index].value"
+                       ng-class="{'has-error':  $ctrl.bShowError && $ctrl.data.values[$index].value == null}">
 
                 <!-- Radio List Field -->
                 <div ng-if="field.type == $ctrl.Const.FIELD_TYPE_RADIOLIST"

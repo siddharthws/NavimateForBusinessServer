@@ -155,8 +155,8 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
                     toastMessage = "Field titles must be unique..."
                 } else if (!field.type) {
                     toastMessage = "Field type cannot be empty..."
-                } else if ((field.type == vm.Const.FIELD_TYPE_NUMBER) && (field.value == null)) {
-                    toastMessage = "Please fill mandatory values..."
+                } else if ((field.type == vm.Const.FIELD_TYPE_NUMBER) && (value == null)) {
+                    toastMessage = "Number field must have a numeric value..."
                 } else if (field.type == vm.Const.FIELD_TYPE_RADIOLIST) {
                     if (!value.options.length) {
                         toastMessage = "Please add atleast 1 option to list..."
