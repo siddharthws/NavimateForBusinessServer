@@ -46,3 +46,14 @@ app.directive("fileread", function () {
         }
     }
 })
+
+// Directive for image buttons
+app.directive("imagebutton", function () {
+    return {
+        scope: {
+            image: "@",
+            text: "@"
+        },
+        templateUrl: '/static/views/directives/imagebutton.html'
+    }
+})

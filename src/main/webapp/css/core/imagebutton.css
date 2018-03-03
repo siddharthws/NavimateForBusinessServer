@@ -34,33 +34,20 @@
     box-shadow: none;
 }
 
+/* --------- Imagebutton directive related styling ------ */
+imagebutton {
+    position: relative;
+    cursor: pointer;
+    border: none;
+    border-radius: 0.25em;
+    background: #37bcf2;
+}
+
+imagebutton:focus {
+    outline: 0;
+}
+
 /* --------- Selector classes for different icons on image buttons ------ */
-/* Bin icon image button */
-.ib-bin {
-    background-image: url("/static/images/icon_bin.png");
-}
-
-.ib-bin.active, .ib-bin:hover {
-    background-image: url("/static/images/icon_bin_active.png");
-}
-
-/* Sort icon image buttons */
-.ib-sort-up {
-    background-image: url("/static/images/icon_sort_up.png");
-}
-
-.ib-sort-up.active, .ib-sort-up:hover {
-    background-image: url("/static/images/icon_sort_up_active.png");
-}
-
-.ib-sort-down {
-    background-image: url("/static/images/icon_sort_down.png");
-}
-
-.ib-sort-down.active, .ib-sort-down:hover {
-    background-image: url("/static/images/icon_sort_down_active.png");
-}
-
 .ib-sort {
     background-image: url("/static/images/ic_sort.png");
 }
@@ -81,60 +68,12 @@
     background-image: url("/static/images/ic_blank_active.png");
 }
 
-.ib-sync {
-    background-image: url("/static/images/ic_sync_grey.png");
-}
-
-.ib-sync:hover {
-    background-image: url("/static/images/ic_sync_white.png");
-}
-
-.ib-add {
-    background-image: url("/static/images/ic_add_grey.png");
-}
-
-.ib-add:hover {
-    background-image: url("/static/images/ic_add_white.png");
-}
-
-.ib-clear-filter {
-    background-image: url("/static/images/ic_clear_filter_grey.png");
-}
-
-.ib-clear-filter:hover {
-    background-image: url("/static/images/ic_clear_filter_white.png");
-}
-
-.ib-customize-table {
-    background-image: url("/static/images/ic_customize_table_grey.png");
-}
-
-.ib-customize-table:hover {
-    background-image: url("/static/images/ic_customize_table_white.png");
-}
-
-.ib-export {
-    background-image: url("/static/images/ic_export_grey.png");
-}
-
-.ib-export:hover {
-    background-image: url("/static/images/ic_export_white.png");
-}
-
 .ib-import {
     background-image: url("/static/images/ic_import_grey.png");
 }
 
 .ib-import:hover {
     background-image: url("/static/images/ic_import_white.png");
-}
-
-.ib-edit {
-    background-image: url("/static/images/icon_edit.png");
-}
-
-.ib-edit.active, .ib-edit:hover {
-    background-image: url("/static/images/icon_edit_active.png");
 }
 
 .ib-cross {
