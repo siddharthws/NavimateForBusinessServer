@@ -1,5 +1,26 @@
 <!-- Html view for Table -->
 <div ng-controller="TableCtrl as vm" class="h-100 w-100 d-flex flex-column">
+
+    <!-- Pager -->
+    <div class="d-flex align-items-center justify-content-between mx-3 my-1"
+         ng-init="pager = vm.table.pager">
+        <!-- Page numbers using bootstrap pagination -->
+        <ul class="pagination">
+            <li ng-repeat="page in vm.table.getPages() track by $index" class="page-item"
+                ng-class="{'active': pager.startIdx == ($index * pager.count)}">
+                <a href ng-click="vm.openPage($index + 1)" class="page-link">{{$index + 1}}</a>
+            </li>
+        </ul>
+
+        <!-- Rows per page -->
+        <span>
+            Showing
+            <input type="number" class="input-box active width-sm" ng-model="pager.count"
+                   ng-model-options="{debounce: 500}" ng-change="vm.updateCount()">
+            rows per page out of {{vm.table.totalRows}} rows
+        </span>
+    </div>
+
     <!-- Table Container -->
     <div class="overflow-auto p-2 bdr-bottom-lighgrey flex-1">
         <!-- Table -->
@@ -132,25 +153,5 @@
                 <h4 class="ml-1 text-grey">Nothing to show...</h4>
             </div>
         </div>
-    </div>
-
-    <!-- Pager -->
-    <div class="d-flex align-items-center justify-content-between mx-3 my-1"
-         ng-init="pager = vm.table.pager">
-        <!-- Page numbers using bootstrap pagination -->
-        <ul class="pagination">
-            <li ng-repeat="page in vm.table.getPages() track by $index" class="page-item"
-                ng-class="{'active': pager.startIdx == ($index * pager.count)}">
-                <a href ng-click="vm.openPage($index + 1)" class="page-link">{{$index + 1}}</a>
-            </li>
-        </ul>
-
-        <!-- Rows per page -->
-        <span>
-            Showing
-            <input type="number" class="input-box active width-sm" ng-model="pager.count"
-                   ng-model-options="{debounce: 500}" ng-change="vm.updateCount()">
-            rows per page out of {{vm.table.totalRows}} rows
-        </span>
     </div>
 </div>
