@@ -76,6 +76,9 @@ class UrlMappings {
         "/api/ext/sync/tasks"           (controller: "ExtApi") {action = [POST: "syncTasks"]}
         "/api/ext/report/forms"         (controller: "ExtApi") {action = [GET: "getFormReport"]}
 
+        /*------------------------- Porting APIs --------------------------*/
+        "/api/port/dbFix1"         (controller: "PortingApi") {action = [GET: "dbFix1"]}
+
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs
         "/api/track/start"          (controller: "TrackingApi") {action = [POST: "start"]}
