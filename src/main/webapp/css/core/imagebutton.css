@@ -35,7 +35,7 @@
 }
 
 /* --------- Imagebutton directive related styling ------ */
-imagebutton {
+imagebutton, ib-filepicker {
     position: relative;
     cursor: pointer;
     border: none;
@@ -43,7 +43,8 @@ imagebutton {
     background: #37bcf2;
 }
 
-imagebutton:focus {
+imagebutton:focus,
+ib-filepicker:focus {
     outline: 0;
 }
 

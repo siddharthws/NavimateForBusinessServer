@@ -57,3 +57,16 @@ app.directive("imagebutton", function () {
         templateUrl: '/static/views/directives/imagebutton.html'
     }
 })
+
+// Directive for image buttons file picker
+app.directive("ibFilepicker", function () {
+    return {
+        scope: {
+            image:      "@",
+            text:       "@",
+            filePicked: "&"
+        },
+        templateUrl: '/static/views/directives/ibFilepicker.html',
+        controller: 'ibFilepickerCtrl',
+    }
+})
