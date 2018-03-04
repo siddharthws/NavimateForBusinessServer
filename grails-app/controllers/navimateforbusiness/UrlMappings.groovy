@@ -48,7 +48,6 @@ class UrlMappings {
         "/api/users/task/stoprenew" (controller: "UserApi") {action = [POST: "stopTaskRenewal"]}
         "/api/users/template"       (controller: "UserApi") {action = [GET: "getTemplates"]}
         "/api/users/locationReport" (controller: "UserApi") {action = [GET: "getLocationReport"]}
-        "/api/leads/upload"         (controller: "UserApi") {action = [POST: "uploadLeads"]}
 
         /*------------------------- Rep APIs --------------------------*/
         "/api/reps/appStart"        (controller: "RepApi") {action = [GET: "appStart"]}

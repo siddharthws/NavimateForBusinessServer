@@ -5,15 +5,8 @@
             <h4><b>Edit Leads</b></h4>
 
             <div class="container-fluid d-flex">
-                <label for="file-upload" class="btn btn-primary flex-1">
-                    Upload
-                </label>
-                <a href class="align-self-end flex-1" ng-click="uploadTemplate()">
-                    <h6>Download<br>Template</h6>
-                </a>
                 <button class="btn btn-primary flex-1" ng-click="save()">Save</button>
                 <button class="btn" ng-click="cancel()">Close</button>
-                <js-xls id="file-upload" class="hidden-element" onread="excelRead" onError="excelError" />
             </div>
 
             <a href ng-click="add()" class="mt-2">+ Add Lead</a>

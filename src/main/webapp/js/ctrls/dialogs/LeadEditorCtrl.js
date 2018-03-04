@@ -4,7 +4,7 @@
 
 // Controller for Alert Dialog
 app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog, $http, $localStorage, ToastService,
-                                            GoogleApiService, ExcelService, LeadDataService, TemplateDataService,
+                                            GoogleApiService, LeadDataService, TemplateDataService,
                                             leads, editCb) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
@@ -164,42 +164,6 @@ app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog, $http
 
     $scope.isLeadValid = function (lead) {
         return (lead.title && lead.latitude && lead.longitude && lead.address)
-    }
-
-    // Excel related APIs
-    $scope.excelRead = function (workbook) {
-        $rootScope.showWaitingDialog("Please wait while we are reading from excel file...")
-        ExcelService.excelRead(workbook).then(
-            function (response) {
-                $rootScope.hideWaitingDialog()
-
-                //Adding leads from excel
-                response.data.forEach(function (lead) {
-                    $scope.leads.push(lead);
-                })
-
-                // Remove all empty leads from array
-                for (var i = ($scope.leads.length - 1); i >= 0; i--) {
-                    var lead = $scope.leads[i]
-                    if (!lead.title && !lead.description && !lead.phoneNumber && !lead.address) {
-                        $scope.leads.splice(i, 1)
-                    }
-                }
-
-            },
-            function (error) {
-                $rootScope.hideWaitingDialog()
-                ToastService.toast("Unable to parse uploaded file. Please make sure file is as per template.")
-            }
-        )
-    }
-
-    $scope.excelError = function (e) {
-        ToastService.toast("Invalid file for uploading leads...")
-    }
-    
-    $scope.uploadTemplate = function () {
-        ExcelService.leadUploadTemplate()
     }
 
     $scope.cancel = function () {
