@@ -15,6 +15,7 @@ class ManagerApiController {
     def sortingService
     def pagingService
     def exportService
+    def importService
 
     GrailsApplication grailsApplication
 
@@ -111,6 +112,34 @@ class ManagerApiController {
 
         // Export data
         exportService.export('excel', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+    }
+
+    def importLeads() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get file
+        def file = request.getFile('importFile')
+
+        // Get table from file
+        def table = tableService.parseExcel(file)
+
+        // Validate all columns
+        importService.checkLeadColumns(table.columns)
+
+        // Get lead JSON for each row
+        def leadsJson = []
+        table.rows.eachWithIndex {row, i -> leadsJson.push(importService.parseLeadRow(table.columns, row, i, user))}
+
+        // Parse each JSON object into Lead object
+        def leads = []
+        leadsJson.each {leadJson -> leads.push(leadService.fromJson(user, leadJson))}
+
+        // Save each lead
+        leads.each {lead -> lead.save(flush: true, failOnError: true)}
+
+        def resp = [success: true]
+        render resp as JSON
     }
 
     // ----------------------- TASK APIs ----------------------- //
