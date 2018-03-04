@@ -28,7 +28,7 @@
             <!-- Table Headers -->
             <thead>
                 <!-- Select All column header -->
-                <th ng-click="vm.toggleAll()"
+                <th ng-click="vm.toggleAll()" class="tbl-col-s"
                     ng-class="{'active': vm.table.totalRows && (vm.table.selectedRows.length == vm.table.totalRows)}">
                     <div class="d-flex flex-column justify-content-around align-items-center">
                         <div class="img-icon ic-tick ic-small" title="Select All"></div>
@@ -37,7 +37,10 @@
                 </th>
 
                 <!-- Columns returned by server -->
-                <th ng-repeat="column in vm.table.columns"  ng-if="column.bShow">
+                <th ng-repeat="column in vm.table.columns"  ng-if="column.bShow"
+                    ng-class="{ 'tbl-col-s' : column.size == vm.TableConst.COL_SIZE_S,
+                                'tbl-col-m' : column.size == vm.TableConst.COL_SIZE_M,
+                                'tbl-col-l' : column.size == vm.TableConst.COL_SIZE_L}">
                     <div class="d-flex flex-column justify-content-center">
                         <!-- Header Top -->
                         <div class="d-flex">
