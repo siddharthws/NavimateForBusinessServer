@@ -269,6 +269,34 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    def getFormIds() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+
+        // get forms for this user
+        def forms = formService.getForUser(user)
+
+        // Convert forms to tabular format
+        def table = tableService.parseForms(user, forms)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+
+        // Prepare response as list of IDs
+        def respIds = []
+        table.rows.each {row ->
+            respIds.push(row.id)
+        }
+        // Send response
+        def resp = [
+                ids: respIds
+        ]
+        render resp as JSON
+    }
+
     def exportForms() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))

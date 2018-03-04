@@ -35,6 +35,7 @@ class UrlMappings {
 
         // Form Related APIs
         "/api/manager/forms/getTable"    (controller: "ManagerApi") {action = [POST: "getFormTable"]}
+        "/api/manager/forms/getIds"      (controller: "ManagerApi") {action = [POST: "getFormIds"]}
         "/api/manager/forms/export"      (controller: "ManagerApi") {action = [POST: "exportForms"]}
 
         /*------------------------- User APIs to be removed --------------------------*/
