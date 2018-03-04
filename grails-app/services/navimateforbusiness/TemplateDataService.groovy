@@ -34,7 +34,10 @@ class TemplateDataService {
 
         // Create Data Object if not found
         if (!data) {
-            data = new Data(account: user.account, owner: user, template: template)
+            data = new Data(account: user.account, owner: user)
+
+            // TODO : Hack since assigning template in constructor changes default data of template
+            data.template = template
         }
 
         // Assign value for each field in template
