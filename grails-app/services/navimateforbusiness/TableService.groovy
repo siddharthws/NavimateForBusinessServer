@@ -2,6 +2,9 @@ package navimateforbusiness
 
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.DataFormatter
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 @Transactional
 class TableService {
@@ -161,6 +164,108 @@ class TableService {
                 rows: rows
         ]
 
+    }
+
+    // API to parse excel file into columns and rows
+    def parseExcel(def file) {
+        // Validate File
+        if (file.empty) {
+            throw new navimateforbusiness.ApiException("Invalid File uploaded", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Convert file to workbook
+        def workbook
+        try {
+            workbook = new XSSFWorkbook(file.getInputStream())
+        } catch (Exception e) {
+            throw new navimateforbusiness.ApiException("Invalid File uploaded", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Get sheet from workbook
+        def sheet = workbook.getSheetAt(0)
+        DataFormatter df = new DataFormatter()
+
+        // Get columns from sheet
+        def columns = []
+        def headerRow = sheet.getRow(0)
+        for (cell in headerRow.cellIterator()) {
+            // Validate cell
+            if (!cell) {
+                throw new navimateforbusiness.ApiException("Column names cannot be empty", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Get and validate cell value
+            String cellValue = df.formatCellValue(cell).trim()
+
+            // Check for null value
+            if (!cellValue) {
+                throw new navimateforbusiness.ApiException("Column names cannot be empty", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Check for duplicate columns
+            if (columns.contains(cellValue)) {
+                throw new navimateforbusiness.ApiException("Duplicate column names are not allowed", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            columns.push(cellValue)
+        }
+
+        // Get rows
+        def rows = []
+        boolean bHeaderFlag = true
+        for (sheetRow in sheet.rowIterator()) {
+            // Skip first row
+            if (bHeaderFlag) {
+                bHeaderFlag = false
+                continue
+            }
+
+            // Iterate through all cells in this row
+            def row = []
+            for (int i = 0; i < columns.size(); i++) {
+                def cell = sheetRow.getCell(i)
+                String value = ""
+
+                if (cell) {
+                    // Parse value based on cell type
+                    if(cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+                        switch(cell.getCachedFormulaResultType()) {
+                            case Cell.CELL_TYPE_NUMERIC:
+                                value = String.valueOf(cell.getNumericCellValue())
+                                break
+                            case Cell.CELL_TYPE_STRING:
+                                value = cell.getRichStringCellValue().toString()
+                                break
+                        }
+                    } else {
+                        value = df.formatCellValue(cell)
+                    }
+                }
+
+                // Trim value
+                value = value.trim()
+
+                // Push to row
+                row.push(value)
+            }
+
+            // Ignore row if all values are blank
+            def nonBlankVals = row.findAll {String it -> !it}
+            if (nonBlankVals.size() != row.size()) {
+                // Add row to rows
+                rows.push(row)
+            }
+        }
+
+        // Ensure atleast 1 row is present
+        if (!rows.size()) {
+            throw new navimateforbusiness.ApiException("No Rows Found", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        return [
+                columns: columns,
+                rows: rows
+        ]
     }
 
     // APi to get export data
