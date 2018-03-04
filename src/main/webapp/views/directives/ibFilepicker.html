@@ -1,0 +1,12 @@
+<!-- View for image button directive -->
+<div class="d-flex py-1 px-2 align-items-center justify-content-center"
+     md-ink-ripple="#FFFFFF" ng-click="pickFile()">
+    <!-- Icon -->
+    <img ng-src="{{image}}" class="ib-base ib-s">
+
+    <!-- Text -->
+    <span ng-if="text" class="ml-2 text-nowrap text-white">{{text}}</span>
+</div>
+
+<!-- File Picker hidden Input -->
+<input type="file" value="" id="file-picker" class="hidden-element" fileread="filePicked({'file': file})"/>
