@@ -127,6 +127,9 @@ class ManagerApiController {
         // Validate all columns
         importService.checkLeadColumns(table.columns)
 
+        // Ensure all IDs are unique
+        importService.checkIds(table.columns, table.rows)
+
         // Get lead JSON for each row
         def leadsJson = []
         table.rows.eachWithIndex {row, i -> leadsJson.push(importService.parseLeadRow(table.columns, row, i, user))}

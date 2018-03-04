@@ -26,6 +26,26 @@ class ImportService {
         }
     }
 
+    def checkIds(def columns, def rows) {
+        // Get Id Column Index
+        int idIdx = columns.indexOf("id")
+
+        // Ensure all IDs are unique
+        rows.eachWithIndex {row, i ->
+            // Get all rows with this ID
+            def duplicates = rows.findAll {it -> it[idIdx] == row[idIdx]}
+
+            // Ensure ID is unique
+            if (duplicates.size() > 1) {
+                // Get first dupe row index
+                def dupeRowIdx = rows.indexOf(duplicates[1])
+
+                // Throw exception
+                throw new navimateforbusiness.ApiException("Duplicate id found in cells " + getCellAddress(idIdx, i) + " & " + getCellAddress(idIdx, dupeRowIdx))
+            }
+        }
+    }
+
     def parseLeadRow(def columns, def row, int rowIdx, User user) {
         // Get and validate mandatory columns
         int idIdx = columns.indexOf("id")
