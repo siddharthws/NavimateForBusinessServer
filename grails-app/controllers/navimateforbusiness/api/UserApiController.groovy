@@ -425,19 +425,4 @@ class UserApiController {
         // Send response
         render resp as JSON
     }
-
-    def uploadLeads() {
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Parse Input
-        JSONArray excelJson = JSON.parse(request.JSON.excelData)
-        ArrayList<Lead> leads = leadService.parseExcel(user, excelJson)
-
-        // Send response
-        def resp = new JSONArray();
-        leads.each { lead ->
-            resp.add(navimateforbusiness.Marshaller.serializeLead(lead))
-        }
-        render resp as JSON
-    }
 }
