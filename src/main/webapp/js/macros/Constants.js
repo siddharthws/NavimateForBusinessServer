@@ -171,7 +171,7 @@ Constants.DashboardNav.Menu = [
         accessLevel:Constants.Role.MANAGER,
         options:    [
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT],
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_LOCATION]
+            //Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_LOCATION]
         ]
     },
     {
