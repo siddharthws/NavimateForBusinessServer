@@ -108,3 +108,38 @@ app.directive('scroll', function ($timeout) {
         }
     }
 })
+
+// Search dropdown to select something
+app.directive('searchSelect', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            // Hint text
+            hint:       '@',
+            // URL for search
+            name:       '@',
+            // Callback when selection is made
+            onSelect:   '&'
+        },
+        // Controller and view
+        controller: 'SearchSelectCtrl as vm',
+        templateUrl: '/static/views/directives/searchSelect.html',
+        // Link function
+        link: function (scope, element, attrs, vm) {
+            // Assign attributes to controller
+            vm.hint         = attrs.hint
+            vm.name         = attrs.name
+
+            // Set dropdown hide listener
+            $('body').on('click', function (e) {
+                if (vm.bShowDropdown) {
+                    var $element = $(element)
+                    if (!$element.is(e.target) && !$element.has(e.target).length) {
+                        vm.bShowDropdown = false
+                    }
+                }
+            })
+        }
+    }
+})

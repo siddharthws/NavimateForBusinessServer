@@ -1,4 +1,68 @@
+/*
+ * List Containers related styling
+ */
+/* General List Container styling */
+.list {
+    display: flex;
+    flex-direction: column;
+}
 
+/* Styling for dropdown list container */
+.list-dropdown {
+    max-height: 20em;
+    min-width: 100%;
+    max-width: 15em;
+    background-color: white;
+    border: solid 1px lightgray;
+    box-shadow: 5px 5px 10px 0 rgba(0,0,0,0.24);
+
+    /* Positioning */
+    position: absolute;
+    top: 90%;
+    left: 2%;
+    z-index: 10000;
+
+    /* Y-overflow only */
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/*
+ * List Items
+ */
+/* Generic List Item properties */
+.li {
+    position: relative;
+    cursor: pointer;
+}
+
+.li:hover {
+    transition: 250ms;
+}
+
+.li:focus {
+    outline: 0px;
+}
+
+/* Styling classes for dropdown list items */
+.li-dropdown {
+    margin: 0 0.1em;
+    padding: 0.25em 0.5em;
+    background-color: white;
+    border: none;
+    border-bottom: solid 1px lightgrey;
+
+    /* Ellipsize Text */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.li-dropdown:hover {
+    background-color: whitesmoke;
+}
+
+/* TODO : Cleanup Below classes */
 .list-group-bordered {
     border: 1px solid #aaaaaa;
     border-radius: 0.25em;
