@@ -70,3 +70,41 @@ app.directive("ibFilepicker", function () {
         controller: 'ibFilepickerCtrl',
     }
 })
+
+// Directive for custom scrolling related functionality
+app.directive('scroll', function ($timeout) {
+    return {
+        restrict: 'A',
+        scope: {
+            // Callback for when bottom is reached in element while scrolling
+            onBottomReached: '&',
+            // Condition to check for scrolling to bottom
+            scrollToBottom: '='
+        },
+        link: function (scope, element, attrs, vm) {
+            // Method for scrolling to bottom
+            var scrollToBottom = function () {
+                if (scope.scrollToBottom) {
+                    // Scroll element to bottom
+                    $timeout(function () {
+                        element[0].scrollTop = element[0].scrollHeight
+                    }, 0)
+                }
+            }
+
+            // Method to check if bottom is reached
+            var scrollListener = function (event) {
+                if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+                    // Bottom Reached. Trigger callback
+                    scope.onBottomReached()
+                }
+            }
+
+            // Set scroll listener on element
+            element.on('scroll', _.debounce(scrollListener, 500))
+
+            // Set watcher for scrolling to bottom
+            scope.$watch('scrollToBottom', scrollToBottom)
+        }
+    }
+})
