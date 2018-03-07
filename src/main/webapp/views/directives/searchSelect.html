@@ -1,0 +1,40 @@
+<!-- HTML view for dropdown with single selection -->
+<div class="pos-r">
+    <!-- Search Box -->
+    <input type="text" placeholder="{{vm.hint}}" class="input-box"
+           ng-model="vm.searchText" ng-model-options="{debounce: 500}"
+           ng-change="vm.textChanged()" ng-focus="vm.onFocused()">
+
+    <!-- Dropdown -->
+    <div class="list list-dropdown" ng-if="vm.bShowDropdown">
+        <!-- List of items -->
+        <div class="fbx-v">
+            <div class="li li-dropdown" ng-repeat="item in vm.items"
+                 ng-click="vm.onItemSelected($index); $root.Statics.absorbEvent($event)">
+                {{item.title}}
+            </div>
+        </div>
+
+        <!-- Waiting UI -->
+        <div class="fbx-h fbx-center-children my-1" ng-if="vm.bLoading">
+            <loader class="loader-s"></loader>
+            <div class="ml-1 text-grey text-bold text-ellipsize">Loading results...</div>
+        </div>
+
+        <!-- Error UI -->
+        <div class="fbx-h fbx-center-children my-1" ng-if="!vm.bLoading && vm.bError">
+            <span class="text-grey text-bold text-ellipsize">Unable to get results...</span>
+        </div>
+
+        <!-- No results UI -->
+        <div class="fbx-h fbx-center-children my-1" ng-if="!vm.bLoading && !vm.bError && !vm.items.length">
+            <span class="text-grey text-bold text-ellipsize">Nothing to show</span>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="li li-dropdown fbx-h fbx-center-children text-grey text-bold" ng-click="vm.loadMore()"
+             ng-if="!vm.bLoading && !vm.bError && vm.items.length && vm.items.length < vm.totalResults">
+            <span>Load more results</span>
+        </div>
+    </div>
+</div>

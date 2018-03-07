@@ -14,6 +14,7 @@ class ManagerApiController {
     def filtrService
     def sortingService
     def pagingService
+    def searchService
     def exportService
     def importService
 
@@ -52,6 +53,35 @@ class ManagerApiController {
                 columns: request.JSON.bColumns ? table.columns : null,
                 totalRows: totalRows
         ]
+        render resp as JSON
+    }
+
+    def searchLeads() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get input params
+        def text = request.JSON.text
+        def pager = request.JSON.pager
+
+        // get leads for this user
+        def leads = leadService.getForUser(user)
+
+        // get search results
+        leads = searchService.searchLeads(leads, text)
+        int totalCount = leads.size()
+
+        // Get pages results
+        leads = pagingService.apply(leads, pager)
+
+        // Create response array with IDs and names
+        def resp = [
+                items: [],
+                totalCount: totalCount
+        ]
+        leads.each {it -> resp.items.push([id: it.id, title: it.title])}
+
+        // Send response
         render resp as JSON
     }
 

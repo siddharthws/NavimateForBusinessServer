@@ -16,6 +16,11 @@ ul.bullet {
     list-style-type: square;
 }
 
+/* Positioning classes */
+.pos-r {
+    position: relative;
+}
+
 /* Reset Container padding and margins to 0 */
 [class*="col-"], .row, .container {
     padding:    0;

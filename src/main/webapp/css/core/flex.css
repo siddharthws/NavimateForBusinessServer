@@ -9,3 +9,23 @@
 .d-flex, input, div, button, loader, a {
     flex-shrink: 0;
 }
+
+/*
+ * Custom flexbox containers
+ */
+/* Column / Row containers */
+.fbx-v {
+    display: flex;
+    flex-direction: column;
+}
+
+.fbx-h {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Flexbox with children centered vertically and horizontally */
+.fbx-center-children {
+    align-items: center;
+    justify-content: center;
+}

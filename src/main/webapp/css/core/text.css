@@ -18,3 +18,9 @@
 .text-bold{
     font-weight: bold;
 }
+
+.text-ellipsize {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
