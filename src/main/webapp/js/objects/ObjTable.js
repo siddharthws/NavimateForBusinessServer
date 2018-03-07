@@ -45,6 +45,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
             $http({
                 method:     'POST',
                 url:        "/api/manager/" + Constants.Table.URL_PREFIX[vm.type] + "/getTable",
+                timeout:    syncCanceller.promise,
                 headers:    {
                     'X-Auth-Token':    $localStorage.accessToken
                 },
