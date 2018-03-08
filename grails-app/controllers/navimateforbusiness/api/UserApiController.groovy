@@ -364,31 +364,34 @@ class UserApiController {
         // Serialize into response
         def templatesJson = []
         templates.each {template ->
-            // Create Field array and data array for template
-            def fieldsJson = []
-            def defaultData = [id: template.defaultData.id, values: []]
+            // Sort template fields in deterministic order
             def fields = template.fields.sort(false) {it.id}
-            fields.each {field ->
-                fieldsJson.push(DomainToJson.Field(field))
 
-                // Add corresponding data
-                def values = template.defaultData.values
-                values.each {value ->
-                    if (value.fieldId == field.id) {
-                        def valueJson = DomainToJson.Value(value)
-                        if (value.field.type == Constants.Template.FIELD_TYPE_RADIOLIST ||
-                            value.field.type == Constants.Template.FIELD_TYPE_CHECKLIST) {
-                            valueJson.value = JSON.parse(valueJson.value)
-                        } else if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX) {
-                            valueJson.value = Boolean.valueOf(valueJson.value)
-                        }
-                        defaultData.values.push(valueJson)
+            // Create Field JSON array for template
+            def fieldsJson = []
+            fields.each {field ->
+                // Convert firld to JSON
+                def fieldJson = DomainToJson.Field(field)
+
+                //Parse value as per field type
+                if (fieldJson.value) {
+                    switch (field.type) {
+                        case navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST:
+                        case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST:
+                            fieldJson.value = JSON.parse(fieldJson.value)
+                            break
+                        case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX:
+                            fieldJson.value = Boolean.valueOf(fieldJson.value)
+                            break
                     }
                 }
+
+                // Add field JSON Array
+                fieldsJson.push(fieldJson)
             }
 
             // Create template JSon
-            def templateJson = [id: template.id, name: template.name, fields: fieldsJson, defaultData: defaultData]
+            def templateJson = [id: template.id, name: template.name, fields: fieldsJson]
 
             templatesJson.push(templateJson)
         }

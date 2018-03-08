@@ -51,24 +51,12 @@ class AuthService {
 
             // Save default templates for this user
             Template defFormTemplate = getDefaultTemplate(user)
-            Data defData = defFormTemplate.defaultData
-            defFormTemplate.save(flush: true, failOnError: true)
-            defFormTemplate.defaultData = defData
-            defData.template = defFormTemplate
             defFormTemplate.save(flush: true, failOnError: true)
 
             Template defLeadTemplate = createDefaultLeadTemplate(user)
-            defData = defLeadTemplate.defaultData
-            defLeadTemplate.save(flush: true, failOnError: true)
-            defLeadTemplate.defaultData = defData
-            defData.template = defLeadTemplate
             defLeadTemplate.save(flush: true, failOnError: true)
 
             Template defTaskTemplate = createDefaultTaskTemplate(user)
-            defData = defTaskTemplate.defaultData
-            defTaskTemplate.save(flush: true, failOnError: true)
-            defTaskTemplate.defaultData = defData
-            defData.template = defTaskTemplate
             defTaskTemplate.save(flush: true, failOnError: true)
         }
 
@@ -186,61 +174,10 @@ class AuthService {
                 type: navimateforbusiness.Constants.Template.TYPE_FORM
         )
 
-        // Create Data Object
-        Data defaultData = new Data(
-                owner: manager,
-                account: manager.account,
-                template: defaultTemplate
-        )
-
         // Create some default fields
-        Field notesField = new Field(
-                account: manager.account,
-                template: defaultTemplate,
-                type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT,
-                title: "Notes",
-                bMandatory: false
-        )
-        Field amountField = new Field(
-                account: manager.account,
-                template: defaultTemplate,
-                type: navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER,
-                title: "Amount",
-                bMandatory: false
-        )
-        Field photoField = new Field(
-                account: manager.account,
-                template: defaultTemplate,
-                type: navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO,
-                title: "Photo",
-                bMandatory: false
-        )
-
-        // Create values for these fields
-        Value notesValue = new Value(
-                account: manager.account,
-                field: notesField,
-                data: defaultData,
-                value: ""
-        )
-        Value amountValue = new Value(
-                account: manager.account,
-                field: amountField,
-                data: defaultData,
-                value: String.valueOf(0)
-        )
-        Value photoValue = new Value(
-                account: manager.account,
-                field: photoField,
-                data: defaultData,
-                value: ""
-        )
-
-        // Add values to template
-        defaultData.addToValues(notesValue)
-        defaultData.addToValues(amountValue)
-        defaultData.addToValues(photoValue)
-        defaultTemplate.defaultData = defaultData
+        Field notesField = new Field(account: manager.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Notes", bMandatory: false, value: "")
+        Field amountField = new Field(account: manager.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER, title: "Amount", bMandatory: false, value: "0")
+        Field photoField = new Field(account: manager.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO, title: "Photo", bMandatory: false, value: "")
 
         // Add fields to template
         defaultTemplate.addToFields(notesField)
@@ -254,29 +191,15 @@ class AuthService {
         // Create a default Lead template
         Template template = new Template(account: user.account, owner: user, name: "Default", type: navimateforbusiness.Constants.Template.TYPE_LEAD)
 
-        // Create default data for this template
-        Data data = new Data(account: user.account, owner: user, template: template)
-
         // Create Fields for the template
-        Field descField     = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false)
-        Field phoneField    = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Phone", bMandatory: false)
-        Field emailField    = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Email", bMandatory: false)
-
-        // Create Values for the fields
-        Value descValue = new Value(account: user.account, field: descField, value: "")
-        Value phoneValue = new Value(account: user.account, field: phoneField, value: "")
-        Value emailValue = new Value(account: user.account, field: emailField, value: "")
+        Field descField     = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false, value: "")
+        Field phoneField    = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Phone", bMandatory: false, value: "")
+        Field emailField    = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Email", bMandatory: false, value: "")
 
         // Add fields to template
         template.addToFields(descField)
         template.addToFields(phoneField)
         template.addToFields(emailField)
-
-        // Add default data to template
-        data.addToValues(descValue)
-        data.addToValues(phoneValue)
-        data.addToValues(emailValue)
-        template.defaultData = data
 
         template
     }
@@ -285,21 +208,11 @@ class AuthService {
         // Create a default Task template
         Template template = new Template(account: admin.account, owner: admin, name: "Default", type: navimateforbusiness.Constants.Template.TYPE_TASK)
 
-        // Create default data for this template
-        Data data = new Data(account: admin.account, owner: admin, template: template)
-
         // Create Fields for the template
-        Field descField     = new Field(account: admin.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false)
-
-        // Create Values for the fields
-        Value descValue = new Value(account: admin.account, field: descField, value: "")
+        Field descField     = new Field(account: admin.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false, value: "")
 
         // Add fields to template
         template.addToFields(descField)
-
-        // Add default data to template
-        data.addToValues(descValue)
-        template.defaultData = data
 
         template
     }

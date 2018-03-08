@@ -93,7 +93,6 @@ class DomainToJson {
                 ver:                template.version,
                 name:               template.name,
                 type:               template.type,
-                defaultDataId:      template.defaultData.id,
                 fieldIds:           fieldIds
         ]
     }
@@ -104,6 +103,7 @@ class DomainToJson {
                 ver:                field.version,
                 title:              field.title,
                 type:               field.type,
+                value:              field.value,
                 isMandatory:        field.bMandatory
         ]
     }

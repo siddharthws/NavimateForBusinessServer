@@ -31,4 +31,5 @@ databaseChangeLog = {
     include file: 'form-task-nullable.groovy'
     include file: 'acra-add.groovy'
     include file: 'loc-report-update-date.groovy'
+    include file: 'vto-field-value-add.groovy'
 }

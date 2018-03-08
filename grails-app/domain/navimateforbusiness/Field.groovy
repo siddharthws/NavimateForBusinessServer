@@ -18,8 +18,10 @@ class Field {
     int type
     String title
     boolean bMandatory
+    String value
 
     static constraints = {
+        value nullable: true
     }
 
     static mapping = {

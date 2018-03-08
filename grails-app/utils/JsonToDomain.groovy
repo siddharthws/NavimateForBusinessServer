@@ -137,9 +137,6 @@ class JsonToDomain {
         }
         template.fields = fields
 
-        // Populate Data Object
-        template.defaultData = Data(templateJson.defaultData, owner, template)
-
         template
     }
 
@@ -162,6 +159,7 @@ class JsonToDomain {
         field.type = fieldJson.type
         field.template = template
         field.account = account
+        field.value = fieldJson.value
 
         field
     }
