@@ -122,7 +122,7 @@ class ImportService {
             String value = row[colIdx]
 
             // Get default field value
-            String defaultValue = template.defaultData.values.find {it -> it.field.id == field.id}.value
+            String defaultValue = field.value
 
             // Validate value
             switch (field.type) {

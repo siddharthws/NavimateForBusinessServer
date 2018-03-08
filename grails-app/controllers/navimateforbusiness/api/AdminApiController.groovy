@@ -36,21 +36,8 @@ class AdminApiController {
         // Parse to Template Object
         Template template = JsonToDomain.Template(request.JSON.template, user)
 
-        if (!template.id) {
-            // For new templates, save needs to be called twice
-            Data defaultData = template.defaultData
-
-            // Save template (default data will become null due to nullable constraint)
-            template.save(flush: true, failOnError: true)
-
-            // Save template with default data
-            template.defaultData = defaultData
-            defaultData.template = template
-            template.save(flush: true, failOnError: true)
-        } else {
-            // Save Template Object
-            template.save(flush: true, failOnError: true)
-        }
+        // Save Template Object
+        template.save(flush: true, failOnError: true)
 
         // Get open tasks that are affected due to this template
         def openTasks = []

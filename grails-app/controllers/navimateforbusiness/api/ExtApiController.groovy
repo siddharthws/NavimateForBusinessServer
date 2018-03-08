@@ -406,7 +406,7 @@ class ExtApiController {
                         }
 
                         // Value should be less than radio list length
-                        String defaultValue = template.defaultData.values.find {it -> it.field.id == field.id}.value
+                        String defaultValue = field.value
                         def defValueJson = JSON.parse(defaultValue)
                         if (numValue >= defValueJson.options.length() || numValue < 0) {
                             throw new ApiException("Invalid index " + numValue + " for field " + key + " in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
@@ -430,7 +430,7 @@ class ExtApiController {
                         }
 
                         // Ensure number of booleans are equal to default value length
-                        String defaultValue = template.defaultData.values.find {it -> it.field.id == field.id}.value
+                        String defaultValue = field.value
                         def defValueJson = JSON.parse(defaultValue)
                         if (defValueJson.length() != selections.size()) {
                             throw new ApiException("Mismatch in number of items for field " + key + " in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
@@ -569,7 +569,7 @@ class ExtApiController {
                         }
 
                         // Value should be less than radio list length
-                        String defaultValue = taskTemplate.defaultData.values.find {it -> it.field.id == field.id}.value
+                        String defaultValue = field.value
                         def defValueJson = JSON.parse(defaultValue)
                         if (numValue >= defValueJson.options.length() || numValue < 0) {
                             throw new ApiException("Invalid index " + numValue + " for field " + key + " in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
@@ -593,7 +593,7 @@ class ExtApiController {
                         }
 
                         // Ensure number of booleans are equal to default value length
-                        String defaultValue = taskTemplate.defaultData.values.find {it -> it.field.id == field.id}.value
+                        String defaultValue = field.value
                         def defValueJson = JSON.parse(defaultValue)
                         if (defValueJson.length() != selections.size()) {
                             throw new ApiException("Mismatch in number of items for field " + key + " in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
@@ -732,7 +732,7 @@ class ExtApiController {
                 }
 
                 // Get default value from template for this field
-                String defaultValue = template.defaultData.values.find {it -> it.field.id == field.id}.value
+                String defaultValue = field.value
 
                 // Find this field name in passed params
                 if (dataJsonKeys.contains(field.title)) {
@@ -867,7 +867,7 @@ class ExtApiController {
                 }
 
                 // Get default value from template for this field
-                String defaultValue = taskTemplate.defaultData.values.find {it -> it.field.id == field.id}.value
+                String defaultValue = field.value
 
                 // Find this field name in passed params
                 if (dataJsonKeys.contains(field.title)) {
