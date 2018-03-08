@@ -38,19 +38,17 @@ app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog, $http
         // Create template data object from given template's default data
         var templateData = {}
         templateData.values = []
-        template.defaultData.values.forEach(function (value) {
-            var field = $rootScope.getFieldById(value.fieldId)
-
+        template.fields.forEach(function (field) {
             if (field.type == Constants.Template.FIELD_TYPE_CHECKLIST ||
                 field.type == Constants.Template.FIELD_TYPE_RADIOLIST) {
                 templateData.values.push({
-                    fieldId: value.fieldId,
-                    value: JSON.parse(JSON.stringify(value.value))
+                    fieldId: field.id,
+                    value: JSON.parse(JSON.stringify(field.value))
                 })
             } else {
                 templateData.values.push({
-                    fieldId: value.fieldId,
-                    value: value.value
+                    fieldId: field.id,
+                    value: field.value
                 })
             }
         })

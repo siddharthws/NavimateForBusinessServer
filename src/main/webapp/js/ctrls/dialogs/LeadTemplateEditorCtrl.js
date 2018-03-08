@@ -58,10 +58,7 @@ app.controller('LeadTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
         $scope.template = {
             name: '',
             type: Constants.Template.TYPE_LEAD,
-            fields: [],
-            defaultData: {
-                values: []
-            }
+            fields: []
         }
     }
     $scope.availableFieldTypes = Constants.Template.LEAD_FIELD_TYPES

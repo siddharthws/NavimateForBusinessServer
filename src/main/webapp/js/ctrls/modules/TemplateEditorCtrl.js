@@ -13,11 +13,7 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
         // Add entry to fields
         vm.fields.push({
             type: vm.Const.FIELD_TYPE_TEXT,
-            title: ''
-        })
-
-        // Add entry to data
-        vm.data.values.push({
+            title: '',
             value: ''
         })
     }
@@ -25,9 +21,6 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
     vm.removeField = function (fieldIdx) {
         // Remove field entry
         vm.fields.splice(fieldIdx, 1)
-
-        // Remove data entry
-        vm.data.values.splice(fieldIdx, 1)
     }
 
     vm.updateFieldType = function (fieldIdx, newType) {
@@ -59,7 +52,7 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
 
         // Update field type
         field.type = newType
-        vm.data.values[fieldIdx].value = value
+        field.value = value
     }
 
     vm.isDupeFieldTitle = function (title) {
@@ -84,7 +77,7 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
     // RadioList related APIs
     vm.addRadioOption = function (fieldIdx) {
         // Get Value of radioList
-        var value = vm.data.values[fieldIdx].value
+        var value = vm.fields[fieldIdx].value
 
         // Add blank option
         value.options.push('')
@@ -92,7 +85,7 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
 
     vm.removeRadioOption = function (fieldIdx, optionIdx) {
         // Get Value of radioList
-        var value = vm.data.values[fieldIdx].value
+        var value = vm.fields[fieldIdx].value
 
         // Check if this option was selected
         if (value.selection == optionIdx) {
@@ -106,27 +99,21 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
 
     // Checklist related APIs
     vm.addCheckOption = function (fieldIdx) {
-        // Get Value of checklist
-        var value = vm.data.values[fieldIdx].value
-
         // Add blank unchecked option
-        value.push({
+        vm.fields[fieldIdx].value.push({
             name: '',
             selection: false
         })
     }
 
     vm.removeCheckOption = function(fieldIdx, optionIdx) {
-        // Get Value of checklist
-        var value = vm.data.values[fieldIdx].value
-
         // Remove option
-        value.splice(optionIdx, 1);
+        vm.fields[fieldIdx].value.splice(optionIdx, 1);
     }
 
     vm.isDupesInChecklist = function (fieldIdx) {
         // Get Value of checklist
-        var value = vm.data.values[fieldIdx].value
+        var value = vm.fields[fieldIdx].value
 
         // Create array of option names
         var names = []
@@ -147,7 +134,7 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
         } else if (vm.fields.length)  {
             for (var i = 0; i < vm.fields.length; i++) {
                 var field = vm.fields[i]
-                var value = vm.data.values[i].value
+                var value = field.value
 
                 if (!field.title) {
                     toastMessage = "Field Title cannot be empty..."
@@ -212,7 +199,6 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
     vm.template = $scope.template
     vm.availableFieldTypes = $scope.availableFieldTypes
     vm.fields = vm.template.fields
-    vm.data = vm.template.defaultData
     vm.bShowError = false
 
     // Set broadcast listener

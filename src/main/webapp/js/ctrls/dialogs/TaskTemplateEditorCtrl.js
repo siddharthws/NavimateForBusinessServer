@@ -58,10 +58,7 @@ app.controller('TaskTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
         $scope.template = {
             name: '',
             type: Constants.Template.TYPE_TASK,
-            fields: [],
-            defaultData: {
-                values: []
-            }
+            fields: []
         }
     }
     $scope.availableFieldTypes = Constants.Template.TASK_FIELD_TYPES

@@ -57,10 +57,7 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
         $scope.template = {
             type: Constants.Template.TYPE_FORM,
             name: '',
-            fields: [],
-            defaultData: {
-                values: []
-            }
+            fields: []
         }
     }
     $scope.availableFieldTypes = Constants.Template.FORM_FIELD_TYPES

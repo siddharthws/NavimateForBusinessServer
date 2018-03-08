@@ -57,25 +57,23 @@
                 <!-- Text Field -->
                 <input ng-if="field.type == $ctrl.Const.FIELD_TYPE_TEXT"
                        class="input-underlined w-75" type="text" placeholder="Enter default text..."
-                       ng-model="$ctrl.data.values[$index].value">
+                       ng-model="field.value">
 
                 <!-- Number Field -->
                 <input string-to-number required value="0" type="number" placeholder="Enter default value..." class="input-underlined w-75"
-                       ng-if="field.type == $ctrl.Const.FIELD_TYPE_NUMBER" ng-model="$ctrl.data.values[$index].value"
-                       ng-class="{'has-error':  $ctrl.bShowError && $ctrl.data.values[$index].value == null}">
+                       ng-if="field.type == $ctrl.Const.FIELD_TYPE_NUMBER" ng-model="field.value"
+                       ng-class="{'has-error':  $ctrl.bShowError && field.value == null}">
 
                 <!-- Radio List Field -->
                 <div ng-if="field.type == $ctrl.Const.FIELD_TYPE_RADIOLIST"
                      class="d-flex flex-column align-items-center"
-                     ng-class="{'has-error': (  !$ctrl.data.values[$index].value.options.length ||
-                                                 $ctrl.data.values[$index].value.options.hasDupes()) &&
-                                                 $ctrl.bShowError}">
-                    <md-radio-group ng-model="$ctrl.data.values[$index].value.selection" class="w-75">
+                     ng-class="{'has-error': (!field.value.options.length || field.value.options.hasDupes()) && $ctrl.bShowError}">
+                    <md-radio-group ng-model="field.value.selection" class="w-75">
                         <div class="d-flex align-items-center w-100"
-                             ng-repeat="option in $ctrl.data.values[$index].value.options track by $index">
+                             ng-repeat="option in field.value.options track by $index">
                             <md-radio-button ng-value="$index"></md-radio-button>
                             <input class="input-underlined flex-1" type="text" placeholder="Enter option..."
-                                   ng-model="$ctrl.data.values[$parent.$index].value.options[$index]"
+                                   ng-model="field.value.options[$index]"
                                    ng-class="{'has-error': $ctrl.bShowError && !option}">
                             <input type="button" value="" class="ib-base ib-hover ib-cross"
                                    ng-click="$ctrl.removeRadioOption($parent.$index, $index)"/>
@@ -87,11 +85,9 @@
                 <!-- Check list Field -->
                 <div ng-if="field.type == $ctrl.Const.FIELD_TYPE_CHECKLIST"
                      class="d-flex flex-column align-items-center"
-                     ng-class="{'has-error':   (!$ctrl.data.values[$index].value.length ||
-                                                 $ctrl.isDupesInChecklist($index)) &&
-                                                 $ctrl.bShowError}">
+                     ng-class="{'has-error':   (!field.value.length || $ctrl.isDupesInChecklist($index)) && $ctrl.bShowError}">
                     <div class="d-flex align-items-center w-75"
-                         ng-repeat="option in $ctrl.data.values[$index].value track by $index">
+                         ng-repeat="option in field.value track by $index">
                         <md-checkbox ng-value="option.name"
                                      ng-model="option.selection">
                         </md-checkbox>
@@ -109,13 +105,12 @@
                 <div ng-if="field.type == $ctrl.Const.FIELD_TYPE_CHECKBOX"
                      class="d-flex flex-column align-items-center">
                     <md-checkbox ng-value="field.title"
-                                 ng-model="$ctrl.data.values[$index].value">
+                                 ng-model="field.value">
                     </md-checkbox>
                 </div>
 
                 <!-- Invalid Default Value Fields -->
-                <div ng-if="  field.type == $ctrl.Const.FIELD_TYPE_PHOTO ||
-                                field.type == $ctrl.Const.FIELD_TYPE_SIGN">
+                <div ng-if="field.type == $ctrl.Const.FIELD_TYPE_PHOTO || field.type == $ctrl.Const.FIELD_TYPE_SIGN">
                     NA
                 </div>
             </td>
