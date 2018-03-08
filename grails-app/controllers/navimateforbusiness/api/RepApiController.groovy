@@ -40,23 +40,15 @@ class RepApiController {
         User rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
         if (!rep) {
             // Create new rep object
-            rep = new User( name: request.JSON.name,
+            rep = new User( name: "NA",
                             phoneNumber: request.JSON.phoneNumber,
                             role: Role.REP,
                             status: UserStatus.ACTIVE)
-        } else {
-            rep.name = request.JSON.name
-        }
-        rep.save(failOnError: true, flush: true)
-
-        // Check if user has been registered
-        rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
-        if (!rep) {
-            throw new ApiException("Rep not registered", Constants.HttpCodes.BAD_REQUEST)
+            rep.save(failOnError: true, flush: true)
         }
 
         // Return user information
-        def resp = [id: rep.id]
+        def resp = [id: rep.id, name: rep.name]
         render resp as JSON
     }
 
@@ -323,6 +315,21 @@ class RepApiController {
 
         // Update User FCM
         rep.fcmId = request.JSON.fcmId
+        rep.save(flush: true, failOnErorr: true)
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def updateName() {
+        def id = request.getHeader("id")
+        User rep = User.findById(id)
+        if (!rep) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Update User FCM
+        rep.name = request.JSON.name
         rep.save(flush: true, failOnErorr: true)
 
         def resp = [success: true]

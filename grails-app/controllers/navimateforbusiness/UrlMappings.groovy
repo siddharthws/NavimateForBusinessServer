@@ -65,6 +65,7 @@ class UrlMappings {
         "/api/reps/sync/data"       (controller: "RepApi") {action = [POST: "syncData"]}
         "/api/reps/sync/values"     (controller: "RepApi") {action = [POST: "syncValues"]}
         "/api/reps/fcm"             (controller: "RepApi") {action = [POST: "updateFcm"]}
+        "/api/reps/name"            (controller: "RepApi") {action = [POST: "updateName"]}
         "/api/reps/otp"             (controller: "RepApi") {action = [POST: "sendOtpSms"]}
         "/api/reps/locationReport"  (controller: "RepApi") {action = [POST: "syncLocationReport"]}
         "/api/reps/addTask"         (controller: "RepApi") {action = [POST: "addTask"]}
