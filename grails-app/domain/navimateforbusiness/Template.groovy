@@ -18,15 +18,11 @@ class Template {
     int type
     String name
 
-    // Default Data of the template
-    Data defaultData
-
     static hasMany = [
             fields:             Field
     ]
 
     static constraints = {
-        defaultData nullable: true
     }
 
     static mapping = {
