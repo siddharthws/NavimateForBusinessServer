@@ -21,7 +21,6 @@ class Field {
     String value
 
     static constraints = {
-        value nullable: true
     }
 
     static mapping = {
