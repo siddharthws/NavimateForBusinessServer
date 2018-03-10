@@ -20,5 +20,20 @@ class SearchService {
         searchedObjects
     }
 
+    // Method to search in user objects
+    def searchUsers (List<User> team, String text) {
+        def searchedObjects = []
+
+        // Iterate through leads
+        team.each {user ->
+            // Search title
+            if (user.name.toLowerCase().contains(text.toLowerCase())) {
+                searchedObjects.push(user)
+            }
+        }
+
+        searchedObjects
+    }
+
     // ----------------------- Private APIs ---------------------------//
 }

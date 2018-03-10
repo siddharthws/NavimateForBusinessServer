@@ -7,6 +7,7 @@ import grails.core.GrailsApplication
 class ManagerApiController {
     // ----------------------- Dependencies ---------------------------//
     def authService
+    def userService
     def leadService
     def taskService
     def formService
@@ -20,10 +21,37 @@ class ManagerApiController {
 
     GrailsApplication grailsApplication
 
-    // ----------------------- APIs ----------------------- //
+    // ----------------------- Team APIs ----------------------- //
+    def searchTeam() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get input params
+        def text = request.JSON.text
+        def pager = request.JSON.pager
+
+        // get reps for this user
+        def reps = userService.getRepsForUser(user)
+
+        // get search results
+        reps = searchService.searchUsers(reps, text)
+        int totalCount = reps.size()
+
+        // Get pages results
+        reps = pagingService.apply(reps, pager)
+
+        // Create response array with IDs and names
+        def resp = [
+                items: [],
+                totalCount: totalCount
+        ]
+        reps.each {it -> resp.items.push([id: it.id, title: it.name])}
+
+        // Send response
+        render resp as JSON
+    }
 
     // ----------------------- LEAD APIs ----------------------- //
-
     def getLeadTable() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -176,7 +204,6 @@ class ManagerApiController {
     }
 
     // ----------------------- TASK APIs ----------------------- //
-
     def getTaskTable() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -269,7 +296,6 @@ class ManagerApiController {
     }
 
     // ----------------------- FORM APIs ----------------------- //
-
     def getFormTable() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
