@@ -351,7 +351,7 @@ class TableService {
         columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
 
         // Add templated columns through lead templates
-        List<Template> templates = templateService.getForUser(user, navimateforbusiness.Constants.Template.TYPE_LEAD)
+        List<Template> templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_LEAD)
         columns += getTemplatedColumns(templates, 4)
 
         columns
@@ -371,7 +371,7 @@ class TableService {
         columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Status"))
 
         // Add templated columns through task templates
-        List<Template> templates = templateService.getForUser(user, navimateforbusiness.Constants.Template.TYPE_TASK)
+        List<Template> templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_TASK)
         columns += getTemplatedColumns(templates, 7)
 
         columns
@@ -392,11 +392,12 @@ class TableService {
         columns.push(createColumn(8, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Task Status"))
 
         // Add templated columns through form templates
-        List<Template> templates = templateService.getForUser(user, navimateforbusiness.Constants.Template.TYPE_FORM)
+        List<Template> templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_FORM)
         columns += getTemplatedColumns(templates, 9)
 
         columns
     }
+
     // Method to get list of columns from template list
     private def getTemplatedColumns(List<Template> templates, int startId) {
         def columns = []
