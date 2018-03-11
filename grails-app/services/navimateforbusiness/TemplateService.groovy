@@ -5,6 +5,8 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class TemplateService {
     // ----------------------- Dependencies ---------------------------//
+    def fieldService
+
     // ----------------------- Getters ---------------------------//
     // Method to get all templates for a user
     def getForUser(User user) {
@@ -47,5 +49,58 @@ class TemplateService {
     }
 
     // ----------------------- Public APIs ---------------------------//
+    // Methods to convert template objects to / from JSON
+    def toJson(Template template) {
+        // Convert template properties to JSON
+        def json = [
+            id: template.id,
+            name: template.name,
+            type: template.type,
+            fields: []
+        ]
+
+        // Convert template fields to JSON
+        def fields = fieldService.getForTemplate(template)
+        fields.each {field ->
+            json.fields.push(fieldService.toJson(field))
+        }
+
+        json
+    }
+
+    Template fromJson(def json, User user) {
+        Template template = null
+
+        // Get existing template or create new
+        if (json.id) {
+            template = getForUserById(user, json.id)
+            if (!template) {
+                throw new navimateforbusiness.ApiException("Illegal access to template", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            }
+        } else {
+            template = new Template(
+                    account: user.account,
+                    owner: user
+            )
+        }
+
+        // Set parameters from JSON
+        template.type = json.type
+        template.name = json.name
+
+        // Set fields using JSON entries
+        json.fields.each {fieldJson ->
+            // Convert JSON to field domain object
+            def field = fieldService.fromJson(fieldJson, template)
+
+            // Add new fields to template
+            if (!field.id) {
+                template.addToFields(field)
+            }
+        }
+
+        template
+    }
+
     // ----------------------- Private APIs ---------------------------//
 }
