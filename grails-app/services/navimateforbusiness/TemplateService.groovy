@@ -23,7 +23,7 @@ class TemplateService {
     // Method to get all templates for a user with a specific type
     def getForUserByType(User user, int type) {
         // Get all templates available for this user
-        def templates = getForUser(user.account)
+        def templates = getForUser(user)
 
         // Use templates of given type only
         templates = templates.findAll {it -> it.type == type}
