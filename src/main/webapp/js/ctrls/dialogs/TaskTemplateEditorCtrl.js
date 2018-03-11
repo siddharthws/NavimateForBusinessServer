@@ -3,7 +3,9 @@
  */
 
 // Controller for Lead Template Editor Dialog
-app.controller('TaskTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, TemplateDataService, template) {
+app.controller('TaskTemplateEditorCtrl', function ( $scope, $rootScope, $mdDialog,
+                                                    ToastService, ObjTemplate, TemplateService,
+                                                    template, cb) {
     var vm = this
 
     /* ------------------------------- HTML APIs -----------------------------------*/
@@ -22,29 +24,24 @@ app.controller('TaskTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
     /* ------------------------------- Local APIs -----------------------------------*/
     function savePostValidation() {
         $rootScope.showWaitingDialog("Please wait while template is being saved...")
-        $http({
-            method:     'POST',
-            url:        '/api/admin/template',
-            headers:    {
-                'X-Auth-Token':    $localStorage.accessToken
-            },
-            data: {
-                'template': $scope.template
-            }
-        }).then(
-            function (response) {
+        var templates = []
+        templates.push($scope.template)
+        TemplateService.edit(templates).then(
+            // Success callback
+            function () {
                 // Hide dialog and show toast
                 $rootScope.hideWaitingDialog()
                 $mdDialog.hide()
                 ToastService.toast("Template saved successfully...")
 
-                // Re-sync Data
-                TemplateDataService.syncTasks()
+                // Trigger callback
+                cb()
             },
-            function (error) {
+            // Error callback
+            function () {
                 // Hide waiting and show error toast
                 $rootScope.hideWaitingDialog()
-                ToastService.toast(error.data.error)
+                ToastService.toast("Unable to save template")
             }
         )
     }
@@ -52,14 +49,11 @@ app.controller('TaskTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
     /* ------------------------------- Init -----------------------------------*/
     // Attach template to scope to pass to child template editor view
     if (template) {
-        $scope.template = JSON.parse(JSON.stringify(template))
+        // CLone template to avoid manipulating original object
+        $scope.template = template.Clone()
     } else {
         // Create empty template object
-        $scope.template = {
-            name: '',
-            type: Constants.Template.TYPE_TASK,
-            fields: []
-        }
+        $scope.template = new ObjTemplate(null, "", Constants.Template.TYPE_TASK, [])
     }
     $scope.availableFieldTypes = Constants.Template.TASK_FIELD_TYPES
 

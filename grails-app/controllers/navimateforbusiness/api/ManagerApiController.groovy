@@ -2,6 +2,7 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import grails.core.GrailsApplication
+import navimateforbusiness.Template
 
 // APIs exposed to users with manager access or higher
 class ManagerApiController {
@@ -11,6 +12,7 @@ class ManagerApiController {
     def leadService
     def taskService
     def formService
+    def templateService
     def tableService
     def filtrService
     def sortingService
@@ -385,6 +387,22 @@ class ManagerApiController {
 
         // Export data
         exportService.export('excel', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+    }
+
+    // ----------------------- Template APIs ----------------------- //
+    def getTemplates() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get templates for this user
+        List<Template> templates = templateService.getForUser(user)
+
+        // Prepare JSON response
+        def resp = []
+        templates.each {template ->
+            resp.push(templateService.toJson(template))
+        }
+
+        render resp as JSON
     }
 
     // ----------------------- Private methods ----------------------- //

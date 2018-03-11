@@ -3,7 +3,9 @@
  */
 
 // Controller for Alert Dialog
-app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog, ToastService, TeamDataService, LeadDataService, TemplateDataService, TaskDataService, tasks, editCb) {
+app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog,
+                                            ToastService, TeamDataService, LeadDataService, TemplateService, TaskDataService,
+                                            tasks, editCb) {
 
     /* ----------------------------- APIs --------------------------------*/
     // Button Click APIs
@@ -48,8 +50,8 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         task.templateId = template.id
     }
 
-    $scope.getTemplateById = TemplateDataService.getTemplateById
-    $scope.getFieldById = TemplateDataService.getFieldById
+    $scope.getTemplateById = TemplateService.getById
+    $scope.getFieldById = TemplateService.getFieldById
 
     $scope.listItemClick = function (task) {
         // Select this lead
@@ -143,8 +145,8 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
     // Init data from services
     $scope.leads = LeadDataService.cache.data
     $scope.team = TeamDataService.cache.data
-    $scope.formTemplates = TemplateDataService.cache.data.forms
-    $scope.taskTemplates = TemplateDataService.cache.data.tasks
+    $scope.formTemplates = TemplateService.getByType(Constants.Template.TYPE_FORM)
+    $scope.taskTemplates = TemplateService.getByType(Constants.Template.TYPE_TASK)
 
     // Init tasks
     if (tasks) {

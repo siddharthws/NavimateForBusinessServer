@@ -17,8 +17,8 @@ class UrlMappings {
         "/api/auth/forgotPassword"  (controller: "AuthApi") { action = [POST: "forgotPassword"] }
 
         /*------------------------- Admin APIs --------------------------*/
-        "/api/admin/accSettings"    (controller: "AdminApi") {action = [POST: "updateSettings"]}
-        "/api/admin/template"       (controller: "AdminApi") {action = [POST: "saveTemplate"]}
+        "/api/admin/accSettings"        (controller: "AdminApi") {action = [POST: "updateSettings"]}
+        "/api/admin/templates/edit"     (controller: "AdminApi") {action = [POST: "editTemplates"]}
         "/api/admin/removeTemplates"(controller: "AdminApi") {action = [POST: "removeTemplates"]}
 
         /*------------------------- Manager APIs --------------------------*/
@@ -41,6 +41,9 @@ class UrlMappings {
         "/api/manager/forms/getTable"    (controller: "ManagerApi") {action = [POST: "getFormTable"]}
         "/api/manager/forms/getIds"      (controller: "ManagerApi") {action = [POST: "getFormIds"]}
         "/api/manager/forms/export"      (controller: "ManagerApi") {action = [POST: "exportForms"]}
+
+        // Template related APIs
+        "/api/manager/templates/getAll"  (controller: "ManagerApi") {action = [POST: "getTemplates"]}
 
         /*------------------------- User APIs to be removed --------------------------*/
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
