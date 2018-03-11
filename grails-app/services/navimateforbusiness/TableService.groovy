@@ -16,6 +16,7 @@ class TableService {
 
     // ----------------------- Dependencies ---------------------------//
     def templateService
+    def fieldService
 
     // ----------------------- Public APIs ---------------------------//
     // API parse lead objects to table format
@@ -405,7 +406,7 @@ class TableService {
         // Iterate through templates
         templates.each {template ->
             // Sort fields as per IDs
-            def fields = template.fields.sort {it -> it.id}
+            def fields = fieldService.getForTemplate(template)
 
             // Iterate through fields
             fields.each {field ->

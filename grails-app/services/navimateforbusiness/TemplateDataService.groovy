@@ -5,6 +5,8 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class TemplateDataService {
     // ----------------------- Dependencies ---------------------------//
+    def fieldService
+
     // ----------------------- Getters ---------------------------//
     // Method to get Template Data for user by id
     def getForUserById(User user, long id) {
@@ -42,7 +44,8 @@ class TemplateDataService {
 
         // Assign value for each field in template
         def values = []
-        template.fields.each {field ->
+        def fields = fieldService.getForTemplate(template)
+        fields.each {field ->
             // Find an existing value object with this field
             Value value = data.values.find {it -> it.field.id == field.id}
 

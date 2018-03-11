@@ -8,6 +8,7 @@ class ImportService {
     // ----------------------- Dependencies ---------------------------//
     def leadService
     def templateService
+    def fieldService
 
     // ----------------------- Public APIs ---------------------------//
     def checkLeadColumns(def columns) {
@@ -112,7 +113,8 @@ class ImportService {
 
         // Iterate through template fields
         def templateData = [:]
-        template.fields.each {field ->
+        def fields = fieldService.getForTemplate(template)
+        fields.each {field ->
             int colIdx = columns.indexOf(field.title)
             if (colIdx == -1) {
                 throw new navimateforbusiness.ApiException("Missing column '" + field.title + "' for template '" + template.name + "'", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
