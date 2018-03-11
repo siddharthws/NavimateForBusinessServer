@@ -3,7 +3,9 @@
  */
 
 // Controller for Alert Dialog
-app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog, $http, $localStorage, ToastService, template, updateCb, TemplateDataService) {
+app.controller('FormTemplateEditorCtrl', function ( $scope, $rootScope, $mdDialog,
+                                                    ObjTemplate, ToastService, TemplateService,
+                                                    template, cb) {
     var vm = this
 
     /* ------------------------------- HTML APIs -----------------------------------*/
@@ -22,43 +24,35 @@ app.controller('FormTemplateEditorCtrl', function ($scope, $rootScope, $mdDialog
     /* ------------------------------- Local APIs -----------------------------------*/
     function savePostValidation() {
         $rootScope.showWaitingDialog("Please wait while template is being saved...")
-        $http({
-            method:     'POST',
-            url:        '/api/admin/template',
-            headers:    {
-                'X-Auth-Token':    $localStorage.accessToken
-            },
-            data: {
-                'template': $scope.template
-            }
-        }).then(
-            function (response) {
+        var templates = []
+        templates.push($scope.template)
+        TemplateService.edit(templates).then(
+            // Success callback
+            function () {
                 // Hide dialog and show toast
                 $rootScope.hideWaitingDialog()
                 $mdDialog.hide()
                 ToastService.toast("Template saved successfully...")
 
-                // Re-sync Template data since template has been added.
-                TemplateDataService.syncForms()
+                // Trigger callback
+                cb()
             },
-            function (error) {
+            // Error callback
+            function () {
                 // Hide waiting and show error toast
                 $rootScope.hideWaitingDialog()
-                ToastService.toast(error.data.error)
+                ToastService.toast("Unable to save template")
             }
         )
     }
     /* ------------------------------- Init -----------------------------------*/
     // Attach template to scope to pass to child template editor view
     if (template) {
-        $scope.template = JSON.parse(JSON.stringify(template))
+        // CLone template to avoid manipulating original object
+        $scope.template = template.Clone()
     } else {
         // Create empty template object
-        $scope.template = {
-            type: Constants.Template.TYPE_FORM,
-            name: '',
-            fields: []
-        }
+        $scope.template = new ObjTemplate(null, "", Constants.Template.TYPE_FORM, [])
     }
     $scope.availableFieldTypes = Constants.Template.FORM_FIELD_TYPES
 

@@ -83,32 +83,32 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Form Template Editor Dialog
-    this.formTemplateEditor = function (template, updateCb) {
+    this.formTemplateEditor = function (template, cb) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/FormTemplateEditor.html',
                             controller: 'FormTemplateEditorCtrl as $ctrl',
                             clickOutsideToClose: true,
-                            locals: { template: template, updateCb: updateCb }
+                            locals: { template: template, cb: cb }
         })
     }
 
     // Launch Lead Template Editor Dialog
-    this.leadTemplateEditor = function (template) {
+    this.leadTemplateEditor = function (template, cb) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/LeadTemplateEditor.html',
                             controller: 'LeadTemplateEditorCtrl as $ctrl',
                             clickOutsideToClose: true,
-                            locals: { template: template }
+                            locals: { template: template, cb: cb }
         })
     }
 
     // Launch Task Template Editor Dialog
-    this.taskTemplateEditor = function (template) {
+    this.taskTemplateEditor = function (template, cb) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/TaskTemplateEditor.html',
                             controller: 'TaskTemplateEditorCtrl as $ctrl',
                             clickOutsideToClose: true,
-                            locals: { template: template }
+                            locals: { template: template, cb: cb }
         })
     }
 

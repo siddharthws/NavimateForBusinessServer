@@ -1,10 +1,7 @@
 package navimateforbusiness.api
 
 
-import grails.converters.JSON
 import navimateforbusiness.Constants
-import navimateforbusiness.Data
-import navimateforbusiness.JsonToDomain
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
 import navimateforbusiness.Template
@@ -16,6 +13,7 @@ class AdminApiController {
     // Service dependencies
     def authService
     def userService
+    def templateService
     def fcmService
 
     def updateSettings() {
@@ -30,21 +28,27 @@ class AdminApiController {
         render resp as JSON
     }
 
-    def saveTemplate() {
+    def editTemplates() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Parse to Template Object
-        Template template = JsonToDomain.Template(request.JSON.template, user)
+        // Parse each template to respective object
+        def templatesJson = request.JSON.templates
+        def templates = []
+        templatesJson.each {templateJson ->
+            templates.push(templateService.fromJson(templateJson, user))
+        }
 
-        // Save Template Object
-        template.save(flush: true, failOnError: true)
-
-        // Get open tasks that are affected due to this template
         def openTasks = []
-        switch (template.type) {
-            case Constants.Template.TYPE_FORM :
-                openTasks = Task.findAllByFormTemplateAndStatus(template, TaskStatus.OPEN)
-                break
+        templates.each {template ->
+            // Save template
+            template.save(flush: true, failOnError: true)
+
+            // Get open tasks that are affected due to this template
+            switch (template.type) {
+                case Constants.Template.TYPE_FORM :
+                    openTasks.addAll(Task.findAllByFormTemplateAndStatus(template, TaskStatus.OPEN))
+                    break
+            }
         }
 
         // Collect FCM Ids of affected reps
@@ -60,7 +64,7 @@ class AdminApiController {
             fcmService.notifyApp(fcm)
         }
 
-        // return resposne
+        // return response
         def resp = [success: true]
         render resp as JSON
     }

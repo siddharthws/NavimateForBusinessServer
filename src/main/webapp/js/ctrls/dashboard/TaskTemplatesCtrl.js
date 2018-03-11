@@ -2,7 +2,8 @@
  * Created by Siddharth on 20-01-2018.
  */
 
-app.controller("TaskTemplatesCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TemplateDataService) {
+app.controller("TaskTemplatesCtrl", function (  $scope, $rootScope, $http, $localStorage, $state,
+                                                DialogService, ToastService, TemplateService) {
     var vm = this
 
     /*------------------------------- Scope APIs -------------------------------*/
@@ -11,12 +12,16 @@ app.controller("TaskTemplatesCtrl", function ($scope, $rootScope, $http, $localS
         if (selectedItems.length != 1) {
             ToastService.toast("Please select a single template to edit...")
         } else {
-            DialogService.taskTemplateEditor(selectedItems[0])
+            DialogService.taskTemplateEditor(selectedItems[0], function () {
+                TemplateService.sync().then(init)
+            })
         }
     }
 
     vm.create = function () {
-        DialogService.taskTemplateEditor(null)
+        DialogService.taskTemplateEditor(null, function () {
+            TemplateService.sync().then(init)
+        })
     }
 
     // Full List Selection Toggling
@@ -65,7 +70,7 @@ app.controller("TaskTemplatesCtrl", function ($scope, $rootScope, $http, $localS
                         ToastService.toast("Templates removed successfully...")
 
                         // Re-sync Template data since template has been removed
-                        TemplateDataService.syncTasks()
+                        TemplateService.sync().then(init)
                     },
                     function (error) {
                         $rootScope.hideWaitingDialog()
@@ -78,7 +83,7 @@ app.controller("TaskTemplatesCtrl", function ($scope, $rootScope, $http, $localS
 
     function init() {
         // Get Template Data
-        vm.templates = TemplateDataService.cache.data.tasks
+        vm.templates = TemplateService.getByType(Constants.Template.TYPE_TASK)
 
         // Re-Init selection array with all unselected
         vm.selection = []
@@ -99,12 +104,10 @@ app.controller("TaskTemplatesCtrl", function ($scope, $rootScope, $http, $localS
     vm.templates = []
     vm.bCheckAll = false
 
-    // Add event listeners
-    // Listener for Template data ready event
-    $scope.$on(Constants.Events.TASK_TEMPLATE_DATA_READY, function (event, data) {
+    // Sync templates if required
+    if (!TemplateService.cache.length) {
+        TemplateService.sync().then(init)
+    } else {
         init()
-    })
-
-    // Run init sequence if data is already updated
-    init()
+    }
 })

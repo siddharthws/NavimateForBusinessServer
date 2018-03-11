@@ -4,7 +4,7 @@
 
 // Controller for Alert Dialog
 app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog, $http, $localStorage, ToastService,
-                                            GoogleApiService, LeadDataService, TemplateDataService,
+                                            GoogleApiService, LeadDataService, TemplateService,
                                             leads, editCb) {
 
     /* ------------------------------- Scope APIs -----------------------------------*/
@@ -58,8 +58,8 @@ app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog, $http
         lead.templateId = template.id
     }
 
-    $scope.getTemplateById = TemplateDataService.getTemplateById
-    $scope.getFieldById = TemplateDataService.getFieldById
+    $scope.getTemplateById = TemplateService.getById
+    $scope.getFieldById = TemplateService.getFieldById
 
     $scope.listItemClick = function (idx) {
         // Select this lead
@@ -234,7 +234,7 @@ app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog, $http
     $scope.mapParams.markers = []
 
     // Init Templates
-    $scope.templates = TemplateDataService.cache.data.leads
+    $scope.templates = TemplateService.getByType(Constants.Template.TYPE_LEAD)
 
     // Set event listeners
     $scope.$on(Constants.Events.MAP_MARKER_CLICK, function (event, params) {

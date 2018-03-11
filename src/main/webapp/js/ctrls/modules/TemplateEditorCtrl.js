@@ -3,7 +3,8 @@
  */
 
 // Controller for Template Editor Dialog
-app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService) {
+app.controller('TemplateEditorCtrl', function ( $scope, $rootScope,
+                                                ToastService, ObjField) {
     var vm = this
     vm.Const = $rootScope.Constants.Template
 
@@ -11,11 +12,7 @@ app.controller('TemplateEditorCtrl', function ($scope, $rootScope, ToastService)
     // Field Related APIs
     vm.addNewField = function () {
         // Add entry to fields
-        vm.fields.push({
-            type: vm.Const.FIELD_TYPE_TEXT,
-            title: '',
-            value: ''
-        })
+        vm.fields.push(new ObjField(null, "", vm.Const.FIELD_TYPE_TEXT, ""))
     }
 
     vm.removeField = function (fieldIdx) {

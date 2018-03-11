@@ -2,7 +2,8 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("FormTemplatesCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TemplateDataService) {
+app.controller("FormTemplatesCtrl", function (  $scope, $rootScope, $http, $localStorage, $state,
+                                                DialogService, ToastService, TemplateService) {
     var vm = this
 
     /*------------------------------- Scope APIs -------------------------------*/
@@ -11,12 +12,16 @@ app.controller("FormTemplatesCtrl", function ($scope, $rootScope, $http, $localS
         if (selectedItems.length != 1) {
             ToastService.toast("Please select a single template to edit...")
         } else {
-            DialogService.formTemplateEditor(selectedItems[0], init)
+            DialogService.formTemplateEditor(selectedItems[0], function () {
+                TemplateService.sync().then(init)
+            })
         }
     }
 
     vm.create = function () {
-        DialogService.formTemplateEditor(null, init)
+        DialogService.formTemplateEditor(null, function () {
+            TemplateService.sync().then(init)
+        })
     }
 
     // Full List Selection Toggling
@@ -65,7 +70,7 @@ app.controller("FormTemplatesCtrl", function ($scope, $rootScope, $http, $localS
                             ToastService.toast("Templates removed successfully...")
 
                             // Re-sync Template data since template has been removed
-                            TemplateDataService.syncForms()
+                            TemplateService.sync().then(init)
                         },
                         function (error) {
                             $rootScope.hideWaitingDialog()
@@ -76,8 +81,8 @@ app.controller("FormTemplatesCtrl", function ($scope, $rootScope, $http, $localS
     /*------------------------------- Local APIs -------------------------------*/
 
     function init() {
-        // Get Template Data
-        vm.templates = TemplateDataService.cache.data.forms
+        // Get form templates
+        vm.templates = TemplateService.getByType(Constants.Template.TYPE_FORM)
 
         // Re-Init selection array with all unselected
         vm.selection = []
@@ -87,7 +92,6 @@ app.controller("FormTemplatesCtrl", function ($scope, $rootScope, $http, $localS
                 vm.selection.push(false)
             })
         }
-
     }
 
     /*------------------------------- INIT -------------------------------*/
@@ -100,12 +104,10 @@ app.controller("FormTemplatesCtrl", function ($scope, $rootScope, $http, $localS
     vm.templates = []
     vm.bCheckAll = false
 
-    // Add event listeners
-    // Listener for Template data ready event
-    $scope.$on(Constants.Events.FORM_TEMPLATE_DATA_READY, function (event, data) {
+    // Sync templates if required
+    if (!TemplateService.cache.length) {
+        TemplateService.sync().then(init)
+    } else {
         init()
-    })
-
-    // Get Form Template for this user
-    init()
+    }
 })

@@ -30,9 +30,6 @@ Constants.Events = {
     // Data Service Related events
     TEAM_DATA_READY:              "evt-team-data-ready",
     LEAD_DATA_READY:              "evt-lead-data-ready",
-    FORM_TEMPLATE_DATA_READY:     "evt-form-template-data-ready",
-    LEAD_TEMPLATE_DATA_READY:     "evt-lead-template-data-ready",
-    TASK_TEMPLATE_DATA_READY:     "evt-task-template-data-ready",
     TASK_DATA_READY:              "evt-task-data-ready",
     DATA_LOAD_ERROR:              "evt-data-load-error"
 }
