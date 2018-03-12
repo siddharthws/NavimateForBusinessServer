@@ -448,5 +448,69 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    // ----------------------- Team APIs ----------------------- //
+    def getTeamTable() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+
+        // Get team for this user
+        def team = userService.getRepsForUser(user)
+
+        // Convert team to tabular format
+        def table = tableService.parseTeam(user, team)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+        int totalRows = table.rows.size()
+
+        // Apply sorting to table
+        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+
+        // Apply paging to table
+        table.rows = pagingService.apply(table.rows, filter.pager)
+
+        // Send response
+        def resp = [
+                rows: table.rows,
+                columns: request.JSON.bColumns ? table.columns : null,
+                totalRows: totalRows
+        ]
+        render resp as JSON
+    }
+
+    /*
+     * Remove reps function is used to remove representatives.
+     * Admin or manager select representatives to be removed.
+     * Remove reps function receives a JSON object of representatives selected by admin or their manager.
+     */
+    def removeReps() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get reps under this user
+        def reps = userService.getRepsForUser(user)
+
+        // Get Reps IDs to remove
+        def ids = request.JSON.ids
+
+        // Get reps to remove
+        def removeReps = []
+        ids.each {id -> removeReps.push(reps.find {it -> it.id == id})}
+
+        // Remove selected reps
+        removeReps.each {rep ->
+            // Remove Rep's Manager & account
+            rep.manager = null
+            rep.account = null
+
+            // Save rep
+            rep.save(flush: true, failOnError: true)
+        }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
     // ----------------------- Private methods ----------------------- //
 }
