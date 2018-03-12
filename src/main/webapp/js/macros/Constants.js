@@ -201,6 +201,7 @@ Constants.Table = {
     TYPE_LEAD:      1,
     TYPE_TASK:      2,
     TYPE_FORM:      3,
+    TYPE_TEAM:      4,
 
     // Column size types
     COL_SIZE_S:         1,
@@ -217,7 +218,8 @@ Constants.Table = {
         'invalid',
         'leads',
         'tasks',
-        'forms'
+        'forms',
+        'team'
     ],
 
     // Default rows per page

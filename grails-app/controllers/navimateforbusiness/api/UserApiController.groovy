@@ -108,30 +108,6 @@ class UserApiController {
     }
 
     /*
-     * Remove reps function is used to remove representatives.
-     * Admin or manager select representatives to be removed.
-     * Remove reps function receives a JSON object of representatives selected by admin or their manager.
-     */
-    def removeReps() {
-        // Get Reps from JSON
-        JSONArray repsJson = JSON.parse(request.JSON.reps)
-        repsJson.each {repJson ->
-            User rep = User.findById(repJson.id)
-            if (!rep) {
-                throw new ApiException("Rep not found", Constants.HttpCodes.BAD_REQUEST)
-            }
-
-            // Remove Rep's Manager
-            rep.manager = null
-            rep.account = null
-            rep.save(flush: true, failOnError: true)
-        }
-
-        def resp = [success: true]
-        render resp as JSON
-    }
-
-    /*
      * Get lead function is used to get leads from the database.
      * Leads are fetched according to the role of the user.
      * If user's role is admin then all leads of the company are fetched.

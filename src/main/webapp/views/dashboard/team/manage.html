@@ -4,7 +4,7 @@
 
     <div class="dropdown ml-2">
         <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
-                ng-disabled="!$ctrl.getSelectedItems().length">
+                ng-disabled="!$ctrl.table.selectedRows.length">
             <span>Actions | </span>
             <img class="img-icon" src="/static/images/dropdown.png"/>
         </button>
@@ -15,30 +15,5 @@
     </div>
 </div>
 
-<div class="overflow-auto mt-1 flex-1">
-    <table class="table table-striped" ng-table="">
-        <thead>
-            <th>
-                <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
-            </th>
-            <th class="text-left">
-                Name
-            </th>
-            <th class="text-left">
-                Phone
-            </th>
-        </thead>
-        <tr ng-repeat="rep in $ctrl.team" ng-click="$ctrl.selection[$index] = !$ctrl.selection[$index]"
-            ng-class="{'active': $ctrl.selection[$index]}">
-            <td class="text-center">
-                <md-checkbox ng-model="$ctrl.selection[$index]" ng-click="$root.Statics.absorbEvent($event)"></md-checkbox>
-            </td>
-            <td>
-                {{rep.name}}
-            </td>
-            <td>
-                {{rep.phoneNumber}}
-            </td>
-        </tr>
-    </table>
-</div>
+<!-- Table -->
+<ng-include src="'/static/views/modules/Table.html'" class="d-flex flex-column flex-1"></ng-include>

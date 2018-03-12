@@ -165,7 +165,39 @@ class TableService {
                 columns: columns,
                 rows: rows
         ]
+    }
 
+    // API to parse team objects to table format
+    def parseTeam(User user, List<User> team) {
+        def rows = []
+
+        // Get all team columns for this user
+        def columns = getTeamColumns(user)
+
+        // Iterate through reps
+        team.each { rep ->
+            def values = []
+
+            // Push blank identifier for each column in values
+            columns.each { it -> values.push('-') }
+
+            // Add row data for mandatory columns
+            values[0] = rep.name
+            values[1] = rep.phoneNumber
+            values[2] = rep.email
+            values[3] = rep.role.name()
+
+            // Add row to table
+            rows.push([
+                    id:         rep.id,
+                    values:     values
+            ])
+        }
+
+        return [
+                columns: columns,
+                rows: rows
+        ]
     }
 
     // API to parse excel file into columns and rows
@@ -397,6 +429,18 @@ class TableService {
         // Add templated columns through form templates
         List<Template> templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_FORM)
         columns += getTemplatedColumns(templates, 9)
+
+        columns
+    }
+
+    private def getTeamColumns(User user) {
+        def columns = []
+
+        // Add mandatory columns for team
+        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Name"))
+        columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Phone"))
+        columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Email"))
+        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Role"))
 
         columns
     }
