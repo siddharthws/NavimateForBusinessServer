@@ -41,16 +41,10 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.edit = function () {
-        // Get selected tasks from selection
-        var selectedTasks = getTaskFromSelection()
-
-        DialogService.taskCreator(selectedTasks, vm.sync)
+        DialogService.taskCreator(vm.table.selectedRows, vm.sync)
     }
 
     vm.close = function () {
-        // Get selected tasks from selection
-        var selectedTasks = getTaskFromSelection()
-
         //Launch confirm Dialog box
         DialogService.confirm("Are you sure you want to close these " + vm.table.selectedRows.length + " tasks ?",
             function () {
@@ -63,7 +57,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : selectedTasks
+                        tasks : vm.table.selectedRows
                     }
                 })
                 .then(
@@ -84,9 +78,6 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.remove = function () {
-        // Get selected tasks from selection
-        var selectedTasks = getTaskFromSelection()
-
         //Launch confirm Dialog box
         DialogService.confirm("Are you sure you want to remove these " + vm.table.selectedRows.length + " tasks ?",
             function () {
@@ -99,7 +90,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : selectedTasks
+                        tasks : vm.table.selectedRows
                     }
                 })
                 .then(
@@ -120,9 +111,6 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.stopRenewal = function () {
-        // Get selected tasks from selection
-        var selectedTasks = getTaskFromSelection()
-
         //Launch confirm Dialog box
         DialogService.confirm("Are you sure you want to stop renewal for " + vm.table.selectedRows.length + " tasks ?",
             function () {
@@ -135,7 +123,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : selectedTasks
+                        tasks : vm.table.selectedRows
                     }
                 })
                 .then(
@@ -176,18 +164,4 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     /*-------------------------------- Local APIs --------------------------------*/
-
-    function getTaskFromSelection() {
-        var selectedTasks = []
-        // get task object for the selected tasks
-        vm.table.selectedRows.forEach(function (selectedId) {
-            // Get task of this Id
-            var task = $rootScope.getTaskById(selectedId)
-            selectedTasks.push(task)
-        })
-
-        return selectedTasks
-    }
-
-
 })

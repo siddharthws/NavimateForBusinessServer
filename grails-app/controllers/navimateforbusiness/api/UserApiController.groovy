@@ -266,10 +266,10 @@ class UserApiController {
      */
     def stopTaskRenewal() {
         // Get Tasks from JSON
-        JSONArray tasksJson = request.JSON.tasks
-        tasksJson.each {taskJson ->
+        def ids = request.JSON.ids
+        ids.each {id ->
             // Validate Task
-            Task task = Task.findById(taskJson.id)
+            Task task = Task.findById(id)
             if (!task) {
                 throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
             }
@@ -294,9 +294,9 @@ class UserApiController {
     def closeTasks() {
         // Get Tasks from JSON
         def fcms = []
-        JSONArray tasksJson = request.JSON.tasks
-        tasksJson.each {taskJson ->
-            Task task = Task.findById(taskJson.id)
+        def ids = request.JSON.ids
+        ids.each {id ->
+            Task task = Task.findById(id)
             if (!task) {
                 throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
             }
@@ -325,9 +325,9 @@ class UserApiController {
     def removeTasks() {
         // Get Reps from JSON
         def fcms = []
-        JSONArray tasksJson = request.JSON.tasks
-        tasksJson.each {taskJson ->
-            Task task = Task.findById(taskJson.id)
+        def ids = request.JSON.ids
+        ids.each {id ->
+            Task task = Task.findById(id)
             if (!task) {
                 throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
             }
