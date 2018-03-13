@@ -10,14 +10,16 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
     /* ----------------------------- APIs --------------------------------*/
     // Button Click APIs
     $scope.add = function () {
+        var task = {}
+
         // Add empty task to array
-        $scope.tasks.push({})
+        $scope.tasks.push(task)
 
         // Update template data
         $scope.updateTemplate($scope.tasks.length - 1, 0)
 
         // Simulate a click on the new item
-        $scope.listItemClick(task)
+        $scope.selectedTask = task
     }
 
     $scope.updateTemplate = function (taskIdx, templateIdx) {
@@ -48,14 +50,6 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         // Update lead's template data
         task.templateData = templateData
         task.templateId = template.id
-    }
-
-    $scope.getTemplateById = TemplateService.getById
-    $scope.getFieldById = TemplateService.getFieldById
-
-    $scope.listItemClick = function (task) {
-        // Select this lead
-        $scope.selectedTask = task
     }
 
     $scope.save = function () {
@@ -141,6 +135,11 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
     $scope.tasks = []
     $scope.selectedTask = {}
     $scope.bShowError = false
+    $scope.bError = false
+    $scope.bWaiting = true
+
+    $scope.getTemplateById = TemplateService.getById
+    $scope.getFieldById = TemplateService.getFieldById
 
     // Init data from services
     $scope.leads = LeadDataService.cache.data

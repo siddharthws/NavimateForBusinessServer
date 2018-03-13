@@ -7,10 +7,9 @@
         </div>
 
         <a href class="ml-2" ng-click="add()">+ Add Task</a>
-        <div class="list-group list-group-bordered p-1 mt-1 flex-1 overflow-auto">
+        <div class="list-group list-group-bordered p-1 mt-1 flex-1 overflow-auto" ng-if="!bError && !bWaiting">
             <div href ng-repeat="task in tasks" class="list-group-item list-group-item-action"
-                 ng-class="{'active': selectedTask == task}"
-                 ng-click="listItemClick(task)">
+                 ng-class="{'active': selectedTask == task}" ng-click="selectedTask = task">
 
                 <div class="d-flex align-items-center flex-wrap">
                     <span>
@@ -129,6 +128,18 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Waiting Spinner -->
+        <div class="fbx-h fbx-center-children" ng-if="bWaiting">
+            <loader class="loader-l"></loader>
+            <h4 class="ml-1 text-grey">Fetching tasks...</h4>
+        </div>
+
+        <!-- Error UI -->
+        <div class="fbx-center-children" ng-if="bError">
+            <img src="/static/images/ic_smiley_sad.png">
+            <h4 class="ml-1 text-grey">Could not get tasks...</h4>
         </div>
 
         <div class="d-flex justify-content-end dialog-buttons">
