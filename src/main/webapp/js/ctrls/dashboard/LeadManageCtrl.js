@@ -125,19 +125,6 @@ app.controller("LeadManageCtrl", function ( $scope, $rootScope, $http, $localSto
         DialogService.leadEditor(ownedLeads, vm.sync)
     }
 
-    vm.createtasks = function () {
-        // Create empty tasks for all seelcted leads
-        var task = []
-        vm.table.selectedRows.forEach(function (selectedId) {
-            task.push({
-                leadId: selectedId
-            })
-        })
-
-        // Trigger task creation dialog
-        DialogService.taskCreator(task)
-    }
-
     /* ------------------------------- Local APIs -----------------------------------*/
     function getOwnedLeadsFromSelection() {
         var ownedLeads = []
