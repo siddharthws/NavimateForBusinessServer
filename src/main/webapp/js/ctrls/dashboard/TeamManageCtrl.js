@@ -74,19 +74,6 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
             })
     }
 
-    vm.createtasks = function () {
-        var task = []
-        vm.selection.forEach(function (bSelected, i)
-        {
-            if (bSelected) {
-                task.push({
-                    repId: vm.team[i].id
-                })
-            }
-        })
-        DialogService.taskCreator(task)
-    }
-
     /* ------------------------------- Local APIs -----------------------------------*/
 
      function init(){
