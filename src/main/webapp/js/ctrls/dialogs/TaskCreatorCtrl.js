@@ -5,7 +5,7 @@
 // Controller for Alert Dialog
 app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog,
                                             ToastService, TeamDataService, LeadDataService, TemplateService, TaskDataService,
-                                            tasks, editCb) {
+                                            taskIds, editCb) {
 
     /* ----------------------------- APIs --------------------------------*/
     // Button Click APIs
@@ -149,9 +149,11 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
     $scope.taskTemplates = TemplateService.getByType(Constants.Template.TYPE_TASK)
 
     // Init tasks
-    if (tasks) {
+    if (taskIds) {
         // Assign the passed leads & mark the first one as selected
-        $scope.tasks = tasks
+        taskIds.forEach(function (taskId) {
+            $scope.tasks.push(TaskDataService.getById(taskId))
+        })
 
         // Update task templates
         $scope.tasks.forEach(function (task, i) {
