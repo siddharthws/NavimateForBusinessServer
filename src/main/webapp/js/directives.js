@@ -143,3 +143,20 @@ app.directive('searchSelect', function () {
         }
     }
 })
+
+// Directive for table pagination
+app.directive('pager', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            // URL for search
+            pageCount:       '=',
+            // Callback when selection is made
+            onPageChanged:   '&'
+        },
+        // Controller and view
+        controller: 'PagerCtrl as vm',
+        templateUrl: '/static/views/directives/pager.html'
+    }
+})

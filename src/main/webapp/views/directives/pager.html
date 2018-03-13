@@ -1,0 +1,23 @@
+<!-- View for image button directive -->
+<div class="d-flex" ng-if="pageCount > 0">
+    <!-- Go To First Page -->
+    <a href ng-click="vm.page(1)" ng-if="vm.currentPage > 1" title="Go to first page"><<</a>
+
+    <!-- Go To Previous Page -->
+    <a href ng-click="vm.page(vm.currentPage - 1)" ng-if="vm.currentPage > 1" title="Go to previous page"><</a>
+
+    <!-- Ellipsized page numbers -->
+    <a href ng-click="vm.page(vm.visiblePages[0] - 1)" ng-if="vm.bPrevEllipses" title="Show previous">...</a>
+
+    <!-- Page numbers -->
+    <a href ng-repeat="page in vm.visiblePages" ng-click="vm.page(page)" ng-class="{'active': vm.currentPage == page}">{{page}}</a>
+
+    <!-- Ellipsized page numbers -->
+    <a href ng-click="vm.page(vm.visiblePages[vm.visiblePages.length - 1] + 1)" ng-if="vm.bNextEllipses" title="Show next">...</a>
+
+    <!-- Go To Next Page -->
+    <a href ng-click="vm.page(vm.currentPage + 1)" ng-if="vm.currentPage < pageCount" title="Go to next page">></a>
+
+    <!-- Go To Last Page -->
+    <a href ng-click="vm.page(pageCount)" ng-if="vm.currentPage < pageCount" title="Go to last page">>></a>
+</div>

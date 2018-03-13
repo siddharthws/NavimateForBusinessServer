@@ -60,43 +60,34 @@ tr:focus {
 }
 
 /* Page numbers styling */
-ul.pagination {
-    margin-bottom: 0px;
-}
-
-.page-link {
+pager a {
+    padding: 0.1em 0.5em;
     color: #37bcf2;
-    padding: 0.5em;
+    background-color: white;
+    border: 1px solid lightgrey;
+    border-left: none;
 }
 
-.page-item.active .page-link {
+pager a:first-child {
+    border-top-left-radius: 0.25em;
+    border-bottom-left-radius: 0.25em;
+    border-left: 1px solid lightgrey;
+}
+
+pager a:last-child {
+    border-top-right-radius: 0.25em;
+    border-bottom-right-radius: 0.25em;
+}
+
+pager a:hover {
+    background-color: whitesmoke;
+    text-decoration-line: none;
+    color: #37bcf2;
+}
+
+pager a.active {
+    color: white;
     background-color: #37bcf2;
     border-color: #37bcf2;
-}
-
-/* TODO: Remove as DSO cleanup */
-.ng-table-counts {
-    display: none;
-}
-
-.ng-table-pager li {
-    margin: 0.2em;
-}
-
-.ng-table-pager a {
-    padding: 0.25em 0.5em;
-    color: black;
-    border: none;
-    border-radius: 2px;
-    background: none;
-}
-
-.ng-table-pager a:hover {
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
-}
-
-.ng-table-pager a:hover, .ng-table-pager li.active a {
-    background-color: #37bcf2;
-    color: white;
-    font-weight: bold;
+    border-left: 1px solid #37bcf2;
 }
