@@ -5,12 +5,7 @@
     <div class="d-flex align-items-center justify-content-between mx-3 my-1"
          ng-init="pager = vm.table.pager">
         <!-- Page numbers using bootstrap pagination -->
-        <ul class="pagination">
-            <li ng-repeat="page in vm.table.getPages() track by $index" class="page-item"
-                ng-class="{'active': pager.startIdx == ($index * pager.count)}">
-                <a href ng-click="vm.openPage($index + 1)" class="page-link">{{$index + 1}}</a>
-            </li>
-        </ul>
+        <pager on-page-changed="vm.openPage(page)" page-count="vm.table.getPageCount()"></pager>
 
         <!-- Rows per page -->
         <span>

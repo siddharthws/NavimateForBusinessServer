@@ -153,9 +153,8 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
         }
 
         // Method to get number of pages based on data
-        vm.getPages = function () {
-            var numPages = Math.ceil(vm.totalRows / vm.pager.count)
-            return Statics.getArray(numPages)
+        vm.getPageCount = function () {
+            return Math.ceil(vm.totalRows / vm.pager.count)
         }
 
         // ----------------------------------- Private Methods ------------------------------------//
