@@ -143,25 +143,5 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
             })
     }
 
-    vm.showMap = function () {
-        // Prepare location array for each task
-        var locations = []
-        vm.table.selectedRows.forEach(function (selectedId) {
-            // Get task of this selectedId
-            var task = $rootScope.getTaskById(selectedId)
-            // Get lead of this task
-            var lead = $rootScope.getLeadById(task.leadId)
-            // Add lead title, lat and lng
-            locations.push({
-                title:      lead.title,
-                latitude:   lead.latitude,
-                longitude:  lead.longitude
-            })
-        })
-
-        // Open Location Viewer dialog
-        DialogService.locationViewer(locations)
-    }
-
     /*-------------------------------- Local APIs --------------------------------*/
 })
