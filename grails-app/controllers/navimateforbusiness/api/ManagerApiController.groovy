@@ -2,6 +2,8 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import grails.core.GrailsApplication
+import navimateforbusiness.ApiException
+import navimateforbusiness.Constants
 import navimateforbusiness.Template
 
 // APIs exposed to users with manager access or higher
@@ -206,6 +208,29 @@ class ManagerApiController {
     }
 
     // ----------------------- TASK APIs ----------------------- //
+    def getTasksById () {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // get tasks for this user
+        def tasks = taskService.getForUser(user)
+
+        // Find tasks with given IDs
+        def selectedTasks = []
+        request.JSON.ids.each {id -> selectedTasks.push(tasks.find {it -> it.id == id}) }
+
+        // Throw exception if all tasks not found
+        if (selectedTasks.size() != request.JSON.ids.size()) {
+            throw new ApiException("Invalid task IDs requested", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Prepare JSON response
+        def resp = []
+        selectedTasks.each {task -> resp.push(taskService.toJson(task))}
+
+        render resp as JSON
+    }
+
     def getTaskTable() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -263,6 +288,24 @@ class ManagerApiController {
         def resp = [
                 ids: respIds
         ]
+        render resp as JSON
+    }
+
+    def editTasks() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Parse task JSON to task objects
+        def tasks = []
+        request.JSON.tasks.each {taskJson ->
+            tasks.push(taskService.fromJson(taskJson, user))
+        }
+
+        // Save tasks
+        tasks.each {it -> it.save(flush: true, failOnError: true)}
+
+        // Return response
+        def resp = [success: true]
         render resp as JSON
     }
 

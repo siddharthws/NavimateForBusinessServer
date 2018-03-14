@@ -13,4 +13,16 @@ enum TaskStatus {
     TaskStatus(int value) {
         this.value = value
     }
+
+    // Method to return enum using integer value
+    static TaskStatus fromValue(int value) {
+        switch (value) {
+            case OPEN.value:
+                return OPEN
+            case CLOSED.value:
+                return CLOSED
+        }
+
+        return null
+    }
 }

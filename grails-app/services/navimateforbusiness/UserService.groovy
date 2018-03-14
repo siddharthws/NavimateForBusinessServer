@@ -5,8 +5,8 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class UserService {
     /* ------------------------------------ Dependencies ------------------------------------ */
-    /* ------------------------------------ Public APIs ------------------------------------ */
-    // Method to get all tasks for a user
+    /* ------------------------------------ Getter APIs ------------------------------------ */
+    // Method to get all reps for a user
     def getRepsForUser(User user) {
         List<User> reps
 
@@ -28,7 +28,19 @@ class UserService {
         reps
     }
 
-    // API to update account settings
+    // Method to get all reps for a user
+    def getRepForUserById(User user, Long id) {
+        // Get all reps for user
+        List<User> reps = getRepsForUser(user)
+
+        // Find rep with this id
+        User rep = reps.find {it -> it.id == id}
+
+        rep
+    }
+
+    /* ------------------------------------ Public APIs ------------------------------------ */
+        // API to update account settings
     def updateAccountSettings(User user, def settingsJson) {
         // Validate JSON
         if (!settingsJson.startHr || !settingsJson.endHr) {

@@ -33,8 +33,10 @@ class UrlMappings {
         "/api/manager/leads/import"      (controller: "ManagerApi") {action = [POST: "importLeads"]}
 
         // Task Related APIs
+        "/api/manager/tasks/getByIds"    (controller: "ManagerApi") {action = [POST: "getTasksById"]}
         "/api/manager/tasks/getTable"    (controller: "ManagerApi") {action = [POST: "getTaskTable"]}
         "/api/manager/tasks/getIds"      (controller: "ManagerApi") {action = [POST: "getTaskIds"]}
+        "/api/manager/tasks/edit"        (controller: "ManagerApi") {action = [POST: "editTasks"]}
         "/api/manager/tasks/export"      (controller: "ManagerApi") {action = [POST: "exportTasks"]}
 
         // Form Related APIs

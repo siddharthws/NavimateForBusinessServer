@@ -7,9 +7,13 @@ import org.grails.web.json.JSONArray
 @Transactional
 class TaskService {
     // ----------------------- Dependencies ---------------------------//
+    def templateService
+    def userService
+    def leadService
+    def valueService
     def fcmService
 
-    // ----------------------- Public APIs ---------------------------//
+    // ----------------------- Getter APIs ---------------------------//
     // Method to get all tasks for a user
     def getForUser(User user) {
         def tasks = []
@@ -23,6 +27,82 @@ class TaskService {
 
         // Return tasks
         tasks
+    }
+
+    // Method to get all tasks for a user
+    def getForUserById(User user, Long id) {
+        // Get all tasks for user
+        def tasks = getForUser(user)
+
+        // Find task by ID
+        def task = tasks.find {it -> it.id == id}
+
+        task
+    }
+
+    // ----------------------- Public APIs ---------------------------//
+    // Methods to convert task objects to / from JSON
+    def toJson(Task task) {
+        // Convert template properties to JSON
+        def json = [
+                id: task.id,
+                lead: [id: task.lead.id, name: task.lead.title],
+                rep: task.rep ? [id: task.rep.id, name: task.rep.name] : null,
+                status: task.status.value,
+                period: task.period,
+                formTemplateId: task.formTemplate.id,
+                templateId: task.templateData.template.id,
+                values: []
+        ]
+
+        // Convert template values to JSON
+        def values = task.templateData.values
+        values.each {value ->
+            json.values.push([fieldId: value.field.id, value: value.value])
+        }
+
+        json
+    }
+
+    Task fromJson(def json, User user) {
+        Task task = null
+
+        // Get existing template or create new
+        if (json.id) {
+            task = getForUserById(user, json.id)
+            if (!task) {
+                throw new navimateforbusiness.ApiException("Illegal access to task", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            }
+        } else {
+            task = new Task(
+                    account: user.account,
+                    manager: user
+            )
+        }
+
+        // Set parameters from JSON
+        task.rep = userService.getRepForUserById(user, json.repId)
+        task.lead = leadService.getForUserById(user, json.leadId)
+        task.status = navimateforbusiness.TaskStatus.fromValue(json.status)
+        task.period = json.period
+        task.formTemplate = templateService.getForUserById(user, json.formTemplateId)
+
+        // Prepare template data
+        if (!task.templateData) {
+            task.templateData = new Data(account: user.account, owner: user)
+        }
+        task.templateData.template = templateService.getForUserById(user, json.templateId)
+
+        // Prepare values
+        json.values.each {valueJson ->
+            Value value = valueService.fromJson(valueJson, task.templateData)
+
+            if (!value.id) {
+                task.templateData.addToValues(value)
+            }
+        }
+
+        task
     }
 
     // ----------------------- Private APIs ---------------------------//
