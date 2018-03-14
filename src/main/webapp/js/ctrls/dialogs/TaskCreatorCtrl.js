@@ -4,13 +4,15 @@
 
 // Controller for Alert Dialog
 app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog,
-                                            ToastService, TeamDataService, LeadDataService, TemplateService, TaskDataService,
+                                            ToastService, TeamDataService, LeadDataService, TemplateService, TaskService,
+                                            ObjTask, ObjValue,
                                             taskIds, editCb) {
 
     /* ----------------------------- APIs --------------------------------*/
     // Button Click APIs
     $scope.add = function () {
-        var task = {}
+        // Create empty task
+        var task = new ObjTask(null, null, null, Constants.Task.STATUS_OPEN, 0, $scope.formTemplates[0], $scope.taskTemplates[0], [])
 
         // Add empty task to array
         $scope.tasks.push(task)
@@ -18,7 +20,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         // Update template data
         $scope.updateTemplate($scope.tasks.length - 1, 0)
 
-        // Simulate a click on the new item
+        // Select this task
         $scope.selectedTask = task
     }
 
@@ -27,60 +29,38 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         var template = $scope.taskTemplates[templateIdx]
 
         // Ignore if same template is selected
-        if (task.templateId == template.id) return
+        if (task.template.id == template.id) return
 
-        // Create template data object from given template's default data
-        var templateData = {}
-        templateData.values = []
+        // Update task template
+        task.template = template
+
+        // Create values based on field default values
+        task.values = []
         template.fields.forEach(function (field) {
-            if (field.type == Constants.Template.FIELD_TYPE_CHECKLIST ||
-                field.type == Constants.Template.FIELD_TYPE_RADIOLIST) {
-                templateData.values.push({
-                    fieldId: field.id,
-                    value: JSON.parse(JSON.stringify(field.value))
-                })
-            } else {
-                templateData.values.push({
-                    fieldId: field.id,
-                    value: field.value
-                })
-            }
+            // Add value object to task
+            task.values.push(new ObjValue(JSON.parse(JSON.stringify(field.value)), field))
         })
-
-        // Update lead's template data
-        task.templateData = templateData
-        task.templateId = template.id
     }
 
     $scope.save = function () {
         // Validate Entered Data
         if (validate()) {
             $rootScope.showWaitingDialog("Please wait while task is created...")
-            // Send to server for saving
-            $http({
-                method:     'POST',
-                url:        '/api/users/task',
-                headers:    {
-                    'X-Auth-Token':    $localStorage.accessToken
-                },
-                data:       {
-                    tasks:      $scope.tasks
-                }
-            }).then(
-                function (response) {
+            TaskService.edit($scope.tasks).then(
+                // Success callback
+                function () {
+                    // Dismiss Dialog & notify user
                     $rootScope.hideWaitingDialog()
-                    // Dismiss Dialog
                     $mdDialog.hide()
+                    ToastService.toast("Tasks Created successfully...")
 
                     // Trigger callback
                     editCb()
-
-                    // Show Toast
-                    ToastService.toast("Tasks Created successfully...")
                 },
-                function (error) {
-                    $rootScope.hideWaitingDialog()
+                // Error callback
+                function () {
                     // Show Error Toast
+                    $rootScope.hideWaitingDialog()
                     ToastService.toast("Unable to create tasks...")
                 }
             )
@@ -116,7 +96,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
         // Validate Task data
         else {
             $scope.tasks.forEach(function (task) {
-                if (!task.leadId || !task.repId || !task.formTemplateId)
+                if (!task.lead || !task.rep || !task.formTemplate || !task.template)
                 {
                     bValid = false
                     $scope.bShowError = true
@@ -136,10 +116,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
     $scope.selectedTask = {}
     $scope.bShowError = false
     $scope.bError = false
-    $scope.bWaiting = true
-
-    $scope.getTemplateById = TemplateService.getById
-    $scope.getFieldById = TemplateService.getFieldById
+    $scope.bWaiting = false
 
     // Init data from services
     $scope.leads = LeadDataService.cache.data
@@ -149,20 +126,21 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
 
     // Init tasks
     if (taskIds) {
-        // Assign the passed leads & mark the first one as selected
-        taskIds.forEach(function (taskId) {
-            $scope.tasks.push(TaskDataService.getById(taskId))
-        })
-
-        // Update task templates
-        $scope.tasks.forEach(function (task, i) {
-            if (!task.templateId) {
-                $scope.updateTemplate(i, 0)
+        // Sync using service
+        $scope.bWaiting = true
+        TaskService.sync(taskIds).then(
+            function () {
+                $scope.bWaiting = false
+                $scope.tasks = TaskService.cache
+                $scope.selectedTask = $scope.tasks[0]
+            },
+            function () {
+                $scope.bWaiting = false
+                $scope.bError = true
             }
-        })
+        )
     } else {
-        $scope.tasks.push({})
-        $scope.updateTemplate(0, 0)
+        $scope.add()
     }
-    $scope.selectedTask = $scope.tasks[0]
+
 })

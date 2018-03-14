@@ -204,6 +204,9 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
     /* ----------------------------- Event Listeners --------------------------------*/
     // Re sync data when Sync Event is triggered
     $scope.$on(Constants.Events.TABLE_SYNC, function (event, args) {
+        // Reset selected rows
+        vm.table.selectedRows = []
+
         // Sync data
         sync(false)
     })

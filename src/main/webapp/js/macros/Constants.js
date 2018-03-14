@@ -224,6 +224,13 @@ Constants.Table = {
     DEFAULT_COUNT_PER_PAGE:     10
 }
 
+/* ------------------------------- Task -----------------------------------*/
+Constants.Task = {
+    // Status constants
+    STATUS_OPEN:    1,
+    STATUS_CLOSED:  2
+}
+
 /* ------------------------------- Template -----------------------------------*/
 Constants.Template = {
     // Template Types
