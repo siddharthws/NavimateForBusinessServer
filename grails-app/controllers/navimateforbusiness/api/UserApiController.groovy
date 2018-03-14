@@ -265,13 +265,18 @@ class UserApiController {
      * the renewal period of the task to zero.
      */
     def stopTaskRenewal() {
-        // Get Tasks from JSON
-        def ids = request.JSON.ids
-        ids.each {id ->
-            // Validate Task
-            Task task = Task.findById(id)
+        // Get user
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get all tasks of this user
+        def tasks = taskService.getForUser(user)
+
+        // Iterate through all tasks that need to be stopped for renewal
+        request.JSON.ids.each {id ->
+            // Get task with this id
+            Task task = tasks.find {it -> it.id == id}
             if (!task) {
-                throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Update Task Period to 0
@@ -292,25 +297,32 @@ class UserApiController {
      * A notification again is sent to all the representatives regarding the closed tasks.
      */
     def closeTasks() {
-        // Get Tasks from JSON
+        // Get user
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get all tasks of this user
+        def tasks = taskService.getForUser(user)
+        log.error("IDs = " + request.JSON.ids)
+
+        // Iterate through IDs to be remove
         def fcms = []
-        def ids = request.JSON.ids
-        ids.each {id ->
-            Task task = Task.findById(id)
+        request.JSON.ids.each {id ->
+            // Get task with this id
+            Task task = tasks.find {it -> it.id == id}
             if (!task) {
-                throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
-            if (task.status != TaskStatus.CLOSED) {
-                // Collect FCM ID to notify the app
+            // Save rep's fcm to be used later
+            if (task.status == TaskStatus.OPEN) {
                 if (!fcms.contains(task.rep.fcmId)) {
                     fcms.push(task.rep.fcmId)
                 }
-
-                // Update Task Status
-                task.status = TaskStatus.CLOSED
-                task.save(flush: true, failOnError: true)
             }
+
+            // Update and save task
+            task.status = TaskStatus.CLOSED
+            task.save(flush: true, failOnError: true)
         }
 
         // Send notifications to all reps
@@ -323,22 +335,29 @@ class UserApiController {
     }
 
     def removeTasks() {
-        // Get Reps from JSON
+        // Get user
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get all tasks of this user
+        def tasks = taskService.getForUser(user)
+
+        // Iterate through IDs to be remove
         def fcms = []
-        def ids = request.JSON.ids
-        ids.each {id ->
-            Task task = Task.findById(id)
+        request.JSON.ids.each {id ->
+            // Get task with this id
+            Task task = tasks.find {it -> it.id == id}
             if (!task) {
-                throw new ApiException("Task not found", Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Save rep's fcm to be used later
-            if (task.status != TaskStatus.CLOSED) {
+            if (task.status == TaskStatus.OPEN) {
                 if (!fcms.contains(task.rep.fcmId)) {
                     fcms.push(task.rep.fcmId)
                 }
             }
 
+            // Update and save task
             task.isRemoved = true
             task.status = TaskStatus.CLOSED
             task.save(flush: true, failOnError: true)

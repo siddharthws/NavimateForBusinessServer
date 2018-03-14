@@ -57,7 +57,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : vm.table.selectedRows
+                        ids : vm.table.selectedRows
                     }
                 })
                 .then(
@@ -90,7 +90,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : vm.table.selectedRows
+                        ids : vm.table.selectedRows
                     }
                 })
                 .then(
@@ -123,7 +123,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        tasks : vm.table.selectedRows
+                        ids : vm.table.selectedRows
                     }
                 })
                 .then(
