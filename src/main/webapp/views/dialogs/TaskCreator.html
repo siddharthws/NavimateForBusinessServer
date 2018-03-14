@@ -16,36 +16,36 @@
                         {{($index + 1) + "."}}
                     </span>
 
-                    <div class="dropdown ml-1" ng-class="{'has-error': !task.leadId && bShowError}">
+                    <div class="dropdown ml-1" ng-class="{'has-error': !task.lead && bShowError}">
                         <button class="dropdown-toggle-button d-flex" data-toggle="dropdown" ng-disabled="task.id">
-                            <span class="flex-1">Lead : {{$root.getLeadById(task.leadId).title}}</span>
+                            <span class="flex-1">Lead : {{task.lead.name}}</span>
                             <img src="/static/images/icon_dropdown.png"/>
                         </button>
                         <div class="dropdown-menu">
                             <input type="text" ng-model="leadFilter.title" placeholder="Search" class="input-underlined">
-                            <button class="dropdown-item" ng-repeat="lead in leads | filter:leadFilter" ng-click="task.leadId = lead.id">{{lead.title}}</button>
+                            <button class="dropdown-item" ng-repeat="lead in leads | filter:leadFilter" ng-click="task.lead = {'id': lead.id, 'name': lead.title}">{{lead.title}}</button>
                         </div>
                     </div>
 
-                    <div class="dropdown ml-1" ng-class="{'has-error': !task.repId && bShowError}">
+                    <div class="dropdown ml-1" ng-class="{'has-error': !task.rep && bShowError}">
                         <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
-                            <span class="flex-1">Rep : {{$root.getRepById(task.repId).name}}</span>
+                            <span class="flex-1">Rep : {{task.rep.name}}</span>
                             <img src="/static/images/icon_dropdown.png"/>
                         </button>
                         <div class="dropdown-menu">
                             <input type="text" ng-model="repFilter.name" placeholder="Search" class="input-underlined">
-                            <button class="dropdown-item" ng-repeat="rep in team | filter:repFilter" ng-click="task.repId = rep.id">{{rep.name}}</button>
+                            <button class="dropdown-item" ng-repeat="rep in team | filter:repFilter" ng-click="task.rep = {'id': rep.id, 'name': rep.name}">{{rep.name}}</button>
                         </div>
                     </div>
 
-                    <div class="dropdown ml-1" ng-class="{'has-error': !task.formTemplateId && bShowError}">
+                    <div class="dropdown ml-1" ng-class="{'has-error': !task.formTemplate && bShowError}">
                         <button class="dropdown-toggle-button d-flex" data-toggle="dropdown">
-                            <span class="flex-1">Form Template : {{$root.getTemplateById(task.formTemplateId).name}}</span>
+                            <span class="flex-1">Form Template : {{task.formTemplate.name}}</span>
                             <img src="/static/images/icon_dropdown.png"/>
                         </button>
                         <div class="dropdown-menu">
                             <input type="text" ng-model="formFilter.name" placeholder="Search" class="input-underlined">
-                            <button class="dropdown-item" ng-repeat="template in formTemplates | filter:formFilter" ng-click="task.formTemplateId = template.id">{{template.name}}</button>
+                            <button class="dropdown-item" ng-repeat="template in formTemplates | filter:formFilter" ng-click="task.formTemplate = template">{{template.name}}</button>
                         </div>
                     </div>
 
@@ -60,7 +60,7 @@
 
                     <div class="dropdown align-self-start m-1 p-1 bdr-primary-light bdr-round">
                         <span class="d-flex dropdown-toggle-button justify-content-around align-items-center" data-toggle="dropdown">
-                            <span>Task Template : {{$root.getTemplateById(task.templateId).name}}</span>
+                            <span>Task Template : {{task.template.name}}</span>
                             <img class="img-icon ml-2" src="/static/images/dropdown.png"/>
                         </span>
                         <div class="dropdown-menu">
@@ -69,32 +69,32 @@
                         </div>
                     </div>
 
-                    <div ng-repeat="value in task.templateData.values" class="p-1 m-1 bdr-primary-light bdr-round">
+                    <div ng-repeat="value in task.values" class="p-1 m-1 bdr-primary-light bdr-round">
 
                         <!-- Text Field -->
-                        <span ng-if="$root.getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_TEXT">
-                                <span>{{$root.getFieldById(value.fieldId).title}}: </span>
+                        <span ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_TEXT">
+                                <span>{{value.field.title}}: </span>
                                 <input  class="input-underlined" type="text"
-                                        ng-model="task.templateData.values[$index].value"
+                                        ng-model="task.values[$index].value"
                                         ng-class="{'input-white': selectedTask == task}">
                             </span>
 
                         <!-- Number Field -->
-                        <span ng-if="$root.getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_NUMBER">
-                            <span>{{$root.getFieldById(value.fieldId).title}}: </span>
+                        <span ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_NUMBER">
+                            <span>{{value.field.title}}: </span>
                             <input  string-to-number class="input-underlined" type="number"
-                                    ng-model="task.templateData.values[$index].value"
+                                    ng-model="task.values[$index].value"
                                     ng-class="{'input-white': selectedTask == task}">
                         </span>
 
                         <!-- Radio List Field -->
-                        <div ng-if="$root.getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_RADIOLIST"
+                        <div ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_RADIOLIST"
                              class="d-flex align-items-center">
-                            <span>{{$root.getFieldById(value.fieldId).title}}</span>
-                            <md-radio-group ng-model="task.templateData.values[$index].value.selection">
+                            <span>{{value.field.title}}</span>
+                            <md-radio-group ng-model="task.values[$index].value.selection">
                                 <div class="d-flex flex-column ml-2">
                                     <div class="d-flex align-items-center"
-                                         ng-repeat="option in task.templateData.values[$index].value.options track by $index">
+                                         ng-repeat="option in task.values[$index].value.options track by $index">
                                         <md-radio-button ng-value="$index" ng-class="{'rb-white': selectedTask == task}"></md-radio-button>
                                         <span class=" ml-1">{{option}}</span>
                                     </div>
@@ -103,12 +103,12 @@
                         </div>
 
                         <!-- Check list Field -->
-                        <div ng-if="$root.getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_CHECKLIST"
+                        <div ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_CHECKLIST"
                              class="d-flex align-items-center">
-                            <span>{{$root.getFieldById(value.fieldId).title}}</span>
+                            <span>{{value.field.title}}</span>
                             <div class="d-flex flex-column ml-2">
                                 <div class="d-flex align-items-center"
-                                     ng-repeat="option in task.templateData.values[$index].value track by $index">
+                                     ng-repeat="option in task.values[$index].value track by $index">
                                     <md-checkbox ng-value="option.name"
                                                  ng-model="option.selection" ng-class="{'cb-white': selectedTask == task}">
                                     </md-checkbox>
@@ -118,10 +118,10 @@
                         </div>
 
                         <!-- Check box Field -->
-                        <div ng-if="$root.getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_CHECKBOX"
+                        <div ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_CHECKBOX"
                              class="d-flex align-items-center">
-                            <span>{{$root.getFieldById(value.fieldId).title}}</span>
-                            <md-checkbox ng-value="$root.getFieldById(value.fieldId).title" class="ml-1"
+                            <span>{{value.field.title}}</span>
+                            <md-checkbox ng-value="value.field.title" class="ml-1"
                                          ng-model="value.value" ng-class="{'cb-white': selectedLead == lead}">
                             </md-checkbox>
                         </div>

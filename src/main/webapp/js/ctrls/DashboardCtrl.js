@@ -4,7 +4,7 @@
 
 app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window, $localStorage,
                                             AuthService, DialogService, ToastService,
-                                            TeamDataService, LeadDataService, TemplateService, TaskDataService) {
+                                            TeamDataService, LeadDataService, TemplateService) {
 
     /*------------------------------------ INIT --------------------------------*/
     // Menu Selection Parameters
@@ -12,13 +12,12 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
     $scope.name = $localStorage.name
     $scope.role = $localStorage.role
     var bError = false
-    var bLeadSync, bTeamSync, bTaskSync, bTemplateSync = false
+    var bLeadSync, bTeamSync, bTemplateSync = false
 
     // Sync all data on Initialization
     $rootScope.showWaitingDialog("Please wait while we are fetching data...")
     TeamDataService.sync()
     LeadDataService.sync()
-    TaskDataService.sync()
 
     // Sync Templates
     TemplateService.sync().then(
@@ -36,7 +35,6 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
     // Attach Data service methods
     $rootScope.getRepById = TeamDataService.getById
     $rootScope.getLeadById = LeadDataService.getById
-    $rootScope.getTaskById = TaskDataService.getById
     $rootScope.getTemplateById = TemplateService.getTemplateById
     $rootScope.getFieldById = TemplateService.getFieldById
 
@@ -71,7 +69,7 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
     }
 
     function checkSync(){
-        if(bLeadSync && bTeamSync && bTaskSync && bTemplateSync){
+        if(bLeadSync && bTeamSync && bTemplateSync){
             $rootScope.hideWaitingDialog()
         }
     }
@@ -93,10 +91,6 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
 
     $scope.$on(Constants.Events.LEAD_DATA_READY, function (event, params) {
         bLeadSync = true
-        checkSync()
-    })
-    $scope.$on(Constants.Events.TASK_DATA_READY, function (event, params) {
-        bTaskSync = true
         checkSync()
     })
     $scope.$on(Constants.Events.TEAM_DATA_READY, function (event, params) {
