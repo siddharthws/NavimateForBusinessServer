@@ -2,7 +2,7 @@
  * Created by Siddharth on 10-03-2018.
  */
 
-app.factory('ObjField', function(ObjValue) {
+app.factory('ObjField', function() {
     // ----------------------------------- Constructor ------------------------------------//
     function ObjField (id, title, type, value) {
         this.id = id
@@ -28,7 +28,7 @@ app.factory('ObjField', function(ObjValue) {
         return new ObjField(json.id,
                             json.title,
                             json.type,
-                            ObjValue.getValueFromString(json.value, json.type))
+                            Statics.getValueFromString(json.value, json.type))
     }
 
     ObjField.toJson = function (field) {
@@ -37,7 +37,7 @@ app.factory('ObjField', function(ObjValue) {
             id:     field.id,
             title:  field.title,
             type:   field.type,
-            value:  ObjValue.getStringFromValue(field.value, field.type)
+            value:  Statics.getStringFromValue(field.value, field.type)
         }
     }
 

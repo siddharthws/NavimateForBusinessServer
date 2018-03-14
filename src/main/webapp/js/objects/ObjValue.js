@@ -2,7 +2,7 @@
  * Created by Siddharth on 11-03-2018.
  */
 
-app.factory('ObjValue', function() {
+app.factory('ObjValue', function(TemplateService) {
     // ----------------------------------- Constructor ------------------------------------//
     function ObjValue (value, field) {
         this.value = value
@@ -12,45 +12,23 @@ app.factory('ObjValue', function() {
     // ----------------------------------- Public APIs ------------------------------------//
     // ----------------------------------- Private APIs ------------------------------------//
     // ----------------------------------- Static APIs ------------------------------------//
-    // Method to convert JSON to Template Object
-    ObjValue.getValueFromString = function (valueString, fieldType) {
-        var value = valueString
+    // Methods to convert between Frontend Field Object and JSON
+    ObjValue.fromJson = function (json) {
+        // Get field
+        var field = TemplateService.getFieldById(json.fieldId)
 
-        // Parse string for specific types
-        switch (fieldType) {
-            case Constants.Template.FIELD_TYPE_RADIOLIST:
-            case Constants.Template.FIELD_TYPE_CHECKLIST:
-                if (value.length) {
-                    value = JSON.parse(value)
-                }
-                break
-            case Constants.Template.FIELD_TYPE_CHECKBOX:
-                value = (value == 'true')
-                break
-        }
+        // Get value
+        var value = Statics.getValueFromString(json.value, field.type)
 
-        // Return Value object
-        return value
+        // Return value Object
+        return new ObjValue(value, field)
     }
 
-    ObjValue.getStringFromValue = function (value, fieldType) {
-        var valueString = value
-
-        // Parse string for specific types
-        switch (fieldType) {
-            case Constants.Template.FIELD_TYPE_RADIOLIST:
-            case Constants.Template.FIELD_TYPE_CHECKLIST:
-                if (value.length) {
-                    valueString = JSON.stringify(value)
-                }
-                break
-            case Constants.Template.FIELD_TYPE_CHECKBOX:
-                valueString = value ? 'true' : 'false'
-                break
+    ObjValue.toJson = function (value) {
+        return {
+            value:    Statics.getStringFromValue(value.value, value.field.type),
+            fieldId:  value.field.id
         }
-
-        // Return Value object
-        return valueString
     }
 
     return ObjValue
