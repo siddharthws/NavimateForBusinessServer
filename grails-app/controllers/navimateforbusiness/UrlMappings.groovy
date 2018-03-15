@@ -26,6 +26,8 @@ class UrlMappings {
         "/api/manager/team/search"       (controller: "ManagerApi") {action = [POST: "searchTeam"]}
         "/api/manager/team/getTable"     (controller: "ManagerApi") {action = [POST: "getTeamTable"]}
         "/api/manager/team/remove"       (controller: "ManagerApi") {action = [POST: "removeReps"]}
+        "/api/manager/team/getIds"       (controller: "ManagerApi") {action = [POST: "getRepIds"]}
+        "/api/manager/team/export"       (controller: "ManagerApi") {action = [POST: "exportTeam"]}
 
         // Lead Related APIs
         "/api/manager/leads/getTable"    (controller: "ManagerApi") {action = [POST: "getLeadTable"]}

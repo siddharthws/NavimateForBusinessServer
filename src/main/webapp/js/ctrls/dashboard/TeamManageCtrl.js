@@ -42,7 +42,7 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.track = function() {
-        DialogService.liveTracking(vm.getSelectedItems())
+        DialogService.liveTracking(vm.table.selectedRows)
     }
 
     // List Actions
@@ -55,7 +55,7 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
                 // Make Http call to remove members
                 $http({
                     method:     'POST',
-                    url:        '/api/users/team/remove',
+                    url:        '/api/manager/team/remove',
                     headers:    {
                         'X-Auth-Token':    $localStorage.accessToken
                     },
