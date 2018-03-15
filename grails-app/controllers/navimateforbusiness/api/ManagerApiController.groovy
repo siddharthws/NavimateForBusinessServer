@@ -512,5 +512,64 @@ class ManagerApiController {
         def resp = [success: true]
         render resp as JSON
     }
+
+    def getRepIds() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+
+        // get team for this user
+        def team = userService.getRepsForUser(user)
+
+        // Convert team to tabular format
+        def table = tableService.parseTeam(user, team)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+
+        // Prepare response as list of IDs
+        def respIds = []
+        table.rows.each {row ->
+            respIds.push(row.id)
+        }
+        // Send response
+        def resp = [
+                ids: respIds
+        ]
+        render resp as JSON
+    }
+
+    def exportTeam() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+        def exportParams = request.JSON.exportParams
+
+        // get team for this user
+        def team = userService.getRepsForUser(user)
+
+        // Convert team to tabular format
+        def table = tableService.parseTeam(user, team)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+
+        // Apply sorting to table
+        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+
+        // Export table
+        def exportData = tableService.getExportData(table, exportParams)
+
+        // Set response parameters
+        response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
+        response.contentType = grailsApplication.config.getProperty("grails.mime.types.xls")
+
+        // Export data
+        exportService.export('csv', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+    }
     // ----------------------- Private methods ----------------------- //
 }
