@@ -182,6 +182,7 @@ class ExtApiController {
                     case Constants.Template.FIELD_TYPE_TEXT:
                     case Constants.Template.FIELD_TYPE_NUMBER:
                     case Constants.Template.FIELD_TYPE_CHECKBOX:
+                    case Constants.Template.FIELD_TYPE_DATE:
                         valueString = value.value
                         break
                     case Constants.Template.FIELD_TYPE_CHECKLIST:
@@ -744,6 +745,7 @@ class ExtApiController {
                         case Constants.Template.FIELD_TYPE_TEXT:
                         case Constants.Template.FIELD_TYPE_NUMBER:
                         case Constants.Template.FIELD_TYPE_CHECKBOX:
+                        case Constants.Template.FIELD_TYPE_DATE:
                             value.value = valueString
                             break
 
@@ -879,6 +881,7 @@ class ExtApiController {
                         case Constants.Template.FIELD_TYPE_TEXT:
                         case Constants.Template.FIELD_TYPE_NUMBER:
                         case Constants.Template.FIELD_TYPE_CHECKBOX:
+                        case Constants.Template.FIELD_TYPE_DATE:
                             value.value = valueString
                             break
 

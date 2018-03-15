@@ -54,7 +54,8 @@ Constants.Form = {
         'radioList',
         'checkList',
         'photo',
-        'signature'
+        'signature',
+        'date'
     ]
 }
 
@@ -265,7 +266,8 @@ Constants.Template.FORM_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_CHECKLIST,
     Constants.Template.FIELD_TYPE_PHOTO,
     Constants.Template.FIELD_TYPE_SIGN,
-    Constants.Template.FIELD_TYPE_CHECKBOX
+    Constants.Template.FIELD_TYPE_CHECKBOX,
+    Constants.Template.FIELD_TYPE_DATE
 ]
 
 Constants.Template.LEAD_FIELD_TYPES = [
@@ -281,7 +283,8 @@ Constants.Template.TASK_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_NUMBER,
     Constants.Template.FIELD_TYPE_RADIOLIST,
     Constants.Template.FIELD_TYPE_CHECKLIST,
-    Constants.Template.FIELD_TYPE_CHECKBOX
+    Constants.Template.FIELD_TYPE_CHECKBOX,
+    Constants.Template.FIELD_TYPE_DATE
 ]
 
 /* ------------------------------- Filters -----------------------------------*/

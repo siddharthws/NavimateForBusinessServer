@@ -134,6 +134,12 @@ class ImportService {
                         value = defaultValue
                     }
                     break
+                case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
+                    // Assign from default if required
+                    if (value == null) {
+                        value = defaultValue
+                    }
+                    break
                 case navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER:
                     // Assign from default if required
                     if (value == null) {
