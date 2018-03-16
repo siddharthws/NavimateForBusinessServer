@@ -626,8 +626,7 @@ class ExtApiController {
             // If user not found by ext Id or Email, create a new one
             if (!user) {
                 user  = new User(   account:    account,
-                                    role:       navimateforbusiness.Role.MANAGER,
-                                    status:     navimateforbusiness.UserStatus.ACTIVE)
+                                    role:       navimateforbusiness.Role.MANAGER)
             }
 
             // Update user info
@@ -656,8 +655,7 @@ class ExtApiController {
 
             // If user not found by ext Id or Email, create a new one
             if (!user) {
-                user  = new User(   role:       navimateforbusiness.Role.REP,
-                                    status:     navimateforbusiness.UserStatus.ACTIVE)
+                user  = new User(   role:       navimateforbusiness.Role.REP)
             }
 
             // Update user info

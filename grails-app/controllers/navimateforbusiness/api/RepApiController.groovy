@@ -16,7 +16,6 @@ import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.User
-import navimateforbusiness.UserStatus
 import navimateforbusiness.Value
 
 class RepApiController {
@@ -42,8 +41,7 @@ class RepApiController {
             // Create new rep object
             rep = new User( name: "NA",
                             phoneNumber: request.JSON.phoneNumber,
-                            role: Role.REP,
-                            status: UserStatus.ACTIVE)
+                            role: Role.REP)
             rep.save(failOnError: true, flush: true)
         }
 

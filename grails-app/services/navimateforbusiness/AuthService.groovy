@@ -39,8 +39,7 @@ class AuthService {
                     email: input.email,
                     password: input.password,
                     account: account,
-                    role: navimateforbusiness.Role.ADMIN,
-                    status: navimateforbusiness.UserStatus.ACTIVE)
+                    role: navimateforbusiness.Role.ADMIN)
 
             // Save
             user.save(flush: true, failOnError: true)
@@ -73,8 +72,7 @@ class AuthService {
                     email: input.email,
                     password: input.password,
                     account: account,
-                    role: navimateforbusiness.Role.MANAGER,
-                    status: navimateforbusiness.UserStatus.ACTIVE)
+                    role: navimateforbusiness.Role.MANAGER)
 
             // Save
             user.save(flush: true, failOnError: true)
