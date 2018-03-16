@@ -17,7 +17,6 @@ class User {
     String fcmId
 
     // Account Information
-    navimateforbusiness.UserStatus status
     navimateforbusiness.Role role
     static belongsTo = [
             account: Account,

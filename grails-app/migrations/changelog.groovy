@@ -33,4 +33,5 @@ databaseChangeLog = {
     include file: 'loc-report-update-date.groovy'
     include file: 'vto-field-value-add.groovy'
     include file: 'cleanup-template-default-data.groovy'
+    include file: 'remove-user-status.groovy'
 }

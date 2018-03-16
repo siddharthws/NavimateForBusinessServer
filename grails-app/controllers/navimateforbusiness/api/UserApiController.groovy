@@ -13,7 +13,6 @@ import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.User
-import navimateforbusiness.UserStatus
 import navimateforbusiness.Visibility
 import org.grails.web.json.JSONArray
 
@@ -92,8 +91,7 @@ class UserApiController {
                     name: request.JSON.name,
                     email: request.JSON.email,
                     phoneNumber: request.JSON.phoneNumber,
-                    role: Role.REP,
-                    status: UserStatus.INACTIVE)
+                    role: Role.REP)
         }
         rep.save(flush: true, failOnError: true)
 
