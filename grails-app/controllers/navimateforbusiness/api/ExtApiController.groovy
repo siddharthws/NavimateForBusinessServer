@@ -244,11 +244,6 @@ class ExtApiController {
                 throw new ApiException("Invalid parameter 'password' for user id " + userJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
 
-            // Check for optional parameters & their data types
-            if (userJson.phone && !(userJson.phone instanceof String)) {
-                throw new ApiException("Invalid parameter 'phone' for user id " + userJson.id, Constants.HttpCodes.BAD_REQUEST)
-            }
-
             // Check for existing registrations with this email
             def existingUser = User.findByEmailAndRoleGreaterThanEquals(userJson.email, Role.MANAGER)
             if (existingUser) {
@@ -293,11 +288,6 @@ class ExtApiController {
             // Add default country code to phone number if no country code was sent
             if (!userJson.phone.contains('+')) {
                 userJson.phone = "+91" + userJson.phone
-            }
-
-            // Check for optional parameters & their data types
-            if (userJson.email && !(userJson.email instanceof String)) {
-                throw new ApiException("Invalid parameter 'email' for user id " + userJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Check if manager exists
@@ -634,7 +624,6 @@ class ExtApiController {
             user.name           = userJson.name
             user.email          = userJson.email
             user.password       = userJson.password
-            user.phoneNumber    = userJson.phone
 
             // Save user
             user.save(flush: true, failOnError: true)
@@ -645,7 +634,7 @@ class ExtApiController {
     private def addReps(Account account, JSONArray usersJson) {
         // Iterate through users
         usersJson.each {userJson ->
-            // Get existing user by email
+            // Get existing user by phone number
             def user = User.findByPhoneNumberAndRole(userJson.phone, Role.REP)
 
             // If user does not exist, find by ext ID
@@ -664,7 +653,6 @@ class ExtApiController {
             user.name           = userJson.name
             user.phoneNumber    = userJson.phone
             user.manager        = User.findByAccountAndExtIdAndRoleGreaterThanEquals(account, userJson.managerId, Role.MANAGER)
-            user.email          = userJson.email
 
             // Save user
             user.save(flush: true, failOnError: true)

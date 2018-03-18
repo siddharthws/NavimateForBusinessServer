@@ -79,7 +79,6 @@ class UserApiController {
         User rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
         if (rep) {
             rep.name = request.JSON.name
-            rep.email = request.JSON.email
             rep.manager = user
             rep.account = user.account
         }
@@ -89,7 +88,6 @@ class UserApiController {
                     account: user.account,
                     manager: user,
                     name: request.JSON.name,
-                    email: request.JSON.email,
                     phoneNumber: request.JSON.phoneNumber,
                     role: Role.REP)
         }
