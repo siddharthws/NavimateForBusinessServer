@@ -119,7 +119,9 @@ app.directive('inputBox', function () {
             hint:       '@',
             model:      '=',
             bNumber:    '@',
-            bSmall:     '@'
+            bSmall:     '@',
+            bShowError: '=',
+            err:        '='
         },
         // view
         templateUrl: '/static/views/directives/inputBox.html'

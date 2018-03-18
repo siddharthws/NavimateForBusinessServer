@@ -4,7 +4,12 @@
     <span class="text-label" ng-if="label">{{label}}</span>
 
     <!-- Input -->
-    <input type="text" ng-model="model" ng-show="!bNumber" placeholder="{{hint}}">
-    <input type="number" ng-model="model" ng-show="bNumber" placeholder="{{hint}}"
-           value="0" ng-class="{'width-sm': bSmall}" string-to-number>
+    <input class="input-box input-lg text-left" ng-class="{'err': bShowError && err.length > 0}" type="text" ng-model="model" ng-show="!bNumber" placeholder="{{hint}}">
+    <input value="0" string-to-number type="number" ng-model="model" ng-show="bNumber" placeholder="{{hint}}"
+           class="input-box input-lg text-left"
+           ng-class="{  'width-sm': bSmall,
+                        'err': bShowError && err.length > 0}">
+
+    <!-- Error Text -->
+    <span class="text-error align-self-end" ng-if="bShowError && err.length > 0">{{err}}</span>
 </div>

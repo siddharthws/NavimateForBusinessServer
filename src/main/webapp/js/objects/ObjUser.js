@@ -20,6 +20,28 @@ app.factory('ObjUser', function() {
         return new ObjUser(this.id, this.name, this.role, this.phone, this.countryCode, this.email)
     }
 
+    // Method to validate User object
+    ObjUser.prototype.isValid = function () {
+        return (this.name && this.phone)
+    }
+
+    // Methods to check validity and return error text
+    ObjUser.prototype.getNameErr = function () {
+        if (!this.name) {
+            return "Name is required"
+        }
+
+        return ""
+    }
+
+    ObjUser.prototype.getPhoneErr = function () {
+        if (!this.phone) {
+            return "Phone number is required"
+        }
+
+        return ""
+    }
+
     // ----------------------------------- Private APIs ------------------------------------//
     // ----------------------------------- Static APIs ------------------------------------//
     // Methods to convert between Frontend Field Object and JSON

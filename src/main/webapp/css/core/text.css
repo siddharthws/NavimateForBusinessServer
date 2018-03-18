@@ -30,3 +30,9 @@
     font-size: 0.8em;
     font-weight: bold;
 }
+
+.text-error {
+    color: red;
+    font-size: 0.8em;
+    font-weight: bold;
+}
