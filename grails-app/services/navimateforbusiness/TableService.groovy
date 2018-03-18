@@ -183,7 +183,7 @@ class TableService {
 
             // Add row data for mandatory columns
             values[0] = rep.name
-            values[1] = rep.phoneNumber
+            values[1] = '+' + rep.countryCode + " " + rep.phone
             values[2] = rep.role.name()
 
             // Add row to table

@@ -35,12 +35,23 @@ class RepApiController {
     }
 
     def register() {
+        // Remove '+' from phone number
+        String phoneNumber = request.JSON.phoneNumber
+        if (phoneNumber.contains('+')) {
+            phoneNumber = phoneNumber.replace("+", "")
+        }
+
+        // Get country code and phone from full number
+        String countryCode = phoneNumber.substring(0, 2)
+        String phone = phoneNumber.substring(2, phoneNumber.length())
+
         // Check if the rep is registered. (Rep is registered from the dashboard)
-        User rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
+        User rep = User.findByPhoneAndCountryCodeAndRole(phone, countryCode, Role.REP)
         if (!rep) {
             // Create new rep object
             rep = new User( name: "NA",
-                            phoneNumber: request.JSON.phoneNumber,
+                            phone: phone,
+                            countryCode: countryCode,
                             role: Role.REP)
             rep.save(failOnError: true, flush: true)
         }

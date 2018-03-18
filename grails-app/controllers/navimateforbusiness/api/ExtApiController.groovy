@@ -281,6 +281,9 @@ class ExtApiController {
             if (!userJson.phone || !(userJson.phone instanceof String)) {
                 throw new ApiException("Invalid parameter 'phone' for user id " + userJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
+            if (!userJson.countryCode || !(userJson.countryCode instanceof String)) {
+                userJson.countryCode = "91"
+            }
             if (!userJson.managerId || !(userJson.managerId instanceof String)) {
                 throw new ApiException("Invalid parameter 'managerId' for user id " + userJson.id, Constants.HttpCodes.BAD_REQUEST)
             }
@@ -297,16 +300,16 @@ class ExtApiController {
             }
 
             // Check for existing registrations with this phone
-            def existingUser = User.findByPhoneNumberAndRole(userJson.phone, Role.REP)
+            def existingUser = User.findByPhoneAndCountryCodeAndRole(userJson.phone, userJson.countryCode, Role.REP)
             if (existingUser) {
                 // Check if user belongs to another account
                 if (existingUser.account && existingUser.account != account) {
-                    throw new ApiException("Unauthorized access to User with phone " + existingUser.phoneNumber, Constants.HttpCodes.BAD_REQUEST)
+                    throw new ApiException("Unauthorized access to User with phone " + existingUser.phone, Constants.HttpCodes.BAD_REQUEST)
                 }
 
                 // Check for ext ID conflicts
                 if (existingUser.extId && existingUser.extId != userJson.id) {
-                    throw new ApiException("User with phone " + existingUser.phoneNumber + " already exists with id " + existingUser.extId, Constants.HttpCodes.BAD_REQUEST)
+                    throw new ApiException("User with phone " + existingUser.phone + " already exists with id " + existingUser.extId, Constants.HttpCodes.BAD_REQUEST)
                 }
             }
         }
@@ -635,7 +638,7 @@ class ExtApiController {
         // Iterate through users
         usersJson.each {userJson ->
             // Get existing user by phone number
-            def user = User.findByPhoneNumberAndRole(userJson.phone, Role.REP)
+            def user = User.findByPhoneAndCountryCodeAndRole(userJson.phone, userJson.countryCode, Role.REP)
 
             // If user does not exist, find by ext ID
             if (!user) {
@@ -651,7 +654,8 @@ class ExtApiController {
             user.extId          = userJson.id
             user.account        = account
             user.name           = userJson.name
-            user.phoneNumber    = userJson.phone
+            user.phone          = userJson.phone
+            user.countryCode    = userJson.countryCode
             user.manager        = User.findByAccountAndExtIdAndRoleGreaterThanEquals(account, userJson.managerId, Role.MANAGER)
 
             // Save user

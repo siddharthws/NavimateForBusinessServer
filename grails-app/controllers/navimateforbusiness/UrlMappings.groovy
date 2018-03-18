@@ -92,6 +92,7 @@ class UrlMappings {
 
         /*------------------------- Porting APIs --------------------------*/
         "/api/port/contact"         (controller: "PortingApi") {action = [GET: "portUserContact"]}
+        "/api/port/phone"           (controller: "PortingApi") {action = [GET: "portPhoneNumbers"]}
 
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs

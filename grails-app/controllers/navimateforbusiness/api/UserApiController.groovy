@@ -75,8 +75,18 @@ class UserApiController {
     def addRep() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
+        // Remove '+' from phone number
+        String phoneNumber = request.JSON.phoneNumber
+        if (phoneNumber.contains('+')) {
+            phoneNumber = phoneNumber.replace("+", "")
+        }
+
+        // Get country code and phone from full number
+        String countryCode = phoneNumber.substring(0, 2)
+        String phone = phoneNumber.substring(2, phoneNumber.length())
+
         // Check if rep is already registered in this manager's team
-        User rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
+        User rep = User.findByPhoneAndCountryCodeAndRole(phone, countryCode, Role.REP)
         if (rep) {
             rep.name = request.JSON.name
             rep.manager = user
@@ -88,7 +98,8 @@ class UserApiController {
                     account: user.account,
                     manager: user,
                     name: request.JSON.name,
-                    phoneNumber: request.JSON.phoneNumber,
+                    phone: phone,
+                    countryCode: countryCode,
                     role: Role.REP)
         }
         rep.save(flush: true, failOnError: true)
@@ -96,7 +107,7 @@ class UserApiController {
         // Send either FCM or SMS to app
         if (!fcmService.notifyApp(rep.fcmId)) {
             // Send SMS to new user
-            SmsHelper.SendSms(rep.phoneNumber, user.name + " has added you to navimate. Join on https://play.google.com/store/apps/details?id=com.biz.navimate")
+            SmsHelper.SendSms(phoneNumber, user.name + " has added you to navimate. Join on https://play.google.com/store/apps/details?id=com.biz.navimate")
         }
 
         def resp = [success: true]

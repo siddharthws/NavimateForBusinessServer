@@ -8,7 +8,7 @@ class Marshaller {
         return [
                 id: user.id,
                 name: user.name,
-                phoneNumber: user.phoneNumber,
+                phoneNumber: "+" + user.countryCode + " " + user.phone,
                 email: user.email
         ]
     }
