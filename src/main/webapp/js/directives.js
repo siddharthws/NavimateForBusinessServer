@@ -109,6 +109,23 @@ app.directive('scroll', function ($timeout) {
     }
 })
 
+// Directive for table pagination
+app.directive('inputBox', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            label:      '@',
+            hint:       '@',
+            model:      '=',
+            bNumber:    '@',
+            bSmall:     '@'
+        },
+        // view
+        templateUrl: '/static/views/directives/inputBox.html'
+    }
+})
+
 // Search dropdown to select something
 app.directive('searchSelect', function () {
     return {

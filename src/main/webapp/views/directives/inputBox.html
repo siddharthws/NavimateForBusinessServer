@@ -1,0 +1,10 @@
+<!-- Input Box with Label -->
+<div class="fbx-v">
+    <!-- Label -->
+    <span class="text-label" ng-if="label">{{label}}</span>
+
+    <!-- Input -->
+    <input type="text" ng-model="model" ng-show="!bNumber" placeholder="{{hint}}">
+    <input type="number" ng-model="model" ng-show="bNumber" placeholder="{{hint}}"
+           value="0" ng-class="{'width-sm': bSmall}" string-to-number>
+</div>

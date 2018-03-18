@@ -1,5 +1,3 @@
-
-
 /* Input related styles */
 input {
     margin: 0.25em;
@@ -66,17 +64,27 @@ input.img-icon:hover {
     border: 1px solid grey;
 }
 
-/* -- Box Styling for input elements -- */
-.input-box {
-    text-align: center;
-    border: solid lightgrey 1px;
+/*
+ * Input Box Styling Classes
+ */
+/* Input element styling */
+input-box input {
+    text-align: start;
+    border: solid darkgray 1px;
     border-radius: 0.15em;
-    padding: 0em 0.5em;
+    padding: 0.25em 0.5em;
     background-color: white;
-    box-shadow: 1px 2px 5px 0px lightgray inset;
+    box-shadow: 0px 0px 5px 0px lightgray inset;
 }
 
-.input-box.active {
+/* Focused input */
+input-box input:focus {
     border-color: #37bcf2;
-    background-color: #37bcf244;
+    box-shadow: 0px 0px 5px 0px #37bcf2 inset;
+}
+
+/* Error in input */
+input-box.err input {
+    border-color: #FF8A80;
+    box-shadow: 0px 0px 5px 0px #FF8A80 inset;
 }
