@@ -24,3 +24,9 @@
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+.text-label {
+    color: grey;
+    font-size: 0.8em;
+    font-weight: bold;
+}
