@@ -2,9 +2,11 @@ package navimateforbusiness.api
 
 
 import navimateforbusiness.Constants
+import navimateforbusiness.SmsHelper
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
 import navimateforbusiness.Template
+import navimateforbusiness.User
 import org.grails.web.json.JSONArray
 import grails.converters.JSON
 
@@ -24,6 +26,31 @@ class AdminApiController {
         userService.updateAccountSettings(user, request.JSON)
 
         // Send success response
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def editTeam() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Parse user JSON to user objects
+        List<User> team = []
+        request.JSON.team.each {userJson ->
+            team.push(userService.repFromJson(userJson, user))
+        }
+
+        // Save user objects
+        team.each {it -> it.save(flush: true, failOnError: true)}
+
+        // Send SMS to all new users
+        team.each {rep ->
+            if (!rep.fcmId) {
+                SmsHelper.SendSms('+' + rep.countryCode + rep.phone, user.name + " has added you to navimate. Join on https://play.google.com/store/apps/details?id=com.biz.navimate")
+            }
+        }
+
+        // Return response
         def resp = [success: true]
         render resp as JSON
     }

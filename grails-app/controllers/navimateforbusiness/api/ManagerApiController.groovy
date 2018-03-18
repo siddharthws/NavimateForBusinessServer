@@ -26,6 +26,29 @@ class ManagerApiController {
     GrailsApplication grailsApplication
 
     // ----------------------- Team APIs ----------------------- //
+    def getTeamById () {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // get team members for this user
+        def team = userService.getRepsForUser(user)
+
+        // Find users with given IDs
+        def selectedTeam = []
+        request.JSON.ids.each {id -> selectedTeam.push(team.find {it -> it.id == id}) }
+
+        // Throw exception if all users not found
+        if (selectedTeam.size() != request.JSON.ids.size()) {
+            throw new ApiException("Invalid team IDs requested", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Prepare JSON response
+        def resp = []
+        selectedTeam.each {rep -> resp.push(userService.toJson(rep))}
+
+        render resp as JSON
+    }
+
     def searchTeam() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
