@@ -39,6 +39,51 @@ class UserService {
         rep
     }
 
+    /* ------------------------------------ Converter APIs ------------------------------------ */
+    // User Object to / from JSON
+    def toJson(User user) {
+        return [
+            id:             user.id,
+            name:           user.name,
+            role:           user.role.value,
+            phone:          user.phone,
+            countryCode:    user.countryCode,
+            email:          user.email
+        ]
+    }
+
+    def repFromJson(def json, User user) {
+        User rep
+
+        // Get rep by phone number
+        rep = User.findByCountryCodeAndPhoneNumber(json.countryCode, json.phone)
+
+        // Ensure rep is present in this user's account
+        if (rep && rep.account && rep.account != user.account) {
+            throw new navimateforbusiness.ApiException("User with phone number " + json.phone + " belongs to another account..." )
+        }
+
+        // Get user by ID
+        if (!rep && json.id) {
+            rep = getRepForUserById(user, json.id)
+            if (!rep) {
+                throw new navimateforbusiness.ApiException("Invalid user id requested", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            }
+        }
+
+        // Create new rep if required
+        if (!rep) {
+            rep = new User(account: user.account, manager: user, role: navimateforbusiness.Role.REP)
+        }
+
+        // Update params using JSON
+        rep.name = json.name
+        rep.phone = json.phone
+        rep.countryCode = json.countryCode
+
+        rep
+    }
+
     /* ------------------------------------ Public APIs ------------------------------------ */
         // API to update account settings
     def updateAccountSettings(User user, def settingsJson) {

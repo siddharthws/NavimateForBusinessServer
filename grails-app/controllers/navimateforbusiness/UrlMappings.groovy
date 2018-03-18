@@ -18,11 +18,13 @@ class UrlMappings {
 
         /*------------------------- Admin APIs --------------------------*/
         "/api/admin/accSettings"        (controller: "AdminApi") {action = [POST: "updateSettings"]}
+        "/api/admin/team/edit"          (controller: "AdminApi") {action = [POST: "editTeam"]}
         "/api/admin/templates/edit"     (controller: "AdminApi") {action = [POST: "editTemplates"]}
-        "/api/admin/removeTemplates"(controller: "AdminApi") {action = [POST: "removeTemplates"]}
+        "/api/admin/removeTemplates"    (controller: "AdminApi") {action = [POST: "removeTemplates"]}
 
         /*------------------------- Manager APIs --------------------------*/
         // Team related APIs
+        "/api/manager/team/getByIds"     (controller: "ManagerApi") {action = [POST: "getTeamById"]}
         "/api/manager/team/search"       (controller: "ManagerApi") {action = [POST: "searchTeam"]}
         "/api/manager/team/getTable"     (controller: "ManagerApi") {action = [POST: "getTeamTable"]}
         "/api/manager/team/remove"       (controller: "ManagerApi") {action = [POST: "removeReps"]}
