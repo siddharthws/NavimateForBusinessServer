@@ -3,7 +3,9 @@
  */
 
 // Controller for Alert Dialog
-app.controller('AddRepCtrl', function ($scope, $rootScope, $http, $localStorage, $mdDialog, ToastService, teamUpdateCb, TeamDataService) {
+app.controller('AddRepCtrl', function ( $scope, $rootScope, $http, $localStorage, $mdDialog,
+                                        ToastService, TeamService,
+                                        cb) {
 
     $scope.add = function () {
         if (validate()) {
@@ -38,19 +40,14 @@ app.controller('AddRepCtrl', function ($scope, $rootScope, $http, $localStorage,
                     $rootScope.hideWaitingDialog()
                     // Hide dialog and show toast
                     $mdDialog.hide()
-
-                    //Re-sync team data since new member has been added
-                    TeamDataService.sync()
-
                     ToastService.toast("An SMS has been sent to the rep...")
 
                     // Trigger Callback
-                    teamUpdateCb()
+                    cb()
                 },
                 function (error) {
                     $rootScope.hideWaitingDialog()
                     ToastService.toast("Unable to add rep")
-                    console.log(error)
                 })
         }
     }

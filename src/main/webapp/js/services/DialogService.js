@@ -53,12 +53,12 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Rep Add Dialog
-    this.addRep = function (teamUpdateCb) {
+    this.addRep = function (cb) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/AddRep.html',
                             controller: 'AddRepCtrl',
                             clickOutsideToClose: true,
-                            locals: { teamUpdateCb: teamUpdateCb}
+                            locals: { cb: cb}
         })
     }
 

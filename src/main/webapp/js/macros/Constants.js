@@ -28,7 +28,6 @@ Constants.Events = {
     MAP_MARKER_SELECTED:     "evt-marker-selected",
 
     // Data Service Related events
-    TEAM_DATA_READY:              "evt-team-data-ready",
     LEAD_DATA_READY:              "evt-lead-data-ready",
     TASK_DATA_READY:              "evt-task-data-ready",
     DATA_LOAD_ERROR:              "evt-data-load-error"

@@ -2,7 +2,7 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TeamDataService, TableService) {
+app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TeamService, TableService) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
@@ -38,11 +38,24 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.add = function () {
-        DialogService.addRep(vm.sync())
+        DialogService.addRep(vm.sync)
     }
 
     vm.track = function() {
-        DialogService.liveTracking(vm.table.selectedRows)
+        // Get all reps by IDs
+        $rootScope.showWaitingDialog("Starting Live Tracking...")
+        TeamService.sync(vm.table.selectedRows).then(
+            // Success
+            function () {
+                $rootScope.hideWaitingDialog()
+                DialogService.liveTracking(TeamService.cache)
+            },
+            // Error
+            function () {
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Unable to get reps")
+            }
+        )
     }
 
     // List Actions
@@ -86,13 +99,4 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/
-    function getSelectedReps() {
-        var selectedReps = []
-        vm.table.selectedRows.forEach(function (selectedId) {
-            var team = $rootScope.getRepById(selectedId)
-            selectedReps.push(team)
-        })
-
-        return selectedReps
-    }
 })

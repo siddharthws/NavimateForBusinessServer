@@ -4,7 +4,7 @@
 
 // Controller for Alert Dialog
 app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localStorage, $state, $mdDialog,
-                                            ToastService, TeamDataService, LeadDataService, TemplateService, TaskService,
+                                            ToastService, TeamService, LeadDataService, TemplateService, TaskService,
                                             ObjTask, ObjValue,
                                             taskIds, editCb) {
 
@@ -120,7 +120,7 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
 
     // Init data from services
     $scope.leads = LeadDataService.cache.data
-    $scope.team = TeamDataService.cache.data
+    $scope.team = TeamService.cache
     $scope.formTemplates = TemplateService.getByType(Constants.Template.TYPE_FORM)
     $scope.taskTemplates = TemplateService.getByType(Constants.Template.TYPE_TASK)
 
@@ -142,5 +142,4 @@ app.controller('TaskCreatorCtrl', function ($scope, $rootScope, $http, $localSto
     } else {
         $scope.add()
     }
-
 })

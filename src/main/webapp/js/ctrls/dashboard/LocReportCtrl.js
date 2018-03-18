@@ -2,7 +2,7 @@
  * Created by Chandel on 11-02-2018.
  */
 
-app.controller("LocReportCtrl", function ($rootScope, $scope, TeamDataService, $filter, LocReportDS) {
+app.controller("LocReportCtrl", function ($rootScope, $scope, $filter, LocReportDS) {
     /*-------------------------------------- INIT ---------------------------------------------*/
     var vm = this
 
@@ -11,7 +11,7 @@ app.controller("LocReportCtrl", function ($rootScope, $scope, TeamDataService, $
     $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_LOCATION]
 
     // Init Variables
-    vm.team = TeamDataService.cache.data
+    vm.team = []
     vm.selectedRep = null
     vm.selectedDate = ""
     vm.report = []
