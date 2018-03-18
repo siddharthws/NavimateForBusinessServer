@@ -34,4 +34,5 @@ databaseChangeLog = {
     include file: 'vto-field-value-add.groovy'
     include file: 'cleanup-template-default-data.groovy'
     include file: 'remove-user-status.groovy'
+    include file: 'update-user-phone.groovy'
 }

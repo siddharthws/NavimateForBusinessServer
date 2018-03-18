@@ -12,6 +12,8 @@ class User {
     // Contact Information
     String name
     String phoneNumber
+    String phone
+    String countryCode
     String password
     String email
     String fcmId
@@ -38,6 +40,8 @@ class User {
         password        nullable: true
         email           nullable: true
         phoneNumber     nullable: true
+        phone           nullable: true
+        countryCode     nullable: true
         fcmId           nullable: true
         manager         nullable: true
         extId           nullable: true

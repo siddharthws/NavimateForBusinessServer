@@ -47,7 +47,7 @@ class DomainToJson {
                 id:             user.id,
                 ver:            user.version,
                 name:           user.name,
-                phoneNumber:    user.phoneNumber,
+                phoneNumber:    '+' + user.countryCode + " " + user.phone,
                 email:          user.email,
                 role:           user.role
         ]
