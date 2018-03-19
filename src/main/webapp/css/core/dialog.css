@@ -7,3 +7,10 @@
     border-radius: 3px;
     padding: 20px;
 }
+
+.dialog-editor-content {
+    background-color: #FAFAFA;
+    border: 1px solid lightgray;
+    border-radius: 0.25em;
+    padding: 1em;
+}

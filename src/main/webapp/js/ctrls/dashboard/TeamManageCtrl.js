@@ -2,7 +2,8 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TeamService, TableService) {
+app.controller("TeamManageCtrl", function ( $scope, $rootScope, $http, $localStorage, $state,
+                                            DialogService, ToastService, TeamService, TableService) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
@@ -38,7 +39,11 @@ app.controller("TeamManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.add = function () {
-        DialogService.addRep(vm.sync)
+        DialogService.teamEditor(null, vm.sync)
+    }
+
+    vm.edit = function () {
+        DialogService.teamEditor(vm.table.selectedRows, vm.sync)
     }
 
     vm.track = function() {

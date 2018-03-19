@@ -22,7 +22,11 @@ app.factory('ObjUser', function() {
 
     // Method to validate User object
     ObjUser.prototype.isValid = function () {
-        return (this.name && this.phone)
+        if (this.getNameErr() || this.getPhoneErr()) {
+            return false
+        }
+
+        return true
     }
 
     // Methods to check validity and return error text
@@ -35,7 +39,7 @@ app.factory('ObjUser', function() {
     }
 
     ObjUser.prototype.getPhoneErr = function () {
-        if (!this.phone) {
+        if (!this.phone || this.phone == "null") {
             return "Phone number is required"
         }
 

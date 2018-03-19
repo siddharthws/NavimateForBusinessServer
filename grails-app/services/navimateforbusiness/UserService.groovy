@@ -73,13 +73,15 @@ class UserService {
 
         // Create new rep if required
         if (!rep) {
-            rep = new User(account: user.account, manager: user, role: navimateforbusiness.Role.REP)
+            rep = new User(role: navimateforbusiness.Role.REP)
         }
 
         // Update params using JSON
+        rep.account = user.account
+        rep.manager = user
         rep.name = json.name
         rep.phone = json.phone
-        rep.countryCode = json.countryCode
+        rep.countryCode = json.countryCode ? json.countryCode : '91'
 
         rep
     }

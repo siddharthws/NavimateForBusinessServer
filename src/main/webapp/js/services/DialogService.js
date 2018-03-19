@@ -52,13 +52,13 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
-    // Launch Rep Add Dialog
-    this.addRep = function (cb) {
+    // Team Editor Dialog
+    this.teamEditor = function (ids, cb) {
         // Show Dialog
-        $mdDialog.show({    templateUrl: '/static/views/dialogs/AddRep.html',
-                            controller: 'AddRepCtrl',
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/TeamEditor.html',
+                            controller: 'TeamEditorCtrl as vm',
                             clickOutsideToClose: true,
-                            locals: { cb: cb}
+                            locals: { ids: ids, cb: cb}
         })
     }
 
