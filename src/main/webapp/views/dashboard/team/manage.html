@@ -13,6 +13,7 @@
             <img class="img-icon" src="/static/images/dropdown.png"/>
         </button>
         <div class="dropdown-menu">
+            <button class="dropdown-item" ng-click="$ctrl.edit()" ng-if="$ctrl.isAdmin()">Edit</button>
             <button class="dropdown-item" ng-click="$ctrl.remove()" ng-if="$ctrl.isAdmin()">Remove</button>
             <button class="dropdown-item" ng-click="$ctrl.track()">Live Tracking</button>
         </div>

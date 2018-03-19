@@ -1,0 +1,63 @@
+<!-- HTML template for Alert Dialog -->
+<md-dialog class="dialog-container w-75 h-75">
+    <!-- Main container -->
+    <div class="fbx-h w-100 h-100">
+        <!-- Content for left side of dialog -->
+        <div class="fbx-h w-75 dialog-editor-content fbx-center-children">
+            <!-- Error Waiting UI -->
+            <div class="fbx-h">
+                <!-- Waiting Spinner -->
+                <div class="fbx-h fbx-center-children" ng-if="vm.bLoading">
+                    <loader class="loader-l"></loader>
+                    <h4 class="ml-1 text-grey">Loading users...</h4>
+                </div>
+
+                <!-- Error UI -->
+                <div class="fbx-center-children" ng-if="vm.bLoadError">
+                    <img src="/static/images/ic_smiley_sad.png">
+                    <h4 class="ml-1 text-grey">Could not get users...</h4>
+                </div>
+            </div>
+
+            <!-- User information form -->
+            <div class="fbx-v" ng-if="!vm.bLoading && !vm.bLoadError">
+                <!-- Name -->
+                <input-box model="vm.selectedUser.name" label="Name*" hint="Enter Name"
+                           b-show-error="vm.bInputError" err="vm.selectedUser.getNameErr()"></input-box>
+
+                <!-- Phone -->
+                <div class="fbx-h mt-3">
+                    <input-box model="vm.selectedUser.countryCode" b-number="true" b-small="true" label="ISD" hint="91"></input-box>
+                    <input-box class="ml-3" model="vm.selectedUser.phone" b-number="true" label="Phone*" hint="Enter Phone number"
+                               b-show-error="vm.bInputError" err="vm.selectedUser.getPhoneErr()"></input-box>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content for right side of dialog -->
+        <div class="fbx-v w-25 h-100 ml-neg">
+            <!-- Dialog title -->
+            <h4 class="align-self-end"><u>Team Editor</u></h4>
+
+            <!-- Add new button -->
+            <imagebutton class="m-1" image="/static/images/ic_add_white.png" text="Add New" ng-click="vm.add()"></imagebutton>
+
+            <!-- Item List -->
+            <div class="list list-blend flex-1">
+                <div class="li li-blend d-flex justify-content-between" ng-repeat="user in vm.team"
+                     ng-class="{'active': vm.selectedUser == user,
+                                'err': vm.bInputError && !user.isValid()}"
+                     ng-click="vm.selectedUser = user" md-ink-ripple="#000000">
+                    <span class="ml-2 text-ellipsize" >{{($index + 1) + ". " + user.name}}</span>
+                    <input type="button" value="" class="ib-base ib-s ib-hover ib-cross" ng-click="vm.remove($index)"/>
+                </div>
+            </div>
+
+            <!-- Dialog buttons -->
+            <div class="d-flex">
+                <button class="btn btn-primary flex-1" ng-click="vm.save()">Save</button>
+                <button class="btn flex-1" ng-click="vm.close()">Close</button>
+            </div>
+        </div>
+    </div>
+</md-dialog>

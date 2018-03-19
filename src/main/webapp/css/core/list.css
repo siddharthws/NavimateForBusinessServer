@@ -27,6 +27,12 @@
     overflow-y: auto;
 }
 
+/* Styling class for blendable list container */
+.list-blend {
+    padding: 0.25em 0.25em 0.25em 0;
+    overflow: auto;
+}
+
 /*
  * List Items
  */
@@ -42,6 +48,10 @@
 
 .li:focus {
     outline: 0px;
+}
+
+.li.err {
+    background-color: #FFCDD2;
 }
 
 /* Styling classes for dropdown list items */
@@ -60,6 +70,25 @@
 
 .li-dropdown:hover {
     background-color: whitesmoke;
+}
+
+/* Styling classes for blendable list items */
+.li-blend {
+    margin: 0 1em 0 0;
+    padding: 0.25em;
+    background-color:   #E8E8E8;
+    border: solid 1px lightgrey;
+    border-left: none;
+    border-bottom-right-radius: 0.25em;
+    border-top-right-radius: 0.25em;
+    box-shadow: 10px 0px 10px -10px grey inset;
+}
+
+.li-blend:hover, .li-blend.active {
+    margin: 0;
+    padding: 0.5em;
+    background-color: #FAFAFA;
+    box-shadow: 0px 2px 2px 0px darkgray;
 }
 
 /* TODO : Cleanup Below classes */
