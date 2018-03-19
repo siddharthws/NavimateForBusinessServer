@@ -160,6 +160,12 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
         var bAllChecked = (vm.table.selectedRows.length == vm.table.totalRows)
 
         if (!bAllChecked) {
+            // Check for maximum selection limit
+            if (vm.table.totalRows > Constants.Table.MAX_SELECTION_COUNT) {
+                ToastService.toast("Too many rows. Maximum " + Constants.Table.MAX_SELECTION_COUNT + " rows can be selected at once.")
+                return
+            }
+
             // Get all IDs from backend for given filter
             vm.bToggleWaiting = true
             vm.table.selectAll().then(

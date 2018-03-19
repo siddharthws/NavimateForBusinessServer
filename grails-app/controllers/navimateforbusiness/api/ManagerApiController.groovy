@@ -156,6 +156,11 @@ class ManagerApiController {
         // Apply column filters to table
         table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
 
+        // Ensure number of rows are less than max limit
+        if (table.rows.size() > Constants.Table.MAX_SELECTION_COUNT) {
+            throw new ApiException("Too many rows. Maximum " + Constants.Table.MAX_SELECTION_COUNT + " rows can be selected at once.")
+        }
+
         // Prepare response as list of IDs
         def respIds = []
         table.rows.each {row ->
@@ -302,6 +307,11 @@ class ManagerApiController {
         // Apply column filters to table
         table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
 
+        // Ensure number of rows are less than max limit
+        if (table.rows.size() > Constants.Table.MAX_SELECTION_COUNT) {
+            throw new ApiException("Too many rows. Maximum " + Constants.Table.MAX_SELECTION_COUNT + " rows can be selected at once.")
+        }
+
         // Prepare response as list of IDs
         def respIds = []
         table.rows.each {row ->
@@ -411,6 +421,11 @@ class ManagerApiController {
 
         // Apply column filters to table
         table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+
+        // Ensure number of rows are less than max limit
+        if (table.rows.size() > Constants.Table.MAX_SELECTION_COUNT) {
+            throw new ApiException("Too many rows. Maximum " + Constants.Table.MAX_SELECTION_COUNT + " rows can be selected at once.")
+        }
 
         // Prepare response as list of IDs
         def respIds = []
