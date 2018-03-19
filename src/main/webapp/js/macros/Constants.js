@@ -222,7 +222,8 @@ Constants.Table = {
     ],
 
     // Default rows per page
-    DEFAULT_COUNT_PER_PAGE:     10
+    DEFAULT_COUNT_PER_PAGE:     10,
+    MAX_SELECTION_COUNT:        500
 }
 
 /* ------------------------------- Task -----------------------------------*/

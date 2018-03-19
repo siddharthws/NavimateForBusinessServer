@@ -62,4 +62,10 @@ class Constants {
         public static final int SORT_ASC           = 1
         public static final int SORT_DESC          = 2
     }
+
+    // Table related constants
+    class Table {
+        // Maximum number of rows that can be selected at once
+        public static final int MAX_SELECTION_COUNT = 500
+    }
 }
