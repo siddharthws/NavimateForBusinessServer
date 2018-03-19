@@ -67,7 +67,7 @@ app.controller('SearchSelectCtrl', function ($scope, $q, SearchService) {
         var item = vm.items[idx]
 
         // Set search text
-        vm.searchText = item.title
+        vm.searchText = item.name
 
         // Reset items
         vm.items = []

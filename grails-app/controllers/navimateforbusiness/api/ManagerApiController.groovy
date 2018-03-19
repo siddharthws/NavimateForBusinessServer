@@ -134,7 +134,7 @@ class ManagerApiController {
                 items: [],
                 totalCount: totalCount
         ]
-        leads.each {it -> resp.items.push([id: it.id, title: it.title])}
+        leads.each {it -> resp.items.push([id: it.id, name: it.name])}
 
         // Send response
         render resp as JSON

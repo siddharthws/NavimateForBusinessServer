@@ -27,7 +27,7 @@ class JsonToDomain {
         lead.latitude = leadJson.latitude
         lead.longitude = leadJson.longitude
         lead.address = leadJson.address
-        lead.title = leadJson.title
+        lead.name = leadJson.title
 
         Template template = Template.findById(leadJson.templateId)
         Data data = Data(leadJson.templateData, owner, template)

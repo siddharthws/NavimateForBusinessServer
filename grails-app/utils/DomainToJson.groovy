@@ -57,7 +57,7 @@ class DomainToJson {
         return [
                 id:             lead.id,
                 ver:            lead.version,
-                title:          lead.title,
+                title:          lead.name,
                 templateId:     lead.templateData.template.id,
                 dataId:         lead.templateData.id,
                 address:        lead.address,

@@ -12,7 +12,7 @@ class SearchService {
         // Iterate through leads
         leads.each {lead ->
             // Search title
-            if (lead.title.toLowerCase().contains(text.toLowerCase())) {
+            if (lead.name.toLowerCase().contains(text.toLowerCase())) {
                 searchedObjects.push(lead)
             }
         }

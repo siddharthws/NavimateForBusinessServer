@@ -678,7 +678,7 @@ class ExtApiController {
 
             // Populate extID, title and isRemoved Status
             lead.extId          = leadJson.id
-            lead.title          = leadJson.title
+            lead.name           = leadJson.name
             lead.isRemoved      = false
 
             // Populate owner

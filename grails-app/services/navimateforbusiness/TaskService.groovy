@@ -46,7 +46,7 @@ class TaskService {
         // Convert template properties to JSON
         def json = [
                 id: task.id,
-                lead: [id: task.lead.id, name: task.lead.title],
+                lead: [id: task.lead.id, name: task.lead.name],
                 rep: task.rep ? [id: task.rep.id, name: task.rep.name] : null,
                 status: task.status.value,
                 period: task.period,

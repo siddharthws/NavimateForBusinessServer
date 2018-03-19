@@ -55,10 +55,10 @@ class ImportService {
             throw new navimateforbusiness.ApiException("Invalid id at " + getCellAddress(idIdx, rowIdx), navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
         }
 
-        int titleIdx = columns.indexOf("Name")
-        def title = row[titleIdx]
-        if (!title) {
-            throw new navimateforbusiness.ApiException("Invalid Name at " + getCellAddress(titleIdx, rowIdx), navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        int nameIdx = columns.indexOf("Name")
+        def name = row[nameIdx]
+        if (!name) {
+            throw new navimateforbusiness.ApiException("Invalid Name at " + getCellAddress(nameIdx, rowIdx), navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
         }
 
         int addressIdx = columns.indexOf("Address")
@@ -93,7 +93,7 @@ class ImportService {
         // Prepare Lead JSON
         def leadJson = [
             extId: extId,
-            title: title,
+            name: name,
             address: address,
             templateId: template.id,
             templateData: parseTemplateData(columns, row, template, rowIdx)
