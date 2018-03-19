@@ -1,0 +1,17 @@
+<!-- View to for dialog to pick different types of objects using table -->
+<md-dialog class="dialog-container w-100 h-100">
+    <!-- Main container -->
+    <div class="fbx-v h-100">
+        <!-- Dialog Title -->
+        <h4><b>{{vm.title}}</b></h4>
+
+        <!-- Table -->
+        <ng-include src="'/static/views/modules/Table.html'" class="d-flex flex-1"></ng-include>
+
+        <!-- Buttons -->
+        <div class="d-flex align-self-end">
+            <button class="btn btn-primary" ng-click="vm.pick()">Pick</button>
+            <button class="btn" ng-click="vm.close()">Close</button>
+        </div>
+    </div>
+</md-dialog>
