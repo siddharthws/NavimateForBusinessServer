@@ -56,6 +56,7 @@ class TableService {
             // Add row to table
             rows.push([
                     id:         lead.id,
+                    name:       lead.name,
                     values:     values
             ])
         }
@@ -105,6 +106,7 @@ class TableService {
             // Add row to table
             rows.push([
                     id:         task.id,
+                    name:       task.lead.name,
                     values:     values
             ])
         }
@@ -157,6 +159,7 @@ class TableService {
             // Add row to table
             rows.push([
                     id:         form.id,
+                    name:       form.owner.name,
                     values:     values
             ])
         }
@@ -189,6 +192,7 @@ class TableService {
             // Add row to table
             rows.push([
                     id:         rep.id,
+                    name:       rep.name,
                     values:     values
             ])
         }

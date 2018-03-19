@@ -32,7 +32,7 @@ class LeadService {
         }
 
         // Sort leads in ascending order of title by default
-        leads = leads.sort {it -> it.title}
+        leads = leads.sort {it -> it.name}
 
         // Return leads
         leads

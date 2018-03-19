@@ -145,10 +145,10 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
     }
 
     // Method to toggle row selection status
-    vm.toggleRowSelection = function (id) {
-        var selectionIdx = vm.table.selectedRows.indexOf(id)
+    vm.toggleRowSelection = function (row) {
+        var selectionIdx = vm.table.getSelectionIndex(row.id)
         if (selectionIdx == -1) {
-            vm.table.selectedRows.push(id)
+            vm.table.selectedRows.push({id: row.id, name: row.name})
         } else {
             vm.table.selectedRows.splice(selectionIdx, 1)
         }

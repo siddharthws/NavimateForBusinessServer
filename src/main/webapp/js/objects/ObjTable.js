@@ -131,10 +131,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
             }).then(
                 function (response) {
                     // Add all IDs to selected Row IDs
-                    vm.selectedRows = []
-                    response.data.ids.forEach(function (id) {
-                        vm.selectedRows.push(id)
-                    })
+                    vm.selectedRows = response.data
 
                     // Resolve promise
                     deferred.resolve(null)
@@ -155,6 +152,28 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
         // Method to get number of pages based on data
         vm.getPageCount = function () {
             return Math.ceil(vm.totalRows / vm.pager.count)
+        }
+
+        // Method to get IDs of all selected objects
+        vm.getSelectedIds = function () {
+            var ids = []
+            vm.selectedRows.forEach(function (row) {
+                ids.push(row.id)
+            })
+
+            return ids
+        }
+
+        // Method to check if a given id is selected
+        vm.getSelectionIndex = function (id) {
+            for (var i = 0; i < vm.selectedRows.length; i++) {
+                var row = vm.selectedRows[i]
+                if (row.id == id) {
+                    return i
+                }
+            }
+
+            return -1
         }
 
         // ----------------------------------- Private Methods ------------------------------------//
@@ -298,7 +317,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
             })
 
             return {
-                selection: vm.selectedRows,
+                selection: vm.getSelectedIds(),
                 order: order
             }
         }
