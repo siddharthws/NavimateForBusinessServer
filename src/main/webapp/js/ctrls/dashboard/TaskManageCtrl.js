@@ -41,7 +41,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.edit = function () {
-        DialogService.taskCreator(vm.table.selectedRows, vm.sync)
+        DialogService.taskCreator(vm.table.getSelectedIds(), vm.sync)
     }
 
     vm.close = function () {
@@ -57,7 +57,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        ids : vm.table.selectedRows
+                        ids : vm.table.getSelectedIds()
                     }
                 })
                 .then(
@@ -90,7 +90,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        ids : vm.table.selectedRows
+                        ids : vm.table.getSelectedIds()
                     }
                 })
                 .then(
@@ -123,7 +123,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        ids : vm.table.selectedRows
+                        ids : vm.table.getSelectedIds()
                     }
                 })
                 .then(

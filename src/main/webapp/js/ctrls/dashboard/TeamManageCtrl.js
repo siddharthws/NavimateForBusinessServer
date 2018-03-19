@@ -43,24 +43,12 @@ app.controller("TeamManageCtrl", function ( $scope, $rootScope, $http, $localSto
     }
 
     vm.edit = function () {
-        DialogService.teamEditor(vm.table.selectedRows, vm.sync)
+        DialogService.teamEditor(vm.table.getSelectedIds(), vm.sync)
     }
 
     vm.track = function() {
         // Get all reps by IDs
-        $rootScope.showWaitingDialog("Starting Live Tracking...")
-        TeamService.sync(vm.table.selectedRows).then(
-            // Success
-            function () {
-                $rootScope.hideWaitingDialog()
-                DialogService.liveTracking(TeamService.cache)
-            },
-            // Error
-            function () {
-                $rootScope.hideWaitingDialog()
-                ToastService.toast("Unable to get reps")
-            }
-        )
+        DialogService.liveTracking(vm.table.selectedRows)
     }
 
     // List Actions
@@ -78,7 +66,7 @@ app.controller("TeamManageCtrl", function ( $scope, $rootScope, $http, $localSto
                         'X-Auth-Token':    $localStorage.accessToken
                     },
                     data: {
-                        ids: vm.table.selectedRows
+                        ids: vm.table.getSelectedIds()
                     }
                 })
                     .then(

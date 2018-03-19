@@ -128,8 +128,8 @@ app.controller("LeadManageCtrl", function ( $scope, $rootScope, $http, $localSto
     /* ------------------------------- Local APIs -----------------------------------*/
     function getOwnedLeadsFromSelection() {
         var ownedLeads = []
-        vm.table.selectedRows.forEach(function (selectedId) {
-            var lead = $rootScope.getLeadById(selectedId)
+        vm.table.selectedRows.forEach(function (row) {
+            var lead = $rootScope.getLeadById(row.id)
             if ((lead.ownerId == $localStorage.id) ||
                 ($localStorage.role == Constants.Role.ADMIN)) {
                 ownedLeads.push(lead)

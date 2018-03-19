@@ -95,8 +95,8 @@
             <!-- Table Body -->
             <tbody  ng-if="vm.table.rows.length && !vm.bWaiting && !vm.bError">
                 <!-- Table Row -->
-                <tr ng-repeat="row in vm.table.rows" ng-click="vm.toggleRowSelection(row.id)"
-                    ng-class="{'active' : vm.table.selectedRows.indexOf(row.id) != -1}">
+                <tr ng-repeat="row in vm.table.rows" ng-click="vm.toggleRowSelection(row)"
+                    ng-class="{'active' : vm.table.getSelectionIndex(row.id) != -1}">
                     <!-- Serial Number -->
                     <td class="tbl-col-s">
                         {{(vm.table.pager.startIdx + $index + 1) + "."}}
