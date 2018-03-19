@@ -19,6 +19,14 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
     // Get table object from service
     vm.table = TableService.activeTable
 
+    // Init table properties
+    vm.props = {
+        bSingleSelect: false
+    }
+    if ($scope.tableProps) {
+        vm.props.bSingleSelect = $scope.tableProps.bSingleSelect ? true : false
+    }
+
     // Sync table data if required
     if (!vm.table.columns.length) {
         sync(true)
@@ -146,11 +154,21 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
 
     // Method to toggle row selection status
     vm.toggleRowSelection = function (row) {
+        // Check if this row is already selected
         var selectionIdx = vm.table.getSelectionIndex(row.id)
-        if (selectionIdx == -1) {
-            vm.table.selectedRows.push({id: row.id, name: row.name})
-        } else {
+        if (selectionIdx != -1) {
+            // If selected, mark as unselected
             vm.table.selectedRows.splice(selectionIdx, 1)
+        } else {
+            // If not selected, add to selection
+            if (vm.props.bSingleSelect) {
+                // Single selection
+                vm.table.selectedRows = []
+                vm.table.selectedRows.push({id: row.id, name: row.name})
+            } else {
+                // Multiple selection
+                vm.table.selectedRows.push({id: row.id, name: row.name})
+            }
         }
     }
 
