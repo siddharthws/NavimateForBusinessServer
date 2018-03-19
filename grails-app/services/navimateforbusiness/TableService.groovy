@@ -34,7 +34,7 @@ class TableService {
             columns.each {it -> values.push('-')}
 
             // Add row data for mandatory columns
-            values[0] = lead.title
+            values[0] = lead.name
             values[1] = lead.address
             values[2] = (lead.latitude || lead.longitude) ? lead.latitude + "," + lead.longitude : '-'
             values[3] = lead.templateData.template.name
@@ -80,7 +80,7 @@ class TableService {
 
             // Add row data for mandatory columns
             values[0] = String.valueOf(task.id)
-            values[1] = task.lead.title
+            values[1] = task.lead.name
             values[2] = (task.lead.latitude || task.lead.longitude) ? task.lead.latitude + "," + task.lead.longitude : '-'
             values[3] = task.rep ? task.rep.name : 'Unassigned'
             values[4] = task.period
@@ -136,7 +136,7 @@ class TableService {
             values[3] = form.dateCreated.format(FORMAT_DATE, IST)
             values[4] = form.dateCreated.format(FORMAT_TIME, IST)
             values[5] = (form.latitude || form.longitude) ? form.latitude + "," + form.longitude : '-'
-            values[6] = form.task ? form.task.lead.title : "-"
+            values[6] = form.task ? form.task.lead.name : "-"
             values[7] = form.task ? String.valueOf(form.task.id) : "-"
             values[8] = form.taskStatus ? form.taskStatus.name() : "-"
 
@@ -378,7 +378,7 @@ class TableService {
         def columns = []
 
         // Add mandatory columns for leads
-        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Title"))
+        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Name"))
         columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Address"))
         columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
         columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))

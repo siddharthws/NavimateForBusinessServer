@@ -16,7 +16,7 @@ class Lead {
     boolean isRemoved = false
 
     // Lead Name
-    String title
+    String name
 
     // Location
     double latitude

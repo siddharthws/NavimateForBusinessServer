@@ -93,7 +93,7 @@ class LeadService {
         }
 
         // Assign values from JSON
-        lead.title = leadJson.title
+        lead.name = leadJson.name
 
         // Update address and latlng if changed
         if (leadJson.address && lead.address != leadJson.address) {
@@ -154,7 +154,7 @@ class LeadService {
             def leadJson = [
                     id: lead.id,
                     ownerId: lead.manager.id,
-                    title: lead.title,
+                    title: lead.name,
                     address: lead.address,
                     latitude: lead.latitude,
                     longitude: lead.longitude,
