@@ -183,4 +183,20 @@ app.service('DialogService', function($mdDialog) {
                             }
         })
     }
+
+    // Table Picker Dialogs
+    this.tablePicker = function (title, table, cb) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/TablePicker.html',
+            controller: 'TablePickerCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                title: title,
+                table: table,
+                cb: cb
+            }
+        })
+    }
 })
