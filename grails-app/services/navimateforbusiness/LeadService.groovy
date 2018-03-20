@@ -8,6 +8,7 @@ class LeadService {
     // ----------------------- Dependencies ---------------------------//
     def googleApiService
     def templateService
+    def valueService
     def templateDataService
 
     // ----------------------- Getter APIs ---------------------------//
@@ -65,51 +66,86 @@ class LeadService {
     }
 
     // ----------------------- Public APIs ---------------------------//
+    // Methods to convert lead objects to / from JSON
+    def toJson(Lead lead) {
+        // Convert template properties to JSON
+        def json = [
+                id:         lead.id,
+                name:       lead.name,
+                address:    lead.address,
+                lat:        lead.latitude,
+                lng:        lead.longitude,
+                templateId: lead.templateData.template.id,
+                values:     []
+        ]
 
-    // Method to convert JSOn to Lead Domain Object
-    def fromJson(User user, def leadJson) {
-        Lead lead = null
-
-        // Get / create lead object
-        if (leadJson.id) {
-            // Validate lead access
-            lead = getForUserById(user, leadJson.id)
-            if (!lead) {
-                throw new navimateforbusiness.ApiException("Lead is unavailable", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-            }
-        } else if (leadJson.extId) {
-            lead = getForUserByExtId(user, leadJson.extId)
+        // Convert template values to JSON
+        def values = lead.templateData.values
+        values.each {value ->
+            json.values.push([fieldId: value.field.id, value: value.value])
         }
 
+        json
+    }
+
+    Lead fromJson(def json, User user) {
+        Lead lead = null
+
+        // Get existing template or create new
+        if (json.id) {
+            lead = getForUserById(user, json.id)
+            if (!lead) {
+                throw new navimateforbusiness.ApiException("Illegal access to lead", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            }
+        } else if (json.extId) {
+            lead = getForUserByExtId(user, json.extId)
+        }
+
+        // Create new lead object if not found
         if (!lead) {
-            // Create new
-            lead = new Lead([
+            lead = new Lead(
                     account: user.account,
                     manager: user,
                     visibility: navimateforbusiness.Visibility.PRIVATE,
                     isRemoved: false,
-                    extId: leadJson.extId
-            ])
+                    extId: json.extId
+            )
         }
 
-        // Assign values from JSON
-        lead.name = leadJson.name
+        // Set name
+        lead.name = json.name
 
         // Update address and latlng if changed
-        if (leadJson.address && lead.address != leadJson.address) {
-            // Get latlng from google for this address
-            String[] addresses = [leadJson.address]
-            def latlngs = googleApiService.geocode(addresses)
+        if (json.address && lead.address != json.address) {
+            lead.address = json.address
 
-            // Assign to lead
-            lead.address = leadJson.address
-            lead.latitude = latlngs[0].latitude
-            lead.longitude = latlngs[0].longitude
+            if (!json.lat || !json.lng) {
+                // Get latlng from google for this address
+                String[] addresses = [json.address]
+                def latlngs = googleApiService.geocode(addresses)
+                lead.latitude = latlngs[0].latitude
+                lead.longitude = latlngs[0].longitude
+            } else {
+                // Assign lat lng from JSON
+                lead.latitude = json.lat
+                lead.longitude = json.lng
+            }
         }
 
-        // Update template data
-        def template = templateService.getForUserById(user, leadJson.templateId)
-        lead.templateData = templateDataService.fromJson(leadJson.templateData, template, user)
+        // Prepare template data
+        if (!lead.templateData) {
+            lead.templateData = new Data(account: user.account, owner: user)
+        }
+        lead.templateData.template = templateService.getForUserById(user, json.templateId)
+
+        // Prepare values
+        json.values.each {valueJson ->
+            Value value = valueService.fromJson(valueJson, lead.templateData)
+
+            if (!value.id) {
+                lead.templateData.addToValues(value)
+            }
+        }
 
         lead
     }
