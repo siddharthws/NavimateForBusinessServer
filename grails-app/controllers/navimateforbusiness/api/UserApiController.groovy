@@ -190,15 +190,21 @@ class UserApiController {
      * Sends a notification to all representatives after closing the tasks.
      */
     def removeLeads() {
-        // Get Leads from JSON
-        JSONArray leadsJson = request.JSON.leads
-        leadsJson.each {leadJson ->
-            Lead lead = Lead.findById(leadJson.id)
+        // Get user
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get all leads of this user
+        def leads = leadService.getForUser(user)
+
+        // Iterate through IDs to be remove
+        request.JSON.ids.each {id ->
+            // Get lead with this id
+            Lead lead = leads.find {it -> it.id == id}
             if (!lead) {
-                throw new ApiException("Lead not found", Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Lead not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
-            // Mark remove flag in lead
+            // Update and save lead
             lead.isRemoved = true
             lead.save(flush: true, failOnError: true)
         }
