@@ -40,7 +40,11 @@ imagebutton, ib-filepicker {
     cursor: pointer;
     border: none;
     border-radius: 0.25em;
-    background: #37bcf2;
+    background-color: transparent;
+}
+
+ib-filepicker {
+    background-color: #37bcf2;
 }
 
 imagebutton:focus,
