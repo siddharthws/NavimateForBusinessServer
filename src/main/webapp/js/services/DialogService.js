@@ -199,4 +199,20 @@ app.service('DialogService', function($mdDialog) {
             }
         })
     }
+
+    /*
+     * Viewer dialogs for viewing different types of objects
+     */
+    this.teamViewer = function (id) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/TeamViewer.html',
+            controller: 'TeamViewerCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                id:  id
+            }
+        })
+    }
 })

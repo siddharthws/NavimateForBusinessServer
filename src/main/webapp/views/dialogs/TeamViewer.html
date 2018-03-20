@@ -1,0 +1,35 @@
+
+<md-dialog class="dialog-container py-3 px-5">
+    <!-- Main container for user information -->
+    <div class="fbx-v">
+        <!-- Dialog Title -->
+        <h4><b>{{vm.obj.name}}</b></h4>
+
+        <!-- Error / Waiting UI -->
+        <div ng-if="vm.bLoading || vm.bLoadError" class="align-self-center">
+            <!-- Waiting Spinner -->
+            <div class="fbx-h fbx-center-children" ng-if="vm.bLoading">
+                <loader></loader>
+                <h4 class="ml-1 text-grey">Loading...</h4>
+            </div>
+
+            <!-- Error UI -->
+            <div class="fbx-h fbx-center-children" ng-if="vm.bLoadError">
+                <img src="/static/images/ic_smiley_sad.png">
+                <h4 class="ml-1 text-grey">Could not get data...</h4>
+            </div>
+        </div>
+
+        <!-- Dialog Content -->
+        <div class="fbx-h flex-1 overflow-auto mt-2 dialog-editor-content" ng-if="!vm.bLoading && !vm.bLoadError">
+            <!-- Name -->
+            <text-box class="mr-4" label="Name" text="{{vm.obj.name}}"></text-box>
+
+            <!-- Phone -->
+            <text-box label="Phone" text="{{'+' + vm.obj.countryCode + '-' + vm.obj.phone}}"></text-box>
+        </div>
+
+        <!-- Close Buttons -->
+        <button class="btn align-self-end" ng-click="vm.close()">Close</button>
+    </div>
+</md-dialog>
