@@ -1,0 +1,52 @@
+
+<md-dialog class="dialog-container py-3 px-5 w-50 h-75">
+    <!-- Main container for user information -->
+    <div class="fbx-v h-100">
+        <!-- Dialog Title -->
+        <h4><b>{{vm.obj.name}}</b></h4>
+
+        <!-- Error / Waiting UI -->
+        <div ng-if="vm.bLoading || vm.bLoadError" class="align-self-center">
+            <!-- Waiting Spinner -->
+            <div class="fbx-h fbx-center-children" ng-if="vm.bLoading">
+                <loader></loader>
+                <h4 class="ml-1 text-grey">Loading...</h4>
+            </div>
+
+            <!-- Error UI -->
+            <div class="fbx-h fbx-center-children" ng-if="vm.bLoadError">
+                <img src="/static/images/ic_smiley_sad.png">
+                <h4 class="ml-1 text-grey">Could not get data...</h4>
+            </div>
+        </div>
+
+        <!-- Dialog Content -->
+        <div class="fbx-v flex-1 overflow-auto mt-2 dialog-editor-content" ng-if="!vm.bLoading && !vm.bLoadError">
+            <!-- Name -->
+            <text-box class="mr-4" label="Lead" text="{{vm.obj.name}}"></text-box>
+
+            <div class="fbx-h mt-2">
+                <!-- Location View Button -->
+                <imagebutton class="align-self-center" image="/static/images/icon_location_grey.png" b-transparent="true" ng-click="vm.viewLocation()"></imagebutton>
+
+                <!-- Address -->
+                <text-box label="Address" text="{{vm.obj.address}}"></text-box>
+            </div>
+
+            <!-- Template Name -->
+            <text-box class="mr-4 mt-2" label="Template" text="{{vm.obj.template.name}}"></text-box>
+
+            <!-- Template Params -->
+            <div class="fbx-h mt-2 flex-wrap">
+                <!-- Template values -->
+                <div ng-repeat="value in vm.obj.values" class="mr-4 mt-2">
+                    <!-- Values with string display -->
+                    <text-box label="{{value.field.title}}" text="{{value.getString()}}"></text-box>
+                </div>
+            </div>
+        </div>
+
+        <!-- Close Buttons -->
+        <button class="btn align-self-end" ng-click="vm.close()">Close</button>
+    </div>
+</md-dialog>
