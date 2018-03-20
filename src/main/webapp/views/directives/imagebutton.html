@@ -1,9 +1,9 @@
 <!-- View for image button directive -->
 <div class="d-flex py-1 px-2 align-items-center justify-content-center"
-     md-ink-ripple="#FFFFFF">
+     ng-class="{'bg-primary-blue': !bTransparent}" md-ink-ripple="#888888">
     <!-- Icon -->
-    <img ng-src="{{image}}" class="ib-base ib-s">
+    <img ng-if="image" ng-src="{{image}}" class="ib-base ib-s">
 
     <!-- Text -->
-    <span ng-if="text" class="ml-2 text-nowrap text-white">{{text}}</span>
+    <span ng-if="text" class="ml-2 text-nowrap" ng-class="{'text-white': !bTransparent, 'text-grey': bTransparent}">{{text}}</span>
 </div>

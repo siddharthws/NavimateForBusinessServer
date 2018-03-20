@@ -51,8 +51,9 @@ app.directive("fileread", function () {
 app.directive("imagebutton", function () {
     return {
         scope: {
-            image: "@",
-            text: "@"
+            image:          "@",
+            text:           "@",
+            bTransparent:   "@"
         },
         templateUrl: '/static/views/directives/imagebutton.html'
     }
