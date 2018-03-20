@@ -32,6 +32,7 @@ class UrlMappings {
         "/api/manager/team/export"       (controller: "ManagerApi") {action = [POST: "exportTeam"]}
 
         // Lead Related APIs
+        "/api/manager/leads/getByIds"    (controller: "ManagerApi") {action = [POST: "getLeadsById"]}
         "/api/manager/leads/getTable"    (controller: "ManagerApi") {action = [POST: "getLeadTable"]}
         "/api/manager/leads/getIds"      (controller: "ManagerApi") {action = [POST: "getLeadIds"]}
         "/api/manager/leads/search"      (controller: "ManagerApi") {action = [POST: "searchLeads"]}
