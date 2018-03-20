@@ -53,6 +53,11 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
                 }
             )
     }
+
+    // Attach Admin Checker API
+    $scope.isAdmin = function () {
+        return $localStorage.role == Constants.Role.ADMIN
+    }
     
     $scope.changePassword = function () {
         DialogService.changePassword()

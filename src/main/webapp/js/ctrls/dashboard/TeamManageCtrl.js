@@ -87,9 +87,5 @@ app.controller("TeamManageCtrl", function ( $scope, $rootScope, $http, $localSto
             })
     }
 
-    vm.isAdmin = function () {
-        return $localStorage.role == Constants.Role.ADMIN
-    }
-
     /* ------------------------------- Local APIs -----------------------------------*/
 })
