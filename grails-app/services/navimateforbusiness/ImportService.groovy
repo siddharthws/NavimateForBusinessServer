@@ -96,14 +96,8 @@ class ImportService {
             name: name,
             address: address,
             templateId: template.id,
-            templateData: parseTemplateData(columns, row, template, rowIdx)
+            values: parseTemplateData(columns, row, template, rowIdx)
         ]
-
-        // Add id to template data if applicable
-        def lead = leadService.getForUserByExtId(user, extId)
-        if (lead) {
-            leadJson.templateData.put("id", lead.templateData.id)
-        }
 
         leadJson
     }
@@ -112,7 +106,7 @@ class ImportService {
     private def parseTemplateData(def columns, def row, Template template, int rowIdx) {
 
         // Iterate through template fields
-        def templateData = [:]
+        def templateData = []
         def fields = fieldService.getForTemplate(template)
         fields.each {field ->
             int colIdx = columns.indexOf(field.title)
@@ -208,7 +202,7 @@ class ImportService {
             }
 
             // Add key value pair to map
-            templateData.put(field.title, value)
+            templateData.push([fieldId: field.id, value: value])
         }
 
         return templateData

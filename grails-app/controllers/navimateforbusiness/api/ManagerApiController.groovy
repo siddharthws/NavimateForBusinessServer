@@ -79,6 +79,47 @@ class ManagerApiController {
     }
 
     // ----------------------- LEAD APIs ----------------------- //
+    def getLeadsById () {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // get tasks for this user
+        def leads = leadService.getForUser(user)
+
+        // Find tasks with given IDs
+        def selectedLeads = []
+        request.JSON.ids.each {id -> selectedLeads.push(leads.find {it -> it.id == id}) }
+
+        // Throw exception if all tasks not found
+        if (selectedLeads.size() != request.JSON.ids.size()) {
+            throw new ApiException("Invalid lead IDs requested", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Prepare JSON response
+        def resp = []
+        selectedLeads.each {lead -> resp.push(leadService.toJson(lead))}
+
+        render resp as JSON
+    }
+
+    def editLeads() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Parse task JSON to task objects
+        def leads = []
+        request.JSON.leads.each {leadJson ->
+            leads.push(leadService.fromJson(leadJson, user))
+        }
+
+        // Save tasks
+        leads.each {it -> it.save(flush: true, failOnError: true)}
+
+        // Return response
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     def getLeadTable() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -223,7 +264,7 @@ class ManagerApiController {
 
         // Parse each JSON object into Lead object
         def leads = []
-        leadsJson.each {leadJson -> leads.push(leadService.fromJson(user, leadJson))}
+        leadsJson.each {leadJson -> leads.push(leadService.fromJson(leadJson, user))}
 
         // Save each lead
         leads.each {lead -> lead.save(flush: true, failOnError: true)}
