@@ -128,6 +128,20 @@ app.directive('inputBox', function () {
     }
 })
 
+// Directive for table pagination
+app.directive('textBox', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            label:      '@',
+            text:       '@'
+        },
+        // view
+        templateUrl: '/static/views/directives/textBox.html'
+    }
+})
+
 // Search dropdown to select something
 app.directive('searchSelect', function () {
     return {
