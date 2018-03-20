@@ -10,6 +10,30 @@ app.factory('ObjValue', function(TemplateService) {
     }
 
     // ----------------------------------- Public APIs ------------------------------------//
+    // Method to get a string value
+    ObjValue.prototype.getString = function () {
+        // Parse string for specific types
+        switch (this.field.type) {
+            case Constants.Template.FIELD_TYPE_RADIOLIST:
+                return this.value.options[this.value.selection]
+            case Constants.Template.FIELD_TYPE_CHECKLIST:
+                var valueString = ""
+                this.value.forEach(function (option) {
+                    if (option.selection) {
+                        if (!valueString) {
+                            valueString += option.name
+                        } else {
+                            valueString += ', ' + option.name
+                        }
+                    }
+                })
+                return valueString
+        }
+
+        // Return stored value by default
+        return this.value
+    }
+
     // ----------------------------------- Private APIs ------------------------------------//
     // ----------------------------------- Static APIs ------------------------------------//
     // Methods to convert between Frontend Field Object and JSON

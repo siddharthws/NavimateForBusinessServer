@@ -56,7 +56,6 @@ Statics.getValueFromString = function (valueString, fieldType) {
         case Constants.Template.FIELD_TYPE_CHECKLIST:
             if (value.length) {
                 value = JSON.parse(value)
-                console.log("Value = " + JSON.stringify(value))
             }
             break
         case Constants.Template.FIELD_TYPE_CHECKBOX:
