@@ -68,19 +68,9 @@ app.controller("LeadManageCtrl", function ( $scope, $rootScope, $http, $localSto
 
     // APIs for actions in dropdown
     vm.remove = function() {
-        // Get owned leads from selection
-        var ownedLeads = getOwnedLeadsFromSelection()
-
-        if (!ownedLeads.length) {
-            ToastService.toast("You do not have permission to remove any of the selected leads.")
-            return
-        } else if (vm.table.selectedRows.length > ownedLeads.length) {
-            ToastService.toast("You do not have permission to remove some of the selected leads. Removing from selection.")
-        }
-
         // Launch Confirm Dialog
         DialogService.confirm(
-            "Are you sure you want to remove " + ownedLeads.length + " leads ?",
+            "Are you sure you want to remove " + vm.table.selectedRows.length + " leads ?",
             function () {
                 $rootScope.showWaitingDialog("Please wait while we are removing leads...")
                 // Make Http call to remove leads
@@ -91,7 +81,7 @@ app.controller("LeadManageCtrl", function ( $scope, $rootScope, $http, $localSto
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        leads: ownedLeads
+                        ids: vm.table.getSelectedIds()
                     }
                 }).then(
                     function (response) {
@@ -111,31 +101,15 @@ app.controller("LeadManageCtrl", function ( $scope, $rootScope, $http, $localSto
     }
 
     vm.edit = function () {
-        // Get owned leads from selection
-        var ownedLeads = getOwnedLeadsFromSelection()
-
-        if (!ownedLeads.length) {
-            ToastService.toast("You do not have permission to edit any of the selected leads.")
-            return
-        } else if (vm.table.selectedRows.length > ownedLeads.length) {
-            ToastService.toast("You do not have permission to edit some of the selected leads. Removing from selection.")
-        }
+        var ids = vm.table.getSelectedIds()
+        var leads = []
+        ids.forEach(function (id) {
+            leads.push($rootScope.getLeadById(id))
+        })
 
         //Launch Leads-Editor dialog
-        DialogService.leadEditor(ownedLeads, vm.sync)
+        DialogService.leadEditor(leads, vm.sync)
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/
-    function getOwnedLeadsFromSelection() {
-        var ownedLeads = []
-        vm.table.selectedRows.forEach(function (row) {
-            var lead = $rootScope.getLeadById(row.id)
-            if ((lead.ownerId == $localStorage.id) ||
-                ($localStorage.role == Constants.Role.ADMIN)) {
-                ownedLeads.push(lead)
-            }
-        })
-
-        return ownedLeads
-    }
 })
