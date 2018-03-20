@@ -125,6 +125,14 @@
                                          ng-model="value.value" ng-class="{'cb-white': selectedLead == lead}">
                             </md-checkbox>
                         </div>
+                        <!-- Date Field -->
+                        <div ng-if="$root.getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_DATE"
+                             class="d-flex align-items-center">
+                            <span>{{$root.getFieldById(value.fieldId).title}}:</span>
+                            <datepicker class="flex-1"
+                                        hint="Choose Date" model-format="yyyy-MM-dd" display-format="MM/dd/yyyy"
+                                        date-model="value.value"></datepicker>
+                        </div>
                     </div>
                 </div>
             </div>
