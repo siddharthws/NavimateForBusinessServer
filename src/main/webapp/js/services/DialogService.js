@@ -178,6 +178,7 @@ app.service('DialogService', function($mdDialog) {
         $mdDialog.show({    templateUrl: '/static/views/dialogs/LocationViewer.html',
                             controller: 'LocationViewerCtrl',
                             clickOutsideToClose: true,
+                            multiple: true,
                             locals: {
                                 locations: locations
                             }
@@ -221,6 +222,19 @@ app.service('DialogService', function($mdDialog) {
         $mdDialog.show({
             templateUrl: '/static/views/dialogs/TaskViewer.html',
             controller: 'TaskViewerCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                id:  id
+            }
+        })
+    }
+
+    this.leadViewer = function (id) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/LeadViewer.html',
+            controller: 'LeadViewerCtrl as vm',
             clickOutsideToClose: true,
             multiple: true,
             locals: {
