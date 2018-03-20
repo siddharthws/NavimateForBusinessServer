@@ -215,4 +215,17 @@ app.service('DialogService', function($mdDialog) {
             }
         })
     }
+
+    this.taskViewer = function (id) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/TaskViewer.html',
+            controller: 'TaskViewerCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                id:  id
+            }
+        })
+    }
 })

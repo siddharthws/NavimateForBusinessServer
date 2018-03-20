@@ -233,6 +233,13 @@ Constants.Task = {
     STATUS_CLOSED:  2
 }
 
+// Status names
+Constants.Task.STATUS_NAME = [
+    "",
+    "OPEN",
+    "CLOSED"
+]
+
 /* ------------------------------- Template -----------------------------------*/
 Constants.Template = {
     // Template Types
