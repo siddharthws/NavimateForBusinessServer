@@ -35,7 +35,7 @@ app.controller('TablePickerCtrl', function ($scope, $mdDialog,
         var row = vm.table.selectedRows[0]
 
         // Trigger callback
-        cb(row)
+        cb(row.id, row.name)
 
         // Close this dialog
         vm.close()
