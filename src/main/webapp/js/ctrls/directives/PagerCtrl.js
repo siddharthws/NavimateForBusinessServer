@@ -22,19 +22,16 @@ app.controller('PagerCtrl', function ($scope, $timeout) {
         // Update current page
         vm.currentPage = pageNum
 
-        // Refresh visible pages
-        refreshDisplay()
+        // Refresh pages if current page is not visible
+        if (vm.visiblePages.indexOf(vm.currentPage) == -1) {
+            refreshDisplay()
+        }
 
         // Trigger callback
         $scope.onPageChanged({page: pageNum})
     }
     /* ------------------------------ Private APIs --------------------------------- */
     function refreshDisplay() {
-        // If visible page nums contains current page, ignore
-        if (vm.visiblePages.indexOf(vm.currentPage) != -1) {
-            return
-        }
-
         // Get closest 5 pages
         var visibleCount = 5
         var firstPage = vm.currentPage
