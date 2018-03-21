@@ -1,0 +1,23 @@
+<!-- Dropdown with Label -->
+<div class="fbx-v pos-r">
+    <!-- Label -->
+    <span class="text-label" ng-if="label">{{label}}</span>
+
+    <!-- Dropdown Button -->
+    <div class="fbx-h input-box input-lg" ng-click="vm.bShowDropdown = true">
+        <!-- Currently selected item name -->
+        <span>{{vm.selection.name}}</span>
+
+        <!-- Dropdown Icon -->
+        <img ng-src="/static/images/icon_dropdown.png" class="ib-base ib-s ml-2">
+    </div>
+
+    <!-- Dropdown window -->
+    <div class="list list-dropdown" ng-if="vm.bShowDropdown">
+        <!-- List of items -->
+        <div class="li li-dropdown" ng-repeat="item in items"
+             ng-click="vm.onItemSelected($index)">
+            {{item.name}}
+        </div>
+    </div>
+</div>

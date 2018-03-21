@@ -143,8 +143,38 @@ app.directive('textBox', function () {
     }
 })
 
+// dropdown to select from a list of items
+app.directive('dropdown', function ($timeout) {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            label:       '@',
+            items:       '=',
+            onSelect:    '&'
+        },
+        // Controller and view
+        controller: 'DropdownCtrl as vm',
+        templateUrl: '/static/views/directives/dropdown.html',
+        // Link function
+        link: function (scope, element, attrs, vm) {
+            // Set dropdown hide listener on clicking anywhere outside the directive
+            $('body').on('click', function (e) {
+                if (vm.bShowDropdown) {
+                    var $element = $(element)
+                    if (!$element.is(e.target) && !$element.has(e.target).length) {
+                        $timeout(function () {
+                            vm.bShowDropdown = false
+                        }, 0)
+                    }
+                }
+            })
+        }
+    }
+})
+
 // Search dropdown to select something
-app.directive('searchSelect', function () {
+app.directive('searchSelect', function ($timeout) {
     return {
         restrict: 'E',
         // Isolated scope with attributes
@@ -170,7 +200,9 @@ app.directive('searchSelect', function () {
                 if (vm.bShowDropdown) {
                     var $element = $(element)
                     if (!$element.is(e.target) && !$element.has(e.target).length) {
-                        vm.bShowDropdown = false
+                        $timeout(function () {
+                            vm.bShowDropdown = false
+                        }, 0)
                     }
                 }
             })
