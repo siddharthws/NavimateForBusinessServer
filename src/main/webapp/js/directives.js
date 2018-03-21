@@ -194,3 +194,19 @@ app.directive('pager', function () {
         templateUrl: '/static/views/directives/pager.html'
     }
 })
+
+// Directive for picking / viewing objects
+app.directive('pickNView', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            label:      '@',
+            text:       '=',
+            onPick:     '&',
+            onView:     '&'
+        },
+        // Controller and view
+        templateUrl: '/static/views/directives/pickNView.html'
+    }
+})

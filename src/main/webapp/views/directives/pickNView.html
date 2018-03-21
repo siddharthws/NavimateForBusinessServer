@@ -1,0 +1,13 @@
+<!-- Object picker with Label -->
+<div class="fbx-v">
+    <!-- Label -->
+    <span class="text-label">{{label}}</span>
+
+    <div class="fbx-h">
+        <!-- View Button -->
+        <imagebutton ng-if="text.length" text="{{text}}" ng-click="onView()" b-transparent="true"></imagebutton>
+
+        <!-- Pick Button -->
+        <imagebutton class="ml-1" image="/static/images/icon_edit.png" ng-click="onPick()" b-transparent="true" text="{{text.length ? '' : 'Pick'}}"></imagebutton>
+    </div>
+</div>
