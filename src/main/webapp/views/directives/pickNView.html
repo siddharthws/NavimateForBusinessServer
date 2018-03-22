@@ -3,11 +3,16 @@
     <!-- Label -->
     <span class="text-label">{{label}}</span>
 
-    <div class="fbx-h box-bordered box-sm">
+    <div class="fbx-h box box-sm"
+         ng-class="{'box-bordered': !bShowError || err.length == 0,
+                    'box-error': bShowError && err.length > 0}">
         <!-- View Button -->
         <imagebutton ng-if="text.length" text="{{text}}" ng-click="onView()" b-transparent="true"></imagebutton>
 
         <!-- Pick Button -->
         <imagebutton class="ml-1" image="/static/images/icon_edit.png" ng-click="onPick()" b-transparent="true" text="{{text.length ? '' : 'Pick'}}"></imagebutton>
     </div>
+
+    <!-- Error Text -->
+    <span class="text-error align-self-end" ng-if="bShowError && err.length > 0">{{err}}</span>
 </div>

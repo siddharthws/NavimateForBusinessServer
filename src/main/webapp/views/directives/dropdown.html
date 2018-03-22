@@ -4,13 +4,19 @@
     <span class="text-label" ng-if="label">{{label}}</span>
 
     <!-- Dropdown Button -->
-    <div class="fbx-h input-box input-lg">
+    <div class="fbx-h input-box input-lg"
+         ng-class="{'err': bShowError && err.length > 0}">
         <!-- Currently selected item name -->
         <span>{{text}}</span>
 
         <!-- Dropdown Icon -->
         <img ng-src="/static/images/icon_dropdown.png" class="ib-base ib-s ml-2">
     </div>
+
+    <!-- Error Text -->
+    <span class="text-error align-self-end" ng-if="bShowError && err.length > 0">
+        {{err}}
+    </span>
 
     <!-- Dropdown window -->
     <div class="list list-dropdown" ng-if="bShowDropdown">

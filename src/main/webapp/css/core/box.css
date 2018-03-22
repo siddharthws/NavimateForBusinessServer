@@ -1,12 +1,19 @@
 /*
  * Styling classes for different types of boxes around elements
  */
-.box-bordered {
-    border: solid 1px darkgray;
+.box {
     border-radius: 0.15em;
     padding: 0.5em;
 }
 
 .box-sm {
     padding: 0.1em;
+}
+
+.box-bordered {
+    border: solid 1px darkgray;
+}
+
+.box-error {
+    border: solid 1px red;
 }

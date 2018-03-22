@@ -27,6 +27,49 @@ app.factory('ObjLead', function(TemplateService, ObjValue) {
         return new ObjLead(this.id, this.name, this.address, this.lat, this.lng, this.template, values)
     }
 
+    // ----------------------------------- Validation APIs ------------------------------------//
+    ObjLead.prototype.isValid = function () {
+        if (this.getNameErr().length) {
+            return false
+        }
+        if (this.getAddressErr().length) {
+            return false
+        }
+        if (this.getTemplateErr().length) {
+            return false
+        }
+        for (var i = 0; i < this.values.length; i++) {
+            if (this.values[0].getErr().length > 0) {
+                return false
+            }
+        }
+        return true
+    }
+
+    ObjLead.prototype.getNameErr = function () {
+        if (!this.name) {
+            return 'Set a name'
+        }
+
+        return ''
+    }
+
+    ObjLead.prototype.getAddressErr = function () {
+        if (!this.address || (!this.lat && !this.lng)) {
+            return 'Select an address from map'
+        }
+
+        return ''
+    }
+
+    ObjLead.prototype.getTemplateErr = function () {
+        if (!this.template) {
+            return 'Select a template'
+        }
+
+        return ''
+    }
+
     // ----------------------------------- Private APIs ------------------------------------//
     // ----------------------------------- Static APIs ------------------------------------//
     // Methods to convert between Frontend Field Object and JSON

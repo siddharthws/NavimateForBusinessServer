@@ -8,15 +8,14 @@
 
         <!-- Number Field Editor -->
         <input-box ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_NUMBER"
-                   label="{{value.field.title}}" model="value.value" b-number="true"></input-box>
+                   label="{{value.field.title}}" model="value.value" b-number="true"
+                   b-show-error="bShowError" err="value.getErr()"></input-box>
 
         <!-- Checkbox Field Editor -->
         <div class="fbx-v"
              ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_CHECKBOX">
             <span class="text-label">{{value.field.title}}</span>
-            <div class="box-bordered">
-                <md-checkbox ng-value="value.field.title"  ng-model="value.value"></md-checkbox>
-            </div>
+            <md-checkbox ng-value="value.field.title"  ng-model="value.value"></md-checkbox>
         </div>
 
         <!-- Radiolist Field Editor -->

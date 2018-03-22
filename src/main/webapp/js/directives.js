@@ -152,7 +152,9 @@ app.directive('dropdown', function ($timeout) {
             label:       '@',
             text:        '=',
             items:       '=',
-            onSelect:    '&'
+            onSelect:    '&',
+            bShowError:  '=',
+            err:         '='
         },
         // Controller and view
         templateUrl: '/static/views/directives/dropdown.html',
@@ -254,7 +256,9 @@ app.directive('pickNView', function () {
             label:      '@',
             text:       '=',
             onPick:     '&',
-            onView:     '&'
+            onView:     '&',
+            bShowError: '=',
+            err:        '='
         },
         // Controller and view
         templateUrl: '/static/views/directives/pickNView.html'
@@ -295,6 +299,7 @@ app.directive('templateValuesEditor', function () {
         restrict: 'E',
         // Isolated scope with attributes
         scope: {
+            bShowError:  '=',
             values:      '='
         },
         // Controller and view

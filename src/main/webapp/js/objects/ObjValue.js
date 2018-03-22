@@ -34,6 +34,33 @@ app.factory('ObjValue', function(TemplateService) {
         return this.value
     }
 
+    // Method to validate the value
+    ObjValue.prototype.getErr = function () {
+        var err = ""
+
+        switch (this.field.type) {
+            case Constants.Template.FIELD_TYPE_TEXT:
+            case Constants.Template.FIELD_TYPE_CHECKBOX:
+            case Constants.Template.FIELD_TYPE_RADIOLIST:
+            case Constants.Template.FIELD_TYPE_CHECKLIST:
+            case Constants.Template.FIELD_TYPE_PHOTO:
+            case Constants.Template.FIELD_TYPE_SIGN:
+            case Constants.Template.FIELD_TYPE_LOCATION:
+            case Constants.Template.FIELD_TYPE_DATE:
+                // No Validation
+                break
+            case Constants.Template.FIELD_TYPE_NUMBER:
+                if (!Statics.validateNumber(this.value)) {
+                    err = 'Cannot be empty'
+                }
+                break
+            default:
+                err = "Invalid Field Type"
+        }
+
+        return err
+    }
+
     // ----------------------------------- Private APIs ------------------------------------//
     // ----------------------------------- Static APIs ------------------------------------//
     // Methods to convert between Frontend Field Object and JSON
