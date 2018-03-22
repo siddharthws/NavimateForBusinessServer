@@ -288,3 +288,16 @@ app.directive('radiolist', function () {
         templateUrl: '/static/views/directives/radiolist.html'
     }
 })
+
+// Directive to edit template values array
+app.directive('templateValuesEditor', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            values:      '='
+        },
+        // Controller and view
+        templateUrl: '/static/views/directives/templateValuesEditor.html'
+    }
+})
