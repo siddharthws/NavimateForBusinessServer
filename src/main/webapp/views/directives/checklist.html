@@ -4,8 +4,10 @@
     <span class="text-label" ng-if="label">{{label}}</span>
 
     <!-- Checklist -->
-    <div class="fbx-h" ng-repeat="option in value track by $index">
-        <md-checkbox ng-value="option.name" ng-model="option.selection"></md-checkbox>
-        <span class="ml-2">{{option.name}}</span>
+    <div class="box-bordered">
+        <div class="fbx-h" ng-repeat="option in value track by $index">
+            <md-checkbox ng-value="option.name" ng-model="option.selection"></md-checkbox>
+            <span class="ml-2">{{option.name}}</span>
+        </div>
     </div>
 </div>
