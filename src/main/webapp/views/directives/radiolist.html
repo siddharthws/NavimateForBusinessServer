@@ -4,7 +4,7 @@
     <span class="text-label" ng-if="label">{{label}}</span>
 
     <!-- Radiolist -->
-    <md-radio-group ng-model="value.selection" class="box-bordered">
+    <md-radio-group ng-model="value.selection" class="box box-bordered">
         <div class="fbx-h" ng-repeat="option in value.options track by $index">
             <md-radio-button ng-value="$index"></md-radio-button>
             <span class="text-grey text-bold">{{option}}</span>

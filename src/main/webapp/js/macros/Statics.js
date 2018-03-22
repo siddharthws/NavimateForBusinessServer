@@ -86,3 +86,12 @@ Statics.getStringFromValue = function (value, fieldType) {
     // Return Value object
     return valueString
 }
+
+// Method to validate a number input
+Statics.validateNumber = function (num) {
+    if ((!num && num != 0) || (num == 'null')) {
+        return false
+    }
+
+    return true
+}

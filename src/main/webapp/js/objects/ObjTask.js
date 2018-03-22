@@ -32,6 +32,71 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         return new ObjTask(this.id, lead, rep, this.status, this.period, this.formTemplate, this.template, values)
     }
 
+    // ----------------------------------- Validation APIs ------------------------------------//
+    ObjTask.prototype.isValid = function () {
+        if (this.getLeadErr().length) {
+            return false
+        }
+        if (this.getRepErr().length) {
+            return false
+        }
+        if (this.getPeriodErr().length) {
+            return false
+        }
+        if (this.getFormErr().length) {
+            return false
+        }
+        if (this.getTemplateErr().length) {
+            return false
+        }
+        for (var i = 0; i < this.values.length; i++) {
+            if (this.values[0].getErr().length > 0) {
+                return false
+            }
+        }
+        return true
+    }
+
+    ObjTask.prototype.getLeadErr = function () {
+        if (!this.lead) {
+            return 'Select a lead'
+        }
+
+        return ''
+    }
+
+    ObjTask.prototype.getRepErr = function () {
+        if (!this.rep) {
+            return 'Select a rep'
+        }
+
+        return ''
+    }
+
+    ObjTask.prototype.getPeriodErr = function () {
+        if (!Statics.validateNumber(this.period)) {
+            return 'Cannot be empty'
+        }
+
+        return ''
+    }
+
+    ObjTask.prototype.getFormErr = function () {
+        if (!this.formTemplate) {
+            return 'Select a form'
+        }
+
+        return ''
+    }
+
+    ObjTask.prototype.getTemplateErr = function () {
+        if (!this.template) {
+            return 'Select a template'
+        }
+
+        return ''
+    }
+
     // ----------------------------------- Private APIs ------------------------------------//
     // ----------------------------------- Static APIs ------------------------------------//
     // Methods to convert between Frontend Field Object and JSON
