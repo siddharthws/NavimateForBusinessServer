@@ -150,23 +150,41 @@ app.directive('dropdown', function ($timeout) {
         // Isolated scope with attributes
         scope: {
             label:       '@',
+            text:        '=',
             items:       '=',
             onSelect:    '&'
         },
         // Controller and view
-        controller: 'DropdownCtrl as vm',
         templateUrl: '/static/views/directives/dropdown.html',
         // Link function
         link: function (scope, element, attrs, vm) {
+            // init dropdown flag
+            scope.bShowDropdown = false
+
             // Set dropdown hide listener on clicking anywhere outside the directive
             $('body').on('click', function (e) {
-                if (vm.bShowDropdown) {
-                    var $element = $(element)
-                    if (!$element.is(e.target) && !$element.has(e.target).length) {
-                        $timeout(function () {
-                            vm.bShowDropdown = false
-                        }, 0)
+                var $element = $(element)
+
+                // Check if a child of this element was clicked
+                var bShow = false
+                if ($element.is(e.target) || $element.has(e.target).length) {
+                    if ($(e.target).hasClass('li-dropdown')) {
+                        // Close dropdown if a list item was clicked
+                        bShow = !scope.bShowDropdown
+                    } else {
+                        // Show dropdown
+                        bShow = true
                     }
+                } else {
+                    // Hide dropdown
+                    bShow = false
+                }
+
+                // Update using digest cycle
+                if (scope.bShowDropdown != bShow) {
+                    $timeout(function () {
+                        scope.bShowDropdown = bShow
+                    }, 0)
                 }
             })
         }
