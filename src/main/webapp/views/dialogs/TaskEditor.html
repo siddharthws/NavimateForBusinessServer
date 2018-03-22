@@ -1,0 +1,78 @@
+<!-- HTML template for Task Editor Dialog -->
+<md-dialog class="dialog-container w-100 h-100">
+    <!-- Main container -->
+    <div class="fbx-h w-100 h-100">
+        <!-- Content for left side of dialog -->
+        <div class="fbx-h w-75 h-100 dialog-editor-content fbx-center-children">
+            <!-- Error Waiting UI -->
+            <div class="fbx-h">
+                <!-- Waiting Spinner -->
+                <div class="fbx-h fbx-center-children" ng-if="vm.bLoading">
+                    <loader class="loader-l"></loader>
+                    <h4 class="ml-1 text-grey">Loading tasks...</h4>
+                </div>
+
+                <!-- Error UI -->
+                <div class="fbx-h fbx-center-children" ng-if="vm.bLoadError">
+                    <img src="/static/images/ic_smiley_sad.png">
+                    <h4 class="ml-1 text-grey">Could not get tasks...</h4>
+                </div>
+            </div>
+
+            <!-- Task information form -->
+            <div class="fbx-v w-100 h-100 overflow-auto align-items-start" ng-if="!vm.bLoading && !vm.bLoadError">
+                <div class="fbx-h">
+                    <!-- Lead -->
+                    <pick-n-view class="mr-4" label="Lead" text="vm.selectedTask.lead.name" on-pick="vm.pickLead()" on-view="vm.viewLead()"
+                                 b-show-error="vm.bInputError" err="vm.selectedTask.getLeadErr()"></pick-n-view>
+
+                    <!-- Representative -->
+                    <pick-n-view label="Representative" text="vm.selectedTask.rep.name" on-pick="vm.pickRep()" on-view="vm.viewRep()"
+                                 b-show-error="vm.bInputError" err="vm.selectedTask.getRepErr()"></pick-n-view>
+                </div>
+
+                <div class="fbx-h mt-2">
+                    <!-- Form template -->
+                    <dropdown class="mr-4" label="Form" text="vm.selectedTask.formTemplate.name" items="vm.formTemplates" on-select="vm.updateFormTemplate(id)"
+                              b-show-error="vm.bInputError" err="vm.selectedTask.getFormErr()"></dropdown>
+
+                    <!-- Period -->
+                    <input-box label="Renew In (days)" model="vm.selectedTask.period" b-number="true" b-small="true" hint="0"
+                               b-show-error="vm.bInputError" err="vm.selectedTask.getPeriodErr()"></input-box>
+                </div>
+
+                <!-- Template -->
+                <dropdown class="mt-2" label="Template" text="vm.selectedTask.template.name" items="vm.taskTemplates" on-select="vm.updateTemplate(id)"
+                          b-show-error="vm.bInputError" err="vm.selectedTask.getTemplateErr()"></dropdown>
+
+                <!-- Template Values -->
+                <template-values-editor class="px-2 mt-2" values="vm.selectedTask.values" b-show-error="vm.bInputError"></template-values-editor>
+            </div>
+        </div>
+
+        <!-- Content for right side of dialog -->
+        <div class="fbx-v w-25 h-100 ml-neg">
+            <!-- Dialog title -->
+            <h4 class="align-self-end"><u>Task Editor</u></h4>
+
+            <!-- Add new button -->
+            <imagebutton class="m-1" image="/static/images/ic_add_white.png" text="Add New" ng-click="vm.add()"></imagebutton>
+
+            <!-- Item List -->
+            <div class="list list-blend flex-1">
+                <div class="li li-blend d-flex justify-content-between" ng-repeat="task in vm.tasks"
+                     ng-class="{'active': vm.selectedTask == task, 'err': vm.bInputError && !task.isValid()}"
+                     ng-click="vm.selectedTask = task" md-ink-ripple="#000000">
+                    <span class="ml-2 text-ellipsize" >{{($index + 1) + ". " + task.lead.name}}</span>
+                    <input type="button" value="" class="ib-base ib-s ib-hover ib-cross" ng-click="vm.remove($index); $root.Statics.absorbEvent($event)"/>
+                </div>
+            </div>
+
+            <!-- Dialog buttons -->
+            <div class="d-flex">
+                <button class="btn btn-primary flex-1" ng-click="vm.save()">Save</button>
+                <button class="btn flex-1" ng-click="vm.close()">Close</button>
+            </div>
+        </div>
+    </div>
+</md-dialog>

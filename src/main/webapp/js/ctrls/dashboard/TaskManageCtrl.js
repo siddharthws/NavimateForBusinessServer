@@ -16,7 +16,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     /*-------------------------------- Scope APIs --------------------------------*/
     vm.add = function () {
         // Launch Task Creator dialog
-        DialogService.taskCreator(null, vm.sync)
+        DialogService.taskEditor(null, vm.sync)
     }
 
     // APIs for table based actions
@@ -41,7 +41,7 @@ app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStor
     }
 
     vm.edit = function () {
-        DialogService.taskCreator(vm.table.getSelectedIds(), vm.sync)
+        DialogService.taskEditor(vm.table.getSelectedIds(), vm.sync)
     }
 
     vm.close = function () {
