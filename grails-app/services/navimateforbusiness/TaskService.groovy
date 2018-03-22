@@ -88,10 +88,10 @@ class TaskService {
         task.formTemplate = templateService.getForUserById(user, json.formTemplateId)
 
         // Prepare template data
-        if (!task.templateData) {
-            task.templateData = new Data(account: user.account, owner: user)
+        def template = templateService.getForUserById(user, json.templateId)
+        if (!task.templateData || task.templateData.template != template) {
+            task.templateData = new Data(account: user.account, owner: user, template: template)
         }
-        task.templateData.template = templateService.getForUserById(user, json.templateId)
 
         // Prepare values
         json.values.each {valueJson ->
