@@ -242,3 +242,31 @@ app.directive('pickNView', function () {
         templateUrl: '/static/views/directives/pickNView.html'
     }
 })
+
+// Directive for showing checklist
+app.directive('checklist', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            label:      '@',
+            value:      '='
+        },
+        // View
+        templateUrl: '/static/views/directives/checklist.html'
+    }
+})
+
+// Directive for showing radiolist
+app.directive('radiolist', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            label:      '@',
+            value:      '='
+        },
+        // View
+        templateUrl: '/static/views/directives/radiolist.html'
+    }
+})
