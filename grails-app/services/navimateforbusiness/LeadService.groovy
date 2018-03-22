@@ -133,10 +133,10 @@ class LeadService {
         }
 
         // Prepare template data
-        if (!lead.templateData) {
-            lead.templateData = new Data(account: user.account, owner: user)
+        def template = templateService.getForUserById(user, json.templateId)
+        if (!lead.templateData || lead.templateData.template != template) {
+            lead.templateData = new Data(account: user.account, owner: user, template: template)
         }
-        lead.templateData.template = templateService.getForUserById(user, json.templateId)
 
         // Prepare values
         json.values.each {valueJson ->
