@@ -4,19 +4,19 @@
     <span class="text-label" ng-if="label">{{label}}</span>
 
     <!-- Dropdown Button -->
-    <div class="fbx-h input-box input-lg" ng-click="vm.bShowDropdown = true">
+    <div class="fbx-h input-box input-lg">
         <!-- Currently selected item name -->
-        <span>{{vm.selection.name}}</span>
+        <span>{{text}}</span>
 
         <!-- Dropdown Icon -->
         <img ng-src="/static/images/icon_dropdown.png" class="ib-base ib-s ml-2">
     </div>
 
     <!-- Dropdown window -->
-    <div class="list list-dropdown" ng-if="vm.bShowDropdown">
+    <div class="list list-dropdown" ng-if="bShowDropdown">
         <!-- List of items -->
         <div class="li li-dropdown" ng-repeat="item in items"
-             ng-click="vm.onItemSelected($index)">
+             ng-click="onSelect({'id': item.id})">
             {{item.name}}
         </div>
     </div>
