@@ -1,0 +1,30 @@
+<!-- Template values editor -->
+<div class="fbx-h align-items-start flex-wrap">
+    <!-- Array of editor components of different types depending on value field -->
+    <div ng-repeat="value in values" class="mr-5 mt-3">
+        <!-- Text Field Editor -->
+        <input-box ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_TEXT"
+                   label="{{value.field.title}}" model="value.value"></input-box>
+
+        <!-- Number Field Editor -->
+        <input-box ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_NUMBER"
+                   label="{{value.field.title}}" model="value.value" b-number="true"></input-box>
+
+        <!-- Checkbox Field Editor -->
+        <div class="fbx-v"
+             ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_CHECKBOX">
+            <span class="text-label">{{value.field.title}}</span>
+            <div class="box-bordered">
+                <md-checkbox ng-value="value.field.title"  ng-model="value.value"></md-checkbox>
+            </div>
+        </div>
+
+        <!-- Radiolist Field Editor -->
+        <radiolist ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_RADIOLIST"
+                   label="{{value.field.title}}" value="value.value"></radiolist>
+
+        <!-- Checklist Field Editor -->
+        <checklist ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_CHECKLIST"
+                   label="{{value.field.title}}" value="value.value"></checklist>
+    </div>
+</div>
