@@ -10,7 +10,7 @@
 /* Styling for dropdown list container */
 .list-dropdown {
     max-height: 20em;
-    min-width: 100%;
+    min-width: 98%;
     max-width: 15em;
     background-color: white;
     border: solid 1px lightgray;
@@ -19,7 +19,7 @@
     /* Positioning */
     position: absolute;
     top: 90%;
-    left: 2%;
+    left: 1%;
     z-index: 10000;
 
     /* Y-overflow only */

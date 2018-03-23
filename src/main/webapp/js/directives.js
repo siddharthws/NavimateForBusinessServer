@@ -230,6 +230,49 @@ app.directive('searchSelect', function ($timeout) {
     }
 })
 
+// dropdown to select from a list of items
+app.directive('searchAddress', function ($timeout) {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            onSelect:    '&'
+        },
+        // Controller and view
+        controller: 'SearchAddressCtrl as vm',
+        templateUrl: '/static/views/directives/searchAddress.html',
+        // Link function
+        link: function (scope, element, attrs, vm) {
+            // Set dropdown show / hide listener
+            $('body').on('click', function (e) {
+                var $element = $(element)
+
+                // Check if a child of this element was clicked
+                var bShow = false
+                if ($element.is(e.target) || $element.has(e.target).length) {
+                    if ($(e.target).hasClass('li-dropdown')) {
+                        // Close dropdown if a list item was clicked
+                        bShow = !vm.bShowDropdown
+                    } else {
+                        // Show dropdown
+                        bShow = true
+                    }
+                } else {
+                    // Hide dropdown
+                    bShow = false
+                }
+
+                // Update using digest cycle
+                if (vm.bShowDropdown != bShow) {
+                    $timeout(function () {
+                        vm.bShowDropdown = bShow
+                    }, 0)
+                }
+            })
+        }
+    }
+})
+
 // Directive for table pagination
 app.directive('pager', function () {
     return {

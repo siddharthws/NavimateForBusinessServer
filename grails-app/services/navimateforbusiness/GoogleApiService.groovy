@@ -25,14 +25,7 @@ class GoogleApiService {
         // Parse google response into results
         def results = []
         if (respJson.status == "OK") {
-            def predictions = respJson.predictions
-            predictions.each { prediction ->
-                def result = [
-                        address: prediction.description,
-                        placeId: prediction.place_id
-                ]
-                results.push(result)
-            }
+            respJson.predictions.each { prediction ->  results.push(prediction.description) }
         }
         else {
             throw new navimateforbusiness.ApiException("Google API call failed with status : " + respJson.status)
