@@ -1,11 +1,7 @@
 /* dialogs styling */
 .dialog-container {
-    background-color: white;
     max-height: 95%;
     max-width: 95%;
-    border: none;
-    border-radius: 3px;
-    padding: 20px;
 }
 
 .dialog-editor-content {
