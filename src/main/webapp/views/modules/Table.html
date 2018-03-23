@@ -124,7 +124,7 @@
                         <!-- Button to open location -->
                         <input type="button" value="" class="ib-base ib-s ib-hover ib-map" title="Open Location"
                                ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_LOCATION)"
-                               ng-click="$root.Statics.absorbEvent($event); vm.showLocation(value)"/>
+                               ng-click="$root.Statics.absorbEvent($event); vm.showLocation(value, row.name)"/>
                     </td>
                 </tr>
             </tbody>

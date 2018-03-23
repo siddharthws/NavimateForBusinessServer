@@ -39,14 +39,14 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
     }
 
     // API to show location on map
-    vm.showLocation = function (latlng) {
+    vm.showLocation = function (latlng, name) {
         // Split location into lat & lng
         var latLngArr = latlng.split(',')
 
         // Prepare Location array to send to location viewer
         var locations = []
         locations.push({
-            title:      "Picked Location",
+            title:      name,
             latitude:   latLngArr[0],
             longitude:  latLngArr[1]
         })

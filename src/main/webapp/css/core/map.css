@@ -1,52 +1,39 @@
-.map-box {
-    position: relative;
+/*
+ * Classes for normal marker styling
+ */
+.marker {
+    font-size: 1rem;
+    padding: 0.1em 1.0em;
+    background: #37bcf2;
+    color: white;
+    border-radius: 0.25em;
+    border: #37bcf2 solid 1px;
+    box-shadow: 0px 0px 10px 1px darkgray;
+    text-align: center;
+    max-width: 15em;
+
+    /* Ellipsize text */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.map-box-shadow {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5) inset;
-    pointer-events: none;
-}
-
-.tracker-marker {
-     font-size: 1.0em;
-     padding: 5px;
-     background: #37bcf2;
-     -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-     border-radius: 4px;
-     border: #37bcf2 solid 1px;
-     text-align: center;
- }
-
-.tracker-marker:after {
+/* Triangular bottom */
+.marker::before {
     content: '';
-    position: absolute;
-    border-style: solid;
-    border-width: 7px 6px 0;
-    border-color: #37bcf2 transparent;
     display: block;
-    width: 0;
     z-index: 1;
-    margin-left: -6px;
-    bottom: -6px;
-    left: 50%;
-}
 
-.tracker-marker:before {
-    content: '';
+    /* Position at bottom center */
     position: absolute;
-    border-style: solid;
-    border-width: 7px 6px 0;
-    border-color: #7F7F7F transparent;
-    display: block;
-    width: 0;
-    z-index: 0;
-    margin-left: -6px;
-    bottom: -7px;
+    bottom: -0.5em;
     left: 50%;
+    width: 0;
+    height: 0;
+    margin-left: -0.5em;
+
+    /* Triangular shape with borders */
+    border-style: solid;
+    border-width: 0.5em 0.5em 0;
+    border-color: #37bcf2 transparent;
 }
