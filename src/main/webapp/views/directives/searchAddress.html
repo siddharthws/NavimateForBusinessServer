@@ -1,0 +1,33 @@
+<!-- Google address search with dropdown -->
+<div class="fbx-v pos-r">
+    <!-- Address Search box -->
+    <input type="text" class="input-box input-lg" placeholder="Search places..."
+           ng-model="vm.searchText" ng-change="vm.search()" ng-model-options="{debounce: 500}">
+
+    <!-- Dropdown window -->
+    <div class="list list-dropdown" ng-if="vm.bShowDropdown">
+        <!-- List of items -->
+        <div class="li li-dropdown" ng-repeat="suggestion in vm.suggestions track by $index"
+             ng-click="vm.onSelect($index)" ng-if="!vm.bSearching && !vm.bSearchError">
+            {{suggestion}}
+        </div>
+
+        <!-- Waiting UI -->
+        <div class="fbx-h align-self-center align-items-center p-2" ng-if="vm.bSearching">
+            <loader class="loader-s"></loader>
+            <span class="ml-2">Loading results...</span>
+        </div>
+
+        <!-- Error UI -->
+        <div class="text-grey text-bold align-self-center p-2"
+             ng-if="vm.bSearchError">
+            Error loading results
+        </div>
+
+        <!-- No results UI -->
+        <div class="text-grey text-bold align-self-center p-2"
+             ng-if="!vm.bSearchError && !vm.bSearching &&  !vm.suggestions.length">
+            Nothing to show
+        </div>
+    </div>
+</div>
