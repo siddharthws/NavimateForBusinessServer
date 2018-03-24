@@ -15,6 +15,7 @@ class AdminApiController {
     // Service dependencies
     def authService
     def userService
+    def leadService
     def templateService
     def fcmService
 
@@ -49,6 +50,24 @@ class AdminApiController {
                 SmsHelper.SendSms('+' + rep.countryCode + rep.phone, user.name + " has added you to navimate. Join on https://play.google.com/store/apps/details?id=com.biz.navimate")
             }
         }
+
+        // Return response
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def editLeads() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Parse task JSON to task objects
+        def leads = []
+        request.JSON.leads.each {leadJson ->
+            leads.push(leadService.fromJson(leadJson, user))
+        }
+
+        // Save tasks
+        leads.each {it -> it.save(flush: true, failOnError: true)}
 
         // Return response
         def resp = [success: true]
