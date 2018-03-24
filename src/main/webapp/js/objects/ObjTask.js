@@ -50,7 +50,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
             return false
         }
         for (var i = 0; i < this.values.length; i++) {
-            if (this.values[0].getErr().length > 0) {
+            if (this.values[i].getErr().length > 0) {
                 return false
             }
         }
