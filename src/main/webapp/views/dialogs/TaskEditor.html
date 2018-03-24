@@ -33,8 +33,7 @@
                               ng-if="$root.isAdmin() && vm.managers.length"></dropdown>
 
                     <!-- Representative -->
-                    <pick-n-view label="Representative" text="vm.selectedTask.rep.name" on-pick="vm.pickRep()" on-view="vm.viewRep()"
-                                 b-show-error="vm.bInputError" err="vm.selectedTask.getRepErr()"></pick-n-view>
+                    <pick-n-view label="Representative" text="vm.selectedTask.rep.name" on-pick="vm.pickRep()" on-view="vm.viewRep()"></pick-n-view>
                 </div>
 
                 <div class="fbx-h mt-2">

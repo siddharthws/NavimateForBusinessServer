@@ -39,9 +39,6 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         if (this.getLeadErr().length) {
             return false
         }
-        if (this.getRepErr().length) {
-            return false
-        }
         if (this.getPeriodErr().length) {
             return false
         }
@@ -62,14 +59,6 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
     ObjTask.prototype.getLeadErr = function () {
         if (!this.lead) {
             return 'Select a lead'
-        }
-
-        return ''
-    }
-
-    ObjTask.prototype.getRepErr = function () {
-        if (!this.rep) {
-            return 'Select a rep'
         }
 
         return ''
@@ -132,7 +121,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
             id:             task.id,
             leadId:         task.lead.id,
             managerId:      task.manager ? task.manager.id : 0,
-            repId:          task.rep.id,
+            repId:          task.rep ? task.rep.id : null,
             status:         task.status,
             period:         task.period,
             formTemplateId: task.formTemplate.id,
