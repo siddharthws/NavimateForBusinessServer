@@ -1,0 +1,22 @@
+<!-- HTML template for Location Viewer Dialog -->
+<md-dialog class="dialog-container dialog-loc-picker">
+    <!-- Include Map View -->
+    <ng-include class="h-100 w-100 pos-a" src="'/static/views/modules/Map.html'"></ng-include>
+
+    <!-- Address Search -->
+    <search-address on-select="vm.addressUpdated(address)"></search-address>
+
+    <!-- Pick Button -->
+    <div id="pick-button">
+        <div>
+            <div class="marker cursor-pointer" ng-click="vm.pick()" ng-if="!vm.bConverting">Pick</div>
+            <loader ng-if="vm.bConverting"></loader>
+        </div>
+    </div>
+
+    <!-- Close button -->
+    <div id="loc-picker-buttons" class="fbx-h">
+        <button class="btn btn-primary" ng-click="vm.pick()">Pick</button>
+        <button class="btn" ng-click="vm.close()">Close</button>
+    </div>
+</md-dialog>

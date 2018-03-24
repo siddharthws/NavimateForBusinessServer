@@ -185,6 +185,22 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
+    // Launch Location Viewer Dialog
+    this.locationPicker = function (lat, lng, cb) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/LocationPicker.html',
+            controller: 'LocationPickerCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                lat: lat,
+                lng: lng,
+                cb: cb
+            }
+        })
+    }
+
     // Table Picker Dialogs
     this.tablePicker = function (title, table, cb) {
         // Show Dialog

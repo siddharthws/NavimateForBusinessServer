@@ -16,6 +16,11 @@ ul.bullet {
     list-style-type: square;
 }
 
+/* Cursor Update classes */
+.cursor-pointer {
+    cursor: pointer;
+}
+
 /* Positioning classes */
 .pos-r {
     position: relative;
