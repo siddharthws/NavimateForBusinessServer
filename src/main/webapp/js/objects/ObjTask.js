@@ -4,9 +4,10 @@
 
 app.factory('ObjTask', function(TemplateService, ObjValue) {
     // ----------------------------------- Constructor ------------------------------------//
-    function ObjTask (id, lead, rep, status, period, formTemplate, template, values) {
+    function ObjTask (id, lead, manager, rep, status, period, formTemplate, template, values) {
         this.id             = id
         this.lead           = lead
+        this.manager        = manager
         this.rep            = rep
         this.status         = status
         this.period         = period
@@ -20,6 +21,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
     ObjTask.prototype.Clone = function () {
         // Create clone for lead and rep
         var lead = this.lead  ? {id: this.lead.id, name: this.lead.name} : null
+        var manager = this.manager  ? {id: this.manager.id, name: this.manager.name} : null
         var rep = this.rep  ? {id: this.rep.id, name: this.rep.name} : null
 
         // Create clone for values
@@ -29,7 +31,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         })
 
         // Return clone of task object
-        return new ObjTask(this.id, lead, rep, this.status, this.period, this.formTemplate, this.template, values)
+        return new ObjTask(this.id, lead, manager, rep, this.status, this.period, this.formTemplate, this.template, values)
     }
 
     // ----------------------------------- Validation APIs ------------------------------------//
@@ -109,6 +111,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
 
         return new ObjTask( json.id,
                             json.lead,
+                            json.manager,
                             json.rep,
                             json.status,
                             json.period,
@@ -128,6 +131,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         return {
             id:             task.id,
             leadId:         task.lead.id,
+            managerId:      task.manager ? task.manager.id : 0,
             repId:          task.rep.id,
             status:         task.status,
             period:         task.period,

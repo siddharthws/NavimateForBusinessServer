@@ -18,6 +18,7 @@ class UrlMappings {
 
         /*------------------------- Admin APIs --------------------------*/
         "/api/admin/accSettings"        (controller: "AdminApi") {action = [POST: "updateSettings"]}
+        "/api/admin/team/getManagers"   (controller: "AdminApi") {action = [POST: "getManagers"]}
         "/api/admin/team/edit"          (controller: "AdminApi") {action = [POST: "editTeam"]}
         "/api/admin/leads/edit"         (controller: "AdminApi") {action = [POST: "editLeads"]}
         "/api/admin/templates/edit"     (controller: "AdminApi") {action = [POST: "editTemplates"]}

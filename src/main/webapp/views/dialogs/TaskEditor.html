@@ -25,6 +25,12 @@
                     <!-- Lead -->
                     <pick-n-view class="mr-4" label="Lead" text="vm.selectedTask.lead.name" on-pick="vm.pickLead()" on-view="vm.viewLead()"
                                  b-show-error="vm.bInputError" err="vm.selectedTask.getLeadErr()"></pick-n-view>
+                </div>
+
+                <div class="fbx-h mt-2">
+                    <!-- Manager selector -->
+                    <dropdown class="mr-4" label="Manager" text="vm.selectedTask.manager.name" items="vm.managers" on-select="vm.updateManager(id)"
+                              ng-if="$root.isAdmin() && vm.managers.length"></dropdown>
 
                     <!-- Representative -->
                     <pick-n-view label="Representative" text="vm.selectedTask.rep.name" on-pick="vm.pickRep()" on-view="vm.viewRep()"

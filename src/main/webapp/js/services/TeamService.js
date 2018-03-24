@@ -7,6 +7,7 @@ app.service('TeamService', function($q, $http, $localStorage, ObjUser) {
 
     // User cache
     vm.cache = []
+    vm.managers = []
 
     // Sync Serialization related variables
     var canceller = null
@@ -69,6 +70,39 @@ app.service('TeamService', function($q, $http, $localStorage, ObjUser) {
         return deferred.promise
     }
 
+    // API to get all managers
+    vm.syncManagers = function (){
+        // Create deferred object
+        var deferred = $q.defer()
+
+        // Trigger request
+        $http({
+            method:     'POST',
+            url:        '/api/admin/team/getManagers',
+            headers:    {
+                'X-Auth-Token':    $localStorage.accessToken
+            }
+        }).then(
+            // Success
+            function (response) {
+                // Update cache
+                vm.managers = []
+                response.data.forEach(function (userJson) {
+                    vm.managers.push(ObjUser.fromJson(userJson))
+                })
+
+                // Resolve promise
+                deferred.resolve()
+            },
+            // Error
+            function (error) {
+                // Resolve promise
+                deferred.reject()
+            })
+
+        return deferred.promise
+    }
+
     // API to edit task data
     vm.edit = function (team){
         // Create deferred object
@@ -109,6 +143,18 @@ app.service('TeamService', function($q, $http, $localStorage, ObjUser) {
     vm.getById = function (id) {
         for (var i = 0; i < vm.cache.length; i++) {
             var user = vm.cache[i]
+            if (user.id == id) {
+                return user
+            }
+        }
+
+        return null
+    }
+
+    // APi to get manager by ID
+    vm.getManagerById = function (id) {
+        for (var i = 0; i < vm.managers.length; i++) {
+            var user = vm.managers[i]
             if (user.id == id) {
                 return user
             }
