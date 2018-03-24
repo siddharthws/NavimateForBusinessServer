@@ -6,4 +6,7 @@
     <!-- Text -->
     <span ng-if="text.length">{{text}}</span>
     <span ng-if="!text.length">-</span>
+
+    <!-- Error Text -->
+    <span class="text-error align-self-end" ng-if="bShowError && err.length > 0">{{err}}</span>
 </div>
