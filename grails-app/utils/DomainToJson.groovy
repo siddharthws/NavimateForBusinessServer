@@ -111,7 +111,8 @@ class DomainToJson {
     static def Data(Data data) {
         // Create value Ids array
         def valueIds = []
-        data.values.each {value ->
+        def values = data.values.sort {it -> it.id}
+        values.each {value ->
             valueIds.push(value.id)
         }
         valueIds.sort(true)

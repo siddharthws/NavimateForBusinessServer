@@ -67,7 +67,7 @@ class TaskService {
         ]
 
         // Convert template values to JSON
-        def values = task.templateData.values
+        def values = task.templateData.values.sort {it -> it.id}
         values.each {value ->
             json.values.push([fieldId: value.field.id, value: value.value])
         }
