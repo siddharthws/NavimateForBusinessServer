@@ -104,7 +104,7 @@ class TaskService {
 
         // Set parameters from JSON
         task.manager = manager
-        task.rep = userService.getRepForUserById(user, json.repId)
+        task.rep = json.repId ? userService.getRepForUserById(user, json.repId) : null
         task.lead = leadService.getForUserById(user, json.leadId)
         task.status = navimateforbusiness.TaskStatus.fromValue(json.status)
         task.period = json.period
