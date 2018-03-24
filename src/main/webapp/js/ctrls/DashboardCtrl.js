@@ -55,7 +55,7 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
     }
 
     // Attach Admin Checker API
-    $scope.isAdmin = function () {
+    $rootScope.isAdmin = function () {
         return $localStorage.role == Constants.Role.ADMIN
     }
     
