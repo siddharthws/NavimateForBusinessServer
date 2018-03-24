@@ -4,7 +4,7 @@
 
 app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window, $localStorage,
                                             AuthService, DialogService, ToastService,
-                                            LeadDataService, TemplateService, TeamService) {
+                                            TemplateService, TeamService) {
 
     /*------------------------------------ INIT --------------------------------*/
     // Menu Selection Parameters
@@ -12,11 +12,10 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
     $scope.name = $localStorage.name
     $scope.role = $localStorage.role
     var bError = false
-    var bLeadSync, bTemplateSync = false
+    var bTemplateSync = false
 
     // Sync all data on Initialization
     $rootScope.showWaitingDialog("Please wait while we are fetching data...")
-    LeadDataService.sync()
 
     // Sync Templates
     TemplateService.sync().then(
@@ -35,11 +34,6 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
     if ($localStorage.role == Constants.Role.ADMIN) {
         TeamService.syncManagers()
     }
-
-    // Attach Data service methods
-    $rootScope.getLeadById = LeadDataService.getById
-    $rootScope.getTemplateById = TemplateService.getTemplateById
-    $rootScope.getFieldById = TemplateService.getFieldById
 
         /*------------------------------------ APIs --------------------------------*/
     // Button Click APIs
@@ -77,7 +71,7 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
     }
 
     function checkSync(){
-        if(bLeadSync && bTemplateSync){
+        if(bTemplateSync){
             $rootScope.hideWaitingDialog()
         }
     }
@@ -96,15 +90,5 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
         ToastService.toast("Unable to load data !!!")
     }
     /*------------------------------------EVENT LISTENERS --------------------------------*/
-
-    $scope.$on(Constants.Events.LEAD_DATA_READY, function (event, params) {
-        bLeadSync = true
-        checkSync()
-    })
-
-    // Listener for data load error
-    $scope.$on(Constants.Events.DATA_LOAD_ERROR, function (event, params) {
-        handleError()
-    })
 
 })

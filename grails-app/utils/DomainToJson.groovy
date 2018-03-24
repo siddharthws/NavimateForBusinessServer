@@ -11,10 +11,6 @@ import org.grails.web.json.JSONObject
 class DomainToJson {
 
     // Methods to validate JSON Strings
-    static boolean isJsonValid(String string) {
-        isJsonObjectValid(string) || isJsonArrayValid(string)
-    }
-
     static boolean isJsonObjectValid(String string) {
         try {
             new JSONObject(string)
@@ -39,17 +35,6 @@ class DomainToJson {
         return [
                 startHr: accSettings.startHr,
                 endHr: accSettings.endHr,
-        ]
-    }
-
-    static def User(User user) {
-        return [
-                id:             user.id,
-                ver:            user.version,
-                name:           user.name,
-                phoneNumber:    '+' + user.countryCode + " " + user.phone,
-                email:          user.email,
-                role:           user.role
         ]
     }
 

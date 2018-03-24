@@ -30,7 +30,12 @@ class RepApiController {
         }
 
         // Return user information
-        def resp = navimateforbusiness.Marshaller.serializeUser(rep)
+        def resp = [
+                id: rep.id,
+                name: rep.name,
+                phoneNumber: "+" + rep.countryCode + " " + rep.phone,
+                email: rep.email
+        ]
         render resp as JSON
     }
 

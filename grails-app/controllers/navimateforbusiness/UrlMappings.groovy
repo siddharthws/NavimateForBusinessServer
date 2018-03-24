@@ -58,15 +58,10 @@ class UrlMappings {
 
         /*------------------------- User APIs to be removed --------------------------*/
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
-        "/api/users/team"           (controller: "UserApi") {action = [GET: "getTeam",      POST: "addRep"]}
-        "/api/users/team/remove"    (controller: "UserApi") {action = [POST: "removeReps"]}
-        "/api/users/lead"           (controller: "UserApi") {action = [GET: "getLead",      POST: "editLeads"]}
         "/api/users/lead/remove"    (controller: "UserApi") {action = [POST: "removeLeads"]}
-        "/api/users/task"           (controller: "UserApi") {action = [GET: "getTask",      POST: "addTasks"]}
         "/api/users/task/close"     (controller: "UserApi") {action = [POST: "closeTasks"]}
         "/api/users/task/remove"    (controller: "UserApi") {action = [POST: "removeTasks"]}
         "/api/users/task/stoprenew" (controller: "UserApi") {action = [POST: "stopTaskRenewal"]}
-        "/api/users/template"       (controller: "UserApi") {action = [GET: "getTemplates"]}
         "/api/users/locationReport" (controller: "UserApi") {action = [GET: "getLocationReport"]}
 
         /*------------------------- Rep APIs --------------------------*/

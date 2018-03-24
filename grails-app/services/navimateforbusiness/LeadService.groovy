@@ -9,7 +9,6 @@ class LeadService {
     def googleApiService
     def templateService
     def valueService
-    def templateDataService
 
     // ----------------------- Getter APIs ---------------------------//
     // Method to get leads for a specific user
@@ -179,52 +178,5 @@ class LeadService {
         }
 
         false
-    }
-
-    // ----------------------- Unclean APIs ---------------------------//
-    def getLeadData (List<Lead> leads) {
-        def leadsJson = []
-
-        leads.each {lead ->
-            // Create lead JSON object
-            def leadJson = [
-                    id: lead.id,
-                    ownerId: lead.manager.id,
-                    title: lead.name,
-                    address: lead.address,
-                    latitude: lead.latitude,
-                    longitude: lead.longitude,
-                    visibility: lead.visibility.value,
-                    templateId: lead.templateData.template.id,
-                    templateData: [
-                        id: lead.templateData.id,
-                        values: []
-                    ]
-            ]
-
-            // Add values to templated data
-            def values = lead.templateData.values.sort {it -> it.id}
-            values.each {value ->
-
-                def val = value.value
-                if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST ||
-                    value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST) {
-                    val = JSON.parse(value.value)
-                } else if (value.field.type == navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX) {
-                    val = Boolean.valueOf(value.value)
-                }
-
-                leadJson.templateData.values.push([
-                        id: value.id,
-                        fieldId: value.fieldId,
-                        value: val
-                ])
-            }
-
-            // Add to JSON Array
-            leadsJson.push(leadJson)
-        }
-
-        leadsJson
     }
 }
