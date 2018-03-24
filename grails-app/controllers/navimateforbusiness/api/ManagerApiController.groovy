@@ -588,15 +588,11 @@ class ManagerApiController {
         // Apply column filters to table
         table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
 
-        // Prepare response as list of IDs
-        def respIds = []
+        // Prepare response as list of IDs & names
+        def resp = []
         table.rows.each {row ->
-            respIds.push(row.id)
+            resp.push(id: row.id, name: row.name)
         }
-        // Send response
-        def resp = [
-                ids: respIds
-        ]
         render resp as JSON
     }
 
