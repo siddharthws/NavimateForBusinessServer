@@ -1,125 +1,72 @@
 <!-- HTML template for Alert Dialog -->
-<md-dialog class="dialog-container box box-dialog h-100 w-100">
-    <div class="d-flex oriented-flexbox w-100 h-100 p-1">
-        <div class="p-1 d-flex flex-1 flex-column">
-            <h4><b>Edit Leads</b></h4>
+<md-dialog class="dialog-container box box-dialog w-100 h-100">
+    <!-- Main container -->
+    <div class="fbx-h w-100 h-100">
+        <!-- Content for left side of dialog -->
+        <div class="fbx-h w-75 h-100 dialog-editor-content fbx-center-children">
+            <!-- Error Waiting UI -->
+            <div class="fbx-h">
+                <!-- Waiting Spinner -->
+                <div class="fbx-h fbx-center-children" ng-if="vm.bLoading">
+                    <loader class="loader-l"></loader>
+                    <h4 class="ml-1 text-grey">Loading tasks...</h4>
+                </div>
 
-            <div class="container-fluid d-flex">
-                <button class="btn btn-primary flex-1" ng-click="save()">Save</button>
-                <button class="btn" ng-click="cancel()">Close</button>
+                <!-- Error UI -->
+                <div class="fbx-h fbx-center-children" ng-if="vm.bLoadError">
+                    <img src="/static/images/ic_smiley_sad.png">
+                    <h4 class="ml-1 text-grey">Could not get tasks...</h4>
+                </div>
             </div>
 
-            <a href ng-click="add()" class="mt-2">+ Add Lead</a>
-            <div class="list-group list-group-bordered p-1 mt-1 flex-1 overflow-auto">
-                <div href ng-repeat="lead in leads"
-                     class="list-group-item list-group-item-action"
-                     ng-class="{'list-group-item-danger': bShowError && !isLeadValid(lead),
-                              'active': selectedLead == lead}"
-                     ng-click="listItemClick($index)">
+            <!-- Lead information form -->
+            <div class="fbx-v w-100 h-100 overflow-auto align-items-start" ng-if="!vm.bLoading && !vm.bLoadError">
+                <!-- Name -->
+                <input-box label="Name" model="vm.selectedLead.name" hint="Enter lead name..."
+                           b-show-error="vm.bInputError" err="vm.selectedLead.getNameErr()"></input-box>
 
-                    <div class="d-flex align-items-center">
-                        <span>
-                            {{($index + 1) + "."}}
-                        </span>
+                <!-- Address picker -->
+                <div class="fbx-h mt-2">
+                    <!-- Location View Button -->
+                    <imagebutton class="align-self-center" image="/static/images/icon_edit.png" b-transparent="true" ng-click="vm.pickLocation()"></imagebutton>
 
-                        <input class="input-underlined w-75" type="text"  placeholder="Enter Title..."
-                               ng-model="lead.title"
-                               ng-class="{'has-error': bShowError && !lead.title, 'input-white': selectedLead == lead}">
-
-                        <input type="button" value="" class="ib-base ib-hover ib-cross" ng-click="remove(lead)"/>
-                    </div>
-
-                    <div class="d-flex flex-column" ng-show="selectedLead == lead">
-
-                        <div class="dropdown flex-1">
-                            <input class="input-underlined input-white w-75" type="text"  placeholder="Search address..."
-                                   ng-model="lead.address" ng-model-options="{debounce: 500}"
-                                   ng-class="{'has-error': bShowError && !(lead.latitude && lead.longitude && lead.address)}"
-                                   ng-change="searchAddress()" data-toggle="dropdown">
-                            <div class="dropdown-menu">
-                                <p ng-show="(searchResults.length == 0) && !bSearchWaiting">Nothing to Show</p>
-                                <p ng-show="bSearchWaiting">Waiting for results...</p>
-                                <button class="dropdown-item" ng-repeat="searchResult in searchResults" ng-click="searchResultClick(searchResult)">{{searchResult.address}}</button>
-                            </div>
-                        </div>
-
-                        <div class="dropdown align-self-start m-1 p-1 bdr-primary-light bdr-round">
-                                <span class="d-flex dropdown-toggle-button justify-content-around align-items-center" data-toggle="dropdown">
-                                    <span>Template : {{getTemplateById(lead.templateId).name}}</span>
-                                    <img class="img-icon ml-2" src="/static/images/dropdown.png"/>
-                                </span>
-                            <div class="dropdown-menu">
-                                <button class="dropdown-item" ng-repeat="template in templates"
-                                        ng-click="updateTemplate($parent.$index, $index)">{{template.name}}</button>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-wrap align-items-center">
-
-                            <div ng-repeat="value in lead.templateData.values" class="p-1 m-1 bdr-primary-light bdr-round">
-
-                                <!-- Text Field -->
-                                <span ng-if="getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_TEXT">
-                                    <span>{{getFieldById(value.fieldId).title}}: </span>
-                                    <input  class="input-underlined" type="text"
-                                            ng-model="lead.templateData.values[$index].value"
-                                            ng-class="{'input-white': selectedLead == lead}">
-                                </span>
-
-                                <!-- Number Field -->
-                                <span ng-if="getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_NUMBER">
-                                    <span>{{getFieldById(value.fieldId).title}}: </span>
-                                    <input  string-to-number class="input-underlined" type="number"
-                                            ng-model="lead.templateData.values[$index].value"
-                                            ng-class="{'input-white': selectedLead == lead}">
-                                </span>
-
-                                <!-- Radio List Field -->
-                                <div ng-if="getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_RADIOLIST"
-                                     class="d-flex align-items-center">
-                                    <span>{{getFieldById(value.fieldId).title}}</span>
-                                    <md-radio-group ng-model="lead.templateData.values[$index].value.selection">
-                                        <div class="d-flex flex-column ml-2">
-                                                <div class="d-flex align-items-center"
-                                                     ng-repeat="option in lead.templateData.values[$index].value.options track by $index">
-                                                    <md-radio-button ng-value="$index" ng-class="{'rb-white': selectedLead == lead}"></md-radio-button>
-                                                    <span class=" ml-1">{{option}}</span>
-                                                </div>
-                                        </div>
-                                    </md-radio-group>
-                                </div>
-
-                                <!-- Check list Field -->
-                                <div ng-if="getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_CHECKLIST"
-                                     class="d-flex align-items-center">
-                                    <span>{{getFieldById(value.fieldId).title}}</span>
-                                    <div class="d-flex flex-column ml-2">
-                                        <div class="d-flex align-items-center"
-                                             ng-repeat="option in lead.templateData.values[$index].value track by $index">
-                                            <md-checkbox ng-value="option.name"
-                                                         ng-model="option.selection" ng-class="{'cb-white': selectedLead == lead}">
-                                            </md-checkbox>
-                                            <span class=" ml-1">{{option.name}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Check box Field -->
-                                <div ng-if="getFieldById(value.fieldId).type == $root.Constants.Template.FIELD_TYPE_CHECKBOX"
-                                     class="d-flex align-items-center">
-                                    <span>{{getFieldById(value.fieldId).title}}</span>
-                                    <md-checkbox ng-value="getFieldById(value.fieldId).title" class="ml-1"
-                                                 ng-model="value.value" ng-class="{'cb-white': selectedLead == lead}">
-                                    </md-checkbox>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Address -->
+                    <text-box label="Address" text="{{vm.selectedLead.address}}"
+                              b-show-error="vm.bInputError" err="vm.selectedLead.getAddressErr()"></text-box>
                 </div>
+
+                <!-- Template -->
+                <dropdown class="mt-2" label="Template" text="vm.selectedLead.template.name" items="vm.templates" on-select="vm.updateTemplate(id)"
+                          b-show-error="vm.bInputError" err="vm.selectedLead.getTemplateErr()"></dropdown>
+
+                <!-- Template Values -->
+                <template-values-editor class="px-2 mt-2" values="vm.selectedLead.values" b-show-error="vm.bInputError"></template-values-editor>
             </div>
         </div>
 
-        <!-- Include Map View -->
-        <ng-include class="flex-1" src="'/static/views/modules/Map.html'"></ng-include>
+        <!-- Content for right side of dialog -->
+        <div class="fbx-v w-25 h-100 ml-neg">
+            <!-- Dialog title -->
+            <h4 class="align-self-end"><u>Lead Editor</u></h4>
+
+            <!-- Add new button -->
+            <imagebutton class="m-1" image="/static/images/ic_add_white.png" text="Add New" ng-click="vm.add()"></imagebutton>
+
+            <!-- Item List -->
+            <div class="list list-blend flex-1">
+                <div class="li li-blend d-flex justify-content-between" ng-repeat="lead in vm.leads"
+                     ng-class="{'active': vm.selectedLead == lead, 'err': vm.bInputError && !lead.isValid()}"
+                     ng-click="vm.selectedLead = lead" md-ink-ripple="#000000">
+                    <span class="ml-2 text-ellipsize" >{{($index + 1) + ". " + lead.name}}</span>
+                    <input type="button" value="" class="ib-base ib-s ib-hover ib-cross" ng-click="vm.remove($index); $root.Statics.absorbEvent($event)"/>
+                </div>
+            </div>
+
+            <!-- Dialog buttons -->
+            <div class="d-flex">
+                <button class="btn btn-primary flex-1" ng-click="vm.save()">Save</button>
+                <button class="btn flex-1" ng-click="vm.close()">Close</button>
+            </div>
+        </div>
     </div>
 </md-dialog>

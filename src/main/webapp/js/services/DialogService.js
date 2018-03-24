@@ -73,12 +73,12 @@ app.service('DialogService', function($mdDialog) {
     }
 
     // Launch Lead Editor Dialog
-    this.leadEditor = function (leads, editCb) {
+    this.leadEditor = function (ids, cb) {
         // Show Dialog
         $mdDialog.show({    templateUrl: '/static/views/dialogs/LeadEditor.html',
-                            controller: 'LeadEditorCtrl',
+                            controller: 'LeadEditorCtrl as vm',
                             clickOutsideToClose: true,
-                            locals: { leads: leads, editCb: editCb }
+                            locals: { ids: ids, cb: cb }
         })
     }
 
