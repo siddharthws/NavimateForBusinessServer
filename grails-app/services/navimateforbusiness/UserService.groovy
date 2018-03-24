@@ -28,6 +28,16 @@ class UserService {
         reps
     }
 
+    // Method to get all managers under a user
+    List<User> getManagersForUser(User user) {
+        List<User> managers = User.findAllByAccountAndRole(user.account, navimateforbusiness.Role.MANAGER)
+
+        // Sort managers in increasing order of name
+        managers.sort{it.name}
+
+        managers
+    }
+
     // Method to get all reps for a user
     def getRepForUserById(User user, Long id) {
         // Get all reps for user
@@ -37,6 +47,17 @@ class UserService {
         User rep = reps.find {it -> it.id == id}
 
         rep
+    }
+
+    // Method to get manager under a user by ID
+    def getManagerForUserById(User user, Long id) {
+        // Get all manager for user
+        List<User> managers = getManagersForUser(user)
+
+        // Find manager with this id
+        User manager = managers.find {it -> it.id == id}
+
+        manager
     }
 
     /* ------------------------------------ Converter APIs ------------------------------------ */

@@ -4,7 +4,7 @@
 
 app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window, $localStorage,
                                             AuthService, DialogService, ToastService,
-                                            LeadDataService, TemplateService) {
+                                            LeadDataService, TemplateService, TeamService) {
 
     /*------------------------------------ INIT --------------------------------*/
     // Menu Selection Parameters
@@ -30,6 +30,11 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
             handleError()
         }
     )
+
+    // Sync managers for admin
+    if ($localStorage.role == Constants.Role.ADMIN) {
+        TeamService.syncManagers()
+    }
 
     // Attach Data service methods
     $rootScope.getLeadById = LeadDataService.getById

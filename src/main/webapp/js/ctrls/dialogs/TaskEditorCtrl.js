@@ -3,8 +3,8 @@
  */
 
 // Controller for Alert Dialog
-app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog,
-                                            ToastService, TemplateService, TaskService, DialogService, TableService,
+app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog, $localStorage,
+                                            ToastService, TemplateService, TaskService, DialogService, TableService, TeamService,
                                             ObjTask, ObjValue,
                                             taskIds, cb) {
     /* ----------------------------- INIT --------------------------------*/
@@ -30,12 +30,20 @@ app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog,
         vm.taskTemplates.push({id: taskTemplate.id, name: taskTemplate.name})
     })
 
+    // Create array of manager objects to send to dropdown
+    vm.managers = []
+    vm.managers.push({id: $localStorage.id, name: $localStorage.name})
+    TeamService.managers.forEach(function (manager) {
+        vm.managers.push({id: manager.id, name: manager.name})
+    })
+
     /* ----------------------------- APIs --------------------------------*/
     // Button Click APIs
     vm.add = function () {
         // Create empty task
         var task = new ObjTask( null,
                                 null,
+                                {id: $localStorage.id, name: $localStorage.name},
                                 null,
                                 Constants.Task.STATUS_OPEN,
                                 0,
@@ -54,6 +62,15 @@ app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog,
 
         // Add template data
         vm.updateTemplate(vm.taskTemplates[0].id)
+    }
+
+    vm.updateManager = function (id) {
+        if (id == $localStorage.id) {
+            vm.selectedTask.manager = {id: $localStorage.id, name: $localStorage.name}
+        } else {
+            var manager = TeamService.getManagerById(id)
+            vm.selectedTask.manager = {id: manager.id, name: manager.name}
+        }
     }
 
     vm.updateFormTemplate = function (id) {

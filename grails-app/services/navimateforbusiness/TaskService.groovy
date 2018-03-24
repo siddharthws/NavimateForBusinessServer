@@ -47,6 +47,7 @@ class TaskService {
         def json = [
                 id: task.id,
                 lead: [id: task.lead.id, name: task.lead.name],
+                manager: [id: task.manager.id, name: task.manager.name],
                 rep: task.rep ? [id: task.rep.id, name: task.rep.name] : null,
                 status: task.status.value,
                 period: task.period,
@@ -67,7 +68,7 @@ class TaskService {
     Task fromJson(def json, User user) {
         Task task = null
 
-        // Get existing template or create new
+        // Get existing task or create new
         if (json.id) {
             task = getForUserById(user, json.id)
             if (!task) {
@@ -75,12 +76,24 @@ class TaskService {
             }
         } else {
             task = new Task(
-                    account: user.account,
-                    manager: user
+                    account: user.account
             )
         }
 
+        // Get manager to be assigned to task
+        User manager
+        if (!json.managerId || json.managerId == user.id) {
+            manager = user
+        } else {
+            manager = userService.getManagerForUserById(user, json.managerId)
+        }
+
+        if (!manager) {
+            throw new navimateforbusiness.ApiException("Invalid manager assigned", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
         // Set parameters from JSON
+        task.manager = manager
         task.rep = userService.getRepForUserById(user, json.repId)
         task.lead = leadService.getForUserById(user, json.leadId)
         task.status = navimateforbusiness.TaskStatus.fromValue(json.status)
