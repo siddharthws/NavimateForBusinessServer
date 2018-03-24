@@ -5,6 +5,7 @@ import grails.core.GrailsApplication
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
 import navimateforbusiness.Template
+import navimateforbusiness.Visibility
 
 // APIs exposed to users with manager access or higher
 class ManagerApiController {
@@ -249,7 +250,13 @@ class ManagerApiController {
         leadsJson.each {leadJson -> leads.push(leadService.fromJson(leadJson, user))}
 
         // Save each lead
-        leads.each {lead -> lead.save(flush: true, failOnError: true)}
+        leads.each {lead ->
+            // Make lead public
+            lead.visibility = Visibility.PUBLIC
+
+            // Save lead
+            lead.save(flush: true, failOnError: true)
+        }
 
         def resp = [success: true]
         render resp as JSON
