@@ -80,7 +80,7 @@ class LeadService {
         ]
 
         // Convert template values to JSON
-        def values = lead.templateData.values
+        def values = lead.templateData.values.sort {it -> it.id}
         values.each {value ->
             json.values.push([fieldId: value.field.id, value: value.value])
         }
