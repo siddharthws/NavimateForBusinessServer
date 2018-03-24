@@ -135,8 +135,10 @@ app.directive('textBox', function () {
         restrict: 'E',
         // Isolated scope with attributes
         scope: {
-            label:      '@',
-            text:       '@'
+            label:       '@',
+            text:        '@',
+            bShowError:  '=',
+            err:         '='
         },
         // view
         templateUrl: '/static/views/directives/textBox.html'
