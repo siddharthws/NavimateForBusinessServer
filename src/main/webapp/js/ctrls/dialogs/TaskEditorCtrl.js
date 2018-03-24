@@ -126,7 +126,6 @@ app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog,
     }
 
     vm.close = function () {
-        console.log("Closing 2 dialog as well")
         $mdDialog.hide()
     }
 

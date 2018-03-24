@@ -20,6 +20,11 @@ app.controller("LeadManageCtrl", function ( $scope, $rootScope, $http, $localSto
         DialogService.leadEditor(null, vm.sync)
     }
 
+    vm.edit = function () {
+        //Launch Leads-Editor dialog
+        DialogService.leadEditor(vm.table.getSelectedIds(), vm.sync)
+    }
+
     // API to import leads
     vm.import = function (file) {
         // Show waiting dialog
@@ -98,17 +103,6 @@ app.controller("LeadManageCtrl", function ( $scope, $rootScope, $http, $localSto
                         ToastService.toast("Failed to remove leads!!!")
                     })
             })
-    }
-
-    vm.edit = function () {
-        var ids = vm.table.getSelectedIds()
-        var leads = []
-        ids.forEach(function (id) {
-            leads.push($rootScope.getLeadById(id))
-        })
-
-        //Launch Leads-Editor dialog
-        DialogService.leadEditor(leads, vm.sync)
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/
