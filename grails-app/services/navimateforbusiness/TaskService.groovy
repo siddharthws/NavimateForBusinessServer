@@ -18,8 +18,18 @@ class TaskService {
     def getForUser(User user) {
         def tasks = []
 
-        // Get all unremoved tasks created by this user
-        tasks = Task.findAllByAccountAndIsRemovedAndManager(user.account, false, user)
+        // Get leads as per access level
+        switch (user.role) {
+            case navimateforbusiness.Role.ADMIN:
+                // Get all unremoved tasks created of account
+                tasks = Task.findAllByAccountAndIsRemoved(user.account, false)
+                break
+
+            case navimateforbusiness.Role.MANAGER:
+                // Get all unremoved tasks created by this user
+                tasks = Task.findAllByAccountAndIsRemovedAndManager(user.account, false, user)
+                break
+        }
 
         // Sort tasks in descending order of create date
         tasks = tasks.sort {it -> it.dateCreated}

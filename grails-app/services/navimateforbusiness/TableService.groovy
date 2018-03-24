@@ -83,11 +83,12 @@ class TableService {
             values[0] = String.valueOf(task.id)
             values[1] = task.lead.name
             values[2] = (task.lead.latitude || task.lead.longitude) ? task.lead.latitude + "," + task.lead.longitude : '-'
-            values[3] = task.rep ? task.rep.name : 'Unassigned'
-            values[4] = task.period
-            values[5] = task.formTemplate.name
-            values[6] = task.templateData.template.name
-            values[7] = task.status.name()
+            values[3] = task.manager.name
+            values[4] = task.rep ? task.rep.name : 'Unassigned'
+            values[5] = task.period
+            values[6] = task.formTemplate.name
+            values[7] = task.templateData.template.name
+            values[8] = task.status.name()
 
             // Iterate through template values
             task.templateData.values.each {value ->
@@ -402,15 +403,16 @@ class TableService {
         columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "ID"))
         columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Lead"))
         columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
-        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Rep"))
-        columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER, "Period"))
-        columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Form"))
-        columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
-        columns.push(createColumn(7, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Status"))
+        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Manager"))
+        columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Rep"))
+        columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER, "Period"))
+        columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Form"))
+        columns.push(createColumn(7, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
+        columns.push(createColumn(8, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Status"))
 
         // Add templated columns through task templates
         List<Template> templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_TASK)
-        columns += getTemplatedColumns(templates, 8)
+        columns += getTemplatedColumns(templates, 9)
 
         columns
     }
