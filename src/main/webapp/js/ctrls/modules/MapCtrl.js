@@ -149,7 +149,10 @@ app.controller('MapCtrl', function ($scope, ObjCluster, $timeout) {
             // Check if map is centered on 0,0
             var mapCenter = googleMap.getCenter()
             if (!mapCenter.lat() && !mapCenter.lng()) {
-                if (vm.markers.length) {
+                if ($scope.mapParams.lat || $scope.mapParams.lng) {
+                    centerMap(new google.maps.LatLng(   $scope.mapParams.lat,
+                                                        $scope.mapParams.lng))
+                } else if (vm.markers.length) {
                     // Center using markers
                     if (vm.markers.length == 1) {
                         // Center on marker if only 1 is present
@@ -172,6 +175,22 @@ app.controller('MapCtrl', function ($scope, ObjCluster, $timeout) {
         }
     }
 
+    // API to get center of map
+    function getCenter() {
+        var latlng = {
+            latitude: 0,
+            longitude: 0
+        }
+
+        if (googleMap != null) {
+            var mapCenter = googleMap.getCenter()
+            latlng.latitude = mapCenter.lat()
+            latlng.longitude = mapCenter.lng()
+        }
+
+        return latlng
+    }
+
     /*------------------------------------ Init --------------------------------*/
     var googleMap = null
     var currentLatLng = null
@@ -179,6 +198,7 @@ app.controller('MapCtrl', function ($scope, ObjCluster, $timeout) {
     var clusters = [];
 
     // Add map params
+    $scope.mapParams.getCenter = getCenter
     $scope.mapParams.zoom = 14
     $scope.mapParams.polylines = []
     if(!$scope.mapParams.markers) {

@@ -3,7 +3,9 @@
  */
 .marker {
     font-size: 1rem;
-    padding: 0.1em 1.0em;
+    height: 1.5em;
+    padding-right: 1.0em;
+    padding-left: 1.0em;
     background: #37bcf2;
     color: white;
     border-radius: 0.25em;

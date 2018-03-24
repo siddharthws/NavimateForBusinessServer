@@ -27,3 +27,43 @@
 .md-dialog-container:nth-of-type(odd) {
     z-index: 82;
 }
+
+/*
+ *Location Picker Dialog styling
+ */
+/* Dialog container */
+.dialog-loc-picker {
+    position: relative;
+    width: 50%;
+    height: 75%;
+}
+
+/* Search bar */
+.dialog-loc-picker search-address {
+    position: absolute;
+    top: 1em;
+    right: 2em;
+    left: 2em;
+    width: auto;
+}
+
+/* Pick button in center */
+.dialog-loc-picker #pick-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.dialog-loc-picker #pick-button > div {
+    position: relative;
+    height: 1.5em;
+    top: -2.0em;
+    left: -50%;
+}
+
+/* Close button */
+.dialog-loc-picker #loc-picker-buttons {
+    position: absolute;
+    bottom: 0.5em;
+    right: 0.5em;
+}
