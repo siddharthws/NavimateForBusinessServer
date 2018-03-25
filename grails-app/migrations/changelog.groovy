@@ -36,4 +36,5 @@ databaseChangeLog = {
     include file: 'remove-user-status.groovy'
     include file: 'update-user-phone.groovy'
     include file: 'update-lead-name.groovy'
+    include file: 'remove-user-phone-number.groovy'
 }
