@@ -66,7 +66,6 @@ class UrlMappings {
 
         /*------------------------- Rep APIs --------------------------*/
         "/api/reps/appStart"        (controller: "RepApi") {action = [GET: "appStart"]}
-        "/api/reps/profile"         (controller: "RepApi") {action = [POST: "getMyProfile"]}
         "/api/reps/register"        (controller: "RepApi") {action = [POST: "register"]}
         "/api/reps/submitForm"      (controller: "RepApi") {action = [POST: "submitForm"]}
         "/api/reps/sync/tasks"      (controller: "RepApi") {action = [POST: "syncTasks"]}

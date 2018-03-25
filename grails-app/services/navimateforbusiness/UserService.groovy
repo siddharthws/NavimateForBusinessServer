@@ -77,7 +77,7 @@ class UserService {
         User rep
 
         // Get rep by phone number
-        rep = User.findByCountryCodeAndPhoneNumber(json.countryCode, json.phone)
+        rep = User.findByCountryCodeAndPhone(json.countryCode, json.phone)
 
         // Ensure rep is present in this user's account
         if (rep && rep.account && rep.account != user.account) {

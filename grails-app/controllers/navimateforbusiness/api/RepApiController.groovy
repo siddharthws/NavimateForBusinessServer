@@ -22,23 +22,6 @@ class RepApiController {
 
     def reportService
 
-    def getMyProfile() {
-        // Check if the rep is registered. (Rep is registered from the dashboard)
-        User rep = User.findByPhoneNumberAndRole(request.JSON.phoneNumber, Role.REP)
-        if (!rep) {
-            throw new ApiException("Rep not registered", Constants.HttpCodes.BAD_REQUEST)
-        }
-
-        // Return user information
-        def resp = [
-                id: rep.id,
-                name: rep.name,
-                phoneNumber: "+" + rep.countryCode + " " + rep.phone,
-                email: rep.email
-        ]
-        render resp as JSON
-    }
-
     def register() {
         // Remove '+' from phone number
         String phoneNumber = request.JSON.phoneNumber
