@@ -182,7 +182,6 @@ Constants.DashboardNav.Menu = [
         state:      "company",
         accessLevel:Constants.Role.ADMIN,
         options:    [
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_PROFILE],
             Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_SETTINGS]
         ]
     }
