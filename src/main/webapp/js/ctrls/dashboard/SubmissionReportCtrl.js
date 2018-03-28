@@ -2,7 +2,8 @@
  * Created by Siddharth on 11-12-2017.
  */
 
-app.controller("ReportCtrl", function ($scope, $rootScope, $http, $localStorage, ToastService, TableService) {
+app.controller("SubmissionReportCtrl", function ($scope, $rootScope, $http, $localStorage,
+                                                 ToastService, TableService) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 

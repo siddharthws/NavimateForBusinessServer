@@ -61,14 +61,14 @@ Constants.DashboardNav = {
     ITEM_TEMPLATES  : 4,
     ITEM_COMPANY    : 5,
 
-    OPTION_MANAGE   : 0,
-    OPTION_REPORT   : 1,
-    OPTION_FORM     : 2,
-    OPTION_LEAD     : 3,
-    OPTION_TASK     : 4,
-    OPTION_PROFILE  : 5,
-    OPTION_SETTINGS : 6,
-    OPTION_LOCATION : 7,
+    OPTION_MANAGE       : 0,
+    OPTION_SUBMISSION   : 1,
+    OPTION_FORM         : 2,
+    OPTION_LEAD         : 3,
+    OPTION_TASK         : 4,
+    OPTION_PROFILE      : 5,
+    OPTION_SETTINGS     : 6,
+    OPTION_MOVEMENT     : 7,
 }
 
 /*-----------------------------Dashboard user role-------------------------------------*/
@@ -91,9 +91,9 @@ Constants.DashboardNav.Options = [
         state:      "manage"
     },
     {
-        id:         Constants.DashboardNav.OPTION_REPORT,
-        name:       'Reports',
-        state:      'report'
+        id:         Constants.DashboardNav.OPTION_SUBMISSION,
+        name:       'Submission',
+        state:      'submission'
     },
     {
         id:         Constants.DashboardNav.OPTION_FORM,
@@ -121,9 +121,9 @@ Constants.DashboardNav.Options = [
         state:      'settings'
     },
     {
-        id:         Constants.DashboardNav.OPTION_LOCATION,
-        name:       'Location',
-        state:      'location'
+        id:         Constants.DashboardNav.OPTION_MOVEMENT,
+        name:       'Movement',
+        state:      'movement'
     }
 ]
 
@@ -161,8 +161,8 @@ Constants.DashboardNav.Menu = [
         state:      "reports",
         accessLevel:Constants.Role.MANAGER,
         options:    [
-            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT],
-            //Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_LOCATION]
+            Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_SUBMISSION],
+            //Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MOVEMENT]
         ]
     },
     {
