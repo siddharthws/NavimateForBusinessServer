@@ -1,0 +1,12 @@
+/* Base properties of a navimate button */
+.bttn {
+    cursor: pointer;
+}
+
+.bttn:hover {
+    transition: 250ms;
+}
+
+.bttn:focus {
+    outline: none;
+}

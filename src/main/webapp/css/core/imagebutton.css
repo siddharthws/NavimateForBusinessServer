@@ -114,9 +114,9 @@ ib-filepicker:focus {
 }
 
 .ib-down {
-    background-image: url("/static/images/dropdown.png");
+    background-image: url("/static/images/ic_dropdown_dark.png");
 }
 
 .ib-down.active, .ib-down:hover {
-    background-image: url("/static/images/ic_down_white.png");
+    background-image: url("/static/images/ic_dropdown_light.png");
 }
