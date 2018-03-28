@@ -13,6 +13,9 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScop
     vm.startHr = $localStorage.startHr
     vm.endHr = $localStorage.endHr
 
+    vm.companyName      = $localStorage.companyName
+    vm.apiKey           = $localStorage.apiKey
+
     /*-------------------------------- Scope APIs --------------------------------*/
     vm.incrementStartHr = function () {
             if(vm.startHr == 23) {

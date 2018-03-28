@@ -1,6 +1,14 @@
 <!-- Company Settings HTML -->
 <div class="d-flex flex-column p-4">
-    <span class="centered">Set the Working Hours</span>
+    <div>
+        <span class="text-bold">Company : </span>
+        <span>{{$ctrl.companyName}}</span>
+    </div>
+    <div>
+        <span class="text-bold">API Key : </span>
+        <span>{{$ctrl.apiKey}}</span>
+    </div>
+    <span class="centered mt-2">Set the Working Hours</span>
     <div class="d-flex align-items-center ml-2">
         <span>Start Time</span>
         <button type="button" class="btn" ng-click="$ctrl.decrementStartHr()">
