@@ -2,9 +2,20 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("FormTemplatesCtrl", function (  $scope, $rootScope, $http, $localStorage, $state,
-                                                DialogService, ToastService, TemplateService) {
+app.controller("FormTemplatesCtrl",
+                function (  $scope, $rootScope, $http, $localStorage, $state,
+                            DialogService, ToastService, TemplateService, NavService) {
+    /*------------------------------- INIT -------------------------------*/
     var vm = this
+
+    // Set menu and option
+    NavService.activeMenu = NavService.templates
+    NavService.activeMenu.activeTab = NavService.templates.tabs[0]
+
+    // Init Object
+    vm.selection = []
+    vm.templates = []
+    vm.bCheckAll = false
 
     /*------------------------------- Scope APIs -------------------------------*/
     vm.edit = function () {
@@ -94,16 +105,7 @@ app.controller("FormTemplatesCtrl", function (  $scope, $rootScope, $http, $loca
         }
     }
 
-    /*------------------------------- INIT -------------------------------*/
-    // Set menu and option
-    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_TEMPLATES]
-    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_FORM]
-
-    // Init Object
-    vm.selection = []
-    vm.templates = []
-    vm.bCheckAll = false
-
+    /*------------------------------- Post INIT -------------------------------*/
     // Sync templates if required
     if (!TemplateService.cache.length) {
         TemplateService.sync().then(init)

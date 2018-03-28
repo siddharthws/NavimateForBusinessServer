@@ -5,11 +5,9 @@
         <div class="logo-container align-self-center">
             <img class="ic-large align-self-center" src="/static/images/logo.png">
         </div>
-        <button class="nav-btn nav-menu-btn" ng-repeat="item in $root.Constants.DashboardNav.Menu"
-                ng-if="role >= item.accessLevel"
-                ng-class="{'active': item.id == nav.item.id}"
-                ui-sref="{{'dashboard.' + item.state + '-' + item.options[0].state}}">
-            {{item.name}}
+        <button class="nav-btn nav-menu-btn" ng-repeat="menu in vm.menus" ng-if="role >= menu.access"
+                ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
+            {{menu.name}}
         </button>
         <button class="nav-btn nav-menu-btn" ng-click="openHelp()">
             Help
@@ -18,11 +16,10 @@
 
     <div class="d-flex flex-column w-90">
         <div class="bg-black d-flex align-items-center">
-            <button ng-repeat="option in nav.item.options"
-                    ng-click="optionClicked('dashboard.' + nav.item.state + '-' + option.state)"
+            <button ng-repeat="tab in vm.nav.activeMenu.tabs" ng-click="vm.nav.activeMenu.selectTab($index)"
                     class="nav-btn nav-tab-btn h-50 align-self-end"
-                    ng-class="{'active': nav.option.id == option.id}">
-                {{option.name}}
+                    ng-class="{'active': vm.nav.activeMenu.activeTab == tab}">
+                {{tab.name}}
             </button>
 
             <div class="dropdown ml-auto mr-5 my-1">

@@ -2,14 +2,15 @@
  * Created by Siddharth on 04-09-2017.
  */
 
-app.controller("LeadManageCtrl", function ( $scope, $rootScope, $http, $localStorage, $state,
-                                            DialogService, ToastService, TableService, ImportService) {
+app.controller("LeadManageCtrl",
+                function ( $scope, $rootScope, $http, $localStorage, $state,
+                            DialogService, ToastService, TableService, ImportService, NavService) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
     // Set menu and option
-    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_LEADS]
-    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
+    NavService.activeMenu = NavService.leads
+    NavService.activeMenu.activeTab = NavService.leads.tabs[0]
 
     // Set lead table as active
     TableService.activeTable = TableService.leadTable

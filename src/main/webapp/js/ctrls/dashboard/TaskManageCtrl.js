@@ -2,12 +2,14 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TaskManageCtrl", function ($scope, $rootScope, $http, $localStorage, $state, DialogService, ToastService, TableService) {
+app.controller("TaskManageCtrl",
+                function (  $scope, $rootScope, $http, $localStorage, $state,
+                            DialogService, ToastService, TableService, NavService) {
     var vm = this
 
     // Set menu and option
-    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_TASKS]
-    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
+    NavService.activeMenu = NavService.tasks
+    NavService.activeMenu.activeTab = NavService.tasks.tabs[0]
 
     // Set task table as active
     TableService.activeTable = TableService.taskTable

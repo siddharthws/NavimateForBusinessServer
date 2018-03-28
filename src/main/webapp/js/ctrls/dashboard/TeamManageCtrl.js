@@ -2,14 +2,15 @@
  * Created by Siddharth on 22-08-2017.
  */
 
-app.controller("TeamManageCtrl", function ( $scope, $rootScope, $http, $localStorage, $state,
-                                            DialogService, ToastService, TeamService, TableService) {
+app.controller("TeamManageCtrl",
+                function (  $scope, $rootScope, $http, $localStorage, $state,
+                            DialogService, ToastService, TeamService, TableService, NavService) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
     // Set menu and option
-    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_TEAM]
-    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_MANAGE]
+    NavService.activeMenu = NavService.team
+    NavService.team.activeTab = NavService.team.tabs[0]
 
     // Set team table as active
     TableService.activeTable = TableService.teamTable
