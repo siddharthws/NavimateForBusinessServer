@@ -2,7 +2,7 @@
  * Created by Chandel on 11-02-2018.
  */
 
-app.controller("LocReportCtrl", function ($rootScope, $scope, $filter, LocReportDS) {
+app.controller("MovementReportCtrl", function ($rootScope, $scope, $filter, LocReportDS) {
     /*-------------------------------------- INIT ---------------------------------------------*/
     var vm = this
 

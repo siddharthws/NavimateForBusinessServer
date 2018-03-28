@@ -191,15 +191,15 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/tasks/manage.html',
         controller: 'TaskManageCtrl as $ctrl'
     })
-    .state('dashboard.reports-report', {
-        url: '/report',
-        templateUrl: '/static/views/dashboard/reports/report.html',
-        controller: 'ReportCtrl as $ctrl'
+    .state('dashboard.reports-submission', {
+        url: '/submission',
+        templateUrl: '/static/views/dashboard/reports/submission.html',
+        controller: 'SubmissionReportCtrl as $ctrl'
     })
-    .state('dashboard.reports-location', {
-        url: '/location',
-        templateUrl: '/static/views/dashboard/reports/location.html',
-        controller: 'LocReportCtrl as $ctrl'
+    .state('dashboard.reports-movement', {
+        url: '/movement',
+        templateUrl: '/static/views/dashboard/reports/movement.html',
+        controller: 'MovementReportCtrl as $ctrl'
     })
     .state('dashboard.templates-form', {
         url: '/templates/form',
