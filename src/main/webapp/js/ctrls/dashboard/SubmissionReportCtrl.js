@@ -2,14 +2,15 @@
  * Created by Siddharth on 11-12-2017.
  */
 
-app.controller("SubmissionReportCtrl", function ($scope, $rootScope, $http, $localStorage,
-                                                 ToastService, TableService) {
+app.controller("SubmissionReportCtrl",
+                function ($scope, $rootScope, $http, $localStorage,
+                         ToastService, TableService, NavService) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
     // Set menu and option
-    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_REPORTS]
-    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_REPORT]
+    NavService.activeMenu = NavService.reports
+    NavService.activeMenu.activeTab = NavService.reports.tabs[0]
 
     // Set form table as active
     TableService.activeTable = TableService.formTable

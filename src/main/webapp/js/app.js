@@ -174,7 +174,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         abstract: true,
         url: '/dashboard',
         templateUrl: '/static/views/dashboard.html',
-        controller: 'DashboardCtrl'
+        controller: 'DashboardCtrl as vm'
     })
     .state('dashboard.team-manage', {
         url: '/team/manage',

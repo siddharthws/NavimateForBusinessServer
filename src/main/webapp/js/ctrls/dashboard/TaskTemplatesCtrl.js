@@ -2,9 +2,14 @@
  * Created by Siddharth on 20-01-2018.
  */
 
-app.controller("TaskTemplatesCtrl", function (  $scope, $rootScope, $http, $localStorage, $state,
-                                                DialogService, ToastService, TemplateService) {
+app.controller("TaskTemplatesCtrl",
+                function (  $scope, $rootScope, $http, $localStorage, $state,
+                            DialogService, ToastService, TemplateService, NavService) {
     var vm = this
+
+    // Set menu and option
+    NavService.activeMenu = NavService.templates
+    NavService.activeMenu.activeTab = NavService.templates.tabs[2]
 
     /*------------------------------- Scope APIs -------------------------------*/
     vm.edit = function () {

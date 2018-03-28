@@ -2,13 +2,15 @@
  * Created by Chandel on 06-02-2018.
  */
 
-app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScope, ToastService, $http) {
+app.controller("CompanySettingsCtrl",
+                function ($scope, $localStorage ,$rootScope, $http,
+                          ToastService, NavService) {
+    /*------------------------------------ INIT --------------------------------*/
     var vm = this
 
-    /*------------------------------------ INIT --------------------------------*/
     // Set menu and option
-    $scope.nav.item = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_COMPANY]
-    $scope.nav.option = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_SETTINGS]
+    NavService.activeMenu = NavService.company
+    NavService.activeMenu.activeTab = NavService.company.tabs[0]
 
     vm.startHr = $localStorage.startHr
     vm.endHr = $localStorage.endHr

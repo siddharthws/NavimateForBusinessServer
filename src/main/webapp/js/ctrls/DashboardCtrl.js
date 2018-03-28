@@ -2,11 +2,19 @@
  * Created by Siddharth on 23-08-2017.
  */
 
-app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window, $localStorage,
-                                            AuthService, DialogService, ToastService,
-                                            TemplateService, TeamService) {
-
+app.controller('DashboardCtrl',
+                function (  $scope, $rootScope, $state, $window, $localStorage,
+                            AuthService, DialogService, ToastService, NavService,
+                            TemplateService, TeamService) {
     /*------------------------------------ INIT --------------------------------*/
+    var vm = this
+
+    // Set Nav controls
+    vm.nav = NavService
+
+    // Prepare 2D array of menu items so that HRs can be displayed
+    vm.menus = [vm.nav.team, vm.nav.leads, vm.nav.tasks, vm.nav.reports, vm.nav.templates, vm.nav.company]
+
     // Menu Selection Parameters
     $scope.nav = {}
     $scope.name = $localStorage.name
