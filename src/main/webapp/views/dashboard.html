@@ -23,10 +23,15 @@
             </button>
 
             <div class="dropdown ml-auto mr-5 my-1">
-                <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown">
-                    <span>{{name}} | </span>
-                    <img class="img-icon" src="/static/images/dropdown.png"/>
-                </button>
+                <div class="fbx-h align-items-center bttn" data-toggle="dropdown">
+                    <img src="/static/images/ic_user_photo.png" class="ib-base ib-l">
+                    <div class="fbx-v align-items-center ml-3">
+                        <span class="text-white text-bold">Welcome,</span>
+                        <span class="text-white">{{name}}</span>
+                    </div>
+                    <img class="img-icon ml-2" src="/static/images/ic_dropdown_light.png"/>
+                </div>
+
                 <div class="dropdown-menu">
                     <button class="dropdown-item" ng-click="changePassword()">Change Password</button>
                     <button class="dropdown-item" ng-click="logout()">Logout</button>
