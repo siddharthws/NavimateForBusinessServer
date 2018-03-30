@@ -7,6 +7,11 @@
     width: 10%;
 }
 
+.w-span {
+    width: 100%;
+    height: auto;
+}
+
 .width-sm {
     width: 3em;
 }
