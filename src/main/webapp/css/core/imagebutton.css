@@ -11,9 +11,16 @@
 }
 
 /* Image button sizing */
-.ib-s {
+.ib-xs {
     height: 1.25em;
     width: 1.25em;
+    background-size: 80%;
+    margin: 0em;
+}
+
+.ib-s {
+    height: 1.75em;
+    width: 1.75em;
     background-size: 80%;
     margin: 0em;
 }
