@@ -48,13 +48,13 @@
                             </span>
 
                             <!-- Sorting Button -->
-                            <input type="button" value="" class="ib-base ib-s ib-sort" title="Toggle Sorting"
+                            <input type="button" value="" class="ib-base ib-xs ib-sort" title="Toggle Sorting"
                                    ng-if="column.bSortable" ng-click="vm.toggleSorting($index)"
                                    ng-class="{  'sort-asc'  : column.sortType == vm.TableConst.SORT_ASC,
                                                 'sort-desc' : column.sortType == vm.TableConst.SORT_DESC}"/>
 
                             <!-- Blanks Filter Button -->
-                            <input type="button" value="" class="ib-base ib-s ib-blank"
+                            <input type="button" value="" class="ib-base ib-xs ib-blank"
                                    title="Show / Hide Blanks" ng-click="vm.toggleBlanks($index)"
                                    ng-class="{'active' : column.bNoBlanks}"/>
                         </div>
@@ -119,13 +119,13 @@
                         </span>
 
                         <!-- Button to open image -->
-                        <input type="button" value="" class="ib-base ib-s ib-hover ib-link" title="Open Image"
+                        <input type="button" value="" class="ib-base ib-xs ib-hover ib-link" title="Open Image"
                                ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_PHOTO ||
                                                          column.type == vm.TemplateConst.FIELD_TYPE_SIGN)"
                                ng-click="$root.Statics.absorbEvent($event); vm.showImage(value)"/>
 
                         <!-- Button to open location -->
-                        <input type="button" value="" class="ib-base ib-s ib-hover ib-map" title="Open Location"
+                        <input type="button" value="" class="ib-base ib-xs ib-hover ib-map" title="Open Location"
                                ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_LOCATION)"
                                ng-click="$root.Statics.absorbEvent($event); vm.showLocation(value, row.name)"/>
                     </td>

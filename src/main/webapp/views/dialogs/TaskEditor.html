@@ -69,7 +69,7 @@
                      ng-class="{'active': vm.selectedTask == task, 'err': vm.bInputError && !task.isValid()}"
                      ng-click="vm.selectedTask = task" md-ink-ripple="#000000">
                     <span class="ml-2 text-ellipsize" >{{($index + 1) + ". " + task.lead.name}}</span>
-                    <input type="button" value="" class="ib-base ib-s ib-hover ib-cross" ng-click="vm.remove($index); $root.Statics.absorbEvent($event)"/>
+                    <input type="button" value="" class="ib-base ib-xs ib-hover ib-cross" ng-click="vm.remove($index); $root.Statics.absorbEvent($event)"/>
                 </div>
             </div>
 
