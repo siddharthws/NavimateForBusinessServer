@@ -14,6 +14,10 @@
     background-color: #FAFAFA;
 }
 
+.bg-dark-blue {
+    background-color: #0c1730;
+}
+
 /* Classes for setting background image as per status */
 
 /* -- Classes to put a status icon as background for an empty div -- */

@@ -1,11 +1,11 @@
 <div class="d-flex flex-column h-100 w-100">
     <div class="d-flex flex-1">
         <!-- Help Menu -->
-        <div class="d-flex flex-column bg-black overflow-auto">
-            <a class="a-white" href="#">
-                <img class="ic-large m-2" src="/static/images/logo.png">
-                <span>Navimate Help</span>
-            </a>
+        <div class="d-flex flex-column dashboard-menu bg-dark-blue overflow-auto">
+            <div class="fbx-v align-items-center my-3">
+                <img class="ib-base" ng-src="/static/images/ic_logo.png">
+                <img class="w-span" ng-src="/static/images/ic_logo_text.png">
+            </div>
             <button class="nav-btn nav-menu-btn" ng-click="scrollTo('introduction')">Introduction</button>
             <button class="nav-btn nav-menu-btn" ng-click="scrollTo('gettingStarted')">Getting Started</button>
             <button class="nav-btn nav-menu-btn" ng-click="scrollTo('registration')">Registration</button>
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Help Content -->
-        <div class="flex-1 overflow-auto p-2">
+        <div class="dashboard-content overflow-auto p-2">
             <!-- Introduction -->
             <div id="introduction">
                 <h4><b>1. Introduction</b></h4>
