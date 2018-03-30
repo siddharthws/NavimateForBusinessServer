@@ -13,7 +13,11 @@ app.controller('DashboardCtrl',
     vm.nav = NavService
 
     // Prepare 2D array of menu items so that HRs can be displayed
-    vm.menus = [vm.nav.team, vm.nav.leads, vm.nav.tasks, vm.nav.reports, vm.nav.templates, vm.nav.company]
+    vm.menus = [
+        [vm.nav.team, vm.nav.leads, vm.nav.tasks],
+        [vm.nav.reports, vm.nav.templates],
+        [vm.nav.company]
+    ]
 
     // Menu Selection Parameters
     $scope.nav = {}

@@ -26,6 +26,11 @@ ul.bullet {
     position: relative;
 }
 
+/* Horizontal Rule Styling */
+hr {
+    border-color: darkgray;
+}
+
 /* Special spacing classes */
 .ml-neg {
     margin-left: -2px;

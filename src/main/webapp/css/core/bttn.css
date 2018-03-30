@@ -10,3 +10,46 @@
 .bttn:focus {
     outline: none;
 }
+
+/* Menu Buttons */
+.bttn-menu {
+    padding: 0.5em 0em 0.5em 1em;
+    color:  rgba(255, 255, 255, 0.5);
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.bttn-menu:hover {
+    color: white;
+    background-color: black;
+    border-right: 5px solid #37bcf2;
+}
+
+.bttn-menu.active {
+    color: white;
+    background-color: #37bcf2;
+    border-right: 5px solid #FAFAFA;
+}
+
+/* Tab buttons */
+.bttn-tab {
+    position: relative;
+    color: rgba(0, 0, 0, 0.5);
+    background-color: #E8E8E8;
+    border-top-left-radius: 0.25em;
+    border-top-right-radius: 0.25em;
+    border: none;
+    box-shadow: 0px -10px 10px -10px gray inset;
+    margin: 0 0.25em;
+    padding: 0.5em 3em;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.bttn-tab:hover,
+.bttn-tab.active {
+    box-shadow: none;
+    background-color: #FAFAFA;
+    color: rgba(0, 0, 0, 0.8);
+    padding: 0.75em 4em;
+}

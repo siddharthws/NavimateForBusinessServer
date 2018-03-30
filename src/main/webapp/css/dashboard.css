@@ -4,8 +4,17 @@
     height: 100%;
     width: 100%;
     min-height: 100%;
+    background-color: #0c1730;
 }
 
 .logo-container {
     padding: 10px;
+}
+
+.dashboard-menu {
+    width: 10em;
+}
+
+.dashboard-content {
+    width: calc(100% - 10em);
 }

@@ -1,24 +1,46 @@
 <!-- Dahsboard -->
-
 <div class="dashboard d-flex">
-    <div class="bg-black d-flex flex-column w-10">
+    <div class="fbx-v dashboard-menu">
         <div class="logo-container align-self-center">
             <img class="ic-large align-self-center" src="/static/images/logo.png">
         </div>
-        <button class="nav-btn nav-menu-btn" ng-repeat="menu in vm.menus" ng-if="role >= menu.access"
-                ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
-            {{menu.name}}
-        </button>
-        <button class="nav-btn nav-menu-btn" ng-click="openHelp()">
-            Help
-        </button>
+
+        <!-- Menu Items Top -->
+        <div ng-repeat="menu in vm.menus[0]" class="fbx-h align-items-center bttn bttn-menu" ng-if="role >= menu.access"
+             ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
+            <img class="ib-base ib-s" ng-src="{{'/static/images/' + menu.icon}}">
+            <div class="ml-2 text-sm text-bold">{{menu.name}}</div>
+        </div>
+
+        <hr class="my-2 mx-3">
+
+        <!-- Menu Items Mid -->
+        <div ng-repeat="menu in vm.menus[1]" class="fbx-h align-items-center bttn bttn-menu" ng-if="role >= menu.access"
+             ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
+            <img class="ib-base ib-s" ng-src="{{'/static/images/' + menu.icon}}">
+            <div class="ml-2 text-sm text-bold">{{menu.name}}</div>
+        </div>
+
+        <hr class="my-2 mx-3">
+
+        <!-- Menu Items Bottom -->
+        <div ng-repeat="menu in vm.menus[2]" class="fbx-h align-items-center bttn bttn-menu" ng-if="role >= menu.access"
+             ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
+            <img class="ib-base ib-s" ng-src="{{'/static/images/' + menu.icon}}">
+            <div class="ml-2 text-sm text-bold">{{menu.name}}</div>
+        </div>
+
+        <!-- Help button -->
+        <div class="fbx-h align-items-center bttn bttn-menu" ng-click="openHelp()">
+            <img class="ib-base ib-s" ng-src="/static/images/ic_help.png">
+            <div class="ml-2 text-sm text-bold">HELP</div>
+        </div>
     </div>
 
-    <div class="d-flex flex-column w-90">
-        <div class="bg-black d-flex align-items-center">
+    <div class="d-flex flex-column dashboard-content">
+        <div class="d-flex align-items-center">
             <button ng-repeat="tab in vm.nav.activeMenu.tabs" ng-click="vm.nav.activeMenu.selectTab($index)"
-                    class="nav-btn nav-tab-btn h-50 align-self-end"
-                    ng-class="{'active': vm.nav.activeMenu.activeTab == tab}">
+                    class="bttn bttn-tab align-self-end text-sm" ng-class="{'active': vm.nav.activeMenu.activeTab == tab}">
                 {{tab.name}}
             </button>
 
@@ -39,6 +61,6 @@
             </div>
         </div>
 
-        <div class="d-flex flex-column flex-1 p-1 bg-off-white" ui-view></div>
+        <div class="fbx-v flex-1 bdr-round mr-2 mb-2 p-1 bg-off-white" ui-view></div>
     </div>
 </div>
