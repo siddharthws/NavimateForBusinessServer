@@ -76,6 +76,9 @@ class UserService {
     def repFromJson(def json, User user) {
         User rep
 
+        // Update Country Code to default
+        json.countryCode = json.countryCode ?: "91"
+
         // Get rep by phone number
         rep = User.findByCountryCodeAndPhone(json.countryCode, json.phone)
 
@@ -102,7 +105,7 @@ class UserService {
         rep.manager = user
         rep.name = json.name
         rep.phone = json.phone
-        rep.countryCode = json.countryCode ? json.countryCode : '91'
+        rep.countryCode = json.countryCode
 
         rep
     }

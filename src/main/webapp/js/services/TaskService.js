@@ -96,7 +96,7 @@ app.service('TaskService', function($q, $http, $localStorage, ObjTask) {
             // Error
             function (error) {
                 // Resolve promise
-                deferred.reject()
+                deferred.reject(error.data.error)
             })
 
         return deferred.promise

@@ -133,7 +133,7 @@ app.service('TeamService', function($q, $http, $localStorage, ObjUser) {
             // Error
             function (error) {
                 // Reject promise
-                deferred.reject()
+                deferred.reject(error.data.error)
             })
 
         return deferred.promise

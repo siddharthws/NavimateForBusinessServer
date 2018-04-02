@@ -71,7 +71,7 @@ app.service('TemplateService', function($q, $http, $localStorage, ObjTemplate) {
             // Error callback
             function (error) {
                 // Reject promise
-                deferred.reject()
+                deferred.reject(error.data.error)
             })
 
         // Return promise

@@ -96,7 +96,7 @@ app.service('LeadService', function($q, $http, $localStorage, ObjLead) {
             // Error
             function (error) {
                 // Reject promise
-                deferred.reject()
+                deferred.reject(error.data.error)
             })
 
         return deferred.promise
