@@ -4,14 +4,14 @@
  * Controller for Date Picker Directive
  */
 
-app.controller('datepickerCtrl', function ($scope, $filter, $timeout) {
+app.controller('datepickerCtrl', function ($scope, $timeout) {
     /* ------------------------------ INIT --------------------------------- */
     $scope.rawDate = null
 
     /* ------------------------------ Public APIs --------------------------------- */
     $scope.dateChanged = function () {
         // Update date model to required format
-        $scope.dateModel = $filter('date')($scope.rawDate, $scope.modelFormat)
+        $scope.dateModel = moment($scope.rawDate.toString()).format($scope.modelFormat)
 
         // Trigger callback on next digest cycle
         $timeout(function () {
@@ -24,7 +24,7 @@ app.controller('datepickerCtrl', function ($scope, $filter, $timeout) {
     function updateFromModel () {
         if ($scope.dateModel) {
             // Update display text in required format
-            $scope.displayText = $filter('date')(new Date($scope.dateModel), $scope.displayFormat)
+            $scope.displayText = moment($scope.dateModel, $scope.modelFormat).format($scope.displayFormat)
         } else {
             // Update display text to empty
             $scope.displayText = ""

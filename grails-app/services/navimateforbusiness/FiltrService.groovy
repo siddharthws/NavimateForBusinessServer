@@ -2,6 +2,8 @@ package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
 
+import java.text.SimpleDateFormat
+
 @Transactional
 class FiltrService {
     // ----------------------- Dependencies ---------------------------//
@@ -83,18 +85,29 @@ class FiltrService {
                     }
                     break
                 case navimateforbusiness.Constants.Filter.TYPE_DATE:
+                    SimpleDateFormat sdf = new SimpleDateFormat('dd-MM-yyyy')
                     // Check if 'from' filter is applied
                     if (filter.value.from) {
-                        // Check if value passes the filter
-                        if (value == '-' || filter.value.from > value) {
+                        if (value != '-') {
+                            Date dateVal = sdf.parse(value)
+                            Date dateFilter = sdf.parse(filter.value.from)
+                            if (dateVal < dateFilter) {
+                                bFiltered = false
+                            }
+                        } else {
                             bFiltered = false
                         }
                     }
 
                     // Check if 'to' filter is applied
                     if (filter.value.to) {
-                        // Check if value passes the filter
-                        if (value == '-' || filter.value.to < value) {
+                        if (value != '-') {
+                            Date dateVal = sdf.parse(value)
+                            Date dateFilter = sdf.parse(filter.value.to)
+                            if (dateVal > dateFilter) {
+                                bFiltered = false
+                            }
+                        } else {
                             bFiltered = false
                         }
                     }
