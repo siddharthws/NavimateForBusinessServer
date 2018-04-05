@@ -3,7 +3,7 @@
  */
 
 
-app.service("FileService", function ($filter) {
+app.service("FileService", function () {
     /*------------------------------------ INIT --------------------------------*/
     var vm  = this
 
@@ -14,7 +14,8 @@ app.service("FileService", function ($filter) {
         var linkElement = document.createElement('a');
 
         // Add timestamp to file
-        filename += '_' + $filter('date')(new Date(), "_dd_MM_yy_HHmm") + '.xls'
+        var timestamp = moment().format('_DD_MM_YY_HHmm')
+        filename += '_' + timestamp + '.xls'
 
         try {
             // Create blob element to save to file
