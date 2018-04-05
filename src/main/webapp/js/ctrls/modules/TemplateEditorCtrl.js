@@ -32,7 +32,8 @@ app.controller('TemplateEditorCtrl', function ( $scope, $rootScope,
         // Update Value data structure according to selection
         if ((newType == vm.Const.FIELD_TYPE_TEXT) ||
             (newType == vm.Const.FIELD_TYPE_PHOTO) ||
-            (newType == vm.Const.FIELD_TYPE_SIGN)) {
+            (newType == vm.Const.FIELD_TYPE_SIGN) ||
+            (newType == vm.Const.FIELD_TYPE_DATE)) {
             value = ""
         } else if (newType == vm.Const.FIELD_TYPE_NUMBER) {
             value = 0
