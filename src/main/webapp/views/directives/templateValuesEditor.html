@@ -25,5 +25,12 @@
         <!-- Checklist Field Editor -->
         <checklist ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_CHECKLIST"
                    label="{{value.field.title}}" value="value.value"></checklist>
+
+        <!-- Date Field Editor -->
+        <div class="fbx-v" ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_DATE">
+            <span class="text-label">{{value.field.title}}</span>
+            <datepicker hint="Select" model-format="DD-MM-YYYY" display-format="DD-MM-YYYY"
+                        date-model="value.value"></datepicker>
+        </div>
     </div>
 </div>

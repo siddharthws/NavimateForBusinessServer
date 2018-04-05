@@ -3,6 +3,8 @@ package navimateforbusiness
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 
+import java.text.SimpleDateFormat
+
 @Transactional
 class ImportService {
     // ----------------------- Dependencies ---------------------------//
@@ -139,6 +141,17 @@ class ImportService {
                         Double val = Double.parseDouble(value)
                     } catch (Exception e) {
                         throw new navimateforbusiness.ApiException("Value in cell " + getCellAddress(colIdx, rowIdx) + " must be a number", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                    }
+                    break
+
+                case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
+                    // Ensure date is in correct format
+                    try {
+                        SimpleDateFormat df = new SimpleDateFormat('dd-MM-yyyy')
+                        Date date = df.parse(value)
+                    } catch (Exception e) {
+                        // Bad date formatting
+                        throw new navimateforbusiness.ApiException("Date in cell " + getCellAddress(colIdx, rowIdx) + " must be in dd-MM-yyyy format", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
                     }
                     break
                 case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX:

@@ -10,7 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook
 class TableService {
 
     // ----------------------- Constants ---------------------------//
-    static String FORMAT_DATE = "yyyy-MM-dd"
+    static String FORMAT_DATE = "dd-MM-yyyy"
     static String FORMAT_TIME = "HH:mm:ss"
     static TimeZone IST = TimeZone.getTimeZone('Asia/Calcutta')
 
@@ -496,6 +496,7 @@ class TableService {
         // Parse to string as per field type
         switch (value.field.type) {
             case navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT:
+            case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
             case navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO:
             case navimateforbusiness.Constants.Template.FIELD_TYPE_SIGN:
             case navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION:
