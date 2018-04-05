@@ -2,7 +2,7 @@
  * Created by Chandel on 11-02-2018.
  */
 
-app.controller("LocReportCtrl", function ($rootScope, $scope, $filter, LocReportDS) {
+app.controller("LocReportCtrl", function ($rootScope, $scope, LocReportDS) {
     /*-------------------------------------- INIT ---------------------------------------------*/
     var vm = this
 
@@ -33,7 +33,7 @@ app.controller("LocReportCtrl", function ($rootScope, $scope, $filter, LocReport
             vm.report = []
 
             // Format the selected the date to 'yyyy-MM-dd' format
-            vm.formattedDateString = $filter('date')(vm.selectedDate, 'yyyy-MM-dd')
+            vm.formattedDateString = moment(vm.selectedDate).format('YYYY-MM-DD')
 
             // Start Async Request to get data
             $rootScope.showWaitingDialog("Getting Report...")

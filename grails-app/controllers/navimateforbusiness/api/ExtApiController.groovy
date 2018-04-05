@@ -17,6 +17,9 @@ import navimateforbusiness.User
 import navimateforbusiness.Value
 import org.grails.web.json.JSONArray
 
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
 class ExtApiController {
 
     def googleApiService
@@ -182,6 +185,7 @@ class ExtApiController {
                     case Constants.Template.FIELD_TYPE_TEXT:
                     case Constants.Template.FIELD_TYPE_NUMBER:
                     case Constants.Template.FIELD_TYPE_CHECKBOX:
+                    case Constants.Template.FIELD_TYPE_DATE:
                         valueString = value.value
                         break
                     case Constants.Template.FIELD_TYPE_CHECKLIST:
@@ -389,6 +393,17 @@ class ExtApiController {
                         }
                         break
 
+                    case Constants.Template.FIELD_TYPE_DATE:
+                        // Ensure date is in correct format
+                        try {
+                            SimpleDateFormat df = new SimpleDateFormat('dd-MM-yyyy')
+                            Date date = df.parse(valueString)
+                        } catch (Exception e) {
+                            // Bad date formatting
+                            throw new ApiException("Unable to parse value for field " + key + " to date (dd-MM-yyyy) in lead id " + leadJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+                        break
+
                     case Constants.Template.FIELD_TYPE_RADIOLIST:
                         // Values should be parseable to integer
                         int numValue
@@ -549,6 +564,17 @@ class ExtApiController {
                             numValue = Long.parseLong(valueString)
                         } catch (Exception e) {
                             throw new ApiException("Unable to parse value for field " + key + " to long in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
+                        }
+                        break
+
+                    case Constants.Template.FIELD_TYPE_DATE:
+                        // Ensure date is in correct format
+                        try {
+                            SimpleDateFormat df = new SimpleDateFormat('dd-MM-yyyy')
+                            Date date = df.parse(valueString)
+                        } catch (Exception e) {
+                            // Bad date formatting
+                            throw new ApiException("Unable to parse value for field " + key + " to date (dd-MM-yyyy) in task id " + taskJson.id, Constants.HttpCodes.BAD_REQUEST)
                         }
                         break
 
@@ -734,6 +760,7 @@ class ExtApiController {
                         case Constants.Template.FIELD_TYPE_TEXT:
                         case Constants.Template.FIELD_TYPE_NUMBER:
                         case Constants.Template.FIELD_TYPE_CHECKBOX:
+                        case Constants.Template.FIELD_TYPE_DATE:
                             value.value = valueString
                             break
 
@@ -869,6 +896,7 @@ class ExtApiController {
                         case Constants.Template.FIELD_TYPE_TEXT:
                         case Constants.Template.FIELD_TYPE_NUMBER:
                         case Constants.Template.FIELD_TYPE_CHECKBOX:
+                        case Constants.Template.FIELD_TYPE_DATE:
                             value.value = valueString
                             break
 

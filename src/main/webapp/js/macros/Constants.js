@@ -40,18 +40,6 @@ Constants.Tracking = {
     ERROR_OFFLINE:          6
 }
 
-// Form Related Constants
-Constants.Form = {
-    Types : [
-        'text',
-        'number',
-        'radioList',
-        'checkList',
-        'photo',
-        'signature'
-    ]
-}
-
 /* ------------------------------- Dashboard navigation -----------------------------------*/
 Constants.DashboardNav = {
     ITEM_TEAM       : 0,
@@ -276,7 +264,8 @@ Constants.Template.FORM_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_CHECKLIST,
     Constants.Template.FIELD_TYPE_PHOTO,
     Constants.Template.FIELD_TYPE_SIGN,
-    Constants.Template.FIELD_TYPE_CHECKBOX
+    Constants.Template.FIELD_TYPE_CHECKBOX,
+    Constants.Template.FIELD_TYPE_DATE
 ]
 
 Constants.Template.LEAD_FIELD_TYPES = [
@@ -284,7 +273,8 @@ Constants.Template.LEAD_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_NUMBER,
     Constants.Template.FIELD_TYPE_RADIOLIST,
     Constants.Template.FIELD_TYPE_CHECKLIST,
-    Constants.Template.FIELD_TYPE_CHECKBOX
+    Constants.Template.FIELD_TYPE_CHECKBOX,
+    Constants.Template.FIELD_TYPE_DATE
 ]
 
 Constants.Template.TASK_FIELD_TYPES = [
@@ -292,7 +282,8 @@ Constants.Template.TASK_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_NUMBER,
     Constants.Template.FIELD_TYPE_RADIOLIST,
     Constants.Template.FIELD_TYPE_CHECKLIST,
-    Constants.Template.FIELD_TYPE_CHECKBOX
+    Constants.Template.FIELD_TYPE_CHECKBOX,
+    Constants.Template.FIELD_TYPE_DATE
 ]
 
 /* ------------------------------- Filters -----------------------------------*/
