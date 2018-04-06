@@ -2,9 +2,12 @@ package navimateforbusiness
 
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
+import org.apache.poi.hssf.usermodel.HSSFDateUtil
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.DataFormatter
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+
+import java.text.SimpleDateFormat
 
 @Transactional
 class TableService {
@@ -275,6 +278,11 @@ class TableService {
                                 value = cell.getRichStringCellValue().toString()
                                 break
                         }
+                    } else if ( cell.getCellType() == Cell.CELL_TYPE_NUMERIC &&
+                                HSSFDateUtil.isCellDateFormatted(cell)) {
+                        SimpleDateFormat sdf = new SimpleDateFormat('dd-MM-yyyy')
+                        Date date = cell.getDateCellValue()
+                        value = sdf.format(date)
                     } else {
                         value = df.formatCellValue(cell)
                     }
