@@ -90,6 +90,8 @@ class UrlMappings {
         "/api/ext/report/forms"         (controller: "ExtApi") {action = [GET: "getFormReport"]}
 
         /*------------------------- Porting APIs --------------------------*/
+        "/api/port/taskCreator"         (controller: "PortingApi") {action = [GET: "taskCreator"]}
+
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs
         "/api/track/start"          (controller: "TrackingApi") {action = [POST: "start"]}

@@ -17,6 +17,7 @@ class Task {
             account:    Account,
             manager:    User
     ]
+    User creator
     User rep
     Lead lead
 
@@ -42,6 +43,7 @@ class Task {
     ]
 
     static constraints = {
+        creator         nullable: true
         rep             nullable: true
         extId           nullable: true
     }
