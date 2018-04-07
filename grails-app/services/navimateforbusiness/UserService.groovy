@@ -69,7 +69,9 @@ class UserService {
             role:           user.role.value,
             phone:          user.phone,
             countryCode:    user.countryCode,
-            email:          user.email
+            email:          user.email,
+            manager:        user.manager ? [name: user.manager.name, id: user.manager.id] :
+                                           [name: user.account.admin.name, id: user.account.admin.id]
         ]
     }
 
@@ -95,6 +97,18 @@ class UserService {
             }
         }
 
+        // Get manager to be assigned to task
+        User manager
+        if (!json.managerId || json.managerId == user.id) {
+            manager = user
+        } else {
+            manager = getManagerForUserById(user, json.managerId)
+        }
+
+        if (!manager) {
+            throw new navimateforbusiness.ApiException("Invalid manager assigned", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
         // Create new rep if required
         if (!rep) {
             rep = new User(role: navimateforbusiness.Role.REP)
@@ -102,7 +116,7 @@ class UserService {
 
         // Update params using JSON
         rep.account = user.account
-        rep.manager = user
+        rep.manager = manager
         rep.name = json.name
         rep.phone = json.phone
         rep.countryCode = json.countryCode

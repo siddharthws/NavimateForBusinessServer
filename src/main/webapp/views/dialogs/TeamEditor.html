@@ -31,6 +31,10 @@
                     <input-box class="ml-3" model="vm.selectedUser.phone" b-number="true" label="Phone*" hint="Enter Phone number"
                                b-show-error="vm.bInputError" err="vm.selectedUser.getPhoneErr()"></input-box>
                 </div>
+
+                <!-- Manager selector -->
+                <dropdown class="mt-3" label="Manager" text="vm.selectedUser.manager.name" items="vm.managers"
+                          on-select="vm.updateManager(id)"></dropdown>
             </div>
         </div>
 

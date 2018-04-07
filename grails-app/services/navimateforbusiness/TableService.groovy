@@ -194,6 +194,7 @@ class TableService {
             values[0] = rep.name
             values[1] = '+' + rep.countryCode + " " + rep.phone
             values[2] = rep.role.name()
+            values[3] = rep.manager.name
 
             // Add row to table
             rows.push([
@@ -457,6 +458,7 @@ class TableService {
         columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Name"))
         columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Phone"))
         columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Role"))
+        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Manager"))
 
         columns
     }

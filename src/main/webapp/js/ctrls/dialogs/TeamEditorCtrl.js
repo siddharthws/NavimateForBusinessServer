@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('TeamEditorCtrl', function ( $scope, $rootScope, $mdDialog,
+app.controller('TeamEditorCtrl', function ( $scope, $rootScope, $mdDialog, $localStorage,
                                             ToastService, TeamService, ObjUser,
                                             ids, cb) {
     /* ------------------------------- Init -----------------------------------*/
@@ -17,17 +17,34 @@ app.controller('TeamEditorCtrl', function ( $scope, $rootScope, $mdDialog,
     vm.bLoadError = false
     vm.bInputError
 
+    // Create array of manager objects to send to dropdown
+    vm.managers = []
+    vm.managers.push({id: $localStorage.id, name: $localStorage.name})
+    TeamService.managers.forEach(function (manager) {
+        vm.managers.push({id: manager.id, name: manager.name})
+    })
+
     /* ------------------------------- Public APIs -----------------------------------*/
     // Method to add a new item to list
     vm.add = function () {
         // Create empty rep object
-        var rep = new ObjUser(0, "", Constants.Role.REP, "", "", "")
+        var rep = new ObjUser(0, "", Constants.Role.REP, "", "", "", {name: $localStorage.name, id: $localStorage.id})
 
         // Add to team
         vm.team.push(rep)
 
         // Set selected
         vm.selectedUser = rep
+    }
+
+    // Method to update manager
+    vm.updateManager = function (id) {
+        if (id == $localStorage.id) {
+            vm.selectedUser.manager = {id: $localStorage.id, name: $localStorage.name}
+        } else {
+            var manager = TeamService.getManagerById(id)
+            vm.selectedUser.manager = {id: manager.id, name: manager.name}
+        }
     }
 
     // Method to remove an item from list
