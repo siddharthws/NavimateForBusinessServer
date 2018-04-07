@@ -33,6 +33,7 @@ class TaskService {
 
         // Sort tasks in descending order of create date
         tasks = tasks.sort {it -> it.dateCreated}
+        tasks = tasks.sort {it -> it.status.name()}
         tasks.reverse(true)
 
         // Return tasks
