@@ -57,7 +57,7 @@ app.controller('RegisterCtrl', function ($scope, $rootScope, $mdDialog, AuthServ
     $scope.email = email
     $scope.password = password
     $scope.confirmPassword = password
-    $scope.roles=["Manager","Admin"]
+    $scope.roles = ["Manager", "Admin", "CC"]
     $scope.companyName=companyName
     $scope.role=role
 

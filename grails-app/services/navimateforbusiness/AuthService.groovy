@@ -77,6 +77,23 @@ class AuthService {
             // Save
             user.save(flush: true, failOnError: true)
         }
+        else if(role == navimateforbusiness.Role.CC) {
+            // Open existing account
+            account = Account.findByName(input.companyName)
+            if(!account){
+                throw new navimateforbusiness.ApiException("Company name does not exist", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Create and save a new customer care
+            user  = new User(   name: input.name,
+                                email: input.email,
+                                password: input.password,
+                                account: account,
+                                role: navimateforbusiness.Role.CC)
+
+            // Save
+            user.save(flush: true, failOnError: true)
+        }
 
         // Send invitation email
         emailService.sendMail(  user.email, "Your Navimate Credentials",

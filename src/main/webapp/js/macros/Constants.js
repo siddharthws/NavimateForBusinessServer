@@ -63,8 +63,9 @@ Constants.DashboardNav = {
 Constants.Role = {
     REP :       1,
     MANAGER:    2,
-    ADMIN:      3,
-    NVM_ADMIN:  4
+    CC:         3,
+    ADMIN:      4,
+    NVM_ADMIN:  5
 }
 
 Constants.Visibility = {

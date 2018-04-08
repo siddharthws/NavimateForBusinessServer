@@ -31,7 +31,7 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
     )
 
     // Sync managers for admin
-    if ($localStorage.role == Constants.Role.ADMIN) {
+    if ($localStorage.role >= Constants.Role.CC) {
         TeamService.syncManagers()
     }
 
@@ -56,6 +56,10 @@ app.controller('DashboardCtrl', function (  $scope, $rootScope, $state, $window,
     // Attach Admin Checker API
     $rootScope.isAdmin = function () {
         return $localStorage.role == Constants.Role.ADMIN
+    }
+
+    $rootScope.isCC = function () {
+        return $localStorage.role >= Constants.Role.CC
     }
     
     $scope.changePassword = function () {
