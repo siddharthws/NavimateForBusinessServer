@@ -232,7 +232,7 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
         vm.table.selectedRows = []
 
         // Sync data
-        sync(false)
+        sync(true)
     })
 
     // Clear Filter Event
