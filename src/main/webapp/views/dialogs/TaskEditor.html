@@ -30,7 +30,7 @@
                 <div class="fbx-h mt-2">
                     <!-- Manager selector -->
                     <dropdown class="mr-4" label="Manager" text="vm.selectedTask.manager.name" items="vm.managers" on-select="vm.updateManager(id)"
-                              ng-if="$root.isAdmin() && vm.managers.length"></dropdown>
+                              ng-if="$root.isCC() && vm.managers.length"></dropdown>
 
                     <!-- Representative -->
                     <pick-n-view label="Representative" text="vm.selectedTask.rep.name" on-pick="vm.pickRep()" on-view="vm.viewRep()"></pick-n-view>

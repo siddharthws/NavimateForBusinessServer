@@ -25,6 +25,11 @@ class TaskService {
                 tasks = Task.findAllByAccountAndIsRemoved(user.account, false)
                 break
 
+            case navimateforbusiness.Role.CC:
+                // Get all unremoved tasks created by this user
+                tasks = Task.findAllByAccountAndIsRemovedAndCreator(user.account, false, user)
+                break
+
             case navimateforbusiness.Role.MANAGER:
                 // Get all unremoved tasks created by this user
                 tasks = Task.findAllByAccountAndIsRemovedAndManager(user.account, false, user)

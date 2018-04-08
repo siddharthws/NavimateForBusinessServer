@@ -78,7 +78,7 @@ app.service('TeamService', function($q, $http, $localStorage, ObjUser) {
         // Trigger request
         $http({
             method:     'POST',
-            url:        '/api/admin/team/getManagers',
+            url:        '/api/cc/team/getManagers',
             headers:    {
                 'X-Auth-Token':    $localStorage.accessToken
             }

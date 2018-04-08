@@ -18,6 +18,7 @@ class LeadService {
         // Get leads as per access level
         switch (user.role) {
             case navimateforbusiness.Role.ADMIN:
+            case navimateforbusiness.Role.CC:
                 // Get all unremoved leads of the account
                 leads = Lead.findAllByAccountAndIsRemoved(user.account, false)
                 break
@@ -40,26 +41,22 @@ class LeadService {
 
     // Method to get lead for user by id
     def getForUserById(User user, long id) {
-        // Get lead by this id
-        Lead lead = Lead.findByAccountAndIsRemovedAndId(user.account, false, id)
+        // Get all leads for this user
+        def leads = getForUser(user)
 
-        // Validate lead and access
-        if (!checkAccess(user, lead)) {
-            lead = null
-        }
+        // Get lead with this ID
+        def lead = leads.find {it -> it.id == id}
 
         lead
     }
 
     // Method to get lead for user by id
     def getForUserByExtId(User user, String extId) {
-        // Get lead by this id
-        Lead lead = Lead.findByAccountAndIsRemovedAndExtId(user.account, false, extId)
+        // Get all leads for this user
+        def leads = getForUser(user)
 
-        // Validate lead and access
-        if (!checkAccess(user, lead)) {
-            lead = null
-        }
+        // Get lead with this ID
+        def lead = leads.find {it -> it.extId == extId}
 
         lead
     }
@@ -150,33 +147,4 @@ class LeadService {
     }
 
     // ----------------------- Private APIs ---------------------------//
-    // API to check if a given user has access to the lead
-    private def checkAccess(User user, Lead lead) {
-        // Validate data
-        if (lead == null) {
-            return false
-        }
-
-        // Check if lead belongs to account and is not removed
-        if ((lead.account != user.account) || lead.isRemoved) {
-            return false
-        }
-
-        // Admin has all access
-        if (user.role == navimateforbusiness.Role.ADMIN) {
-            return true
-        }
-
-        // Publicly visible leads are accessible to everyone
-        if (lead.visibility == navimateforbusiness.Visibility.PUBLIC) {
-            return true
-        }
-
-        //  Owner of lead should be able to access it
-        if (lead.manager == user) {
-            return true
-        }
-
-        false
-    }
 }

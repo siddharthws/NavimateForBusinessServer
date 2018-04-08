@@ -12,6 +12,7 @@ class UserService {
 
         switch (user.role) {
             case navimateforbusiness.Role.ADMIN:
+            case navimateforbusiness.Role.CC:
                 // Get all reps of company
                 reps = User.findAllByAccountAndRole(user.account, navimateforbusiness.Role.REP)
                 break
