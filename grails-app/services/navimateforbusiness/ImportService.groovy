@@ -226,7 +226,7 @@ class ImportService {
 
         // Get character for colIdx
         if (colIdx > 25) {
-            address += (char)(65 + (colIdx / 26))
+            address += (char)(64 + (colIdx / 26))
         }
         address += (char)(65 + (colIdx % 26))
 
