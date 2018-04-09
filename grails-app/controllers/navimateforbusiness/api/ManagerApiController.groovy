@@ -235,11 +235,15 @@ class ManagerApiController {
         // Get table from file
         def table = tableService.parseExcel(file)
 
+        log.error("Excel Parsing Complete")
+
         // Validate all columns
         importService.checkLeadColumns(table.columns)
 
         // Ensure all IDs are unique
         importService.checkIds(table.columns, table.rows)
+
+        log.error("Validation Complete")
 
         // Get lead JSON for each row
         def leadsJson = []
@@ -247,15 +251,22 @@ class ManagerApiController {
 
         // Parse each JSON object into Lead object
         def leads = []
-        leadsJson.each {leadJson -> leads.push(leadService.fromJson(leadJson, user))}
+        leadsJson.eachWithIndex {leadJson, i ->
+            leads.push(leadService.fromJson(leadJson, user))
+
+            log.error("Parsed " + i + " out of " + leadsJson.size() + " records")
+        }
 
         // Save each lead
-        leads.each {lead ->
+        leads.eachWithIndex {lead, i ->
             // Make lead public
             lead.visibility = Visibility.PUBLIC
 
             // Save lead
             lead.save(flush: true, failOnError: true)
+
+            // Temp Log
+            log.error("Uploaded " + i + " out of " + leads.size() + " records")
         }
 
         def resp = [success: true]
