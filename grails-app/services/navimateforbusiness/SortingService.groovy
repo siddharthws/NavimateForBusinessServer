@@ -2,11 +2,13 @@ package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
 
+import java.text.SimpleDateFormat
+
 @Transactional
 class SortingService {
     // ----------------------- Dependencies ---------------------------//
     // ----------------------- Public APIs ---------------------------//
-    def sortRows (rows, sortList) {
+    def sortRows (columns, rows, sortList) {
         def sortedRows = rows
 
         // Create reverse order array for applying sorting
@@ -17,15 +19,18 @@ class SortingService {
             // Get column index
             def colId = sortObj.colId
 
+            // Get column type
+            def type = columns.find{it -> it.id == colId}.type
+
             // Check type of sorting required
             switch (sortObj.type) {
                 case navimateforbusiness.Constants.Filter.SORT_ASC:
                     // Sort rows in ascending order
-                    sortedRows = sortedRows.sort {row -> row.values[colId] ? row.values[colId].toLowerCase() : ''}
+                    sortedRows = sortedRows.sort {row -> getSortableValue(type, row.values[colId])}
                     break
                 case navimateforbusiness.Constants.Filter.SORT_DESC:
                     // Sort rows in ascending order
-                    sortedRows = sortedRows.sort {row -> row.values[colId] ? row.values[colId].toLowerCase() : ''}
+                    sortedRows = sortedRows.sort {row -> getSortableValue(type, row.values[colId])}
 
                     // Reverse list
                     sortedRows = sortedRows.reverse()
@@ -38,4 +43,16 @@ class SortingService {
     }
 
     // ----------------------- Private APIs ---------------------------//
+    def getSortableValue (int colType, def value) {
+        def sortableValue
+
+        if (colType == navimateforbusiness.Constants.Template.FIELD_TYPE_DATE) {
+            SimpleDateFormat sdf = new SimpleDateFormat('dd-MM-yyyy')
+            sortableValue = value ? sdf.parse(value) : ''
+        } else {
+            sortableValue = value ? value.toLowerCase() : ''
+        }
+
+        sortableValue
+    }
 }

@@ -121,7 +121,7 @@ class ManagerApiController {
         int totalRows = table.rows.size()
 
         // Apply sorting to table
-        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Apply paging to table
         table.rows = pagingService.apply(table.rows, filter.pager)
@@ -212,7 +212,7 @@ class ManagerApiController {
         table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
 
         // Apply sorting to table
-        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Export table
         def exportData = tableService.getExportData(table, exportParams)
@@ -304,7 +304,7 @@ class ManagerApiController {
         int totalRows = table.rows.size()
 
         // Apply sorting to table
-        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Apply paging to table
         table.rows = pagingService.apply(table.rows, filter.pager)
@@ -384,7 +384,7 @@ class ManagerApiController {
         table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
 
         // Apply sorting to table
-        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Export table
         def exportData = tableService.getExportData(table, exportParams)
@@ -416,7 +416,7 @@ class ManagerApiController {
         int totalRows = table.rows.size()
 
         // Apply sorting to table
-        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Apply paging to table
         table.rows = pagingService.apply(table.rows, filter.pager)
@@ -478,7 +478,7 @@ class ManagerApiController {
         table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
 
         // Apply sorting to table
-        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Export table
         def exportData = tableService.getExportData(table, exportParams)
@@ -526,7 +526,7 @@ class ManagerApiController {
         int totalRows = table.rows.size()
 
         // Apply sorting to table
-        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Apply paging to table
         table.rows = pagingService.apply(table.rows, filter.pager)
@@ -614,7 +614,7 @@ class ManagerApiController {
         table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
 
         // Apply sorting to table
-        table.rows = sortingService.sortRows(table.rows, filter.sortList)
+        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Export table
         def exportData = tableService.getExportData(table, exportParams)
