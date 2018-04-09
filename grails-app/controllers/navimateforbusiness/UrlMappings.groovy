@@ -93,7 +93,6 @@ class UrlMappings {
         "/api/ext/report/forms"         (controller: "ExtApi") {action = [GET: "getFormReport"]}
 
         /*------------------------- Porting APIs --------------------------*/
-        "/api/port/taskCreator"         (controller: "PortingApi") {action = [GET: "taskCreator"]}
         "/api/port/fixDates"            (controller: "PortingApi") {action = [GET: "fixDates"]}
         "/api/port/mongoLeads"          (controller: "PortingApi") {action = [GET: "mongoLeads"]}
         "/api/port/taskLeads"           (controller: "PortingApi") {action = [GET: "taskLeads"]}

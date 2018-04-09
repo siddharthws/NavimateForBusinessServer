@@ -44,7 +44,6 @@ class Task {
     ]
 
     static constraints = {
-        creator         nullable: true
         rep             nullable: true
         extId           nullable: true
         leadid          nullable: true

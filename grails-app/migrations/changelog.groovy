@@ -38,6 +38,7 @@ databaseChangeLog = {
     include file: 'update-lead-name.groovy'
     include file: 'remove-user-phone-number.groovy'
     include file: 'add-task-creator.groovy'
+    include file: 'cleanup-porting-task-creator.groovy'
     include file: 'default-value-remove.groovy'
     include file: 'update-task-lead-id.groovy'
 }
