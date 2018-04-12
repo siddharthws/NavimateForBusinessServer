@@ -4,7 +4,7 @@
 
 app.controller("TaskManageCtrl",
                 function (  $scope, $rootScope, $http, $localStorage, $state,
-                            DialogService, ToastService, TableService, NavService) {
+                            DialogService, ToastService, TableService, NavService, ImportService) {
     var vm = this
 
     // Set menu and option
@@ -25,6 +25,31 @@ app.controller("TaskManageCtrl",
     vm.export = function () {
         // Broadcast Toggle Columns Event
         $scope.$broadcast(Constants.Events.TABLE_EXPORT)
+    }
+
+    // API to import tasks
+    vm.import = function (file) {
+        // Show waiting dialog
+        $rootScope.showWaitingDialog("Importing tasks. This may take some time...")
+
+        // Perform import
+        ImportService.import("/api/manager/tasks/import", file).then(
+            // Success callback
+            function () {
+                // Sync data again
+                vm.sync()
+
+                // Notify user about success
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Tasks imported successfully...")
+            },
+            // Error callback
+            function (message) {
+                // Notify user about error
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Upload Error : " + message)
+            }
+        )
     }
 
     vm.clearFilters = function () {

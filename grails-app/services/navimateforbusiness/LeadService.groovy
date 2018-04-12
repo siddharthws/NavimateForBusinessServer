@@ -50,6 +50,17 @@ class LeadService {
         lead
     }
 
+    // Method to get lead for user by name
+    def getForUserByName(User user, String name) {
+        // Get all leads for this user
+        def leads = getForUser(user)
+
+        // Get lead with this ID
+        def lead = leads.find {it -> it.name == name}
+
+        lead
+    }
+
     // Method to get lead for user by id
     def getForUserByExtId(User user, String extId) {
         // Get all leads for this user

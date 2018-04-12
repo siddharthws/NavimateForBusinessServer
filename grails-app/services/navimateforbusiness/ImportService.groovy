@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat
 class ImportService {
     // ----------------------- Dependencies ---------------------------//
     def leadService
+    def userService
     def templateService
     def fieldService
 
@@ -102,6 +103,74 @@ class ImportService {
         ]
 
         leadJson
+    }
+
+    // Task related import methods
+    def checkTaskColumns(def columns) {
+        // Ensure all mandatory columns are present
+        if (!columns.contains("Lead")) {
+            throw new navimateforbusiness.ApiException("Lead column not found", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+        if (!columns.contains("Form")) {
+            throw new navimateforbusiness.ApiException("Form column not found", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+        if (!columns.contains("Template")) {
+            throw new navimateforbusiness.ApiException("Template column not found", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+    }
+
+    def parseTaskRow(def columns, def row, int rowIdx, User user) {
+        int leadIdx = columns.indexOf("Lead")
+        def leadId = row[leadIdx]
+        def lead = leadService.getForUserByExtId(user, leadId)
+        if (!lead) {
+            lead = leadService.getForUserByName(user, leadId)
+        }
+        if (!lead) {
+            throw new navimateforbusiness.ApiException("Lead not found at " + getCellAddress(leadIdx, rowIdx), navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        int formIdx = columns.indexOf("Form")
+        def formName = row[formIdx]
+        def form = templateService.getForUserByName(user, formName, navimateforbusiness.Constants.Template.TYPE_FORM)
+        if (!form) {
+            throw new navimateforbusiness.ApiException("Invalid Form name '" + formName + "' at " + getCellAddress(formIdx, rowIdx), navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        int templateIdx = columns.indexOf("Template")
+        def templateName = row[templateIdx]
+        def template = templateService.getForUserByName(user, templateName, navimateforbusiness.Constants.Template.TYPE_TASK)
+        if (!template) {
+            throw new navimateforbusiness.ApiException("Invalid Template name '" + templateName + "' at " + getCellAddress(templateIdx, rowIdx), navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Get optional columns
+        // Validate manager
+        int managerIdx = columns.indexOf("Manager")
+        def manager = (managerIdx != -1) ? userService.getManagerForUserByName(user, row[managerIdx]) : null
+        manager = manager ?: user
+
+        // Validate rep
+        int repIdx = columns.indexOf("Representative")
+        def rep = (repIdx != -1) ? userService.getRepForUserByName(user, row[repIdx]) : null
+
+        // Get task period
+        int periodIdx = columns.indexOf("Period")
+        def period = (periodIdx != -1) ? row[periodIdx] ?: 0 : 0
+
+        // Prepare Lead JSON
+        def taskJson = [
+                managerId: manager.id,
+                repId: rep ? rep.id : 0,
+                leadId: lead.id,
+                status: navimateforbusiness.TaskStatus.OPEN.value,
+                period: period,
+                formTemplateId: form.id,
+                templateId: template.id,
+                values: parseTemplateData(columns, row, template, rowIdx)
+        ]
+
+        taskJson
     }
 
     // ----------------------- Private APIs ---------------------------//

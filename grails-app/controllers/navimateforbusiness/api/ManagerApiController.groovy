@@ -397,6 +397,34 @@ class ManagerApiController {
         exportService.export('excel', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
     }
 
+    def importTasks() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get file
+        def file = request.getFile('importFile')
+
+        // Get table from file
+        def table = tableService.parseExcel(file)
+
+        // Validate all columns
+        importService.checkTaskColumns(table.columns)
+
+        // Get task JSON for each row
+        def tasksJson = []
+        table.rows.eachWithIndex {row, i -> tasksJson.push(importService.parseTaskRow(table.columns, row, i, user))}
+
+        // Parse each JSON object into Task object
+        def tasks = []
+        tasksJson.each {taskJson -> tasks.push(taskService.fromJson(taskJson, user))}
+
+        // Save each task
+        tasks.each {task -> task.save(flush: true, failOnError: true) }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     // ----------------------- FORM APIs ----------------------- //
     def getFormTable() {
         // Get user object

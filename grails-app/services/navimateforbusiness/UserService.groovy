@@ -50,6 +50,17 @@ class UserService {
         rep
     }
 
+    // Method to get all reps for a user by name
+    def getRepForUserByName(User user, String name) {
+        // Get all reps for user
+        List<User> reps = getRepsForUser(user)
+
+        // Find rep with this id
+        User rep = reps.find {it -> it.name == name}
+
+        rep
+    }
+
     // Method to get manager under a user by ID
     def getManagerForUserById(User user, Long id) {
         // Get all manager for user
@@ -57,6 +68,17 @@ class UserService {
 
         // Find manager with this id
         User manager = managers.find {it -> it.id == id}
+
+        manager
+    }
+
+    // Method to get manager under a user by name
+    def getManagerForUserByName(User user, String name) {
+        // Get all manager for user
+        List<User> managers = getManagersForUser(user)
+
+        // Find manager with this id
+        User manager = managers.find {it -> it.name == name}
 
         manager
     }
