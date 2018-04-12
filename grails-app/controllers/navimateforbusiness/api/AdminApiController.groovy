@@ -18,6 +18,8 @@ class AdminApiController {
     def leadService
     def templateService
     def fcmService
+    def tableService
+    def importService
 
     def updateSettings() {
         // Get user
@@ -131,6 +133,33 @@ class AdminApiController {
             template.isRemoved = true
             template.save(flush: true, failOnError: true)
         }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def importTeam() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get file
+        def file = request.getFile('importFile')
+
+        // Get table from file
+        def table = tableService.parseExcel(file)
+
+        // Validate all columns
+        importService.validateTeam(table.columns, table.rows)
+
+        // Get team JSON for each row
+        def teamJson = []
+        table.rows.eachWithIndex {row, i -> teamJson.push(importService.parseTeamRow(table.columns, row, i, user))}
+
+        // Parse each JSON object into Team object
+        def team = []
+        teamJson.each {repJson -> team.push(userService.repFromJson(repJson, user))}
+
+        team.each {rep ->rep.save(flush: true, failOnError: true)}
 
         def resp = [success: true]
         render resp as JSON
