@@ -12,7 +12,6 @@ class ImportService {
     def userService
     def templateService
     def fieldService
-
     // ----------------------- Public APIs ---------------------------//
     def checkLeadColumns(def columns) {
         // Ensure all mandatory columns are present
@@ -27,6 +26,34 @@ class ImportService {
         }
         if (!columns.contains("Template")) {
             throw new navimateforbusiness.ApiException("Template column not found", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+    }
+
+    def validateTeam(def columns, def rows) {
+        // Ensure all mandatory columns are present
+        if (!columns.contains("Name")) {
+            throw new navimateforbusiness.ApiException("Name column not found", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+        if (!columns.contains("Phone")) {
+            throw new navimateforbusiness.ApiException("Phone column not found", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Get phone number Column Index
+        int phoneIdx = columns.indexOf("Phone")
+
+        // Ensure all phone numbers are unique
+        rows.eachWithIndex {row, i ->
+            // Get all rows with this ID
+            def duplicates = rows.findAll {it -> it[phoneIdx] == row[phoneIdx]}
+
+            // Ensure phone number is unique
+            if (duplicates.size() > 1) {
+                // Get first dupe row index
+                def dupeRowIdx = rows.indexOf(duplicates[1])
+
+                // Throw exception
+                throw new navimateforbusiness.ApiException("Duplicate phone number found in cells " + getCellAddress(phoneIdx, i) + " & " + getCellAddress(phoneIdx, dupeRowIdx))
+            }
         }
     }
 
@@ -171,6 +198,35 @@ class ImportService {
         ]
 
         taskJson
+    }
+
+    def parseTeamRow(def columns, def row, int rowIdx, User user) {
+        // Get and validate mandatory columns
+        int nameIdx = columns.indexOf("Name")
+        def name = row[nameIdx]
+        if (!name) {
+            throw new navimateforbusiness.ApiException("Invalid Name at " + getCellAddress(nameIdx, rowIdx), navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        int phoneIdx = columns.indexOf("Phone")
+        def phone = row[phoneIdx]
+        if (!phone) {
+            throw new navimateforbusiness.ApiException("Invalid Phone at " + getCellAddress(phoneIdx, rowIdx), navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        //Check for valid manager name
+        int managerIdx = columns.indexOf("Manager")
+        def manager = (managerIdx != -1) ? userService.getManagerForUserByName(user, row[managerIdx]) : null
+        manager = manager ?: user
+
+        // Prepare Team JSON
+        def teamJson = [
+                name: name,
+                phone: phone,
+                managerId : manager.id
+        ]
+
+        teamJson
     }
 
     // ----------------------- Private APIs ---------------------------//

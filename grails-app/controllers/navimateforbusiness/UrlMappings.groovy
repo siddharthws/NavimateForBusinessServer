@@ -22,6 +22,7 @@ class UrlMappings {
         "/api/admin/leads/edit"         (controller: "AdminApi") {action = [POST: "editLeads"]}
         "/api/admin/templates/edit"     (controller: "AdminApi") {action = [POST: "editTemplates"]}
         "/api/admin/removeTemplates"    (controller: "AdminApi") {action = [POST: "removeTemplates"]}
+        "/api/admin/team/import"        (controller: "AdminApi") {action = [POST: "importTeam"]}
 
         /*------------------------- CC APIs --------------------------*/
         "/api/cc/team/getManagers"   (controller: "CcApi") {action = [POST: "getManagers"]}

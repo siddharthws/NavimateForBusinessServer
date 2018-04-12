@@ -4,7 +4,7 @@
 
 app.controller("TeamManageCtrl",
                 function (  $scope, $rootScope, $http, $localStorage, $state,
-                            DialogService, ToastService, TeamService, TableService, NavService) {
+                            DialogService, ToastService, TeamService, TableService, NavService, ImportService) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
@@ -22,6 +22,30 @@ app.controller("TeamManageCtrl",
     vm.export = function () {
         // Broadcast Toggle Columns Event
         $scope.$broadcast(Constants.Events.TABLE_EXPORT)
+    }
+
+    vm.import = function (file) {
+        // Show waiting dialog
+        $rootScope.showWaitingDialog("Importing team. This may take some time...")
+
+        // Perform import
+        ImportService.import("/api/admin/team/import", file).then(
+            // Success callback
+            function () {
+                // Sync data again
+                vm.sync()
+
+                // Notify user about success
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Team imported successfully...")
+            },
+            // Error callback
+            function (message) {
+                // Notify user about error
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Upload Error : " + message)
+            }
+        )
     }
 
     vm.clearFilters = function () {
