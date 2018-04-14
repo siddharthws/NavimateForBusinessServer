@@ -241,6 +241,9 @@ Constants.Template = {
     FIELD_TYPE_CHECKBOX:        8,
     FIELD_TYPE_DATE:            9,
 
+    // Special Object Column type
+    FIELD_TYPE_LEAD:            21,
+
     // Field Names
     FIELD_NAMES:    [
         '',
@@ -293,5 +296,6 @@ Constants.Filter = {
     TYPE_SELECTION      : 1,
     TYPE_TEXT           : 2,
     TYPE_NUMBER         : 3,
-    TYPE_DATE           : 4
+    TYPE_DATE           : 4,
+    TYPE_OBJECT         : 5
 }

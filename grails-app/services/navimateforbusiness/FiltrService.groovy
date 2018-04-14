@@ -57,6 +57,15 @@ class FiltrService {
                         }
                     }
                     break
+                case navimateforbusiness.Constants.Filter.TYPE_OBJECT:
+                    // Check if filter is applied
+                    if (filter.value) {
+                        // Check if value passes the filter
+                        if (!value.name.toLowerCase().contains(filter.value.toLowerCase())) {
+                            bFiltered = false
+                        }
+                    }
+                    break
                 case navimateforbusiness.Constants.Filter.TYPE_NUMBER:
                     // Check if 'from' filter is applied
                     if (filter.value.from) {

@@ -84,7 +84,7 @@ class TableService {
 
             // Add row data for mandatory columns
             values[0] = String.valueOf(task.id)
-            values[1] = task.lead.name
+            values[1] = [id:task.lead.id, name:task.lead.name]
             values[2] = (task.lead.latitude || task.lead.longitude) ? task.lead.latitude + "," + task.lead.longitude : '-'
             values[3] = task.manager.name
             values[4] = task.rep ? task.rep.name : 'Unassigned'
@@ -360,13 +360,18 @@ class TableService {
 
             // Iterate through each selected row
             selectedRows.eachWithIndex {row, i ->
-                String value = row.values[column.id]
+                def value = row.values[column.id]
 
                 // Parse special values as per column type
                 switch (column.type) {
                     case navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION:
                         if (value != '-') {
                             value = "https://www.google.com/maps/search/?api=1&query=" + value
+                        }
+                        break
+                    case navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD:
+                        if (value != "-") {
+                            value = value.name
                         }
                         break
                     case navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO:
@@ -413,7 +418,7 @@ class TableService {
 
         // Add mandatory columns for tasks
         columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "ID"))
-        columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Lead"))
+        columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD, "Lead"))
         columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
         columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Manager"))
         columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Rep"))

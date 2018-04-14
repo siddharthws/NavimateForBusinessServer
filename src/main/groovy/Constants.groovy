@@ -46,6 +46,9 @@ class Constants {
         public static final int FIELD_TYPE_LOCATION       = 7
         public static final int FIELD_TYPE_CHECKBOX       = 8
         public static final int FIELD_TYPE_DATE           = 9
+
+        // Special Object Column type
+        public static final int FIELD_TYPE_LEAD           = 21
     }
 
     // Filter related constants
@@ -56,6 +59,7 @@ class Constants {
         public static final int TYPE_TEXT           = 2
         public static final int TYPE_NUMBER         = 3
         public static final int TYPE_DATE           = 4
+        public static final int TYPE_OBJECT         = 5
 
         // Sort Types
         public static final int SORT_NONE          = 0
