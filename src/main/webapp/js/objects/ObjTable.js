@@ -291,6 +291,11 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
                     filter.value = ""
                     break
                 }
+                case Constants.Template.FIELD_TYPE_LEAD:  {
+                    filter.type = Constants.Filter.TYPE_OBJECT
+                    filter.value = ""
+                    break
+                }
                 case Constants.Template.FIELD_TYPE_NUMBER: {
                     filter.type = Constants.Filter.TYPE_NUMBER
                     filter.value = {from: null, to: null}

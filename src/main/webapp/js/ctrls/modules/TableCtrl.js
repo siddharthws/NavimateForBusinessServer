@@ -55,6 +55,10 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
         DialogService.locationViewer(locations)
     }
 
+    vm.viewLead = function (id) {
+        // Open Lead Viewer dialog
+        DialogService.leadViewer(id)
+    }
     /*
      * Paging related methods
      */
