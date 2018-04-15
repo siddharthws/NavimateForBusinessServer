@@ -448,7 +448,7 @@ class TableService {
         columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_NONE, "Time"))
         columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
         columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Lead"))
-        columns.push(createColumn(7, navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER, "Task ID"))
+        columns.push(createColumn(7, navimateforbusiness.Constants.Template.FIELD_TYPE_TASK, "Task ID"))
         columns.push(createColumn(8, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Task Status"))
 
         // Add templated columns through form templates
