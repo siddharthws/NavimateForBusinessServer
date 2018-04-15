@@ -145,7 +145,7 @@ class TableService {
             values[3] = form.dateCreated.format(FORMAT_DATE, IST)
             values[4] = form.dateCreated.format(FORMAT_TIME, IST)
             values[5] = (form.latitude || form.longitude) ? form.latitude + "," + form.longitude : '-'
-            values[6] = form.task ? form.task.lead.name : "-"
+            values[6] = form.task ? [id:form.task.lead.id , name:form.task.lead.name] : "-"
             values[7] = form.task ? String.valueOf(form.task.id) : "-"
             values[8] = form.taskStatus ? form.taskStatus.name() : "-"
 
@@ -447,7 +447,7 @@ class TableService {
         columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_DATE, "Date"))
         columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_NONE, "Time"))
         columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
-        columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Lead"))
+        columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD, "Lead"))
         columns.push(createColumn(7, navimateforbusiness.Constants.Template.FIELD_TYPE_TASK, "Task ID"))
         columns.push(createColumn(8, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Task Status"))
 
