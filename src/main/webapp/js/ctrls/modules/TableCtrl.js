@@ -55,9 +55,16 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
         DialogService.locationViewer(locations)
     }
 
+    //API to show Lead Information Dialog
     vm.viewLead = function (id) {
         // Open Lead Viewer dialog
         DialogService.leadViewer(id)
+    }
+
+    //API to show Task Information Dialog
+    vm.viewTask = function (id) {
+        // Open Task Viewer dialog
+        DialogService.taskViewer(parseInt(id))
     }
     /*
      * Paging related methods

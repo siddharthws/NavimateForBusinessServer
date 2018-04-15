@@ -115,7 +115,8 @@
                         <span ng-if="(value == '-') || (column.type != vm.TemplateConst.FIELD_TYPE_PHOTO &&
                                                         column.type != vm.TemplateConst.FIELD_TYPE_SIGN &&
                                                         column.type != vm.TemplateConst.FIELD_TYPE_LOCATION &&
-                                                        column.type != vm.TemplateConst.FIELD_TYPE_LEAD )">
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_LEAD &&
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_TASK )">
                             {{value}}
                         </span>
 
@@ -130,9 +131,13 @@
                                ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_LOCATION)"
                                ng-click="$root.Statics.absorbEvent($event); vm.showLocation(value, row.name)"/>
 
-                        <!-- Link to open location -->
+                        <!-- Link to open Lead  -->
                         <a href  ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_LEAD )"
                            ng-click="$root.Statics.absorbEvent($event); vm.viewLead(value.id)">{{value.name}}</a>
+
+                        <!-- Link to open Task -->
+                        <a href  ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_TASK )"
+                           ng-click="$root.Statics.absorbEvent($event); vm.viewTask(value)">{{value}}</a>
                     </td>
                 </tr>
             </tbody>
