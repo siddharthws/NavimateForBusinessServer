@@ -37,7 +37,7 @@ class TableService {
             columns.each {it -> values.push('-')}
 
             // Add row data for mandatory columns
-            values[0] = lead.name
+            values[0] = [id:lead.id, name:lead.name]
             values[1] = lead.address
             values[2] = (lead.latitude || lead.longitude) ? lead.latitude + "," + lead.longitude : '-'
             values[3] = lead.templateData.template.name
@@ -400,7 +400,7 @@ class TableService {
         def columns = []
 
         // Add mandatory columns for leads
-        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Name"))
+        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD, "Name"))
         columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Address"))
         columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
         columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
