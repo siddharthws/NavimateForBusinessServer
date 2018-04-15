@@ -243,6 +243,7 @@ Constants.Template = {
 
     // Special Object Column type
     FIELD_TYPE_LEAD:            21,
+    FIELD_TYPE_TASK:            22,
 
     // Field Names
     FIELD_NAMES:    [

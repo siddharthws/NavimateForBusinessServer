@@ -286,7 +286,8 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
                 case Constants.Template.FIELD_TYPE_TEXT:
                 case Constants.Template.FIELD_TYPE_RADIOLIST:
                 case Constants.Template.FIELD_TYPE_CHECKLIST:
-                case Constants.Template.FIELD_TYPE_CHECKBOX: {
+                case Constants.Template.FIELD_TYPE_CHECKBOX:
+                case Constants.Template.FIELD_TYPE_TASK: {
                     filter.type = Constants.Filter.TYPE_TEXT
                     filter.value = ""
                     break

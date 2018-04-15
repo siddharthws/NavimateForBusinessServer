@@ -417,7 +417,7 @@ class TableService {
         def columns = []
 
         // Add mandatory columns for tasks
-        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "ID"))
+        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TASK, "ID"))
         columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD, "Lead"))
         columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
         columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Manager"))
