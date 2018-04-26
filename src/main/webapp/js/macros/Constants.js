@@ -193,7 +193,7 @@ Constants.Table = {
     // Sorting Types
     SORT_NONE:          0,
     SORT_ASC:           1,
-    SORT_DESC:          2,
+    SORT_DESC:          -1,
 
     // URL prefix
     URL_PREFIX: [
