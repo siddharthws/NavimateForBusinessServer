@@ -65,7 +65,7 @@ class Constants {
         // Sort Types
         public static final int SORT_NONE          = 0
         public static final int SORT_ASC           = 1
-        public static final int SORT_DESC          = 2
+        public static final int SORT_DESC          = -1
     }
 
     // Table related constants
