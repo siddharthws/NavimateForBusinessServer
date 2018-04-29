@@ -18,7 +18,7 @@ app.controller('ToggleColumnsCtrl', function ($scope, $mdDialog, columns) {
     // Full List Selection Toggling
     vm.toggleAll = function () {
         for (var i = 0; i < vm.columns.length; i++) {
-            vm.columns[i].bShow = vm.bCheckAll
+            vm.columns[i].filter.bShow = vm.bCheckAll
         }
     }
 

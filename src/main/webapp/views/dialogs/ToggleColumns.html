@@ -21,7 +21,7 @@
                 </thead>
                 <tr ng-repeat="column in $ctrl.columns track by $index">
                     <td class="text-center">
-                        <md-checkbox ng-value="column.name" ng-model="column.bShow"></md-checkbox>
+                        <md-checkbox ng-value="column.name" ng-model="column.filter.bShow"></md-checkbox>
                     </td>
                     <td>
                         {{column.name}}
