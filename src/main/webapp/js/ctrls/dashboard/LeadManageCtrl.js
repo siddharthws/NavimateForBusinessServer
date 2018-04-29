@@ -93,6 +93,9 @@ app.controller("LeadManageCtrl",
                     function (response) {
                         $rootScope.hideWaitingDialog()
 
+                        // Reset table Selection
+                        vm.table.selection = []
+
                         // Sync data again
                         vm.sync()
 
