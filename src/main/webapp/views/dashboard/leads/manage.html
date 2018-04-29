@@ -9,7 +9,7 @@
 
     <div class="dropdown ml-2"  ng-if="$root.isAdmin()">
         <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
-                ng-disabled="!$ctrl.table.selectedRows.length">
+                ng-disabled="!$ctrl.table.selection.length">
             <span>Actions | </span>
             <img class="img-icon" src="/static/images/ic_dropdown_light.png"/>
         </button>
@@ -20,4 +20,4 @@
     </div>
 </div>
 
-<ng-include src="'/static/views/modules/Table.html'" class="d-flex flex-1"></ng-include>
+<ng-include src="'/static/views/modules/Table2.html'" class="d-flex flex-1"></ng-include>

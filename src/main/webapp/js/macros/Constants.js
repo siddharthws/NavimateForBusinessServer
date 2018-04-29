@@ -206,7 +206,14 @@ Constants.Table = {
 
     // Default rows per page
     DEFAULT_COUNT_PER_PAGE:     10,
-    MAX_SELECTION_COUNT:        500
+    MAX_SELECTION_COUNT:        500,
+
+    // IDs for mandatory columns in leads
+    ID_LEAD_NAME:               0,
+    ID_LEAD_ADDRESS:            1,
+    ID_LEAD_LOCATION:           2,
+    ID_LEAD_TEMPLATE:           3,
+    ID_LEAD_LAST:               3
 }
 
 /* ------------------------------- Task -----------------------------------*/

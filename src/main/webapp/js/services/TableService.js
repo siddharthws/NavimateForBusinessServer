@@ -12,7 +12,6 @@ app.service('TableService', function(ObjTable) {
     vm.activeTable = null
 
     // Init tables for different types
-    vm.leadTable = new ObjTable(Constants.Table.TYPE_LEAD)
     vm.taskTable = new ObjTable(Constants.Table.TYPE_TASK)
     vm.formTable = new ObjTable(Constants.Table.TYPE_FORM)
     vm.teamTable = new ObjTable(Constants.Table.TYPE_TEAM)
