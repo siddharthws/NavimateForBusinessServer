@@ -3,7 +3,7 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
-import navimateforbusiness.Lead
+import navimateforbusiness.LeadM
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
 import navimateforbusiness.User
@@ -43,13 +43,10 @@ class UserApiController {
         // Get user
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get all leads of this user
-        def leads = leadService.getForUser(user)
-
         // Iterate through IDs to be remove
         request.JSON.ids.each {id ->
             // Get lead with this id
-            Lead lead = leads.find {it -> it.id == id}
+            LeadM lead = leadService.getForUserById(user, id)
             if (!lead) {
                 throw new ApiException("Lead not found...", Constants.HttpCodes.BAD_REQUEST)
             }

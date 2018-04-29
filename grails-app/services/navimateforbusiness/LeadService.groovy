@@ -2,79 +2,221 @@ package navimateforbusiness
 
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
+import com.mongodb.client.FindIterable
+
+import java.text.SimpleDateFormat
+
+import static com.mongodb.client.model.Filters.*
 
 @Transactional
 class LeadService {
     // ----------------------- Dependencies ---------------------------//
     def googleApiService
     def templateService
-    def valueService
+    def fieldService
 
     // ----------------------- Getter APIs ---------------------------//
-    // Method to get leads for a specific user
-    def getForUser(User user) {
-        def leads = []
+    // Method to search leads in mongo database using filter, pager and sorter
+    def getForUserByFilter(User user, def filters, def pager, def sorter) {
+        // Prepare mongo filters
+        def mongoFilters = []
 
-        // Get leads as per access level
-        switch (user.role) {
-            case navimateforbusiness.Role.ADMIN:
-            case navimateforbusiness.Role.CC:
-                // Get all unremoved leads of the account
-                leads = Lead.findAllByAccountAndIsRemoved(user.account, false)
-                break
+        // Add accountId and isRemoved flag filters
+        mongoFilters.push(eq("accountId", user.accountId))
+        mongoFilters.push(ne("isRemoved", true))
 
-            case navimateforbusiness.Role.MANAGER:
-                // Get all leads owned by this manager
-                leads = Lead.findAllByAccountAndIsRemovedAndManager(user.account, false, user)
-
-                // Add all public leads of the company
-                leads.addAll(Lead.findAllByAccountAndIsRemovedAndVisibility(user.account, false, navimateforbusiness.Visibility.PUBLIC))
-                break
+        // Add role specific filters
+        if (user.role == navimateforbusiness.Role.MANAGER) {
+            // Objects should either be owned by user or publicly visible for a manager to view it
+            mongoFilters.push(or(   eq("ownerId", user.id),
+                                    eq("visibility", navimateforbusiness.Visibility.PUBLIC.name())))
+        } else if (user.role == navimateforbusiness.Role.REP) {
+            // Objects should either be owned by rep's manager or publicly visible for a rep to view it
+            mongoFilters.push(or(   eq("ownerId", user.manager.id),
+                                    eq("visibility", navimateforbusiness.Visibility.PUBLIC.name())))
         }
 
-        // Sort leads in ascending order of title by default
-        leads = leads.sort {it -> it.name}
+        // Apply ID filters if any
+        if (filters?._ids) {
+            def idFilters = []
+            filters._ids.each {id -> idFilters.push(eq("_id", id))}
+            mongoFilters.push(or(idFilters))
+        }
 
-        // Return leads
-        leads
+        // Atleast sort the objects by name
+        if (!sorter) {
+            sorter = [[name: navimateforbusiness.Constants.Filter.SORT_ASC]]
+        }
+
+        // Apply Ext ID filters if any
+        if (filters?.extId) {mongoFilters.push(eq("extId", filters.extId))}
+
+        // Apply Name filters if any
+        if (filters?.name?.equal) {mongoFilters.push(eq("name", "$filters.name.equal"))}
+        if (filters?.name?.value) {mongoFilters.push(regex("name", /.*$filters.name.value.*/, 'i'))}
+
+        // Apply address / location filter
+        if (filters?.address?.value) {mongoFilters.push(regex("address", /.*$filters.address.value.*/, 'i'))}
+        if (filters?.location?.bNoBlanks) {mongoFilters.push(and(ne("latitude", 0), ne("longitude", 0)))}
+
+        // Apply Template Filter
+        if (filters?.template?.value) {
+            def templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_LEAD)
+            def templateFilters = []
+            templates.each {it ->
+                if (it.name.toLowerCase().contains(filters.template.value.toLowerCase())) {
+                    templateFilters.push(eq("templateId", it.id))
+                }
+            }
+            if (templateFilters) {
+                mongoFilters.push(or(templateFilters))
+            } else {
+                mongoFilters.push(eq("templateId", null))
+            }
+        }
+
+        // Get all fields present in filters
+        def templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_LEAD)
+        def fields = []
+        templates.each {template -> fields.addAll(fieldService.getForTemplate(template))}
+        fields.each {field ->
+            def key = "$field.id"
+            def filter = filters[key]
+
+            // Ignore if filter not found
+            if (!filter) {
+                return
+            }
+
+            def value = filter.value
+            Boolean bNoBlanks = filter.bNoBlanks ?: false
+
+            switch (field.type) {
+                case navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT:
+                    if (value) {
+                        mongoFilters.push(regex("$key", /.*$value.*/, 'i'))
+                    }
+                    break
+                case navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST:
+                    if (value) {
+                        // Get list of option indexes in field that contain the filter value
+                        def json = JSON.parse(field.value)
+                        def idxFilters = []
+                        json.options.eachWithIndex {it, i ->
+                            if (it.toLowerCase().contains(value.toLowerCase())) {
+                                idxFilters.push(regex("$key", /.*\"selection\":$i.*/))
+                            }
+                        }
+                        if (idxFilters) {
+                            mongoFilters.push(or(idxFilters))
+                        } else {
+                            mongoFilters.push(eq("$key", null))
+                        }
+                    }
+                    break
+                case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST:
+                    if (value) {
+                        // Get list of option indexes in field that contain the filter value
+                        def json = JSON.parse(field.value)
+                        def optFilters = []
+                        json.eachWithIndex {it, i ->
+                            if (it.name.toLowerCase().contains(value.toLowerCase())) {
+                                optFilters.push(regex("$key", /.*\"name\":\"$it.name\",\"selection\":true.*/))
+                            }
+                        }
+                        if (optFilters) {
+                            mongoFilters.push(or(optFilters))
+                        } else {
+                            mongoFilters.push(eq("$key", null))
+                        }
+                    }
+                    break
+                case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX:
+                    if (value) {
+                        if ("yes".contains(value.toLowerCase())) {
+                            mongoFilters.push(eq("$key", "true"))
+                        } else if ("no".contains(value.toLowerCase())) {
+                            mongoFilters.push(eq("$key", "false"))
+                        }
+                    }
+                    break
+                case navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER:
+                case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
+                    if (value.from) {
+                        mongoFilters.push(gte("$key", "$value.from"))
+                    }
+                    if (value.to) {
+                        mongoFilters.push(lte("$key", "$value.to"))
+                    }
+                    break
+            }
+            if (bNoBlanks) {
+                mongoFilters.push(ne("$key", null))
+            }
+        }
+
+        // Get results
+        FindIterable fi = LeadM.find(and(mongoFilters))
+        int rowCount = fi.size()
+
+        // Apply Sorting
+        if (sorter) {
+            def sortBson = [:]
+            sorter.each {sortObj ->
+                def key = sortObj.keySet()[0]
+                sortBson[key] = sortObj[key]
+            }
+            fi = fi.sort(sortBson)
+        }
+
+        // Apply paging
+        if (pager.startIdx) {fi = fi.skip(pager.startIdx)}
+        if (pager.count) {fi = fi.limit(pager.count)}
+
+        // Prepare leads array to return
+        def leads = []
+        fi.each {LeadM lead -> leads.push(lead)}
+
+        // Return response
+        return [
+                rowCount: rowCount,
+                leads: leads
+        ]
     }
 
     // Method to get lead for user by id
-    def getForUserById(User user, long id) {
-        // Get all leads for this user
-        def leads = getForUser(user)
+    def getForUserById(User user, String id) {
+        def leads = getForUserByFilter(user, [_ids: [id]], [:], []).leads
 
-        // Get lead with this ID
-        def lead = leads.find {it -> it.id == id}
-
-        lead
+        if (leads) {
+            return leads[0]
+        }
+        return null
     }
 
     // Method to get lead for user by name
     def getForUserByName(User user, String name) {
-        // Get all leads for this user
-        def leads = getForUser(user)
+        def leads = getForUserByFilter(user, [name: [equal: name]], [:], []).leads
 
-        // Get lead with this ID
-        def lead = leads.find {it -> it.name == name}
-
-        lead
+        if (leads) {
+            return leads[0]
+        }
+        return null
     }
 
     // Method to get lead for user by id
     def getForUserByExtId(User user, String extId) {
-        // Get all leads for this user
-        def leads = getForUser(user)
+        def leads = getForUserByFilter(user, [extId: extId], [:], []).leads
 
-        // Get lead with this ID
-        def lead = leads.find {it -> it.extId == extId}
-
-        lead
+        if (leads) {
+            return leads[0]
+        }
+        return null
     }
 
     // ----------------------- Public APIs ---------------------------//
     // Methods to convert lead objects to / from JSON
-    def toJson(Lead lead) {
+    def toJson(LeadM lead, User user) {
         // Convert template properties to JSON
         def json = [
                 id:         lead.id,
@@ -82,21 +224,22 @@ class LeadService {
                 address:    lead.address,
                 lat:        lead.latitude,
                 lng:        lead.longitude,
-                templateId: lead.templateData.template.id,
+                templateId: lead.templateId,
                 values:     []
         ]
 
-        // Convert template values to JSON
-        def values = lead.templateData.values.sort {it -> it.id}
-        values.each {value ->
-            json.values.push([fieldId: value.field.id, value: value.value])
+        // Add templated values in JSON
+        def template = templateService.getForUserById(user, lead.templateId)
+        def fields = fieldService.getForTemplate(template)
+        fields.each {Field field ->
+            json.values.push([fieldId: field.id, value: lead["$field.id"]])
         }
 
         json
     }
 
-    Lead fromJson(def json, User user) {
-        Lead lead = null
+    LeadM fromJson(def json, User user) {
+        LeadM lead = null
 
         // Get existing template or create new
         if (json.id) {
@@ -110,9 +253,9 @@ class LeadService {
 
         // Create new lead object if not found
         if (!lead) {
-            lead = new Lead(
-                    account: user.account,
-                    manager: user,
+            lead = new LeadM(
+                    accountId: user.account.id,
+                    ownerId: user.id,
                     visibility: navimateforbusiness.Visibility.PRIVATE,
                     isRemoved: false,
                     extId: json.extId
@@ -139,22 +282,106 @@ class LeadService {
             }
         }
 
+        // Set template ID
+        lead.templateId = json.templateId
+
         // Prepare template data
         def template = templateService.getForUserById(user, json.templateId)
-        if (!lead.templateData || lead.templateData.template != template) {
-            lead.templateData = new Data(account: user.account, owner: user, template: template)
-        }
-
-        // Prepare values
-        json.values.each {valueJson ->
-            Value value = valueService.fromJson(valueJson, lead.templateData)
-
-            if (!value.id) {
-                lead.templateData.addToValues(value)
-            }
+        def fields = fieldService.getForTemplate(template)
+        fields.each {field ->
+            // Set value for this field from JSON received
+            lead["$field.id"] = json.values.find {it -> it.fieldId == field.id}.value
         }
 
         lead
+    }
+
+    // Method to convert lead array into exportable data
+    def getExportData(User user, List<LeadM> leads, def params) {
+        List objects    = []
+        List fields     = []
+        Map labels      = [:]
+
+        // Validate data
+        if (!leads) {
+            throw new navimateforbusiness.ApiException("No rows to export", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        } else if (!params.columns) {
+            throw new navimateforbusiness.ApiException("No columns to export", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Create one export object for each selected row
+        leads.each {it -> objects.push([:])}
+
+        // Iterate through each column
+        params.columns.each {column ->
+            // Add field and label
+            fields.push(column.label)
+            labels.put(column.label, column.label)
+
+            // Iterate through each lead
+            leads.eachWithIndex {lead, i ->
+                def value
+
+                if (column.field == "template") {
+                    value = templateService.getForUserById(user, lead.templateId).name
+                } else if (column.field == "location") {
+                    value = "https://www.google.com/maps/search/?api=1&query=" + lead.latitude + "," + lead.longitude
+                } else {
+                    value = lead["$column.field"]
+
+                    // Parse special values as per column type
+                    switch (column.type) {
+                        case navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO:
+                        case navimateforbusiness.Constants.Template.FIELD_TYPE_SIGN:
+                            if (value) {
+                                value = "https://biz.navimateapp.com/#/photos?name=" + value
+                            }
+                            break
+                        case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX:
+                            value = value ? "yes" : "no"
+                            break
+                        case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
+                            SimpleDateFormat sdf = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_BACKEND)
+                            value = value ? sdf.parse(value).format(navimateforbusiness.Constants.Date.FORMAT_FRONTEND) : ""
+                            break
+                        case navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST:
+                            if (value) {
+                                def valueJson = JSON.parse(value)
+                                value = valueJson.options[valueJson.selection]
+                            }
+                            break
+                        case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST:
+                            if (value) {
+                                def valueJson = JSON.parse(value)
+                                value = ""
+                                valueJson.each {option ->
+                                    if (option.selection) {
+                                        if (value) {
+                                            value += ", " + option.name
+                                        } else {
+                                            value = option.name
+                                        }
+                                    }
+                                }
+                            }
+                            break
+                    }
+                }
+
+                if (value == null || value.equals("")) {
+                    value = '-'
+                }
+
+                // Add data to objects
+                objects[i][column.label] = value
+            }
+        }
+
+        return [
+                objects: objects,
+                fields: fields,
+                labels: labels
+        ]
     }
 
     // ----------------------- Private APIs ---------------------------//

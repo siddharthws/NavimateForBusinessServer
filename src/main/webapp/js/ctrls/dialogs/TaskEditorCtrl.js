@@ -4,7 +4,7 @@
 
 // Controller for Alert Dialog
 app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog, $localStorage,
-                                            ToastService, TemplateService, TaskService, DialogService, TableService, TeamService,
+                                            ToastService, TemplateService, TaskService, DialogService, TableService, TeamService, LeadService,
                                             ObjTask, ObjValue,
                                             taskIds, cb) {
     /* ----------------------------- INIT --------------------------------*/
@@ -150,7 +150,7 @@ app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog, $loca
      * Pick and View methods
      */
     vm.pickLead = function () {
-        DialogService.tablePicker("Pick Lead", TableService.leadTable, function (id, name) {
+        DialogService.table2Picker("Pick Lead", LeadService.table, function (id, name) {
             vm.selectedTask.lead = {id: id, name: name}
         })
     }

@@ -4,7 +4,8 @@
 
 app.controller("LeadManageCtrl",
                 function ( $scope, $rootScope, $http, $localStorage, $state,
-                            DialogService, ToastService, TableService, ImportService, NavService) {
+                           DialogService, ToastService, TableService, ImportService, NavService,
+                           LeadService) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
@@ -12,7 +13,7 @@ app.controller("LeadManageCtrl",
     NavService.setActive(NavService.leads, 0)
 
     // Set lead table as active
-    TableService.activeTable = TableService.leadTable
+    TableService.activeTable = LeadService.table
     vm.table = TableService.activeTable
 
     /* ------------------------------- Scope APIs -----------------------------------*/
@@ -75,7 +76,7 @@ app.controller("LeadManageCtrl",
     vm.remove = function() {
         // Launch Confirm Dialog
         DialogService.confirm(
-            "Are you sure you want to remove " + vm.table.selectedRows.length + " leads ?",
+            "Are you sure you want to remove " + vm.table.selection.length + " leads ?",
             function () {
                 $rootScope.showWaitingDialog("Please wait while we are removing leads...")
                 // Make Http call to remove leads

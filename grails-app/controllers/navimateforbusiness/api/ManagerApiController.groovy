@@ -4,6 +4,7 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
+import navimateforbusiness.LeadM
 import navimateforbusiness.Template
 import navimateforbusiness.Visibility
 
@@ -84,21 +85,17 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // get tasks for this user
-        def leads = leadService.getForUser(user)
-
-        // Find tasks with given IDs
-        def selectedLeads = []
-        request.JSON.ids.each {id -> selectedLeads.push(leads.find {it -> it.id == id}) }
+        // Find leads with given IDs
+        def leads = leadService.getForUserByFilter(user, [_ids: request.JSON.ids], [:], []).leads
 
         // Throw exception if all tasks not found
-        if (selectedLeads.size() != request.JSON.ids.size()) {
+        if (leads.size() != request.JSON.ids.size()) {
             throw new ApiException("Invalid lead IDs requested", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Prepare JSON response
         def resp = []
-        selectedLeads.each {lead -> resp.push(leadService.toJson(lead))}
+        leads.each {lead -> resp.push(leadService.toJson(lead, user))}
 
         render resp as JSON
     }
@@ -109,29 +106,18 @@ class ManagerApiController {
 
         // Get filters from request
         def filter = request.JSON.filter
+        def pager = request.JSON.pager
+        def sorter = request.JSON.sorter
 
         // get leads for this user
-        def leads = leadService.getForUser(user)
+        def filteredLeads = leadService.getForUserByFilter(user, filter, pager, sorter)
 
-        // Convert leads to tabular format
-        def table = tableService.parseLeads(user, leads)
-
-        // Apply column filters to table
-        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
-        int totalRows = table.rows.size()
-
-        // Apply sorting to table
-        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
-
-        // Apply paging to table
-        table.rows = pagingService.apply(table.rows, filter.pager)
-
-        // Send response
+        // Send JSON Response
         def resp = [
-                rows: table.rows,
-                columns: request.JSON.bColumns ? table.columns : null,
-                totalRows: totalRows
+                rowCount: filteredLeads.rowCount,
+                leads: []
         ]
+        filteredLeads.leads.each {LeadM lead -> resp.leads.push(leadService.toJson(lead, user))}
         render resp as JSON
     }
 
@@ -171,25 +157,20 @@ class ManagerApiController {
 
         // Get filters from request
         def filter = request.JSON.filter
+        def sorter = request.JSON.sorter
 
         // get leads for this user
-        def leads = leadService.getForUser(user)
-
-        // Convert leads to tabular format
-        def table = tableService.parseLeads(user, leads)
-
-        // Apply column filters to table
-        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+        def filteredLeads = leadService.getForUserByFilter(user, filter, [:], sorter)
 
         // Ensure number of rows are less than max limit
-        if (table.rows.size() > Constants.Table.MAX_SELECTION_COUNT) {
+        if (filteredLeads.leads.size() > Constants.Table.MAX_SELECTION_COUNT) {
             throw new ApiException("Too many rows. Maximum " + Constants.Table.MAX_SELECTION_COUNT + " rows can be selected at once.")
         }
 
         // Prepare response as list of IDs & names
         def resp = []
-        table.rows.each {row ->
-            resp.push(id: row.id, name: row.name)
+        filteredLeads.leads.each {LeadM lead ->
+            resp.push(id: lead.id, name: lead.name)
         }
         // Send response
         render resp as JSON
@@ -201,22 +182,20 @@ class ManagerApiController {
 
         // Get filters from request
         def filter = request.JSON.filter
+        def sorter = request.JSON.sorter
         def exportParams = request.JSON.exportParams
 
         // get leads for this user
-        def leads = leadService.getForUser(user)
+        def leads = leadService.getForUserByFilter(user, filter, [:], sorter).leads
 
-        // Convert leads to tabular format
-        def table = tableService.parseLeads(user, leads)
-
-        // Apply column filters to table
-        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
-
-        // Apply sorting to table
-        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
+        // Extract selected leads if applicable
+        if (params.selection) {
+            // Find all leads with IDs contained in selection array
+            leads = leads.findAll {it -> params.selection.contains(it.id)}
+        }
 
         // Export table
-        def exportData = tableService.getExportData(table, exportParams)
+        def exportData = leadService.getExportData(user, leads, exportParams)
 
         // Set response parameters
         response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
@@ -282,7 +261,7 @@ class ManagerApiController {
 
         // Prepare JSON response
         def resp = []
-        selectedTasks.each {task -> resp.push(taskService.toJson(task))}
+        selectedTasks.each {task -> resp.push(taskService.toJson(task, user))}
 
         render resp as JSON
     }
