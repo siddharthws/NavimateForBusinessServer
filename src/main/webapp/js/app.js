@@ -170,6 +170,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/help/team/manage.html',
     })*/
       // Dashboard mappings
+    .state('dashboard-loading', {
+        url: '/loading',
+        templateUrl: '/static/views/dashboard/loading.html',
+        controller: 'DashboardLoadingCtrl as vm'
+    })
     .state('dashboard', {
         abstract: true,
         url: '/dashboard',

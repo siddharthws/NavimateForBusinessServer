@@ -1,67 +1,74 @@
 <!-- Dahsboard -->
-<div class="dashboard d-flex">
-    <div class="fbx-v dashboard-menu">
-        <div class="fbx-v align-items-center my-3">
-            <img class="ib-base" ng-src="/static/images/ic_logo.png">
-            <img class="w-span" ng-src="/static/images/ic_logo_text.png">
-        </div>
-
-        <!-- Menu Items Top -->
-        <div ng-repeat="menu in vm.menus[0]" class="fbx-h align-items-center bttn bttn-menu" ng-if="role >= menu.access"
-             ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
-            <img class="ib-base ib-s" ng-src="{{'/static/images/' + menu.icon}}">
-            <div class="ml-2 text-sm text-bold">{{menu.name}}</div>
-        </div>
-
-        <hr class="my-2 mx-3">
-
-        <!-- Menu Items Mid -->
-        <div ng-repeat="menu in vm.menus[1]" class="fbx-h align-items-center bttn bttn-menu" ng-if="role >= menu.access"
-             ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
-            <img class="ib-base ib-s" ng-src="{{'/static/images/' + menu.icon}}">
-            <div class="ml-2 text-sm text-bold">{{menu.name}}</div>
-        </div>
-
-        <hr class="my-2 mx-3">
-
-        <!-- Menu Items Bottom -->
-        <div ng-repeat="menu in vm.menus[2]" class="fbx-h align-items-center bttn bttn-menu" ng-if="role >= menu.access"
-             ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
-            <img class="ib-base ib-s" ng-src="{{'/static/images/' + menu.icon}}">
-            <div class="ml-2 text-sm text-bold">{{menu.name}}</div>
-        </div>
-
-        <!-- Help button -->
-        <div class="fbx-h align-items-center bttn bttn-menu" ng-click="openHelp()">
-            <img class="ib-base ib-s" ng-src="/static/images/ic_help.png">
-            <div class="ml-2 text-sm text-bold">HELP</div>
-        </div>
+<div class="dashboard">
+    <!-- Dashboard Cover -->
+    <div class="dashboard-cover" ng-if="!vm.bNoCover">
     </div>
 
-    <div class="d-flex flex-column dashboard-content">
-        <div class="d-flex align-items-center">
-            <button ng-repeat="tab in vm.nav.activeMenu.tabs" ng-click="vm.nav.activeMenu.selectTab($index)"
-                    class="bttn bttn-tab align-self-end text-sm" ng-class="{'active': vm.nav.activeMenu.activeTab == tab}">
-                {{tab.name}}
-            </button>
+    <!-- Dashboard menu and content -->
+    <div class="fbx-h h-100 w-100">
+        <div class="fbx-v dashboard-menu">
+            <div class="fbx-v align-items-center my-3">
+                <img class="ib-base" ng-src="/static/images/ic_logo.png">
+                <img class="w-span" ng-src="/static/images/ic_logo_text.png">
+            </div>
 
-            <div class="dropdown ml-auto mr-5 my-1">
-                <div class="fbx-h align-items-center bttn" data-toggle="dropdown">
-                    <img src="/static/images/ic_user_photo.png" class="ib-base ib-l">
-                    <div class="fbx-v align-items-center ml-3">
-                        <span class="text-white text-bold">Welcome,</span>
-                        <span class="text-white">{{name}}</span>
-                    </div>
-                    <img class="img-icon ml-2" src="/static/images/ic_dropdown_light.png"/>
-                </div>
+            <!-- Menu Items Top -->
+            <div ng-repeat="menu in vm.menus[0]" class="fbx-h align-items-center bttn bttn-menu" ng-if="role >= menu.access"
+                 ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
+                <img class="ib-base ib-s" ng-src="{{'/static/images/' + menu.icon}}">
+                <div class="ml-2 text-sm text-bold">{{menu.name}}</div>
+            </div>
 
-                <div class="dropdown-menu">
-                    <button class="dropdown-item" ng-click="changePassword()">Change Password</button>
-                    <button class="dropdown-item" ng-click="logout()">Logout</button>
-                </div>
+            <hr class="my-2 mx-3">
+
+            <!-- Menu Items Mid -->
+            <div ng-repeat="menu in vm.menus[1]" class="fbx-h align-items-center bttn bttn-menu" ng-if="role >= menu.access"
+                 ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
+                <img class="ib-base ib-s" ng-src="{{'/static/images/' + menu.icon}}">
+                <div class="ml-2 text-sm text-bold">{{menu.name}}</div>
+            </div>
+
+            <hr class="my-2 mx-3">
+
+            <!-- Menu Items Bottom -->
+            <div ng-repeat="menu in vm.menus[2]" class="fbx-h align-items-center bttn bttn-menu" ng-if="role >= menu.access"
+                 ng-class="{'active': vm.nav.activeMenu == menu}" ng-click="menu.select()">
+                <img class="ib-base ib-s" ng-src="{{'/static/images/' + menu.icon}}">
+                <div class="ml-2 text-sm text-bold">{{menu.name}}</div>
+            </div>
+
+            <!-- Help button -->
+            <div class="fbx-h align-items-center bttn bttn-menu" ng-click="openHelp()">
+                <img class="ib-base ib-s" ng-src="/static/images/ic_help.png">
+                <div class="ml-2 text-sm text-bold">HELP</div>
             </div>
         </div>
 
-        <div class="fbx-v flex-1 bdr-round mr-2 mb-2 p-1 bg-off-white" ui-view></div>
+        <div class="fbx-v dashboard-content">
+            <div class="d-flex align-items-center">
+                <button ng-repeat="tab in vm.nav.activeMenu.tabs" ng-click="vm.nav.activeMenu.selectTab($index)"
+                        class="bttn bttn-tab align-self-end text-sm" ng-class="{'active': vm.nav.activeMenu.activeTab == tab}">
+                    {{tab.name}}
+                </button>
+
+                <div class="dropdown ml-auto mr-5 my-1">
+                    <div class="fbx-h align-items-center bttn" data-toggle="dropdown">
+                        <img src="/static/images/ic_user_photo.png" class="ib-base ib-l">
+                        <div class="fbx-v align-items-center ml-3">
+                            <span class="text-white text-bold">Welcome,</span>
+                            <span class="text-white">{{name}}</span>
+                        </div>
+                        <img class="img-icon ml-2" src="/static/images/ic_dropdown_light.png"/>
+                    </div>
+
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" ng-click="changePassword()">Change Password</button>
+                        <button class="dropdown-item" ng-click="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fbx-v flex-1 bdr-round mr-2 mb-2 p-1 bg-off-white" ui-view></div>
+        </div>
     </div>
 </div>
