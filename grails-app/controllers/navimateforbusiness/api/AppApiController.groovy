@@ -4,7 +4,7 @@ import grails.converters.JSON
 import navimateforbusiness.Acra
 
 class AppApiController {
-    static final int MIN_APP_VERSION_CODE = 22
+    static final int MIN_APP_VERSION_CODE = 23
 
     def checkForUpdate() {
         int appVersionCode = request.JSON.versionCode
