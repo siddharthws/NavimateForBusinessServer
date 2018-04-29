@@ -2,6 +2,7 @@ package navimateforbusiness.api
 
 
 import navimateforbusiness.Constants
+import navimateforbusiness.LeadM
 import navimateforbusiness.SmsHelper
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
@@ -62,10 +63,20 @@ class AdminApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Parse task JSON to task objects
+        // Parse lead JSON to task objects
         def leads = []
         request.JSON.leads.each {leadJson ->
-            leads.push(leadService.fromJson(leadJson, user))
+            // Parse to lead object and assign update & create time
+            LeadM lead = leadService.fromJson(leadJson, user)
+
+            // Assign Lead update / create time as current time
+            String currentTime = new Date().format(Constants.Date.FORMAT_BACKEND, Constants.Date.TIMEZONE_IST)
+            if (!lead.createTime) {
+                lead.createTime = currentTime
+            }
+            lead.updateTime = currentTime
+
+            leads.push(lead)
         }
 
         // Save tasks
