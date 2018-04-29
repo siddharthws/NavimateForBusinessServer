@@ -13,10 +13,6 @@ import java.text.SimpleDateFormat
 class TableService {
 
     // ----------------------- Constants ---------------------------//
-    static String FORMAT_DATE = "dd-MM-yyyy"
-    static String FORMAT_TIME = "HH:mm:ss"
-    static TimeZone IST = TimeZone.getTimeZone('Asia/Calcutta')
-
     // ----------------------- Dependencies ---------------------------//
     def templateService
     def fieldService
@@ -89,8 +85,10 @@ class TableService {
             values[3] = task.manager.name
             values[4] = task.rep ? task.rep.name : 'Unassigned'
             values[5] = task.creator.name
-            values[6] = task.dateCreated.format(FORMAT_DATE, IST)
-            values[7] = task.dateCreated.format(FORMAT_TIME, IST)
+            values[6] = task.dateCreated.format(navimateforbusiness.Constants.Date.FORMAT_FRONTEND,
+                                                navimateforbusiness.Constants.Date.TIMEZONE_IST)
+            values[7] = task.dateCreated.format(navimateforbusiness.Constants.Date.FORMAT_TIME,
+                                                navimateforbusiness.Constants.Date.TIMEZONE_IST)
             values[8] = task.period
             values[9] = task.formTemplate.name
             values[10] = task.templateData.template.name
@@ -142,8 +140,10 @@ class TableService {
             values[0] = form.owner.manager.name
             values[1] = form.owner.name
             values[2] = form.submittedData.template.name
-            values[3] = form.dateCreated.format(FORMAT_DATE, IST)
-            values[4] = form.dateCreated.format(FORMAT_TIME, IST)
+            values[3] = form.dateCreated.format(navimateforbusiness.Constants.Date.FORMAT_FRONTEND,
+                                                navimateforbusiness.Constants.Date.TIMEZONE_IST)
+            values[4] = form.dateCreated.format(navimateforbusiness.Constants.Date.FORMAT_TIME,
+                                                navimateforbusiness.Constants.Date.TIMEZONE_IST)
             values[5] = (form.latitude || form.longitude) ? form.latitude + "," + form.longitude : '-'
             values[6] = form.task ? [id:form.task.lead.id , name:form.task.lead.name] : "-"
             values[7] = form.task ? String.valueOf(form.task.id) : "-"
@@ -284,7 +284,7 @@ class TableService {
                         }
                     } else if ( cell.getCellType() == Cell.CELL_TYPE_NUMERIC &&
                                 HSSFDateUtil.isCellDateFormatted(cell)) {
-                        SimpleDateFormat sdf = new SimpleDateFormat('dd-MM-yyyy')
+                        SimpleDateFormat sdf = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_FRONTEND)
                         Date date = cell.getDateCellValue()
                         value = sdf.format(date)
                     } else {

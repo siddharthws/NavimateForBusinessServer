@@ -14,7 +14,7 @@ app.service("FileService", function () {
         var linkElement = document.createElement('a');
 
         // Add timestamp to file
-        var timestamp = moment().format('_DD_MM_YY_HHmm')
+        var timestamp = moment().format(Constants.Date.FORMAT_FILE_SUFFIX)
         filename += '_' + timestamp + '.xls'
 
         try {

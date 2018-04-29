@@ -47,7 +47,7 @@ class SortingService {
         def sortableValue
 
         if (colType == navimateforbusiness.Constants.Template.FIELD_TYPE_DATE) {
-            SimpleDateFormat sdf = new SimpleDateFormat('dd-MM-yyyy')
+            SimpleDateFormat sdf = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_BACKEND)
             sortableValue = value ? sdf.parse(value) : ''
         } else {
             sortableValue = value ? value.toLowerCase() : ''
