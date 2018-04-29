@@ -15,6 +15,7 @@ class TableService {
     // ----------------------- Constants ---------------------------//
     // ----------------------- Dependencies ---------------------------//
     def templateService
+    def leadService
     def fieldService
 
     // ----------------------- Public APIs ---------------------------//
@@ -78,10 +79,13 @@ class TableService {
             // Push blank identifier for each column in values
             columns.each {it -> values.push('-')}
 
+            // Get lead for this task
+            LeadM lead = leadService.getForUserById(user, task.leadid)
+
             // Add row data for mandatory columns
             values[0] = String.valueOf(task.id)
-            values[1] = [id:task.lead.id, name:task.lead.name]
-            values[2] = (task.lead.latitude || task.lead.longitude) ? task.lead.latitude + "," + task.lead.longitude : '-'
+            values[1] = [id:lead.id, name:lead.name]
+            values[2] = (lead.latitude || lead.longitude) ? lead.latitude + "," + lead.longitude : '-'
             values[3] = task.manager.name
             values[4] = task.rep ? task.rep.name : 'Unassigned'
             values[5] = task.creator.name
@@ -111,7 +115,7 @@ class TableService {
             // Add row to table
             rows.push([
                     id:         task.id,
-                    name:       task.lead.name,
+                    name:       lead.name,
                     values:     values
             ])
         }
@@ -136,6 +140,9 @@ class TableService {
             // Push blank identifier for each column in values
             columns.each { it -> values.push('-') }
 
+            // Get lead for this task
+            LeadM lead = form.task ? leadService.getForUserById(user, form.task.leadid) : null
+
             // Add row data for mandatory columns
             values[0] = form.owner.manager.name
             values[1] = form.owner.name
@@ -145,7 +152,7 @@ class TableService {
             values[4] = form.dateCreated.format(navimateforbusiness.Constants.Date.FORMAT_TIME,
                                                 navimateforbusiness.Constants.Date.TIMEZONE_IST)
             values[5] = (form.latitude || form.longitude) ? form.latitude + "," + form.longitude : '-'
-            values[6] = form.task ? [id:form.task.lead.id , name:form.task.lead.name] : "-"
+            values[6] = lead ? [id:lead.id , name:lead.name] : "-"
             values[7] = form.task ? String.valueOf(form.task.id) : "-"
             values[8] = form.taskStatus ? form.taskStatus.name() : "-"
 

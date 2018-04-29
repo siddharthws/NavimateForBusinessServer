@@ -58,11 +58,14 @@ class TaskService {
 
     // ----------------------- Public APIs ---------------------------//
     // Methods to convert task objects to / from JSON
-    def toJson(Task task) {
+    def toJson(Task task, User user) {
+        // Get lead for this task
+        LeadM lead = leadService.getForUserById(user, task.leadid)
+
         // Convert template properties to JSON
         def json = [
                 id: task.id,
-                lead: [id: task.lead.id, name: task.lead.name],
+                lead: [id: lead.id, name: lead.name],
                 manager: [id: task.manager.id, name: task.manager.name],
                 rep: task.rep ? [id: task.rep.id, name: task.rep.name] : null,
                 status: task.status.value,
@@ -112,7 +115,7 @@ class TaskService {
         task.manager = manager
         task.creator = user
         task.rep = json.repId ? userService.getRepForUserById(user, json.repId) : null
-        task.lead = leadService.getForUserById(user, json.leadId)
+        task.leadid = json.leadId
         task.status = navimateforbusiness.TaskStatus.fromValue(json.status)
         task.period = json.period
         task.formTemplate = templateService.getForUserById(user, json.formTemplateId)

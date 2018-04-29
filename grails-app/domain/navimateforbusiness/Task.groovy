@@ -20,6 +20,7 @@ class Task {
     User creator
     User rep
     Lead lead
+    String leadid
 
     // Task properties
     navimateforbusiness.TaskStatus status = navimateforbusiness.TaskStatus.OPEN
@@ -46,6 +47,8 @@ class Task {
         creator         nullable: true
         rep             nullable: true
         extId           nullable: true
+        leadid          nullable: true
+        lead            nullable: true
     }
 
     static mapping = {
