@@ -8,9 +8,8 @@ app.controller("SubmissionReportCtrl",
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
-    // Set menu and option
-    NavService.activeMenu = NavService.reports
-    NavService.activeMenu.activeTab = NavService.reports.tabs[0]
+    // Set Active Tab and Menu
+    NavService.setActive(NavService.reports, 0)
 
     // Set form table as active
     TableService.activeTable = TableService.formTable

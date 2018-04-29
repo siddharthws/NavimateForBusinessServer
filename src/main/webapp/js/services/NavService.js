@@ -2,9 +2,11 @@
  * Created by Siddharth on 27-03-2018.
  */
 
-app.service('NavService', function(ObjMenu, ObjTab) {
+app.service('NavService', function($localStorage, ObjMenu, ObjTab) {
     /* ----------------------------- INIT --------------------------------*/
     var vm = this
+
+    vm.activeMenu = null
 
     // Create each menu item with its respective tab
     vm.team = new ObjMenu(
@@ -64,9 +66,15 @@ app.service('NavService', function(ObjMenu, ObjTab) {
         ]
     )
 
-    // Set active menu item
-    vm.activeMenu = vm.team
-
     /* ----------------------------- APIs --------------------------------*/
+    vm.setActive = function(menu, tabIdx) {
+        // Set active menu and tab
+        vm.activeMenu = menu
+        vm.activeMenu.activeTab = vm.activeMenu.tabs[tabIdx]
 
+        // Cache current state in local storage
+        $localStorage.lastKnownState = "dashboard." + vm.activeMenu.activeTab.state
+    }
+
+    /* ----------------------------- Post Init --------------------------------*/
 })

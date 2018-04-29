@@ -8,9 +8,8 @@ app.controller("LeadTemplatesCtrl",
     /*------------------------------- INIT -------------------------------*/
     var vm = this
 
-    // Set menu and option
-    NavService.activeMenu = NavService.templates
-    NavService.activeMenu.activeTab = NavService.templates.tabs[1]
+    // Set Active Tab and Menu
+    NavService.setActive(NavService.templates, 1)
 
     // Init Object
     vm.selection = []

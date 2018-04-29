@@ -7,9 +7,8 @@ app.controller("TaskManageCtrl",
                             DialogService, ToastService, TableService, NavService, ImportService) {
     var vm = this
 
-    // Set menu and option
-    NavService.activeMenu = NavService.tasks
-    NavService.activeMenu.activeTab = NavService.tasks.tabs[0]
+    // Set Active Tab and Menu
+    NavService.setActive(NavService.tasks, 0)
 
     // Set task table as active
     TableService.activeTable = TableService.taskTable

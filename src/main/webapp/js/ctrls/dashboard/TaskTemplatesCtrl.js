@@ -7,9 +7,8 @@ app.controller("TaskTemplatesCtrl",
                             DialogService, ToastService, TemplateService, NavService) {
     var vm = this
 
-    // Set menu and option
-    NavService.activeMenu = NavService.templates
-    NavService.activeMenu.activeTab = NavService.templates.tabs[2]
+    // Set Active Tab and Menu
+    NavService.setActive(NavService.templates, 2)
 
     /*------------------------------- Scope APIs -------------------------------*/
     vm.edit = function () {

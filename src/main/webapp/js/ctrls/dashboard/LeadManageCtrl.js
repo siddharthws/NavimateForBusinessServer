@@ -8,9 +8,8 @@ app.controller("LeadManageCtrl",
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
-    // Set menu and option
-    NavService.activeMenu = NavService.leads
-    NavService.activeMenu.activeTab = NavService.leads.tabs[0]
+    // Set Active Tab and Menu
+    NavService.setActive(NavService.leads, 0)
 
     // Set lead table as active
     TableService.activeTable = TableService.leadTable
