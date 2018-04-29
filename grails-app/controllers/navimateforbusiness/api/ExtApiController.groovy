@@ -1,6 +1,6 @@
 package navimateforbusiness.api
 
-import grails.converters.JSON
+/*import grails.converters.JSON
 import navimateforbusiness.Account
 import navimateforbusiness.ApiException
 import navimateforbusiness.ApiKey
@@ -18,13 +18,13 @@ import navimateforbusiness.Value
 import org.grails.web.json.JSONArray
 
 import java.text.DateFormat
-import java.text.SimpleDateFormat
+import java.text.SimpleDateFormat*/
 
 class ExtApiController {
 
-    def googleApiService
-    def fcmService
-
+    //def googleApiService
+    //def fcmService
+/*
     def syncManagers() {
         // Get account for this request
         def account = ApiKey.findByKey(request.getHeader("X-Api-Key")).account
@@ -109,7 +109,7 @@ class ExtApiController {
         render resp as JSON
     }
 
-    def getFormReport() {
+    def getFormReport() {/*
         // Get account for this request
         def account = ApiKey.findByKey(request.getHeader("X-Api-Key")).account
 
@@ -949,5 +949,5 @@ class ExtApiController {
         fcms.each {fcm ->
             fcmService.notifyApp(fcm)
         }
-    }
+    }*/
 }

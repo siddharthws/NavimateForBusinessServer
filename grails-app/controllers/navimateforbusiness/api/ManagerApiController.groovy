@@ -136,7 +136,7 @@ class ManagerApiController {
     }
 
     def searchLeads() {
-        // Get user object
+        /*// Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get input params
@@ -161,7 +161,8 @@ class ManagerApiController {
         leads.each {it -> resp.items.push([id: it.id, name: it.name])}
 
         // Send response
-        render resp as JSON
+        render resp as JSON*/
+        throw new ApiException("API unavailable")
     }
 
     def getLeadIds() {

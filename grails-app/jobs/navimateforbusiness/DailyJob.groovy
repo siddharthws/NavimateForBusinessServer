@@ -9,7 +9,7 @@ class DailyJob {
     }
 
     void execute() {
-        def currentDate = (new Date()).format("yyyy-MM-dd")
+        /*def currentDate = (new Date()).format("yyyy-MM-dd")
 
         def tasks = Task.findAll ()
         tasks.each {task ->
@@ -36,7 +36,7 @@ class DailyJob {
                     task.save(flush: true, failOnError: true)
                 }
             }
-        }
+        }*/
     }
 }
 
