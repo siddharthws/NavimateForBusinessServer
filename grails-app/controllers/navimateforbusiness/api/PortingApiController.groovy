@@ -11,6 +11,8 @@ import navimateforbusiness.Value
 
 import java.text.SimpleDateFormat
 
+import static com.mongodb.client.model.Filters.eq
+
 class PortingApiController {
 
     // Port task creator column from owner
@@ -74,6 +76,22 @@ class PortingApiController {
             mongoLead.save(flush: true, failOnError: true)
 
             log.error("Done with " + i + " leads out of " + numLeads)
+        }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    // API to port lead IDs for tasks
+    def taskLeads () {
+        def tasks = Task.findAll()
+        int numTasks = tasks.size()
+        tasks.eachWithIndex {task, i ->
+            // Find lead with old ID
+            LeadM lead = LeadM.find(eq("oldId", task.lead.id))[0]
+            task.leadid = lead.id
+            task.save(flush: true, failOnError: true)
+            log.error("Done with = " + i + " out of " + numTasks)
         }
 
         def resp = [success: true]

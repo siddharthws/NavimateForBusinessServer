@@ -57,7 +57,7 @@ class DomainToJson {
                 ver:                task.version,
                 managerId:          task.manager.id,
                 repId:              task.rep.id,
-                leadId:             task.lead.id,
+                leadId:             task.leadid,
                 formTemplateId:     task.formTemplate.id,
                 period:             task.period,
                 status:             task.status.name(),
