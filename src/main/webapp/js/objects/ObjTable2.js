@@ -215,7 +215,9 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
                     var charCount = column.name.length
                     vm.rows.forEach(function (row) {
                         var value = row.values[column.id]
-                        charCount += value.length
+                        if (value) {
+                            charCount += value.length
+                        }
                     })
 
                     // Get average character per row
