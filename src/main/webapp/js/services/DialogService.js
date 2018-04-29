@@ -189,12 +189,27 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
+    // TODO Merge both functions
     // Table Picker Dialogs
     this.tablePicker = function (title, table, cb) {
         // Show Dialog
         $mdDialog.show({
             templateUrl: '/static/views/dialogs/TablePicker.html',
             controller: 'TablePickerCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                title: title,
+                table: table,
+                cb: cb
+            }
+        })
+    }
+    this.table2Picker = function (title, table, cb) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/Table2Picker.html',
+            controller: 'Table2PickerCtrl as vm',
             clickOutsideToClose: true,
             multiple: true,
             locals: {

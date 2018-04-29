@@ -1,0 +1,176 @@
+<!-- Html view for Table -->
+<div ng-controller="Table2Ctrl as vm" class="h-100 w-100 d-flex flex-column">
+
+    <!-- Pager -->
+    <div class="d-flex align-items-center justify-content-between mx-3 my-1"
+         ng-init="pager = vm.table.pager">
+        <!-- Page numbers using bootstrap pagination -->
+        <pager on-page-changed="vm.openPage(page)" page-count="vm.table.pageCount"></pager>
+
+        <!-- Rows per page -->
+        <span>
+            Showing
+            <input type="number" class="input-box active width-sm" ng-model="pager.count"
+                   ng-model-options="{debounce: 500}" ng-change="vm.rowsPerPage()">
+            rows per page out of {{vm.table.rowCount}} rows
+        </span>
+    </div>
+
+    <!-- Table Container -->
+    <div class="overflow-auto p-2 bdr-bottom-lighgrey flex-1">
+        <!-- Table -->
+        <table class="table table-striped" ng-if="vm.table.columns.length">
+            <!-- Table Headers -->
+            <thead>
+            <!-- Select All column header -->
+            <th class="tbl-col-s" ng-class="{'active': vm.table.rowCount && (vm.table.selection.length == vm.table.rowCount)}">
+                <div class="fbx-v fbx-center-children cursor-pointer"
+                     ng-if="!vm.props.bSingleSelect" ng-click="vm.toggleAll()" >
+                    <div class="img-icon ic-tick ic-small" title="Select All"></div>
+                    <loader class="loader-s" ng-if="vm.bToggleWaiting"></loader>
+                </div>
+                <div class="fbx-v fbx-center-children" ng-if="vm.props.bSingleSelect">
+                    #
+                </div>
+            </th>
+
+            <!-- Columns returned by server -->
+            <th ng-repeat="column in vm.table.columns"  ng-if="column.filter.bShow"
+                ng-class="{ 'tbl-col-s' : column.size == vm.TableConst.COL_SIZE_S,
+                            'tbl-col-m' : column.size == vm.TableConst.COL_SIZE_M,
+                            'tbl-col-l' : column.size == vm.TableConst.COL_SIZE_L}">
+                <div class="d-flex flex-column justify-content-center">
+                    <!-- Header Top -->
+                    <div class="d-flex">
+                        <!-- Column Name -->
+                        <span class="flex-1 text-nowrap">
+                                {{column.name}}
+                            </span>
+
+                        <!-- Sorting Button -->
+                        <input type="button" value="" class="ib-base ib-xs ib-sort" title="Toggle Sorting"
+                               ng-if="column.filter.bSortable" ng-click="vm.toggleSorting($index)"
+                               ng-class="{  'sort-asc'  : column.filter.sort == vm.TableConst.SORT_ASC,
+                                            'sort-desc' : column.filter.sort == vm.TableConst.SORT_DESC}"/>
+
+                        <!-- Blanks Filter Button -->
+                        <input type="button" value="" class="ib-base ib-xs ib-blank"
+                               title="Show / Hide Blanks" ng-click="vm.toggleBlanks($index)"
+                               ng-class="{'active' : column.filter.bNoBlanks}"/>
+                    </div>
+
+                    <!-- Header bottom with specialized filters for different data types -->
+                    <div class="d-flex">
+                        <!-- Text filter -->
+                        <input ng-if="(column.filter.type == vm.FilterConst.TYPE_TEXT ||column.filter.type == vm.FilterConst.TYPE_OBJECT)" type="text" placeholder="Search..."
+                               class="input-box w-100" ng-model="column.filter.value"
+                               ng-model-options="{debounce: 500}" ng-change="vm.filterUpdated()"
+                               ng-class="{'active': column.filter.value}">
+
+                        <!-- Number filter -->
+                        <div class="d-flex align-items-center" ng-if="column.filter.type == vm.FilterConst.TYPE_NUMBER">
+                            <span class="text-nowrap">From : </span>
+                            <input type="number" placeholder="0" class="input-box width-sm"
+                                   ng-model="column.filter.value.from" ng-model-options="{debounce: 500}"
+                                   ng-change="vm.filterUpdated()" ng-class="{'active': column.filter.value.from}">
+
+                            <span class="text-nowrap"> To : </span>
+                            <input type="number" placeholder="0" class="input-box width-sm"
+                                   ng-model="column.filter.value.to" ng-model-options="{debounce: 500}"
+                                   ng-change="vm.filterUpdated()" ng-class="{'active': column.filter.value.to}">
+                        </div>
+
+                        <!-- Date filter -->
+                        <div class="d-flex flex-1 align-items-center" ng-if="column.filter.type == vm.FilterConst.TYPE_DATE">
+                            <datepicker class="flex-1" ng-class="{'active' : column.filter.value.from}" hint="From"
+                                        model-format="{{$root.Constants.Date.FORMAT_BACKEND}}"
+                                        display-format="{{$root.Constants.Date.FORMAT_FRONTEND_SHORT}}"
+                                        date-model="column.filter.value.from" date-change="vm.filterUpdated()"></datepicker>
+                            <span class="mx-1">-</span>
+                            <datepicker class="flex-1" ng-class="{'active' : column.filter.value.to}" hint="Till"
+                                        model-format="{{$root.Constants.Date.FORMAT_BACKEND}}"
+                                        display-format="{{$root.Constants.Date.FORMAT_FRONTEND_SHORT}}"
+                                        date-model="column.filter.value.to" date-change="vm.filterUpdated()"></datepicker>
+                        </div>
+                    </div>
+                </div>
+            </th>
+            </thead>
+
+            <!-- Table Body -->
+            <tbody  ng-if="vm.table.rows.length && !vm.bWaiting && !vm.bError">
+            <!-- Table Row -->
+            <tr ng-repeat="row in vm.table.rows" ng-click="vm.toggleRowSelection(row)"
+                ng-class="{'active' : vm.table.getSelectionIndex(row.id) != -1}">
+                <!-- Serial Number -->
+                <td class="tbl-col-s">
+                    {{(vm.table.pager.startIdx + $index + 1) + "."}}
+                </td>
+
+                <!-- Data returned by server -->
+                <td ng-repeat="column in vm.table.columns"  ng-if="column.filter.bShow"
+                    ng-init="value = row.values[column.id]"
+                    ng-class="{ 'tbl-col-s' : column.size == vm.TableConst.COL_SIZE_S,
+                                    'tbl-col-m' : column.size == vm.TableConst.COL_SIZE_M,
+                                    'tbl-col-l' : column.size == vm.TableConst.COL_SIZE_L}">
+                    <!-- Simple Text Value -->
+                    <span ng-if="(value == '-') || (column.type != vm.TemplateConst.FIELD_TYPE_PHOTO &&
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_SIGN &&
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_LOCATION &&
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_CHECKBOX &&
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_LEAD &&
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_TASK )">
+                        {{value}}
+                    </span>
+
+                    <!-- Button to open image -->
+                    <input type="button" value="" class="ib-base ib-xs ib-hover ib-link" title="Open Image"
+                           ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_PHOTO ||
+                                                         column.type == vm.TemplateConst.FIELD_TYPE_SIGN)"
+                           ng-click="$root.Statics.absorbEvent($event); vm.showImage(value)"/>
+
+                    <!-- Button to open location -->
+                    <input type="button" value="" class="ib-base ib-xs ib-hover ib-map" title="Open Location"
+                           ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_LOCATION)"
+                           ng-click="$root.Statics.absorbEvent($event); vm.showLocation(value, row.name)"/>
+
+                    <!-- Checkbox value shows as yes or no -->
+                    <span ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_CHECKBOX)">
+                        {{value ? "yes" : "no"}}
+                    </span>
+
+                    <!-- Link to open Lead  -->
+                    <a href  ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_LEAD )"
+                       ng-click="$root.Statics.absorbEvent($event); vm.viewLead(row.id)">{{value}}</a>
+
+                    <!-- Link to open Task -->
+                    <a href  ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_TASK )"
+                       ng-click="$root.Statics.absorbEvent($event); vm.viewTask(value)">{{value}}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Waiting / Error UI -->
+        <div class="d-flex align-items-center justify-content-center mt-1 p-4"
+             ng-if="vm.bError || vm.bWaiting || !vm.table.rows.length">
+            <!-- Waiting Spinner -->
+            <div class="d-flex align-items-center" ng-if="vm.bWaiting">
+                <loader ng-if="vm.bWaiting" class="loader-l"></loader>
+                <h4 class="ml-2 text-grey">Getting data...</h4>
+            </div>
+
+            <!-- Error UI -->
+            <div class="d-flex align-items-center" ng-if="vm.bError">
+                <img src="/static/images/ic_smiley_sad.png">
+                <h4 class="ml-1 text-grey">Could not sync data...</h4>
+            </div>
+
+            <!-- No data UI -->
+            <div class="d-flex align-items-center" ng-if="!vm.bError && !vm.bWaiting && !vm.table.rows.length">
+                <img src="/static/images/ic_smiley_neutral.png">
+                <h4 class="ml-1 text-grey">Nothing to show...</h4>
+            </div>
+        </div>
+    </div>
+</div>
