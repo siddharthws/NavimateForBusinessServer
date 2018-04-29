@@ -56,7 +56,7 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
                         $mdDialog.hide()
 
                         // Redirect to dashboard
-                        $state.go("dashboard.team-manage")
+                        $state.go("dashboard-loading")
                     },
                     function (error) {
                         $rootScope.hideWaitingDialog()

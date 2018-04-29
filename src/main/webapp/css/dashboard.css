@@ -7,6 +7,12 @@
     background-color: #0c1730;
 }
 
+.dashboard-cover {
+    background-color: #37bcf2;
+    height: 100%;
+    width: 100%;
+}
+
 .logo-container {
     padding: 10px;
 }

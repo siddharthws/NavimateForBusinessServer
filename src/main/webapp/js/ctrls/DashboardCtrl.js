@@ -3,11 +3,15 @@
  */
 
 app.controller('DashboardCtrl',
-                function (  $scope, $rootScope, $state, $window, $localStorage,
-                            AuthService, DialogService, ToastService, NavService,
-                            TemplateService, TeamService) {
+                function (  $scope, $rootScope, $state, $window, $localStorage, $timeout,
+                            AuthService, DialogService, ToastService, NavService) {
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
+
+    // Go to loading page if app is not loaded
+    if (!$rootScope.bAppLoaded) {
+        $state.go('dashboard-loading')
+    }
 
     // Set Nav controls
     vm.nav = NavService
@@ -23,31 +27,18 @@ app.controller('DashboardCtrl',
     $scope.nav = {}
     $scope.name = $localStorage.name
     $scope.role = $localStorage.role
-    var bError = false
-    var bTemplateSync = false
 
-    // Sync all data on Initialization
-    $rootScope.showWaitingDialog("Please wait while we are fetching data...")
-
-    // Sync Templates
-    TemplateService.sync().then(
-        // Success
-        function () {
-            bTemplateSync = true
-            checkSync()
-        },
-        // Error
-        function () {
-            handleError()
-        }
-    )
-
-    // Sync managers for admin
-    if ($localStorage.role >= Constants.Role.CC) {
-        TeamService.syncManagers()
+    /*------------------------------------ Root APIs --------------------------------*/
+    // Access Checker API
+    $rootScope.isAdmin = function () {
+        return $localStorage.role == Constants.Role.ADMIN
     }
 
-        /*------------------------------------ APIs --------------------------------*/
+    $rootScope.isCC = function () {
+        return $localStorage.role >= Constants.Role.CC
+    }
+
+    /*------------------------------------ APIs --------------------------------*/
     // Button Click APIs
     $scope.logout = function(){
         $rootScope.showWaitingDialog("Please wait while you are being logged out...")
@@ -64,15 +55,6 @@ app.controller('DashboardCtrl',
                 }
             )
     }
-
-    // Attach Admin Checker API
-    $rootScope.isAdmin = function () {
-        return $localStorage.role == Constants.Role.ADMIN
-    }
-
-    $rootScope.isCC = function () {
-        return $localStorage.role >= Constants.Role.CC
-    }
     
     $scope.changePassword = function () {
         DialogService.changePassword()
@@ -86,25 +68,12 @@ app.controller('DashboardCtrl',
         $state.go(state)
     }
 
-    function checkSync(){
-        if(bTemplateSync){
-            $rootScope.hideWaitingDialog()
-        }
-    }
-
-    function handleError() {
-        // Ignore if error flag is already marker
-        if (bError) {
-            return
-        }
-        bError = true
-
-        // Hide Waiting dialog
-        $rootScope.hideWaitingDialog()
-
-        // Show Error Toast
-        ToastService.toast("Unable to load data !!!")
-    }
     /*------------------------------------EVENT LISTENERS --------------------------------*/
+    /*------------------------------------Post Init --------------------------------*/
+    // remove cover after 100ms. This is done so that when user is on dashboard and he refreshes
+    // refreshes the webpage, the page should not flicker before redirecting to loading screen
+    $timeout(function () {
+        vm.bNoCover = true
+    }, 100)
 
 })
