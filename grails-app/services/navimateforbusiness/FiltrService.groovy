@@ -94,7 +94,7 @@ class FiltrService {
                     }
                     break
                 case navimateforbusiness.Constants.Filter.TYPE_DATE:
-                    SimpleDateFormat sdf = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_BACKEND)
+                    SimpleDateFormat sdf = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_FRONTEND)
                     // Check if 'from' filter is applied
                     if (filter.value.from) {
                         if (value != '-') {

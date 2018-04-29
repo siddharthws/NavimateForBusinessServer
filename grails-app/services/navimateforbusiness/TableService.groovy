@@ -517,11 +517,14 @@ class TableService {
         // Parse to string as per field type
         switch (value.field.type) {
             case navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT:
-            case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
             case navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO:
             case navimateforbusiness.Constants.Template.FIELD_TYPE_SIGN:
             case navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION:
                 valueString = value.value ? value.value : '-'
+                break
+            case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
+                SimpleDateFormat sdf = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_BACKEND)
+                valueString = value.value ? sdf.parse(value.value).format(navimateforbusiness.Constants.Date.FORMAT_FRONTEND) : '-'
                 break
             case navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER:
                 valueString = String.valueOf(value.value)
