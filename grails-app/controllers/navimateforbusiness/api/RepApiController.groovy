@@ -372,7 +372,7 @@ class RepApiController {
     }
 
     def addTask() {
-        // Get rep
+        /*// Get rep
         User rep = authenticate()
 
         // Add rep ID to task json
@@ -399,11 +399,12 @@ class RepApiController {
                         values: valuesResp
                 ]
         ]
-        render taskResp as JSON
+        render taskResp as JSON*/
+        throw new ApiException("API Unavailable")
     }
 
     def addLead() {
-        // Get rep
+        /*// Get rep
         User rep = authenticate()
 
         // Parse to Lead
@@ -427,7 +428,8 @@ class RepApiController {
                         values: valuesResp
                 ]
         ]
-        render leadResp as JSON
+        render leadResp as JSON*/
+        throw new ApiException("API Unavailable")
     }
 
     private def authenticate() {

@@ -6,7 +6,7 @@ import grails.gorm.transactions.Transactional
 class SearchService {
     // ----------------------- Dependencies ---------------------------//
     // ----------------------- Public APIs ---------------------------//
-    def searchLeads (List<Lead> leads, String text) {
+    /*def searchLeads (List<Lead> leads, String text) {
         def searchedObjects = []
 
         // Iterate through leads
@@ -18,7 +18,7 @@ class SearchService {
         }
 
         searchedObjects
-    }
+    }*/
 
     // Method to search in user objects
     def searchUsers (List<User> team, String text) {

@@ -4,68 +4,6 @@
 package navimateforbusiness
 
 class JsonToDomain {
-    static Lead Lead(def leadJson, User owner) {
-        navimateforbusiness.Lead lead = null
-        // Check for existing objects
-        if (leadJson.id) {
-            lead = Lead.findByIdAndManager(leadJson.id, owner)
-
-            // Throw exception if invalid id / owner
-            if (!lead) {
-                throw new navimateforbusiness.ApiException("Invalid Lead Id for this user",
-                        navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-            }
-        } else {
-            // Create new lead
-            lead = new Lead(manager: owner,
-                    account: owner.account,
-                    isRemoved: false,
-                    visibility: navimateforbusiness.Visibility.PRIVATE)
-        }
-
-        // Update lead info from JSON received
-        lead.latitude = leadJson.latitude
-        lead.longitude = leadJson.longitude
-        lead.address = leadJson.address
-        lead.name = leadJson.title
-
-        Template template = Template.findById(leadJson.templateId)
-        Data data = Data(leadJson.templateData, owner, template)
-        lead.templateData = data
-
-        lead
-    }
-
-    static Task Task(def taskJson, def manager) {
-        navimateforbusiness.Task task = null
-
-        // Check for existing objects
-        if (taskJson.id) {
-            task = Task.findById(taskJson.id)
-
-            // Throw exception if invalid id / owner
-            if (!task) {
-                throw new navimateforbusiness.ApiException("Invalid Task Id for this user",
-                        navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-            }
-        } else {
-            // Create new task
-            task = new Task(manager: manager,
-                            account: manager.account)
-        }
-
-        // Update lead info from JSON received
-        task.period = taskJson.period ? taskJson.period : 0
-        task.rep = User.findById(taskJson.repId)
-        task.lead = Lead.findById(taskJson.leadId)
-        task.formTemplate = Template.findById(taskJson.formTemplateId)
-
-        navimateforbusiness.Template template = navimateforbusiness.Template.findById(taskJson.templateId)
-        Data data = Data(taskJson.templateData, manager, template)
-        task.templateData = data
-
-        task
-    }
 
     static Form Form(def formJson, User owner) {
         navimateforbusiness.Form form = null
@@ -105,63 +43,6 @@ class JsonToDomain {
         }
 
         form
-    }
-
-    static Template Template(def templateJson, User owner) {
-        if (!templateJson) {
-            throw new navimateforbusiness.ApiException( "No template data found !!!",
-                    navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-        }
-
-        // Get template object
-        navimateforbusiness.Template template = null
-        if (templateJson.id) {
-            template = navimateforbusiness.Template.findByIdAndOwner(templateJson.id, owner)
-
-            // Throw exception if invalid id / owner
-            if (!template) {
-                throw new navimateforbusiness.ApiException("Invalid Template Id for this user",
-                        navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-            }
-        } else {
-            template = new Template(owner: owner, account: owner.account, type: templateJson.type)
-        }
-
-        // Assign Name
-        template.name = templateJson.name
-
-        // Get Fields Array
-        List<Field> fields = []
-        templateJson.fields.each { fieldJson ->
-            fields.push(Field(fieldJson, template, owner.account))
-        }
-        template.fields = fields
-
-        template
-    }
-
-    static Field Field (def fieldJson, Template template, Account account) {
-        if (!fieldJson || !fieldJson.type || !fieldJson.title) {
-            throw new navimateforbusiness.ApiException( "Invalid Field in template !!!",
-                    navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
-        }
-
-        // Get Field from Id
-        Field field
-        if (fieldJson.id) {
-            field = Field.findById(fieldJson.id)
-        } else {
-            field = new Field()
-        }
-
-        // Assign properties
-        field.title = fieldJson.title
-        field.type = fieldJson.type
-        field.template = template
-        field.account = account
-        field.value = fieldJson.value
-
-        field
     }
 
     static Data Data(def dataJson, User owner, Template template) {
