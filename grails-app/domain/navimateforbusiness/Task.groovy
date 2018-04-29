@@ -53,5 +53,6 @@ class Task {
 
     static mapping = {
         period defaultValue: 0
+        autoTimestamp false
     }
 }

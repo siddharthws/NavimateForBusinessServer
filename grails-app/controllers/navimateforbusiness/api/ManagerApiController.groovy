@@ -338,6 +338,10 @@ class ManagerApiController {
         def fcms = []
         request.JSON.tasks.each {taskJson ->
             def task = taskService.fromJson(taskJson, user)
+            if (!task.dateCreated) {
+                task.dateCreated = new Date()
+            }
+            task.lastUpdated = new Date()
             tasks.push(task)
 
             // Push FCM
