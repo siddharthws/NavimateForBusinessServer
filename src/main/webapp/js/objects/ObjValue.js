@@ -11,23 +11,34 @@ app.factory('ObjValue', function(TemplateService) {
 
     // ----------------------------------- Public APIs ------------------------------------//
     // Method to get a string value
-    ObjValue.prototype.getString = function () {
+    ObjValue.prototype.getDisplayString = function () {
         // Parse string for specific types
         switch (this.field.type) {
+            case Constants.Template.FIELD_TYPE_DATE:
+                if (this.value && this.value.length) {
+                    return moment(this.value, Constants.Date.FORMAT_BACKEND).format(Constants.Date.FORMAT_FRONTEND)
+                }
+                break
             case Constants.Template.FIELD_TYPE_RADIOLIST:
-                return this.value.options[this.value.selection]
+                if (this.value) {
+                    return this.value.options[this.value.selection]
+                }
+                break
             case Constants.Template.FIELD_TYPE_CHECKLIST:
-                var valueString = ""
-                this.value.forEach(function (option) {
-                    if (option.selection) {
-                        if (!valueString) {
-                            valueString += option.name
-                        } else {
-                            valueString += ', ' + option.name
+                if (this.value) {
+                    var valueString = ""
+                    this.value.forEach(function (option) {
+                        if (option.selection) {
+                            if (!valueString) {
+                                valueString += option.name
+                            } else {
+                                valueString += ', ' + option.name
+                            }
                         }
-                    }
-                })
-                return valueString
+                    })
+                    return valueString
+                }
+                break
         }
 
         // Return stored value by default

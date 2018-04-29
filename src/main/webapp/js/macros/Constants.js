@@ -300,3 +300,11 @@ Constants.Filter = {
     TYPE_DATE           : 4,
     TYPE_OBJECT         : 5
 }
+
+Constants.Date = {
+    // Date format types
+    FORMAT_BACKEND:         "YYYY-MM-DD HH:mm:ss",
+    FORMAT_FRONTEND:        "DD-MM-YYYY",
+    FORMAT_FRONTEND_SHORT:  "DD/MM",
+    FORMAT_FILE_SUFFIX:     "_DD_MM_YY_HHmm"
+}

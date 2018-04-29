@@ -73,4 +73,16 @@ class Constants {
         // Maximum number of rows that can be selected at once
         public static final int MAX_SELECTION_COUNT = 500
     }
+
+    class Date {
+        // Date Formats
+        public static final String FORMAT_BACKEND   = "yyyy-MM-dd HH:mm:ss"
+        public static final String FORMAT_FRONTEND  = "dd-MM-yyyy"
+
+        // Time Formats
+        public static final String FORMAT_TIME = "HH:mm:ss"
+
+        // Timezones
+        public static final TimeZone TIMEZONE_IST = TimeZone.getTimeZone('Asia/Calcutta')
+    }
 }

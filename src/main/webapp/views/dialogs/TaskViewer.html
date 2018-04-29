@@ -50,7 +50,7 @@
                 <!-- Template values -->
                 <div ng-repeat="value in vm.obj.values" class="mr-4 mt-2">
                     <!-- Values with string display -->
-                    <text-box label="{{value.field.title}}" text="{{value.getString()}}"></text-box>
+                    <text-box label="{{value.field.title}}" text="{{value.getDisplayString()}}"></text-box>
                 </div>
             </div>
         </div>

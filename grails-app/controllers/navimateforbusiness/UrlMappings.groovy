@@ -94,6 +94,7 @@ class UrlMappings {
 
         /*------------------------- Porting APIs --------------------------*/
         "/api/port/taskCreator"         (controller: "PortingApi") {action = [GET: "taskCreator"]}
+        "/api/port/fixDates"            (controller: "PortingApi") {action = [GET: "fixDates"]}
         "/api/port/mongoLeads"          (controller: "PortingApi") {action = [GET: "mongoLeads"]}
 
         /*------------------------- Other APIs --------------------------*/

@@ -1,10 +1,15 @@
 package navimateforbusiness.api
 
+import navimateforbusiness.Constants
+import navimateforbusiness.Field
 import navimateforbusiness.Task
 
 import grails.converters.JSON
 import navimateforbusiness.Lead
 import navimateforbusiness.LeadM
+import navimateforbusiness.Value
+
+import java.text.SimpleDateFormat
 
 class PortingApiController {
 
@@ -15,6 +20,30 @@ class PortingApiController {
             task.creator = task.manager
             task.save(flush: true, failOnError: true)
         }
+    }
+
+    def fixDates() {
+        // Iterate through all date fields
+        def values = []
+        Field.findAllByType(Constants.Template.FIELD_TYPE_DATE).each { field ->
+            values.addAll(Value.findAllByField(field))
+        }
+
+        SimpleDateFormat df = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_FRONTEND)
+        int numValues = values.size()
+        values.eachWithIndex {Value value, j ->
+            // Update date value to new format
+            if (value.value) {
+                String newVal = df.parse(value.value).format(Constants.Date.FORMAT_BACKEND)
+                value.value = newVal
+                value.save(flush: true, failOnError: true)
+
+                log.error("Fixing Dates Done with " + j + " : " + numValues)
+            }
+        }
+
+        def resp = [success: true]
+        render resp as JSON
     }
 
     // Porting APi to move leads into mongo database
