@@ -16,6 +16,7 @@ class ManagerApiController {
     def leadService
     def taskService
     def formService
+    def fcmService
     def templateService
     def tableService
     def filtrService
@@ -334,12 +335,20 @@ class ManagerApiController {
 
         // Parse task JSON to task objects
         def tasks = []
+        def fcms = []
         request.JSON.tasks.each {taskJson ->
-            tasks.push(taskService.fromJson(taskJson, user))
+            def task = taskService.fromJson(taskJson, user)
+            tasks.push(task)
+
+            // Push FCM
+            if (task.rep?.fcmId) {if (!fcms.contains(task.rep.fcmId)) {fcms.push(task.rep.fcmId)}}
         }
 
         // Save tasks
         tasks.each {it -> it.save(flush: true, failOnError: true)}
+
+        // Send notifications
+        fcms.each {it -> fcmService.notifyApp(it)}
 
         // Return response
         def resp = [success: true]
