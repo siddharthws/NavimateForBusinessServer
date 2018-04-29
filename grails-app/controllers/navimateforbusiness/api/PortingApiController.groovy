@@ -65,7 +65,10 @@ class PortingApiController {
                     address: lead.address,
                     latitude: lead.latitude,
                     longitude: lead.longitude,
-                    templateId: lead.templateData.templateId)
+                    templateId: lead.templateData.templateId,
+                    createTime: lead.dateCreated.format(Constants.Date.FORMAT_BACKEND, Constants.Date.TIMEZONE_IST),
+                    updateTime: lead.lastUpdated.format(Constants.Date.FORMAT_BACKEND, Constants.Date.TIMEZONE_IST)
+            )
 
             // Add templated data
             lead.templateData.values.each {value ->
