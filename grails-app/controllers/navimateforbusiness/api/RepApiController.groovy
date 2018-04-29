@@ -9,7 +9,7 @@ import navimateforbusiness.DomainToJson
 import navimateforbusiness.Field
 import navimateforbusiness.Form
 import navimateforbusiness.JsonToDomain
-import navimateforbusiness.Lead
+import navimateforbusiness.LeadM
 import navimateforbusiness.Role
 import navimateforbusiness.SmsHelper
 import navimateforbusiness.Task
@@ -21,6 +21,7 @@ import navimateforbusiness.Value
 class RepApiController {
 
     def reportService
+    def leadService
 
     def register() {
         // Remove '+' from phone number
@@ -64,6 +65,7 @@ class RepApiController {
 
         // Check which tasks need to be sent back to app
         def tasksJson = []
+        def leadsJson = []
         tasks.each {task ->
             // Assume all OPEN tasks as unsynced and closed tasks as synced
             boolean bSynced = (task.status == TaskStatus.CLOSED)
@@ -77,43 +79,17 @@ class RepApiController {
                 }
             }
 
-            // If unsynced, add to JSON response
+            // If unsynced, add task and corresponding lead to JSON response
             if (!bSynced) {
                 tasksJson.push(DomainToJson.Task(task))
+                LeadM lead = leadService.getForUserById(rep.manager, task.leadid)
+                leadsJson.push(leadService.toJson(lead, rep.manager))
             }
         }
 
         // Send response
         def resp = [
-                "tasks" : tasksJson
-        ]
-        render resp as JSON
-    }
-
-    def syncLeads() {
-        def id = request.getHeader("id")
-        User rep = User.findById(id)
-        if (!rep) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
-        }
-
-        // Get Sync data form request
-        def syncData = request.JSON.syncData
-
-        // Check which tasks need to be sent back to app
-        def leadsJson = []
-        syncData.each {syncObject ->
-            // Get lead with this id
-            Lead lead = Lead.findByIdAndAccount(syncObject.id, rep.account)
-
-            // Add to response if version mismatch
-            if (lead && (lead.version > syncObject.ver)) {
-                leadsJson.push(DomainToJson.Lead(lead))
-            }
-        }
-
-        // Send response
-        def resp = [
+                "tasks" : tasksJson,
                 "leads" : leadsJson
         ]
         render resp as JSON
