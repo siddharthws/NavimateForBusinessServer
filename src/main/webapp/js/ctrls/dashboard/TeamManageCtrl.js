@@ -8,9 +8,8 @@ app.controller("TeamManageCtrl",
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
-    // Set menu and option
-    NavService.activeMenu = NavService.team
-    NavService.team.activeTab = NavService.team.tabs[0]
+    // Set Active Tab and Menu
+    NavService.setActive(NavService.team, 0)
 
     // Set team table as active
     TableService.activeTable = TableService.teamTable

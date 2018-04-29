@@ -8,9 +8,8 @@ app.controller("CompanySettingsCtrl",
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
 
-    // Set menu and option
-    NavService.activeMenu = NavService.company
-    NavService.activeMenu.activeTab = NavService.company.tabs[0]
+    // Set Active Tab and Menu
+    NavService.setActive(NavService.company, 0)
 
     vm.startHr = $localStorage.startHr
     vm.endHr = $localStorage.endHr

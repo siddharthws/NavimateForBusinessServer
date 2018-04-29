@@ -8,9 +8,8 @@ app.controller("FormTemplatesCtrl",
     /*------------------------------- INIT -------------------------------*/
     var vm = this
 
-    // Set menu and option
-    NavService.activeMenu = NavService.templates
-    NavService.activeMenu.activeTab = NavService.templates.tabs[0]
+    // Set Active Tab and Menu
+    NavService.setActive(NavService.templates, 0)
 
     // Init Object
     vm.selection = []
