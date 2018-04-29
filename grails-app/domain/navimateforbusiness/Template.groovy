@@ -26,5 +26,6 @@ class Template {
     }
 
     static mapping = {
+        autoTimestamp false
     }
 }

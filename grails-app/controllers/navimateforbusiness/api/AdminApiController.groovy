@@ -94,7 +94,13 @@ class AdminApiController {
         def templatesJson = request.JSON.templates
         def templates = []
         templatesJson.each {templateJson ->
-            templates.push(templateService.fromJson(templateJson, user))
+            def template = templateService.fromJson(templateJson, user)
+            if (!template.dateCreated) {
+                template.dateCreated = new Date()
+            }
+            template.lastUpdated = new Date()
+
+            templates.push(template)
         }
 
         def openTasks = []
