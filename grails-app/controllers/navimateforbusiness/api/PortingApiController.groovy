@@ -50,8 +50,10 @@ class PortingApiController {
     def mongoLeads() {
         // Port each lead to mongo DB
         def leads = Lead.findAll()
+        int numLeads = leads.size()
         leads.eachWithIndex {lead, i ->
             LeadM mongoLead = new LeadM(
+                    oldId: lead.id,
                     accountId: lead.accountId,
                     ownerId: lead.managerId,
                     extId: lead.extId,
@@ -69,9 +71,9 @@ class PortingApiController {
             }
 
             // Save lead
-            mongoLead.save()
+            mongoLead.save(flush: true, failOnError: true)
 
-            log.error("Done with " + i + " leads out of " + leads.size())
+            log.error("Done with " + i + " leads out of " + numLeads)
         }
 
         def resp = [success: true]
