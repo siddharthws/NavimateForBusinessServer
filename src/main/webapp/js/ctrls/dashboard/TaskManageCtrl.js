@@ -46,7 +46,7 @@ app.controller("TaskManageCtrl",
             function (message) {
                 // Notify user about error
                 $rootScope.hideWaitingDialog()
-                ToastService.toast("Upload Error : " + message)
+                DialogService.alert("Upload Error : " + message)
             }
         )
     }
