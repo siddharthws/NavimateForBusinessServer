@@ -228,7 +228,19 @@ class ManagerApiController {
 
         // Parse each JSON object into Lead object
         def leads = []
-        leadsJson.each {leadJson -> leads.push(leadService.fromJson(leadJson, user))}
+        leadsJson.each {leadJson ->
+            // Parse to lead object and assign update & create time
+            LeadM lead = leadService.fromJson(leadJson, user)
+
+            // Assign Lead update / create time as current time
+            String currentTime = new Date().format(Constants.Date.FORMAT_BACKEND, Constants.Date.TIMEZONE_IST)
+            if (!lead.createTime) {
+                lead.createTime = currentTime
+            }
+            lead.updateTime = currentTime
+
+            leads.push(lead)
+        }
 
         // Save each lead
         leads.each {lead ->
