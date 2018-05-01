@@ -57,21 +57,21 @@ app.controller("LeadTemplatesCtrl",
         DialogService.confirm("Are you sure you want to remove these " + vm.getSelectedItems().length + " templates ?",
             function () {
                 //creating array for template array
-                var templateId = []
+                var templateIds = []
                 vm.getSelectedItems().forEach(function (template) {
-                    templateId.push(template.id)
+                    templateIds.push(template.id)
                 })
 
                 //http call to close tasks
                 $rootScope.showWaitingDialog("Removing Templates...")
                 $http({
                     method: 'POST',
-                    url:    '/api/admin/removeTemplates',
+                    url:    '/api/admin/templates/remove',
                     headers: {
                         'X-Auth-Token': $localStorage.accessToken
                     },
                     data: {
-                        templateIds : templateId
+                        ids : templateIds
                     }
                 }).then(
                     function (response) {
