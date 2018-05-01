@@ -215,20 +215,28 @@ class ManagerApiController {
 
         // Get table from file
         def table = tableService.parseExcel(file)
+        log.error("File parsed to table")
 
         // Validate all columns
         importService.checkLeadColumns(table.columns)
 
         // Ensure all IDs are unique
         importService.checkIds(table.columns, table.rows)
+        log.error("Validation Complete")
 
         // Get lead JSON for each row
         def leadsJson = []
-        table.rows.eachWithIndex {row, i -> leadsJson.push(importService.parseLeadRow(table.columns, row, i, user))}
+        int rowSize = table.rows.size()
+        table.rows.eachWithIndex {row, i ->
+            leadsJson.push(importService.parseLeadRow(table.columns, row, i, user))
+            log.error("Parsing to JSON " + i + " : " + rowSize)
+        }
+        log.error("Parsing to Lead JSONs complete")
 
         // Parse each JSON object into Lead object
         def leads = []
-        leadsJson.each {leadJson ->
+        int jsonSize = leadsJson.size()
+        leadsJson.eachWithIndex {leadJson, i ->
             // Parse to lead object and assign update & create time
             LeadM lead = leadService.fromJson(leadJson, user)
 
@@ -240,12 +248,16 @@ class ManagerApiController {
             lead.updateTime = currentTime
 
             leads.push(lead)
+            log.error("Parsing to object " + i + " : " + jsonSize)
         }
+        log.error("Parsing to lead Objects Complete")
 
         // Save each lead
-        leads.each {lead ->
+        int leadsSize = leads.size()
+        leads.eachWithIndex {LeadM lead, i ->
             // Make lead public
             lead.visibility = Visibility.PUBLIC
+            log.error("Saving " + i + " : " + leadsSize)
 
             // Save lead
             lead.save(flush: true, failOnError: true)

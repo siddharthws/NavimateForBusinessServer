@@ -62,7 +62,9 @@ class ImportService {
         int idIdx = columns.indexOf("id")
 
         // Ensure all IDs are unique
+        int rowSize = rows.size()
         rows.eachWithIndex {row, i ->
+            log.error("Validating for " + i + " : " + rowSize)
             // Get all rows with this ID
             def duplicates = rows.findAll {it -> it[idIdx] == row[idIdx]}
 
@@ -271,12 +273,14 @@ class ImportService {
 
                 case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
                     // Ensure date is in correct format
-                    try {
-                        SimpleDateFormat df = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_FRONTEND)
-                        Date date = df.parse(value)
-                    } catch (Exception e) {
-                        // Bad date formatting
-                        throw new navimateforbusiness.ApiException("Date in cell " + getCellAddress(colIdx, rowIdx) + " must be in " + navimateforbusiness.Constants.Date.FORMAT_FRONTEND + " format", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                    if (value) {
+                        try {
+                            SimpleDateFormat df = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_FRONTEND)
+                            Date date = df.parse(value)
+                        } catch (Exception e) {
+                            // Bad date formatting
+                            throw new navimateforbusiness.ApiException("Date in cell " + getCellAddress(colIdx, rowIdx) + " must be in " + navimateforbusiness.Constants.Date.FORMAT_FRONTEND + " format", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                        }
                     }
                     break
                 case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX:
