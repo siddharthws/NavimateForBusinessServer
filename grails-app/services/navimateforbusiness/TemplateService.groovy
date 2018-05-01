@@ -6,6 +6,9 @@ import grails.gorm.transactions.Transactional
 class TemplateService {
     // ----------------------- Dependencies ---------------------------//
     def fieldService
+    def leadService
+    def taskService
+    def formService
 
     // ----------------------- Getters ---------------------------//
     // Method to get all templates for a user
@@ -106,6 +109,39 @@ class TemplateService {
         template.lastUpdated = new Date()
 
         template
+    }
+
+    // Method to remove a template object
+    def remove(User user, Template template) {
+        // Remove all objects associatedw= with this template
+        switch (template.type) {
+            case navimateforbusiness.Constants.Template.TYPE_FORM:
+                // Remove all forms associated with this template
+                def forms = formService.getForUserByTemplate(user, template)
+                forms.each {Form form ->
+                    formService.remove(user, form)
+                }
+                break
+            case navimateforbusiness.Constants.Template.TYPE_TASK:
+                // Remove all tasks associated with this template
+                def tasks = taskService.getForUserByTemplate(user, template)
+                tasks.each {Task task ->
+                    taskService.remove(user, task)
+                }
+                break
+            case navimateforbusiness.Constants.Template.TYPE_LEAD:
+                // Remove all leads associated with this template
+                def leads = leadService.getForUserByFilter(user, [template: [value: template.name]], [:], []).leads
+                leads.each {LeadM lead ->
+                    leadService.remove(user, lead)
+                }
+                break
+        }
+
+        // Remove template
+        template.isRemoved = true
+        template.lastUpdated = new Date()
+        template.save(failOnError: true, flush: true)
     }
 
     // ----------------------- Private APIs ---------------------------//

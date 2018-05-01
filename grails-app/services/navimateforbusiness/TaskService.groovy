@@ -1,8 +1,6 @@
 package navimateforbusiness
 
-import grails.converters.JSON
 import grails.gorm.transactions.Transactional
-import org.grails.web.json.JSONArray
 
 @Transactional
 class TaskService {
@@ -12,6 +10,7 @@ class TaskService {
     def leadService
     def valueService
     def fcmService
+    def formService
 
     // ----------------------- Getter APIs ---------------------------//
     // Method to get all tasks for a user
@@ -34,6 +33,11 @@ class TaskService {
                 // Get all unremoved tasks created by this user
                 tasks = Task.findAllByAccountAndIsRemovedAndManager(user.account, false, user)
                 break
+
+            case navimateforbusiness.Role.REP:
+                // Get all unremoved tasks assigned to this rep
+                tasks = Task.findAllByAccountAndIsRemovedAndRep(user.account, false, user)
+                break
         }
 
         // Sort tasks in descending order of create date
@@ -52,6 +56,28 @@ class TaskService {
 
         // Find task by ID
         def task = tasks.find {it -> it.id == id}
+
+        task
+    }
+
+    // Method to get all tasks for a user by lead
+    def getForUserByLead(User user, LeadM lead) {
+        // Get all tasks for user
+        def tasks = getForUser(user)
+
+        // Find tasks by template
+        def task = tasks.findAll {Task it -> it.leadid == lead.id}
+
+        task
+    }
+
+    // Method to get all tasks for a user by template
+    def getForUserByTemplate(User user, Template template) {
+        // Get all tasks for user
+        def tasks = getForUser(user)
+
+        // Find tasks by template
+        def task = tasks.findAll {Task it -> it.templateData.template.id == template.id}
 
         task
     }
@@ -145,6 +171,21 @@ class TaskService {
         task.lastUpdated = new Date()
 
         task
+    }
+
+    // Method to remove a task object
+    def remove(User user, Task task) {
+        // Remove all forms associated with this task
+        def forms = formService.getForUserByTask(user, task)
+        forms.each {Form form ->
+            formService.remove(user, form)
+        }
+
+        // Close & Remove task
+        task.status = navimateforbusiness.TaskStatus.CLOSED
+        task.isRemoved = true
+        task.lastUpdated = new Date()
+        task.save(failOnError: true, flush: true)
     }
 
     // ----------------------- Private APIs ---------------------------//

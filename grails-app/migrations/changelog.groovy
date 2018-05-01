@@ -42,4 +42,5 @@ databaseChangeLog = {
     include file: 'default-value-remove.groovy'
     include file: 'update-task-lead-id.groovy'
     include file: 'add-user-about.groovy'
+    include file: 'add-form-is-remove.groovy'
 }

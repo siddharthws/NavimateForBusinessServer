@@ -5,6 +5,7 @@ import grails.core.GrailsApplication
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
 import navimateforbusiness.LeadM
+import navimateforbusiness.Task
 import navimateforbusiness.Template
 import navimateforbusiness.Visibility
 
@@ -419,6 +420,23 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    def removeTasks() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        request.JSON.ids.each {id ->
+            Task task = taskService.getForUserById(user, id)
+            if (!task) {
+                throw new navimateforbusiness.ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Remove task
+            taskService.remove(user, task)
+        }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     // ----------------------- FORM APIs ----------------------- //
     def getFormTable() {
         // Get user object
@@ -559,38 +577,6 @@ class ManagerApiController {
                 columns: request.JSON.bColumns ? table.columns : null,
                 totalRows: totalRows
         ]
-        render resp as JSON
-    }
-
-    /*
-     * Remove reps function is used to remove representatives.
-     * Admin or manager select representatives to be removed.
-     * Remove reps function receives a JSON object of representatives selected by admin or their manager.
-     */
-    def removeReps() {
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Get reps under this user
-        def reps = userService.getRepsForUser(user)
-
-        // Get Reps IDs to remove
-        def ids = request.JSON.ids
-
-        // Get reps to remove
-        def removeReps = []
-        ids.each {id -> removeReps.push(reps.find {it -> it.id == id})}
-
-        // Remove selected reps
-        removeReps.each {rep ->
-            // Remove Rep's Manager & account
-            rep.manager = null
-            rep.account = null
-
-            // Save rep
-            rep.save(flush: true, failOnError: true)
-        }
-
-        def resp = [success: true]
         render resp as JSON
     }
 
