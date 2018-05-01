@@ -271,12 +271,14 @@ class ImportService {
 
                 case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
                     // Ensure date is in correct format
-                    try {
-                        SimpleDateFormat df = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_FRONTEND)
-                        Date date = df.parse(value)
-                    } catch (Exception e) {
-                        // Bad date formatting
-                        throw new navimateforbusiness.ApiException("Date in cell " + getCellAddress(colIdx, rowIdx) + " must be in " + navimateforbusiness.Constants.Date.FORMAT_FRONTEND + " format", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                    if (value) {
+                        try {
+                            SimpleDateFormat df = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_FRONTEND)
+                            Date date = df.parse(value)
+                        } catch (Exception e) {
+                            // Bad date formatting
+                            throw new navimateforbusiness.ApiException("Date in cell " + getCellAddress(colIdx, rowIdx) + " must be in " + navimateforbusiness.Constants.Date.FORMAT_FRONTEND + " format", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                        }
                     }
                     break
                 case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX:
