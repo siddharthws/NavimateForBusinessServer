@@ -100,8 +100,11 @@ class TaskService {
         }
 
         // Get manager to be assigned to task
+        User rep = json.repId ? userService.getRepForUserById(user, json.repId) : null
         User manager
-        if (!json.managerId || json.managerId == user.id) {
+        if (rep) {
+            manager = rep.manager
+        } else if (!json.managerId || json.managerId == user.id) {
             manager = user
         } else {
             manager = userService.getManagerForUserById(user, json.managerId)
@@ -114,7 +117,7 @@ class TaskService {
         // Set parameters from JSON
         task.manager = manager
         task.creator = user
-        task.rep = json.repId ? userService.getRepForUserById(user, json.repId) : null
+        task.rep = rep
         task.leadid = json.leadId
         task.status = navimateforbusiness.TaskStatus.fromValue(json.status)
         task.period = json.period
