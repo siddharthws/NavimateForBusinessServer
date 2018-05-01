@@ -111,7 +111,7 @@ app.controller("TaskManageCtrl",
                 $rootScope.showWaitingDialog("Removing Tasks...")
                 $http({
                     method: 'POST',
-                    url:    '/api/users/task/remove',
+                    url:    '/api/manager/tasks/remove',
                     headers: {
                         'X-Auth-Token': $localStorage.accessToken
                     },

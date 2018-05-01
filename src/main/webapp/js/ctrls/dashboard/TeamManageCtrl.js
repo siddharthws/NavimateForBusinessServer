@@ -85,7 +85,7 @@ app.controller("TeamManageCtrl",
                 // Make Http call to remove members
                 $http({
                     method:     'POST',
-                    url:        '/api/manager/team/remove',
+                    url:        '/api/admin/team/remove',
                     headers:    {
                         'X-Auth-Token':    $localStorage.accessToken
                     },
