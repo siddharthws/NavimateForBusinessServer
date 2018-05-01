@@ -12,16 +12,18 @@ class FormService {
     def getForUser(User user) {
         List<Form> forms = []
 
-        // Get all reps under this user
-        def reps = userService.getRepsForUser(user)
-
-        // Iterate through each rep and get all his form submissions
-        reps.each {User rep ->
-            forms.addAll(Form.findAllByAccountAndOwner(user.account, rep))
+        switch (user.role) {
+            case navimateforbusiness.Role.ADMIN:
+            case navimateforbusiness.Role.MANAGER:
+                userService.getRepsForUser(user).each {it -> forms.addAll(Form.findAllByAccountAndIsRemovedAndOwner(user.account, false, it)) }
+                break
+            case navimateforbusiness.Role.CC:
+                // No forms returned for customer care
+                break
+            case navimateforbusiness.Role.REP:
+                forms = Form.findAllByAccountAndIsRemovedAndOwner(user.account, false, user)
+                break
         }
-
-        // Remove forms for which templates have been removed
-        forms = forms.findAll {it -> it.submittedData.template && !it.submittedData.template.isRemoved}
 
         // Sort forms as per creation date
         forms.sort{it.dateCreated}
@@ -29,6 +31,36 @@ class FormService {
 
         // Return forms
         forms
+    }
+
+    // Method to get all tasks for a user
+    def getForUserByTemplate(User user, Template template) {
+        // Get all forms for user
+        def forms = getForUser(user)
+
+        // Find tasks by template
+        def form = forms.findAll {Form it -> it.submittedData.template.id == template.id}
+
+        form
+    }
+
+    // Method to get all tasks for a user
+    def getForUserByTask(User user, Task task) {
+        // Get all forms for user
+        def forms = getForUser(user)
+
+        // Find tasks by template
+        def form = forms.findAll {Form it -> it.task ? it.task.id == task.id : false}
+
+        form
+    }
+
+    // Method to remove a form object
+    def remove(User user, Form form) {
+        // Remove form
+        form.isRemoved = true
+        form.lastUpdated = new Date()
+        form.save(failOnError: true, flush: true)
     }
 
     // ----------------------- Private APIs ---------------------------//

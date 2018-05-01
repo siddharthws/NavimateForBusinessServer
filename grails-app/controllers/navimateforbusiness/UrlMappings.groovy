@@ -19,9 +19,11 @@ class UrlMappings {
         /*------------------------- Admin APIs --------------------------*/
         "/api/admin/accSettings"        (controller: "AdminApi") {action = [POST: "updateSettings"]}
         "/api/admin/team/edit"          (controller: "AdminApi") {action = [POST: "editTeam"]}
+        "/api/admin/team/remove"        (controller: "AdminApi") {action = [POST: "removeTeam"]}
         "/api/admin/leads/edit"         (controller: "AdminApi") {action = [POST: "editLeads"]}
+        "/api/admin/leads/remove"       (controller: "AdminApi") {action = [POST: "removeLeads"]}
         "/api/admin/templates/edit"     (controller: "AdminApi") {action = [POST: "editTemplates"]}
-        "/api/admin/removeTemplates"    (controller: "AdminApi") {action = [POST: "removeTemplates"]}
+        "/api/admin/templates/remove"   (controller: "AdminApi") {action = [POST: "removeTemplates"]}
         "/api/admin/team/import"        (controller: "AdminApi") {action = [POST: "importTeam"]}
 
         /*------------------------- CC APIs --------------------------*/
@@ -32,7 +34,6 @@ class UrlMappings {
         "/api/manager/team/getByIds"     (controller: "ManagerApi") {action = [POST: "getTeamById"]}
         "/api/manager/team/search"       (controller: "ManagerApi") {action = [POST: "searchTeam"]}
         "/api/manager/team/getTable"     (controller: "ManagerApi") {action = [POST: "getTeamTable"]}
-        "/api/manager/team/remove"       (controller: "ManagerApi") {action = [POST: "removeReps"]}
         "/api/manager/team/getIds"       (controller: "ManagerApi") {action = [POST: "getRepIds"]}
         "/api/manager/team/export"       (controller: "ManagerApi") {action = [POST: "exportTeam"]}
 
@@ -50,6 +51,7 @@ class UrlMappings {
         "/api/manager/tasks/getIds"      (controller: "ManagerApi") {action = [POST: "getTaskIds"]}
         "/api/manager/tasks/edit"        (controller: "ManagerApi") {action = [POST: "editTasks"]}
         "/api/manager/tasks/export"      (controller: "ManagerApi") {action = [POST: "exportTasks"]}
+        "/api/manager/tasks/remove"      (controller: "ManagerApi") {action = [POST: "removeTasks"]}
 
         // Form Related APIs
         "/api/manager/forms/getTable"    (controller: "ManagerApi") {action = [POST: "getFormTable"]}
@@ -61,9 +63,7 @@ class UrlMappings {
 
         /*------------------------- User APIs to be removed --------------------------*/
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
-        "/api/users/lead/remove"    (controller: "UserApi") {action = [POST: "removeLeads"]}
         "/api/users/task/close"     (controller: "UserApi") {action = [POST: "closeTasks"]}
-        "/api/users/task/remove"    (controller: "UserApi") {action = [POST: "removeTasks"]}
         "/api/users/task/stoprenew" (controller: "UserApi") {action = [POST: "stopTaskRenewal"]}
         "/api/users/locationReport" (controller: "UserApi") {action = [GET: "getLocationReport"]}
 
@@ -95,6 +95,7 @@ class UrlMappings {
         /*------------------------- Porting APIs --------------------------*/
         "/api/port/fixManagers"            (controller: "PortingApi") {action = [GET: "fixManagers"]}
         "/api/port/fixFcms"                (controller: "PortingApi") {action = [GET: "fixFcms"]}
+        "/api/port/fixIsRemoved"           (controller: "PortingApi") {action = [GET: "fixIsRemoved"]}
 
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs

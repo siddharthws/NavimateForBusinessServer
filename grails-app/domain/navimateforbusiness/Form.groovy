@@ -6,6 +6,9 @@ class Form {
     Date dateCreated
     Date lastUpdated
 
+    // Removal flag
+    boolean isRemoved
+
     static belongsTo = [
             account:    Account,
             owner:      User,

@@ -3,7 +3,6 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
-import navimateforbusiness.LeadM
 import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
 import navimateforbusiness.User
@@ -14,7 +13,6 @@ class UserApiController {
     def taskService
     def fcmService
     def reportService
-    def leadService
 
     def changePassword() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -39,26 +37,6 @@ class UserApiController {
      * send notification to respective representative and change the status to CLOSED.
      * Sends a notification to all representatives after closing the tasks.
      */
-    def removeLeads() {
-        // Get user
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Iterate through IDs to be remove
-        request.JSON.ids.each {id ->
-            // Get lead with this id
-            LeadM lead = leadService.getForUserById(user, id)
-            if (!lead) {
-                throw new ApiException("Lead not found...", Constants.HttpCodes.BAD_REQUEST)
-            }
-
-            // Update and save lead
-            lead.isRemoved = true
-            lead.save(flush: true, failOnError: true)
-        }
-
-        def resp = [success: true]
-        render resp as JSON
-    }
 
     /*
      * Stop task renewal function gets a JSON object of tasks.
@@ -122,44 +100,6 @@ class UserApiController {
             }
 
             // Update and save task
-            task.status = TaskStatus.CLOSED
-            task.save(flush: true, failOnError: true)
-        }
-
-        // Send notifications to all reps
-        reps.each {rep ->
-            fcmService.notifyApp(rep)
-        }
-
-        def resp = [success: true]
-        render resp as JSON
-    }
-
-    def removeTasks() {
-        // Get user
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Get all tasks of this user
-        def tasks = taskService.getForUser(user)
-
-        // Iterate through IDs to be remove
-        def reps = []
-        request.JSON.ids.each {id ->
-            // Get task with this id
-            Task task = tasks.find {it -> it.id == id}
-            if (!task) {
-                throw new ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
-            }
-
-            // Save rep's fcm to be used later
-            if (task.status == TaskStatus.OPEN) {
-                if (!reps.contains(task.rep)) {
-                    reps.push(task.rep)
-                }
-            }
-
-            // Update and save task
-            task.isRemoved = true
             task.status = TaskStatus.CLOSED
             task.save(flush: true, failOnError: true)
         }

@@ -14,6 +14,7 @@ class LeadService {
     def googleApiService
     def templateService
     def fieldService
+    def taskService
 
     // ----------------------- Getter APIs ---------------------------//
     // Method to search leads in mongo database using filter, pager and sorter
@@ -389,6 +390,20 @@ class LeadService {
                 fields: fields,
                 labels: labels
         ]
+    }
+
+    // Method to remove a lead object
+    def remove(User user, LeadM lead) {
+        // Remove all tasks associated with lead
+        def tasks = taskService.getForUserByLead(user, lead)
+        tasks.each {Task task ->
+            taskService.remove(user, task)
+        }
+
+        // Remove lead
+        lead.isRemoved = true
+        lead.updateTime = new Date().format(navimateforbusiness.Constants.Date.FORMAT_BACKEND, navimateforbusiness.Constants.Date.TIMEZONE_IST)
+        lead.save(failOnError: true, flush: true)
     }
 
     // ----------------------- Private APIs ---------------------------//

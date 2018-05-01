@@ -1,11 +1,19 @@
 package navimateforbusiness.api
 
+import com.mongodb.client.FindIterable
+import navimateforbusiness.Account
+import navimateforbusiness.Data
+import navimateforbusiness.Form
+import navimateforbusiness.LeadM
 import grails.plugins.rest.client.RestBuilder
 import navimateforbusiness.Role
 import navimateforbusiness.Task
 
 import grails.converters.JSON
 import navimateforbusiness.User
+import navimateforbusiness.Template
+
+import static com.mongodb.client.model.Filters.eq
 
 class PortingApiController {
 
@@ -65,5 +73,45 @@ class PortingApiController {
         }
 
         bSent
+    }
+
+    // Post is Removed so that all dependencies are satisfied
+    def templateService
+    def taskService
+    def leadService
+    def formService
+    def fixIsRemoved() {
+        // Hack
+        def data = Data.findById(6129)
+        data.template = Template.findById(6218)
+        data.save(flush: true, failOnError: true)
+
+        // Find all removed templates and remove them through service
+        Template.findAllByIsRemoved(true).eachWithIndex { Template template, int i ->
+            templateService.remove(template.account.admin, template)
+            log.error("Removing template num " + i)
+        }
+
+        // Find all removed leads and remove them through service
+        FindIterable fi = LeadM.find(eq("isRemoved", true))
+        fi.eachWithIndex {LeadM lead, int i ->
+            leadService.remove(Account.findById(lead.accountId).admin, lead)
+            log.error("Removing lead num " + i)
+        }
+
+        // Find all removed tasks and remove them through service
+        Task.findAllByIsRemoved(true).eachWithIndex { Task task, int i ->
+            taskService.remove(task.account.admin, task)
+            log.error("Removing task num " + i)
+        }
+
+        // Find all removed forms and remove them through service
+        def forms = Form.findAll()
+        forms.each {form ->
+            // Mark Form for removal if its template has been removed
+            if (form.submittedData.template.isRemoved) {
+                formService.remove(form.account.admin, form)
+            }
+        }
     }
 }

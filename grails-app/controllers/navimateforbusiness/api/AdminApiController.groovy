@@ -1,6 +1,6 @@
 package navimateforbusiness.api
 
-
+import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
 import navimateforbusiness.LeadM
 import navimateforbusiness.SmsHelper
@@ -8,7 +8,6 @@ import navimateforbusiness.Task
 import navimateforbusiness.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.User
-import org.grails.web.json.JSONArray
 import grails.converters.JSON
 
 class AdminApiController {
@@ -59,6 +58,33 @@ class AdminApiController {
         render resp as JSON
     }
 
+    def removeTeam() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get reps under this user
+        def reps = userService.getRepsForUser(user)
+
+        // Get Reps IDs to remove
+        def ids = request.JSON.ids
+
+        // Get reps to remove
+        def removeReps = []
+        ids.each {id -> removeReps.push(reps.find {it -> it.id == id})}
+
+        // Remove selected reps
+        removeReps.each {rep ->
+            // Remove Rep's Manager & account
+            rep.manager = null
+            rep.account = null
+
+            // Save rep
+            rep.save(flush: true, failOnError: true)
+        }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     def editLeads() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -76,6 +102,26 @@ class AdminApiController {
         leads.each {it -> it.save(flush: true, failOnError: true)}
 
         // Return response
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def removeLeads() {
+        // Get user
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Iterate through IDs to be remove
+        request.JSON.ids.each {id ->
+            // Get lead with this id
+            LeadM lead = leadService.getForUserById(user, id)
+            if (!lead) {
+                throw new ApiException("Lead not found...", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Remove lead
+            leadService.remove(user, lead)
+        }
+
         def resp = [success: true]
         render resp as JSON
     }
@@ -126,17 +172,15 @@ class AdminApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get Templates from JSON
-        JSONArray templateIdsJson = request.JSON.templateIds
-        templateIdsJson.each {templateId ->
+        request.JSON.ids.each {id ->
             // Get Template
-            Template template = Template.findByAccountAndId(user.account, templateId)
+            Template template = templateService.getForUserById(user, id)
             if (!template) {
                 throw new navimateforbusiness.ApiException("Template not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Remove Template
-            template.isRemoved = true
-            template.save(flush: true, failOnError: true)
+            templateService.remove(user, template)
         }
 
         def resp = [success: true]
