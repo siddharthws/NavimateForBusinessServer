@@ -11,25 +11,25 @@
     <span class="centered mt-2">Set the Working Hours</span>
     <div class="d-flex align-items-center ml-2">
         <span>Start Time</span>
-        <button type="button" class="btn" ng-click="$ctrl.decrementStartHr()">
+        <button type="button" class="btn-shiny" ng-click="$ctrl.decrementStartHr()">
             -
         </button>
         <span>{{$ctrl.startHr + ": 00"}}</span>
-        <button type="button" class="btn btn-primary" ng-click="$ctrl.incrementStartHr()">
+        <button type="button" class="btn-shiny" ng-click="$ctrl.incrementStartHr()">
             +
         </button>
     </div>
     <div class="d-flex align-items-center  ml-2">
         <span>End Time</span>
-        <button type="button" class="btn" ng-click="$ctrl.decrementEndHr()">
+        <button type="button" class="btn-shiny" ng-click="$ctrl.decrementEndHr()">
             -
         </button>
         <span>{{$ctrl.endHr + ": 00"}}</span>
-        <button type="button" class="btn btn-primary" ng-click="$ctrl.incrementEndHr()">
+        <button type="button" class="btn-shiny" ng-click="$ctrl.incrementEndHr()">
             +
         </button>
     </div>
 </div>
 <div>
-    <button class="btn btn-primary ml-4" ng-click="$ctrl.update()">Update</button>
+    <button class="btn-shiny ml-4" ng-click="$ctrl.update()">Update</button>
 </div>

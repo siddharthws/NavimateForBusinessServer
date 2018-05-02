@@ -1,17 +1,17 @@
 <!-- Lead Manage HTML -->
 <div class="d-flex align-items-center p-2 flex-wrap">
     <imagebutton image="/static/images/ic_add_white.png" text="Add" ng-click="$ctrl.add()" ng-if="$root.isAdmin()"></imagebutton>
-    <imagebutton class="ml-2" image="/static/images/ic_sync_white.png" text="Refresh" ng-click="$ctrl.sync()"></imagebutton>
-    <imagebutton class="ml-2" image="/static/images/ic_clear_filter_white.png" text="Clear Filters" ng-click="$ctrl.clearFilters()"></imagebutton>
-    <imagebutton class="ml-2" image="/static/images/ic_customize_table_white.png" text="Customize Table" ng-click="$ctrl.toggleColumns()"></imagebutton>
-    <imagebutton class="ml-2" image="/static/images/ic_export_white.png" text="Export" ng-click="$ctrl.export()"></imagebutton>
-    <ib-filepicker class="ml-2" image="/static/images/ic_import_white.png" text="Import" file-picked="$ctrl.import(file)" ng-if="$root.isAdmin()"></ib-filepicker>
+    <imagebutton image="/static/images/ic_sync_white.png" text="Refresh" ng-click="$ctrl.sync()"></imagebutton>
+    <imagebutton image="/static/images/ic_clear_filter_white.png" text="Clear Filters" ng-click="$ctrl.clearFilters()"></imagebutton>
+    <imagebutton image="/static/images/ic_customize_table_white.png" text="Customize Table" ng-click="$ctrl.toggleColumns()"></imagebutton>
+    <imagebutton image="/static/images/ic_export_white.png" text="Export" ng-click="$ctrl.export()"></imagebutton>
+    <ib-filepicker image="/static/images/ic_import_white.png" text="Import" file-picked="$ctrl.import(file)" ng-if="$root.isAdmin()"></ib-filepicker>
 
-    <div class="dropdown ml-2"  ng-if="$root.isAdmin()">
-        <button class="btn btn-primary d-flex justify-content-around align-items-center" data-toggle="dropdown"
+    <div class="dropdown"  ng-if="$root.isAdmin()">
+        <button class="btn-shiny d-flex justify-content-around align-items-center" data-toggle="dropdown"
                 ng-disabled="!$ctrl.table.selection.length">
-            <span>Actions | </span>
-            <img class="img-icon" src="/static/images/ic_dropdown_light.png"/>
+            <span>Actions</span>
+            <img class="img-icon ml-2" src="/static/images/ic_dropdown_light.png"/>
         </button>
         <div class="dropdown-menu">
             <button class="dropdown-item" ng-click="$ctrl.edit()">Edit</button>

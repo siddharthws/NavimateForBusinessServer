@@ -50,10 +50,6 @@ imagebutton, ib-filepicker {
     background-color: transparent;
 }
 
-ib-filepicker {
-    background-color: #37bcf2;
-}
-
 imagebutton:focus,
 ib-filepicker:focus {
     outline: 0;
