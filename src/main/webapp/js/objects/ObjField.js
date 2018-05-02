@@ -2,13 +2,14 @@
  * Created by Siddharth on 10-03-2018.
  */
 
-app.factory('ObjField', function() {
+app.factory('ObjField', function(ObjFieldSettings) {
     // ----------------------------------- Constructor ------------------------------------//
     function ObjField (id, title, type, value) {
         this.id = id
         this.type = type
         this.title = title
         this.value = value
+        this.settings = new ObjFieldSettings(false)
     }
 
     // ----------------------------------- Public APIs ------------------------------------//
@@ -18,7 +19,7 @@ app.factory('ObjField', function() {
         var value = JSON.parse(JSON.stringify(this.value))
 
         // Return clone of field object
-        return new ObjField(this.id, this.title, this.type, value)
+        return new ObjField(this.id, this.title, this.type, value, this.settings.Clone())
     }
 
     // ----------------------------------- Private APIs ------------------------------------//
@@ -28,7 +29,8 @@ app.factory('ObjField', function() {
         return new ObjField(json.id,
                             json.title,
                             json.type,
-                            Statics.getValueFromString(json.value, json.type))
+                            Statics.getValueFromString(json.value, json.type),
+                            json.settings)
     }
 
     ObjField.toJson = function (field) {
@@ -37,8 +39,9 @@ app.factory('ObjField', function() {
             id:     field.id,
             title:  field.title,
             type:   field.type,
-            value:  Statics.getStringFromValue(field.value, field.type)
-        }
+            value:  Statics.getStringFromValue(field.value, field.type),
+            settings : ObjFieldSettings.toJson(field.settings)
+    }
     }
 
     return ObjField
