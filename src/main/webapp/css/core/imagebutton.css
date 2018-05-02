@@ -127,3 +127,11 @@ ib-filepicker:focus {
 .ib-down.active, .ib-down:hover {
     background-image: url("/static/images/ic_dropdown_light.png");
 }
+
+.ib-setting {
+    background-image: url("/static/images/icon_settings.png");
+}
+
+.ib-setting.active, .ib-setting:hover {
+    background-image: url("/static/images/icon_settings_active.png");
+}

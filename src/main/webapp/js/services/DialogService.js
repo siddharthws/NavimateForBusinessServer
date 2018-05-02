@@ -246,4 +246,18 @@ app.service('DialogService', function($mdDialog) {
             }
         })
     }
+
+    this.FieldSettings = function (field, cb) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/FieldSettings.html',
+            controller: 'FieldSettingsCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                cb : cb,
+                field: field
+            }
+        })
+    }
 })

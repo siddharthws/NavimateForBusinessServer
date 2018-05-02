@@ -1,0 +1,14 @@
+md-switch.md-checked .md-bar {
+    background-color: #37bcf2; /* set selected bar color */
+}
+
+md-switch.md-checked .md-thumb {
+    background-color: white; /* selected switch color */
+}
+
+md-switch .md-ink-ripple {
+    color: #37bcf2; /* not selected switch ripple color */
+}
+md-switch.md-checked .md-ink-ripple {
+    color: black; /* selected switch ripple color */
+}
