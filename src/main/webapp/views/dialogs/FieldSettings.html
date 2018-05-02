@@ -1,0 +1,32 @@
+
+<md-dialog class="dialog-container box box-dialog py-3 px-5 w-50 h-75">
+    <!-- Main container for user information -->
+    <div class="fbx-v h-100">
+        <!-- Dialog Title -->
+        <h4><b>Field Setting</b></h4>
+
+        <!-- Dialog Content -->
+        <div class="fbx-v flex-1 overflow-auto mt-2 dialog-editor-content">
+            <table class="table table-striped text-center flex-1" ng-table="">
+                <thead>
+                    <th>
+                        Setting
+                    </th>
+                    <th>
+                        Value
+                    </th>
+                </thead>
+                <tr>
+                    <td>Mandatory</td>
+                    <td>
+                        <md-switch ng-model = "vm.field.settings.bMandatory"
+                                   ng-if    = "!(vm.field.type == vm.Const.FIELD_TYPE_RADIOLIST ||
+                                               vm.field.type == vm.Const.FIELD_TYPE_CHECKLIST)">
+                        </md-switch>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <button class="btn-shiny align-self-end" ng-click="vm.close()">Close</button>
+    </div>
+</md-dialog>
