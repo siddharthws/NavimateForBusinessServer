@@ -16,6 +16,7 @@ class User {
     String password
     String email
     String fcmId
+    String about
 
     // Account Information
     navimateforbusiness.Role role
@@ -43,6 +44,7 @@ class User {
         fcmId           nullable: true
         manager         nullable: true
         extId           nullable: true
+        about           nullable: true
     }
 
     static mapping = {

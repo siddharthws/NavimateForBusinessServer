@@ -4,7 +4,7 @@
 
 app.factory('ObjUser', function() {
     // ----------------------------------- Constructor ------------------------------------//
-    function ObjUser (id, name, role, phone, countryCode, email, manager) {
+    function ObjUser (id, name, role, phone, countryCode, email, manager, about) {
         this.id             = id
         this.name           = name
         this.role           = role
@@ -12,6 +12,7 @@ app.factory('ObjUser', function() {
         this.countryCode    = countryCode
         this.email          = email
         this.manager        = manager
+        this.about          = about
     }
 
     // ----------------------------------- Public APIs ------------------------------------//
@@ -19,7 +20,7 @@ app.factory('ObjUser', function() {
     ObjUser.prototype.Clone = function () {
         // Return clone of this object
         return new ObjUser( this.id, this.name, this.role, this.phone, this.countryCode, this.email,
-                            {name: this.manager.name, id: this.manager.id})
+                            {name: this.manager.name, id: this.manager.id}, this.about)
     }
 
     // Method to validate User object
@@ -59,7 +60,8 @@ app.factory('ObjUser', function() {
             json.phone,
             json.countryCode,
             json.email,
-            json.manager
+            json.manager,
+            json.about
         )
     }
 
@@ -72,7 +74,8 @@ app.factory('ObjUser', function() {
             phone:          user.phone,
             countryCode:    user.countryCode,
             email:          user.email,
-            managerId:      user.manager.id
+            managerId:      user.manager.id,
+            about:          user.about
         }
     }
 
