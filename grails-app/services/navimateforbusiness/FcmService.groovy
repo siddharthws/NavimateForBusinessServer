@@ -6,9 +6,10 @@ import grails.plugins.rest.client.RestBuilder
 @Transactional
 class FcmService {
 
-    def notifyApp (fcmId) {
+    def notifyApp (User user) {
         def bSent = false
 
+        String fcmId = user?.fcmId
         if (fcmId) {
             // Send request to FCM server
             def request = new RestBuilder(connectTimeout:1000, readTimeout:20000)
@@ -25,7 +26,9 @@ class FcmService {
 
             // Validate response
             if (!resp.json.success) {
-                log.error("Error while sending FCM : " + resp.json)
+                log.error("Error while sending FCM : " + resp.json + " Removing FCM ID = " + user.fcmId + " For " + user.id)
+                user.fcmId = ""
+                user.save(flush: true, failOnError: true)
             } else {
                 bSent = true
             }

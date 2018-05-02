@@ -117,16 +117,16 @@ class AdminApiController {
         }
 
         // Collect FCM Ids of affected reps
-        def fcms = []
+        def reps = []
         openTasks.each {task ->
-            if (!fcms.contains(task.rep.fcmId)) {
-                fcms.push(task.rep.fcmId)
+            if (!reps.contains(task.rep)) {
+                reps.push(task.rep)
             }
         }
 
         // Send notifications to all reps
-        fcms.each {fcm ->
-            fcmService.notifyApp(fcm)
+        reps.each {User rep ->
+            fcmService.notifyApp(rep)
         }
 
         // return response
