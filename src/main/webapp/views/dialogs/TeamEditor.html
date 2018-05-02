@@ -32,6 +32,9 @@
                                b-show-error="vm.bInputError" err="vm.selectedUser.getPhoneErr()"></input-box>
                 </div>
 
+                <!-- About -->
+                <input-box class="mt-3" model="vm.selectedUser.about" label="About" hint="(Optional) Enter user details "></input-box>
+
                 <!-- Manager selector -->
                 <dropdown class="mt-3" label="Manager" text="vm.selectedUser.manager.name" items="vm.managers"
                           on-select="vm.updateManager(id)"></dropdown>

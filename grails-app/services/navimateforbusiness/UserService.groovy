@@ -93,6 +93,7 @@ class UserService {
             phone:          user.phone,
             countryCode:    user.countryCode,
             email:          user.email,
+            about:          user.about,
             manager:        user.manager ? [name: user.manager.name, id: user.manager.id] :
                                            [name: user.account.admin.name, id: user.account.admin.id]
         ]
@@ -142,6 +143,7 @@ class UserService {
         rep.manager = manager
         rep.name = json.name
         rep.phone = json.phone
+        rep.about = json.about
         rep.countryCode = json.countryCode
 
         rep

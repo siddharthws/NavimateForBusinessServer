@@ -41,4 +41,5 @@ databaseChangeLog = {
     include file: 'cleanup-porting-task-creator.groovy'
     include file: 'default-value-remove.groovy'
     include file: 'update-task-lead-id.groovy'
+    include file: 'add-user-about.groovy'
 }
