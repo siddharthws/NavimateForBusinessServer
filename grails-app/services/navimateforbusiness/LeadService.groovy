@@ -406,5 +406,19 @@ class LeadService {
         lead.save(failOnError: true, flush: true)
     }
 
+    // Method to get FCMs associated with the lead
+    def getAffectedReps (User user, LeadM lead) {
+        def reps = []
+
+        // Get reps from all open tasks with this lead
+        def tasks = taskService.getForUserByLead(user, lead)
+        def openTasks = tasks.findAll {Task it -> it.status == navimateforbusiness.TaskStatus.OPEN}
+        openTasks.each {Task task ->
+            if (task.rep) {reps.push(task.rep)}
+        }
+
+        reps
+    }
+
     // ----------------------- Private APIs ---------------------------//
 }

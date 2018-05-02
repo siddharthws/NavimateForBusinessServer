@@ -144,5 +144,33 @@ class TemplateService {
         template.save(failOnError: true, flush: true)
     }
 
+    // Method to get FCMs associated with the lead
+    def getAffectedReps (User user, Template template) {
+        def reps = []
+
+        // Add FCMs as per template type
+        switch (template.type) {
+            case navimateforbusiness.Constants.Template.TYPE_FORM:
+                // Get FCMs for all affected tasks
+                def tasks = taskService.getForUserByFormTemplate(user, template)
+                def openTasks = tasks.findAll {Task it -> it.status == navimateforbusiness.TaskStatus.OPEN}
+                openTasks.each {Task task -> if (task.rep) {reps.push(task.rep)} }
+                break
+            case navimateforbusiness.Constants.Template.TYPE_LEAD:
+                // Get all affected leads
+                def leads = leadService.getForUserByFilter(user, [template: [value: template.name]], [:], [])
+                leads.each {LeadM lead -> reps.addAll(leadService.getAffectedReps(user, lead)) }
+                break
+            case navimateforbusiness.Constants.Template.TYPE_TASK:
+                // Get FCMs for all affected tasks
+                def tasks = taskService.getForUserByTemplate(user, template)
+                def openTasks = tasks.findAll {Task it -> it.status == navimateforbusiness.TaskStatus.OPEN}
+                openTasks.each {Task task -> if (task.rep) {reps.push(task.rep)} }
+                break
+        }
+
+        reps
+    }
+
     // ----------------------- Private APIs ---------------------------//
 }
