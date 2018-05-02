@@ -106,7 +106,7 @@ class UserApiController {
         log.error("IDs = " + request.JSON.ids)
 
         // Iterate through IDs to be remove
-        def fcms = []
+        def reps = []
         request.JSON.ids.each {id ->
             // Get task with this id
             Task task = tasks.find {it -> it.id == id}
@@ -116,8 +116,8 @@ class UserApiController {
 
             // Save rep's fcm to be used later
             if (task.status == TaskStatus.OPEN) {
-                if (!fcms.contains(task.rep.fcmId)) {
-                    fcms.push(task.rep.fcmId)
+                if (!reps.contains(task.rep)) {
+                    reps.push(task.rep)
                 }
             }
 
@@ -127,8 +127,8 @@ class UserApiController {
         }
 
         // Send notifications to all reps
-        fcms.each {fcm ->
-            fcmService.notifyApp(fcm)
+        reps.each {rep ->
+            fcmService.notifyApp(rep)
         }
 
         def resp = [success: true]
@@ -143,7 +143,7 @@ class UserApiController {
         def tasks = taskService.getForUser(user)
 
         // Iterate through IDs to be remove
-        def fcms = []
+        def reps = []
         request.JSON.ids.each {id ->
             // Get task with this id
             Task task = tasks.find {it -> it.id == id}
@@ -153,8 +153,8 @@ class UserApiController {
 
             // Save rep's fcm to be used later
             if (task.status == TaskStatus.OPEN) {
-                if (!fcms.contains(task.rep.fcmId)) {
-                    fcms.push(task.rep.fcmId)
+                if (!reps.contains(task.rep)) {
+                    reps.push(task.rep)
                 }
             }
 
@@ -165,8 +165,8 @@ class UserApiController {
         }
 
         // Send notifications to all reps
-        fcms.each {fcm ->
-            fcmService.notifyApp(fcm)
+        reps.each {rep ->
+            fcmService.notifyApp(rep)
         }
 
         def resp = [success: true]

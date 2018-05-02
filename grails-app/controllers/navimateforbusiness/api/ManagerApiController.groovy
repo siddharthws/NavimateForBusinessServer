@@ -359,7 +359,7 @@ class ManagerApiController {
 
         // Parse task JSON to task objects
         def tasks = []
-        def fcms = []
+        def reps = []
         request.JSON.tasks.each {taskJson ->
             def task = taskService.fromJson(taskJson, user)
             if (!task.dateCreated) {
@@ -369,14 +369,14 @@ class ManagerApiController {
             tasks.push(task)
 
             // Push FCM
-            if (task.rep?.fcmId) {if (!fcms.contains(task.rep.fcmId)) {fcms.push(task.rep.fcmId)}}
+            if (task.rep?.fcmId) {if (!reps.contains(task.rep)) {reps.push(task.rep)}}
         }
 
         // Save tasks
         tasks.each {it -> it.save(flush: true, failOnError: true)}
 
         // Send notifications
-        fcms.each {it -> fcmService.notifyApp(it)}
+        reps.each {it -> fcmService.notifyApp(it)}
 
         // Return response
         def resp = [success: true]
