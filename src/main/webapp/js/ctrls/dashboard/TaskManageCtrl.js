@@ -78,7 +78,7 @@ app.controller("TaskManageCtrl",
                 $rootScope.showWaitingDialog("Closing Tasks...")
                 $http({
                     method: 'POST',
-                    url:    '/api/users/task/close',
+                    url:    '/api/manager/tasks/close',
                     headers: {
                         'X-Auth-Token': $localStorage.accessToken
                     },
@@ -144,7 +144,7 @@ app.controller("TaskManageCtrl",
                 $rootScope.showWaitingDialog("Stopping renewal period...")
                 $http({
                     method: 'POST',
-                    url:    '/api/users/task/stoprenew',
+                    url:    '/api/manager/tasks/stopRenewal',
                     headers: {
                         'X-Auth-Token': $localStorage.accessToken
                     },

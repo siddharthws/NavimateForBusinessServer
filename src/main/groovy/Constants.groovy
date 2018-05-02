@@ -85,4 +85,13 @@ class Constants {
         // Timezones
         public static final TimeZone TIMEZONE_IST = TimeZone.getTimeZone('Asia/Calcutta')
     }
+
+    class Notifications {
+        // Types of notifications
+        public static final int TYPE_TASK_UPDATE        = 1
+        public static final int TYPE_TEMPLATE_UPDATE    = 2
+        public static final int TYPE_LEAD_UPDATE        = 3
+        public static final int TYPE_ACCOUNT_ADDED      = 4
+        public static final int TYPE_ACCOUNT_REMOVED    = 5
+    }
 }

@@ -46,9 +46,9 @@ class AdminApiController {
         // Save user objects
         team.each {it -> it.save(flush: true, failOnError: true)}
 
-        // Send SMS to all new users
+        // Send FCM / SMS to all new users
         team.each {rep ->
-            if (!rep.fcmId) {
+            if (!fcmService.notifyUser(rep, Constants.Notifications.TYPE_ACCOUNT_ADDED)) {
                 SmsHelper.SendSms('+' + rep.countryCode + rep.phone, user.name + " has added you to navimate. Join on https://play.google.com/store/apps/details?id=com.biz.navimate")
             }
         }
@@ -61,24 +61,17 @@ class AdminApiController {
     def removeTeam() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get reps under this user
-        def reps = userService.getRepsForUser(user)
-
-        // Get Reps IDs to remove
-        def ids = request.JSON.ids
-
-        // Get reps to remove
-        def removeReps = []
-        ids.each {id -> removeReps.push(reps.find {it -> it.id == id})}
-
         // Remove selected reps
-        removeReps.each {rep ->
+        request.JSON.ids.each {id ->
+            User rep = userService.getRepForUserById(user, id)
+
             // Remove Rep's Manager & account
             rep.manager = null
             rep.account = null
-
-            // Save rep
             rep.save(flush: true, failOnError: true)
+
+            // Send notification to app
+            fcmService.notifyUser(rep, Constants.Notifications.TYPE_ACCOUNT_REMOVED)
         }
 
         def resp = [success: true]
@@ -91,15 +84,20 @@ class AdminApiController {
 
         // Parse lead JSON to task objects
         def leads = []
+        def reps = []
         request.JSON.leads.each {leadJson ->
             // Parse to lead object and assign update & create time
             LeadM lead = leadService.fromJson(leadJson, user)
 
             leads.push(lead)
+            reps.addAll(leadService.getAffectedReps(user, lead))
         }
 
         // Save tasks
         leads.each {it -> it.save(flush: true, failOnError: true)}
+
+        // Collect FCM Ids of affected reps & notify each rep
+        fcmService.notifyUsers(reps, Constants.Notifications.TYPE_LEAD_UPDATE)
 
         // Return response
         def resp = [success: true]
@@ -111,6 +109,7 @@ class AdminApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Iterate through IDs to be remove
+        def reps = []
         request.JSON.ids.each {id ->
             // Get lead with this id
             LeadM lead = leadService.getForUserById(user, id)
@@ -119,8 +118,12 @@ class AdminApiController {
             }
 
             // Remove lead
+            reps.addAll(leadService.getAffectedReps(user, lead))
             leadService.remove(user, lead)
         }
+
+        // Collect FCM Ids of affected reps & notify each rep
+        fcmService.notifyUsers(reps, Constants.Notifications.TYPE_LEAD_UPDATE)
 
         def resp = [success: true]
         render resp as JSON
@@ -132,36 +135,17 @@ class AdminApiController {
         // Parse each template to respective object
         def templatesJson = request.JSON.templates
         def templates = []
+        def reps = []
         templatesJson.each {templateJson ->
             def template = templateService.fromJson(templateJson, user)
             templates.push(template)
+            reps.addAll(templateService.getAffectedReps(user, template))
         }
 
-        def openTasks = []
-        templates.each {template ->
-            // Save template
-            template.save(flush: true, failOnError: true)
+        templates.each {template -> template.save(flush: true, failOnError: true)}
 
-            // Get open tasks that are affected due to this template
-            switch (template.type) {
-                case Constants.Template.TYPE_FORM :
-                    openTasks.addAll(Task.findAllByFormTemplateAndStatus(template, TaskStatus.OPEN))
-                    break
-            }
-        }
-
-        // Collect FCM Ids of affected reps
-        def reps = []
-        openTasks.each {task ->
-            if (!reps.contains(task.rep)) {
-                reps.push(task.rep)
-            }
-        }
-
-        // Send notifications to all reps
-        reps.each {User rep ->
-            fcmService.notifyApp(rep)
-        }
+        // Collect FCM Ids of affected reps & notify each rep
+        fcmService.notifyUsers(reps, Constants.Notifications.TYPE_TEMPLATE_UPDATE)
 
         // return response
         def resp = [success: true]
@@ -172,6 +156,7 @@ class AdminApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get Templates from JSON
+        def reps = []
         request.JSON.ids.each {id ->
             // Get Template
             Template template = templateService.getForUserById(user, id)
@@ -180,8 +165,12 @@ class AdminApiController {
             }
 
             // Remove Template
+            reps.addAll(templateService.getAffectedReps(user, template))
             templateService.remove(user, template)
         }
+
+        // Collect FCM Ids of affected reps & notify each rep
+        fcmService.notifyUsers(reps, Constants.Notifications.TYPE_TEMPLATE_UPDATE)
 
         def resp = [success: true]
         render resp as JSON

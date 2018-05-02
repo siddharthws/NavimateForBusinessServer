@@ -51,6 +51,8 @@ class UrlMappings {
         "/api/manager/tasks/getIds"      (controller: "ManagerApi") {action = [POST: "getTaskIds"]}
         "/api/manager/tasks/edit"        (controller: "ManagerApi") {action = [POST: "editTasks"]}
         "/api/manager/tasks/export"      (controller: "ManagerApi") {action = [POST: "exportTasks"]}
+        "/api/manager/tasks/close"       (controller: "ManagerApi") {action = [POST: "closeTasks"]}
+        "/api/manager/tasks/stopRenewal" (controller: "ManagerApi") {action = [POST: "stopTaskRenewal"]}
         "/api/manager/tasks/remove"      (controller: "ManagerApi") {action = [POST: "removeTasks"]}
 
         // Form Related APIs
@@ -63,8 +65,6 @@ class UrlMappings {
 
         /*------------------------- User APIs to be removed --------------------------*/
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
-        "/api/users/task/close"     (controller: "UserApi") {action = [POST: "closeTasks"]}
-        "/api/users/task/stoprenew" (controller: "UserApi") {action = [POST: "stopTaskRenewal"]}
         "/api/users/locationReport" (controller: "UserApi") {action = [GET: "getLocationReport"]}
 
         /*------------------------- Rep APIs --------------------------*/

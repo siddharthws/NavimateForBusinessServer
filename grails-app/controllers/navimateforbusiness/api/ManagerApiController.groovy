@@ -6,6 +6,7 @@ import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
 import navimateforbusiness.LeadM
 import navimateforbusiness.Task
+import navimateforbusiness.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.Visibility
 
@@ -347,14 +348,14 @@ class ManagerApiController {
             tasks.push(task)
 
             // Push FCM
-            if (task.rep) {if (!reps.contains(task.rep)) {reps.push(task.rep)}}
+            if (task.rep) {reps.push(task.rep)}
         }
 
         // Save tasks
         tasks.each {it -> it.save(flush: true, failOnError: true)}
 
-        // Send notifications
-        reps.each {it -> fcmService.notifyApp(it)}
+        // Collect FCM Ids of affected reps & notify each rep
+        fcmService.notifyUsers(reps, Constants.Notifications.TYPE_TASK_UPDATE)
 
         // Return response
         def resp = [success: true]
@@ -423,6 +424,7 @@ class ManagerApiController {
     def removeTasks() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
+        def reps =[]
         request.JSON.ids.each {id ->
             Task task = taskService.getForUserById(user, id)
             if (!task) {
@@ -430,7 +432,56 @@ class ManagerApiController {
             }
 
             // Remove task
+            if (task.rep) {reps.push(task.rep)}
             taskService.remove(user, task)
+        }
+
+        // Collect FCM Ids of affected reps & notify each rep
+        fcmService.notifyUsers(reps, Constants.Notifications.TYPE_TASK_UPDATE)
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def closeTasks() {
+        // Get user
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Iterate through IDs to be remove
+        def reps  = []
+        request.JSON.ids.each {id ->
+            Task task = taskService.getForUserById(user, id)
+            if (!task) {
+                throw new navimateforbusiness.ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Update and save task
+            task.status = TaskStatus.CLOSED
+            if (task.rep) {reps.push(task.rep)}
+            task.save(flush: true, failOnError: true)
+        }
+
+        // Collect FCM Ids of affected reps & notify each rep
+        fcmService.notifyUsers(reps, Constants.Notifications.TYPE_TASK_UPDATE)
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def stopTaskRenewal() {
+        // Get user
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Iterate through IDs to be remove
+        request.JSON.ids.each {id ->
+            Task task = taskService.getForUserById(user, id)
+            if (!task) {
+                throw new navimateforbusiness.ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Update and save task
+            task.period = 0
+            task.save(flush: true, failOnError: true)
         }
 
         def resp = [success: true]

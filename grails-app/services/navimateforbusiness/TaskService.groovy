@@ -82,6 +82,17 @@ class TaskService {
         task
     }
 
+    // Method to get all tasks for a user by Form template
+    def getForUserByFormTemplate(User user, Template template) {
+        // Get all tasks for user
+        def tasks = getForUser(user)
+
+        // Find tasks by template
+        def task = tasks.findAll {Task it -> it.formTemplate.id == template.id}
+
+        task
+    }
+
     // ----------------------- Public APIs ---------------------------//
     // Methods to convert task objects to / from JSON
     def toJson(Task task, User user) {
