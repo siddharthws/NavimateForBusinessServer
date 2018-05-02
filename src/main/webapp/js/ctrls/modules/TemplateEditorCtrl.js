@@ -4,7 +4,7 @@
 
 // Controller for Template Editor Dialog
 app.controller('TemplateEditorCtrl', function ( $scope, $rootScope,
-                                                ToastService, ObjField) {
+                                                ToastService, ObjField, DialogService) {
     var vm = this
     vm.Const = $rootScope.Constants.Template
 
@@ -18,6 +18,11 @@ app.controller('TemplateEditorCtrl', function ( $scope, $rootScope,
     vm.removeField = function (fieldIdx) {
         // Remove field entry
         vm.fields.splice(fieldIdx, 1)
+    }
+
+    vm.fieldSettings = function (fieldIdx) {
+        // Open Field Settings Dialog
+        DialogService.FieldSettings(vm.fields[fieldIdx])
     }
 
     vm.updateFieldType = function (fieldIdx, newType) {
