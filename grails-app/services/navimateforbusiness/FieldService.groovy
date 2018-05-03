@@ -32,7 +32,8 @@ class FieldService {
                 id:     field.id,
                 title:  field.title,
                 type:   field.type,
-                value:  field.value
+                value:  field.value,
+                settings: [bMandatory: field.bMandatory]
         ]
 
         fieldJson
@@ -56,6 +57,7 @@ class FieldService {
         field.title = fieldJson.title
         field.type = fieldJson.type
         field.value = fieldJson.value
+        field.bMandatory = fieldJson.settings ? fieldJson.settings.bMandatory : false
 
         field
     }
