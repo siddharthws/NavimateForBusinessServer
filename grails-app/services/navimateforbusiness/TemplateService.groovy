@@ -121,6 +121,11 @@ class TemplateService {
                 forms.each {Form form ->
                     formService.remove(user, form)
                 }
+                // Remove all tasks associated with this form template
+                def tasks = taskService.getForUserByFormTemplate(user, template)
+                tasks.each {Task task ->
+                    taskService.remove(user, task)
+                }
                 break
             case navimateforbusiness.Constants.Template.TYPE_TASK:
                 // Remove all tasks associated with this template
