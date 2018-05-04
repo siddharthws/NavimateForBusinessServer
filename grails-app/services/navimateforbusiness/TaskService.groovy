@@ -138,6 +138,12 @@ class TaskService {
             }
         }
 
+        // Add date info
+        if (!task.dateCreated) {
+            task.dateCreated = new Date()
+        }
+        task.lastUpdated = new Date()
+
         task
     }
 

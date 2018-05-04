@@ -69,13 +69,6 @@ class AdminApiController {
             // Parse to lead object and assign update & create time
             LeadM lead = leadService.fromJson(leadJson, user)
 
-            // Assign Lead update / create time as current time
-            String currentTime = new Date().format(Constants.Date.FORMAT_BACKEND, Constants.Date.TIMEZONE_IST)
-            if (!lead.createTime) {
-                lead.createTime = currentTime
-            }
-            lead.updateTime = currentTime
-
             leads.push(lead)
         }
 
@@ -95,11 +88,6 @@ class AdminApiController {
         def templates = []
         templatesJson.each {templateJson ->
             def template = templateService.fromJson(templateJson, user)
-            if (!template.dateCreated) {
-                template.dateCreated = new Date()
-            }
-            template.lastUpdated = new Date()
-
             templates.push(template)
         }
 

@@ -99,6 +99,12 @@ class TemplateService {
             }
         }
 
+        // Add date info
+        if (!template.dateCreated) {
+            template.dateCreated = new Date()
+        }
+        template.lastUpdated = new Date()
+
         template
     }
 

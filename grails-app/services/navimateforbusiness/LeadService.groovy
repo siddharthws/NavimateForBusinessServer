@@ -293,6 +293,13 @@ class LeadService {
             lead["$field.id"] = json.values.find {it -> it.fieldId == field.id}.value
         }
 
+        // Add date info
+        String currentTime = new Date().format(navimateforbusiness.Constants.Date.FORMAT_BACKEND, navimateforbusiness.Constants.Date.TIMEZONE_IST)
+        if (!lead.createTime) {
+            lead.createTime = currentTime
+        }
+        lead.updateTime = currentTime
+
         lead
     }
 

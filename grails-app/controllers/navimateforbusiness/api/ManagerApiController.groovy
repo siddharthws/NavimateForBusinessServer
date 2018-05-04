@@ -232,13 +232,6 @@ class ManagerApiController {
             // Parse to lead object and assign update & create time
             LeadM lead = leadService.fromJson(leadJson, user)
 
-            // Assign Lead update / create time as current time
-            String currentTime = new Date().format(Constants.Date.FORMAT_BACKEND, Constants.Date.TIMEZONE_IST)
-            if (!lead.createTime) {
-                lead.createTime = currentTime
-            }
-            lead.updateTime = currentTime
-
             leads.push(lead)
         }
 
@@ -350,14 +343,10 @@ class ManagerApiController {
         def reps = []
         request.JSON.tasks.each {taskJson ->
             def task = taskService.fromJson(taskJson, user)
-            if (!task.dateCreated) {
-                task.dateCreated = new Date()
-            }
-            task.lastUpdated = new Date()
             tasks.push(task)
 
             // Push FCM
-            if (task.rep?.fcmId) {if (!reps.contains(task.rep)) {reps.push(task.rep)}}
+            if (task.rep) {if (!reps.contains(task.rep)) {reps.push(task.rep)}}
         }
 
         // Save tasks
