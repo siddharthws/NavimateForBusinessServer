@@ -22,6 +22,16 @@ class TemplateService {
         // Return sorted templates
         return templates
     }
+    def getForUserRemoved(User user) {
+        // Get all unremoved templates for user's account and given type
+        def templates = Template.findAllByAccount(user.account, false)
+
+        // Sort templates in order of IDs
+        templates = templates.sort {it -> it.id}
+
+        // Return sorted templates
+        return templates
+    }
 
     // Method to get all templates for a user with a specific type
     def getForUserByType(User user, int type) {
@@ -49,6 +59,13 @@ class TemplateService {
         Template template = Template.findByAccountAndIsRemovedAndTypeAndName(user.account, false, type, name)
 
         template
+    }
+
+    // Method to get through last updated
+    def getForUserAfterLastUpdated(User user, Date date) {
+        def templates = getForUserRemoved(user)
+        templates = templates.findAll {Template it -> it.lastUpdated >= date}
+        templates
     }
 
     // ----------------------- Public APIs ---------------------------//

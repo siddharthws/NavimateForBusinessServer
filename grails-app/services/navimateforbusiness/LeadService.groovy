@@ -24,7 +24,11 @@ class LeadService {
 
         // Add accountId and isRemoved flag filters
         mongoFilters.push(eq("accountId", user.accountId))
-        mongoFilters.push(ne("isRemoved", true))
+
+        // Add isRemoved filter by default (unless specified in filters
+        if (!filters?.includeRemoved) {
+            mongoFilters.push(ne("isRemoved", true))
+        }
 
         // Add role specific filters
         if (user.role == navimateforbusiness.Role.MANAGER) {
@@ -48,6 +52,12 @@ class LeadService {
         if (!sorter) {
             sorter = [[name: navimateforbusiness.Constants.Filter.SORT_ASC]]
         }
+
+        // Apply date filter
+        if (filters?.createTime?.from)  {mongoFilters.push(gte("createTime", "$filters.createTime.from"))}
+        if (filters?.createTime?.to)    {mongoFilters.push(lte("createTime", "$filters.createTime.to"))}
+        if (filters?.updateTime?.from)  {mongoFilters.push(gte("updateTime", "$filters.updateTime.from"))}
+        if (filters?.updateTime?.to)    {mongoFilters.push(lte("updateTime", "$filters.updateTime.to"))}
 
         // Apply Ext ID filters if any
         if (filters?.extId) {mongoFilters.push(eq("extId", filters.extId))}
@@ -213,6 +223,14 @@ class LeadService {
             return leads[0]
         }
         return null
+    }
+
+    // Method to get through last updated
+    def getForUserAfterLastUpdated(User user, Date date) {
+        def leads = getForUserByFilter(user, [includeRemoved: true,
+                                              updateTime: [from: date.format(navimateforbusiness.Constants.Date.FORMAT_BACKEND,
+                                                                             navimateforbusiness.Constants.Date.TIMEZONE_IST)]], [:], []).leads
+        leads
     }
 
     // ----------------------- Public APIs ---------------------------//
