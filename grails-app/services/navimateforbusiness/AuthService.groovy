@@ -186,7 +186,9 @@ class AuthService {
                 owner: manager,
                 account: manager.account,
                 name: "Default",
-                type: navimateforbusiness.Constants.Template.TYPE_FORM
+                type: navimateforbusiness.Constants.Template.TYPE_FORM,
+                dateCreated: new Date(),
+                lastUpdated: new Date()
         )
 
         // Create some default fields
@@ -204,7 +206,7 @@ class AuthService {
 
     Template createDefaultLeadTemplate(User user) {
         // Create a default Lead template
-        Template template = new Template(account: user.account, owner: user, name: "Default", type: navimateforbusiness.Constants.Template.TYPE_LEAD)
+        Template template = new Template(account: user.account, owner: user, name: "Default", type: navimateforbusiness.Constants.Template.TYPE_LEAD, dateCreated: new Date(), lastUpdated: new Date())
 
         // Create Fields for the template
         Field descField     = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false, value: "")
@@ -221,7 +223,7 @@ class AuthService {
 
     Template createDefaultTaskTemplate(User admin) {
         // Create a default Task template
-        Template template = new Template(account: admin.account, owner: admin, name: "Default", type: navimateforbusiness.Constants.Template.TYPE_TASK)
+        Template template = new Template(account: admin.account, owner: admin, name: "Default", type: navimateforbusiness.Constants.Template.TYPE_TASK, dateCreated: new Date(), lastUpdated: new Date())
 
         // Create Fields for the template
         Field descField     = new Field(account: admin.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false, value: "")
