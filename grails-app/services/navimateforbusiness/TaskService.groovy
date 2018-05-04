@@ -48,6 +48,40 @@ class TaskService {
         // Return tasks
         tasks
     }
+    def getForUserRemoved(User user) {
+        def tasks = []
+
+        // Get leads as per access level
+        switch (user.role) {
+            case navimateforbusiness.Role.ADMIN:
+                // Get all unremoved tasks created of account
+                tasks = Task.findAllByAccount(user.account)
+                break
+
+            case navimateforbusiness.Role.CC:
+                // Get all unremoved tasks created by this user
+                tasks = Task.findAllByAccountAndCreator(user.account, user)
+                break
+
+            case navimateforbusiness.Role.MANAGER:
+                // Get all unremoved tasks created by this user
+                tasks = Task.findAllByAccountAndManager(user.account, user)
+                break
+
+            case navimateforbusiness.Role.REP:
+                // Get all unremoved tasks assigned to this rep
+                tasks = Task.findAllByAccountAndRep(user.account, user)
+                break
+        }
+
+        // Sort tasks in descending order of create date
+        tasks = tasks.sort {it -> it.dateCreated}
+        tasks = tasks.sort {it -> it.status.name()}
+        tasks.reverse(true)
+
+        // Return tasks
+        tasks
+    }
 
     // Method to get all tasks for a user
     def getForUserById(User user, Long id) {
@@ -91,6 +125,13 @@ class TaskService {
         def task = tasks.findAll {Task it -> it.formTemplate.id == template.id}
 
         task
+    }
+
+    // Method to get through last updated
+    def getForUserAfterLastUpdated(User user, Date date) {
+        def tasks = getForUserRemoved(user)
+        tasks = tasks.findAll {Task it -> it.lastUpdated >= date}
+        tasks
     }
 
     // ----------------------- Public APIs ---------------------------//

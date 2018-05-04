@@ -71,6 +71,7 @@ class UrlMappings {
         "/api/reps/appStart"        (controller: "RepApi") {action = [GET: "appStart"]}
         "/api/reps/register"        (controller: "RepApi") {action = [POST: "register"]}
         "/api/reps/submitForm"      (controller: "RepApi") {action = [POST: "submitForm"]}
+        "/api/reps/sync"            (controller: "RepApi") {action = [POST: "sync"]}
         "/api/reps/sync/tasks"      (controller: "RepApi") {action = [POST: "syncTasks"]}
         "/api/reps/sync/leads"      (controller: "RepApi") {action = [POST: "syncLeads"]}
         "/api/reps/sync/templates"  (controller: "RepApi") {action = [POST: "syncTemplates"]}
