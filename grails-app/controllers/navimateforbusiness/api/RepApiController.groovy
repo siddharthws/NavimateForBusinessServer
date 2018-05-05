@@ -58,9 +58,16 @@ class RepApiController {
         if (request.JSON.templates != null) {
             resp.templates = [templates: [], remove: []]
 
+            // Get templates
+            def templates = []
+            if (request.JSON.templates == 0) {
+                templates = templateService.getForUser(rep)
+            } else {
+                Date lastSyncTime = new Date(request.JSON.templates)
+                templates = templateService.getForUserAfterLastUpdated(rep, lastSyncTime)
+            }
+
             // Find all templates updated after sync date
-            Date lastSyncTime = new Date(request.JSON.templates)
-            def templates = templateService.getForUserAfterLastUpdated(rep, lastSyncTime)
             templates.each {Template template ->
                 if (template.isRemoved) {
                     resp.templates.remove.push(template.id)
@@ -74,9 +81,18 @@ class RepApiController {
         if (request.JSON.leads != null) {
             resp.leads = [leads: [], remove: []]
 
-            // Find all leads updated after sync date
-            Date lastSyncTime = new Date(request.JSON.leads)
-            def leads = leadService.getForUserAfterLastUpdated(rep, lastSyncTime)
+            // Get templates
+            def leads = []
+            if (request.JSON.leads == 0) {
+                taskService.getForUserByStatus(rep, TaskStatus.OPEN).each {Task it ->
+                    def lead = leadService.getForUserById(rep, it.leadid)
+                    leads.push(lead)
+                }
+            } else {
+                Date lastSyncTime = new Date(request.JSON.leads)
+                leads = leadService.getForUserAfterLastUpdated(rep, lastSyncTime)
+            }
+
             leads.each {LeadM lead ->
                 if (lead.isRemoved) {
                     resp.leads.remove.push(lead.id)
@@ -90,9 +106,16 @@ class RepApiController {
         if (request.JSON.tasks != null) {
             resp.tasks = [tasks: [], remove: []]
 
+            // Get templates
+            def tasks = []
+            if (request.JSON.tasks == 0) {
+                tasks = taskService.getForUserByStatus(rep, TaskStatus.OPEN)
+            } else {
+                Date lastSyncTime = new Date(request.JSON.tasks)
+                tasks = taskService.getForUserAfterLastUpdated(rep, lastSyncTime)
+            }
+
             // Find all templates updated after sync date
-            Date lastSyncTime = new Date(request.JSON.tasks)
-            def tasks = taskService.getForUserAfterLastUpdated(rep, lastSyncTime)
             tasks.each {Task task ->
                 if (task.isRemoved) {
                     resp.tasks.remove.push(task.id)

@@ -127,6 +127,17 @@ class TaskService {
         task
     }
 
+    // Method to get all tasks for a user by Form template
+    def getForUserByStatus(User user, navimateforbusiness.TaskStatus status) {
+        // Get all tasks for user
+        def tasks = getForUser(user)
+
+        // Find tasks by template
+        def task = tasks.findAll {Task it -> it.status == status}
+
+        task
+    }
+
     // Method to get through last updated
     def getForUserAfterLastUpdated(User user, Date date) {
         def tasks = getForUserRemoved(user)
