@@ -93,3 +93,9 @@ input.img-icon:hover {
     border-color: #FF8A80;
     box-shadow: 0px 0px 5px 0px #FF8A80 inset;
 }
+
+/* Active Input Box */
+.input-box.active {
+    background-color: #37bcf244;
+    border-color: #37bcf2;
+}
