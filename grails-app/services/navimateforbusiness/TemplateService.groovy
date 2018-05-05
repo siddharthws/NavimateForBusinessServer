@@ -180,7 +180,7 @@ class TemplateService {
                 break
             case navimateforbusiness.Constants.Template.TYPE_LEAD:
                 // Get all affected leads
-                def leads = leadService.getForUserByFilter(user, [template: [value: template.name]], [:], [])
+                def leads = leadService.getForUserByFilter(user, [template: [value: template.name]], [:], []).leads
                 leads.each {LeadM lead -> reps.addAll(leadService.getAffectedReps(user, lead)) }
                 break
             case navimateforbusiness.Constants.Template.TYPE_TASK:
