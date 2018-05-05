@@ -97,6 +97,7 @@ class UrlMappings {
         "/api/port/fixManagers"            (controller: "PortingApi") {action = [GET: "fixManagers"]}
         "/api/port/fixFcms"                (controller: "PortingApi") {action = [GET: "fixFcms"]}
         "/api/port/fixIsRemoved"           (controller: "PortingApi") {action = [GET: "fixIsRemoved"]}
+        "/api/port/removeAcra"             (controller: "PortingApi") {action = [GET: "removeAcra"]}
 
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs

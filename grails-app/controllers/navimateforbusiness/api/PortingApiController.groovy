@@ -2,6 +2,7 @@ package navimateforbusiness.api
 
 import com.mongodb.client.FindIterable
 import navimateforbusiness.Account
+import navimateforbusiness.Acra
 import navimateforbusiness.Data
 import navimateforbusiness.Form
 import navimateforbusiness.LeadM
@@ -112,6 +113,13 @@ class PortingApiController {
             if (form.submittedData.template.isRemoved) {
                 formService.remove(form.account.admin, form)
             }
+        }
+    }
+
+    // Remove all ACRA entries
+    def removeAcra() {
+        Acra.findAll().each {it ->
+            it.delete(flush: true)
         }
     }
 }
