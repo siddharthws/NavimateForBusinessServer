@@ -275,7 +275,7 @@ class LeadService {
             lead = new LeadM(
                     accountId: user.account.id,
                     ownerId: user.id,
-                    visibility: navimateforbusiness.Visibility.PRIVATE,
+                    visibility: navimateforbusiness.Visibility.PUBLIC,
                     isRemoved: false,
                     extId: json.extId
             )

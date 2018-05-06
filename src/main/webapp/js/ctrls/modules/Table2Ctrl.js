@@ -253,6 +253,12 @@ app.controller('Table2Ctrl', function (  $rootScope, $scope, $window, $state,
     })
 
     // Clear Filter Event
+    $scope.$on(Constants.Events.TABLE_RESET, function (event, args) {
+        // Reset table
+        reset()
+    })
+
+    // Clear Filter Event
     $scope.$on(Constants.Events.TABLE_CLEAR_FILTERS, function (event, args) {
         // Reset table
         reset()

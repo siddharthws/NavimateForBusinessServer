@@ -13,6 +13,7 @@ import navimateforbusiness.Task
 import grails.converters.JSON
 import navimateforbusiness.User
 import navimateforbusiness.Template
+import navimateforbusiness.Visibility
 
 import static com.mongodb.client.model.Filters.eq
 
@@ -120,6 +121,14 @@ class PortingApiController {
     def removeAcra() {
         Acra.findAll().each {it ->
             it.delete(flush: true)
+        }
+    }
+
+    def publicLeads() {
+        FindIterable fi = LeadM.find(eq("visibility", Visibility.PRIVATE.name()))
+        fi.each {LeadM it ->
+            it.visibility = Visibility.PUBLIC
+            it.save(flush: true, failOnError: true)
         }
     }
 }

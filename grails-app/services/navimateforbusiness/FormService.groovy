@@ -91,7 +91,7 @@ class FormService {
         }
 
         // Add task info
-        if (json.taskId) {
+        if (json.taskId != -1) {
             // Add task
             form.task = taskService.getForUserById(user, json.taskId)
             if (!form.task) {
