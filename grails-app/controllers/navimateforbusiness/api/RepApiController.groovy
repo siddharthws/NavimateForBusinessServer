@@ -52,21 +52,16 @@ class RepApiController {
     def sync () {
         User rep = authenticate()
 
-        def resp = [:]
+        def resp = [templates: [templates: [], remove: []],
+                    leads: [leads: [], remove: []],
+                    tasks: [tasks: [], remove: []]]
 
-        // Fill Template Response
-        if (request.JSON.templates != null) {
-            resp.templates = [templates: [], remove: []]
+        if (rep.account) {
+            Date lastSyncTime = new Date(request.JSON.lastSyncTime)
+            String lastSyncTimeString = lastSyncTime.format(Constants.Date.FORMAT_BACKEND)
 
-            // Get templates
-            def templates = []
-            if (request.JSON.templates == 0) {
-                templates = templateService.getForUser(rep)
-            } else {
-                Date lastSyncTime = new Date(request.JSON.templates)
-                templates = templateService.getForUserAfterLastUpdated(rep, lastSyncTime)
-            }
-
+            // Fill Template Response
+            def templates = templateService.getForUserAfterLastUpdated(rep, lastSyncTime)
             // Find all templates updated after sync date
             templates.each {Template template ->
                 if (template.isRemoved) {
@@ -75,54 +70,35 @@ class RepApiController {
                     resp.templates.templates.push(templateService.toJson(template))
                 }
             }
-        }
 
-        // Fill Lead Response
-        if (request.JSON.leads != null) {
-            resp.leads = [leads: [], remove: []]
-
-            // Get templates
+            // Iterate through all tasks of this rep
             def leads = []
-            if (request.JSON.leads == 0) {
-                taskService.getForUserByStatus(rep, TaskStatus.OPEN).each {Task it ->
-                    def lead = leadService.getForUserById(rep, it.leadid)
-                    leads.push(lead)
+            taskService.getForUserRemoved(rep).each {Task task ->
+                // Check if lead was updated after sync time
+                LeadM lead = leadService.getForUserById(rep, task.leadid)
+                if (task.dateCreated > lastSyncTime) {
+                    if (!leads.contains(lead)) {leads.push(lead)}
+                } else if (lead.updateTime > lastSyncTimeString) {
+                    // Remove Lead / Add JSON as required
+                    if (lead.isRemoved) {
+                        resp.leads.remove.push(lead.id)
+                    } else {
+                        if (!leads.contains(lead)) {leads.push(lead)}
+                    }
                 }
-            } else {
-                Date lastSyncTime = new Date(request.JSON.leads)
-                leads = leadService.getForUserAfterLastUpdated(rep, lastSyncTime)
-            }
 
-            leads.each {LeadM lead ->
-                if (lead.isRemoved) {
-                    resp.leads.remove.push(lead.id)
-                } else {
-                    resp.leads.leads.push(leadService.toJson(lead, rep))
-                }
-            }
-        }
-
-        // Fill Task Response
-        if (request.JSON.tasks != null) {
-            resp.tasks = [tasks: [], remove: []]
-
-            // Get templates
-            def tasks = []
-            if (request.JSON.tasks == 0) {
-                tasks = taskService.getForUserByStatus(rep, TaskStatus.OPEN)
-            } else {
-                Date lastSyncTime = new Date(request.JSON.tasks)
-                tasks = taskService.getForUserAfterLastUpdated(rep, lastSyncTime)
-            }
-
-            // Find all templates updated after sync date
-            tasks.each {Task task ->
-                if (task.isRemoved) {
-                    resp.tasks.remove.push(task.id)
-                } else {
-                    resp.tasks.tasks.push(taskService.toJson(task, rep))
+                // Check if task was updated after sync time
+                if (task.lastUpdated > lastSyncTime) {
+                    // Remove Lead / Add JSON as required
+                    if (task.isRemoved) {
+                        resp.tasks.remove.push(task.id)
+                    } else {
+                        resp.tasks.tasks.push(taskService.toJson(task, rep))
+                    }
                 }
             }
+
+            leads.each {LeadM it -> resp.leads.leads.push(leadService.toJson(it, rep))}
         }
 
         render resp as JSON
@@ -131,7 +107,11 @@ class RepApiController {
     def syncForms() {
         def rep = authenticate()
 
-        // Check which templates need to be sent back to app
+        // Report error for reps under no account
+        if (!rep.account) {
+            throw new ApiException("Not registered with any account for form submission", Constants.HttpCodes.BAD_REQUEST)
+        }
+
         def idResp = []
         request.JSON.forms.each {def formJson ->
             Form form = formService.fromJson(formJson, rep)
@@ -201,16 +181,24 @@ class RepApiController {
         def rep = authenticate()
 
         // Get account settings
-        def accSettings = AccountSettings.findByAccount(rep.account)
+        def resp = [startHr: 0, endHr: 0]
+        if (rep.account) {
+            def accSettings = AccountSettings.findByAccount(rep.account)
+            resp.startHr = accSettings.startHr
+            resp.endHr = accSettings.endHr
+        }
 
-        // Return JSON response
-        def resp = DomainToJson.AccountSettings(accSettings)
         render resp as JSON
     }
 
     def syncLocationReport() {
         // Get rep
         User rep = authenticate()
+
+        // Report error for reps under no account
+        if (!rep.account) {
+            throw new ApiException("Not registered with any account for form submission", Constants.HttpCodes.BAD_REQUEST)
+        }
 
         // Get report elements from request
         def reportJson = request.JSON.report

@@ -18,12 +18,12 @@ app.controller("LeadManageCtrl",
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     vm.add = function() {
-        DialogService.leadEditor(null, vm.sync)
+        DialogService.leadEditor(null, vm.reset)
     }
 
     vm.edit = function () {
         //Launch Leads-Editor dialog
-        DialogService.leadEditor(vm.table.getSelectedIds(), vm.sync)
+        DialogService.leadEditor(vm.table.getSelectedIds(), vm.reset)
     }
 
     // API to import leads
@@ -36,7 +36,7 @@ app.controller("LeadManageCtrl",
             // Success callback
             function () {
                 // Sync data again
-                vm.sync()
+                vm.reset()
 
                 // Notify user about success
                 $rootScope.hideWaitingDialog()
@@ -70,6 +70,11 @@ app.controller("LeadManageCtrl",
     vm.sync = function () {
         // Broadcast Toggle Columns Event
         $scope.$broadcast(Constants.Events.TABLE_SYNC)
+    }
+
+    vm.reset = function () {
+        // Broadcast Toggle Columns Event
+        $scope.$broadcast(Constants.Events.TABLE_RESET)
     }
 
     // APIs for actions in dropdown
