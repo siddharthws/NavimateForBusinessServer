@@ -29,7 +29,7 @@
 
                 <div class="fbx-h mt-2">
                     <!-- Manager selector -->
-                    <dropdown class="mr-4" label="Manager" text="vm.selectedTask.manager.name" items="vm.managers" on-select="vm.updateManager(id)"
+                    <dropdown class="mr-4" label="Manager" text="vm.selectedTask.manager.name" items="vm.managers" on-select="vm.updateManager(idx)"
                               ng-if="$root.isCC() && vm.managers.length"></dropdown>
 
                     <!-- Representative -->
@@ -38,7 +38,7 @@
 
                 <div class="fbx-h mt-2">
                     <!-- Form template -->
-                    <dropdown class="mr-4" label="Form" text="vm.selectedTask.formTemplate.name" items="vm.formTemplates" on-select="vm.updateFormTemplate(id)"
+                    <dropdown class="mr-4" label="Form" text="vm.selectedTask.formTemplate.name" items="vm.formTemplates" on-select="vm.updateFormTemplate(idx)"
                               b-show-error="vm.bInputError" err="vm.selectedTask.getFormErr()"></dropdown>
 
                     <!-- Period -->
@@ -47,7 +47,7 @@
                 </div>
 
                 <!-- Template -->
-                <dropdown class="mt-2" label="Template" text="vm.selectedTask.template.name" items="vm.taskTemplates" on-select="vm.updateTemplate(id)"
+                <dropdown class="mt-2" label="Template" text="vm.selectedTask.template.name" items="vm.taskTemplates" on-select="vm.updateTemplate(idx)"
                           b-show-error="vm.bInputError" err="vm.selectedTask.getTemplateErr()"></dropdown>
 
                 <!-- Template Values -->

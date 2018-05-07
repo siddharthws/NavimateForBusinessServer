@@ -36,7 +36,7 @@
                 </div>
 
                 <!-- Template -->
-                <dropdown class="mt-2" label="Template" text="vm.selectedLead.template.name" items="vm.templates" on-select="vm.updateTemplate(id)"
+                <dropdown class="mt-2" label="Template" text="vm.selectedLead.template.name" items="vm.templates" on-select="vm.updateTemplate(idx)"
                           b-show-error="vm.bInputError" err="vm.selectedLead.getTemplateErr()"></dropdown>
 
                 <!-- Template Values -->

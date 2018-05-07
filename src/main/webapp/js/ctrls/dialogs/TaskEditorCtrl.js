@@ -58,13 +58,14 @@ app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog, $loca
         vm.selectedTask = task
 
         // Add form template
-        vm.updateFormTemplate(vm.formTemplates[0].id)
+        vm.updateFormTemplate(0)
 
         // Add template data
-        vm.updateTemplate(vm.taskTemplates[0].id)
+        vm.updateTemplate(0)
     }
 
-    vm.updateManager = function (id) {
+    vm.updateManager = function (idx) {
+        var id = vm.managers[idx].id
         if (id == $localStorage.id) {
             vm.selectedTask.manager = {id: $localStorage.id, name: $localStorage.name}
         } else {
@@ -73,12 +74,14 @@ app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog, $loca
         }
     }
 
-    vm.updateFormTemplate = function (id) {
+    vm.updateFormTemplate = function (idx) {
+        var id = vm.formTemplates[idx].id
         vm.selectedTask.formTemplate = TemplateService.getById(id)
     }
 
-    vm.updateTemplate = function (id) {
+    vm.updateTemplate = function (idx) {
         // Get template by ID
+        var id = vm.taskTemplates[idx].id
         var template = TemplateService.getById(id)
 
         // Ignore if same template is selected

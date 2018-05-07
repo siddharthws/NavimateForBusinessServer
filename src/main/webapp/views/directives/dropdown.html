@@ -7,10 +7,10 @@
     <div class="fbx-h input-box input-lg"
          ng-class="{'err': bShowError && err.length > 0}">
         <!-- Currently selected item name -->
-        <span>{{text}}</span>
+        <span class="mr-2">{{text}}</span>
 
         <!-- Dropdown Icon -->
-        <img ng-src="/static/images/ic_dropdown_dark.png" class="ib-base ib-xs ml-2">
+        <img ng-src="/static/images/ic_dropdown_dark.png" class="ib-base ib-xs ml-auto">
     </div>
 
     <!-- Error Text -->
@@ -22,7 +22,7 @@
     <div class="list list-dropdown" ng-if="bShowDropdown">
         <!-- List of items -->
         <div class="li li-dropdown" ng-repeat="item in items"
-             ng-click="onSelect({'id': item.id})">
+             ng-click="onSelect({'idx': $index})">
             {{item.name}}
         </div>
     </div>

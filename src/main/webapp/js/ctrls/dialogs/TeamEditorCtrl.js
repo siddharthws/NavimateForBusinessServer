@@ -38,7 +38,8 @@ app.controller('TeamEditorCtrl', function ( $scope, $rootScope, $mdDialog, $loca
     }
 
     // Method to update manager
-    vm.updateManager = function (id) {
+    vm.updateManager = function (idx) {
+        var id = vm.managers[idx].id
         if (id == $localStorage.id) {
             vm.selectedUser.manager = {id: $localStorage.id, name: $localStorage.name}
         } else {

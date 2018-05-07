@@ -45,11 +45,12 @@ app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog,
         vm.selectedLead = lead
 
         // Add template data
-        vm.updateTemplate(vm.templates[0].id)
+        vm.updateTemplate(0)
     }
 
-    vm.updateTemplate = function (id) {
+    vm.updateTemplate = function (idx) {
         // Get template by ID
+        var id = vm.templates[idx].id
         var template = TemplateService.getById(id)
 
         // Ignore if same template is selected
