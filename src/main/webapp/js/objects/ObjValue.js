@@ -58,7 +58,11 @@ app.factory('ObjValue', function(TemplateService) {
             case Constants.Template.FIELD_TYPE_SIGN:
             case Constants.Template.FIELD_TYPE_LOCATION:
             case Constants.Template.FIELD_TYPE_DATE:
-                // No Validation
+                if(this.field.settings.bMandatory){
+                    if(!this.value){
+                        err = 'Field is mandatory'
+                    }
+                }
                 break
             case Constants.Template.FIELD_TYPE_NUMBER:
                 if (!Statics.validateNumber(this.value)) {

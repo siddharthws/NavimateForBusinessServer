@@ -4,7 +4,8 @@
     <div ng-repeat="value in values" class="mr-5 mt-3">
         <!-- Text Field Editor -->
         <input-box ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_TEXT"
-                   label="{{value.field.title}}" model="value.value"></input-box>
+                   label="{{value.field.title}}" model="value.value"
+                   b-show-error="bShowError" err="value.getErr()"></input-box>
 
         <!-- Number Field Editor -->
         <input-box ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_NUMBER"
@@ -32,6 +33,8 @@
             <datepicker hint="Select" date-model="value.value"
                         model-format="{{$root.Constants.Date.FORMAT_BACKEND}}"
                         display-format="{{$root.Constants.Date.FORMAT_FRONTEND}}"></datepicker>
+            <!-- Error Text -->
+            <span class="text-error align-self-end" ng-if="bShowError && value.getErr().length > 0">{{value.getErr()}}</span>
         </div>
     </div>
 </div>
