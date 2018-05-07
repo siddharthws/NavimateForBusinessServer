@@ -15,7 +15,9 @@ app.directive('datepicker', function () {
             modelFormat:        '@',
             displayFormat:      '@',
             dateModel:          '=',
-            dateChange:         '&'
+            dateChange:         '&',
+            bShowError:         '=',
+            err:                '='
         },
         // Controller and view
         controller: 'datepickerCtrl as vm',
