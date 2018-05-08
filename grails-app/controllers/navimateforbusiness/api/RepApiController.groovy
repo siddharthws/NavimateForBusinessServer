@@ -75,7 +75,7 @@ class RepApiController {
             def leads = []
             taskService.getForUserRemoved(rep).each {Task task ->
                 // Check if lead was updated after sync time
-                LeadM lead = leadService.getForUserById(rep, task.leadid)
+                LeadM lead = leadService.getForUserByIdRemoved(rep, task.leadid)
                 if (task.dateCreated > lastSyncTime) {
                     if (!leads.contains(lead)) {leads.push(lead)}
                 } else if (lead.updateTime > lastSyncTimeString) {
