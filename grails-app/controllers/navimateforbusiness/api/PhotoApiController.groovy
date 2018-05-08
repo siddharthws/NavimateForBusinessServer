@@ -34,13 +34,13 @@ class PhotoApiController {
             throw new ApiException("Invalid File..." + filename, Constants.HttpCodes.BAD_REQUEST)
         }
 
-        // Convert to bytes & delete the file
-        byte[] ba = IOUtils.copyToByteArray(imageFile)
-        imageFile.delete()
+        // Set response parameters
+        response.setHeader("Content-disposition", "attachment; filename=photo.jpg")
+        response.contentType = grailsApplication.config.getProperty("grails.mime.types.jpg")
 
-        // Send bytes in response
-        def resp = [image: ba]
-        render resp as JSON
+        // Send file as response
+        imageFile.withInputStream { response.outputStream << it }
+        imageFile.delete()
     }
 
     // APi to upload photo form app

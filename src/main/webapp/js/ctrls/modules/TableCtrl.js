@@ -2,8 +2,8 @@
  * Created by Siddharth on 24-02-2018.
  */
 
-app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
-                                        TableService, DialogService, ToastService) {
+app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state, $http, $localStorage,
+                                        TableService, DialogService, ToastService, FileService) {
     /* ----------------------------- INIT --------------------------------*/
     var vm  = this
 
@@ -34,8 +34,33 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state,
 
     /* ----------------------------- Public APIs --------------------------------*/
     // API to show photo on new page
-    vm.showImage = function (filename) {
-        $window.open($state.href('photos', {name: filename}), "_blank")
+    vm.showImage = function (filename, colIdx) {
+        // Get photo from server
+        $rootScope.showWaitingDialog("Downloading Photo..")
+
+        // Get Photo
+        $http({
+            method:     'GET',
+            url:        '/api/photos/get',
+            headers:    {
+                'X-Auth-Token':    $localStorage.accessToken
+            },
+            responseType: 'arraybuffer',
+            params: {
+                'filename': filename
+            }
+        })
+            .then(
+                function (response) {
+                    FileService.downloadPhoto(response, vm.table.columns[colIdx].name)
+                    $rootScope.hideWaitingDialog()
+                },
+                function (error) {
+                    ToastService.toast("Download Error : " + error.data.error)
+                    $rootScope.hideWaitingDialog()
+                    $scope.bError = true
+                }
+            )
     }
 
     // API to show location on map

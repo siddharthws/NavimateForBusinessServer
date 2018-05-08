@@ -51,6 +51,7 @@ grails:
             html:
               - text/html
               - application/xhtml+xml
+            jpg: image/jpeg
             js: text/javascript
             json:
               - application/json
