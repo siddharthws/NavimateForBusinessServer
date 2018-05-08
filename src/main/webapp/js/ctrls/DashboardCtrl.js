@@ -4,7 +4,7 @@
 
 app.controller('DashboardCtrl',
                 function (  $scope, $rootScope, $state, $window, $localStorage, $timeout,
-                            AuthService, DialogService, ToastService, NavService) {
+                            AuthService, DialogService, ToastService, NavService, LocationService) {
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
 
@@ -27,6 +27,9 @@ app.controller('DashboardCtrl',
     $scope.nav = {}
     $scope.name = $localStorage.name
     $scope.role = $localStorage.role
+
+    // Init Location Service
+    LocationService.init()
 
     /*------------------------------------ Root APIs --------------------------------*/
     // Access Checker API

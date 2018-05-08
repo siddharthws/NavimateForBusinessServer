@@ -1,0 +1,17 @@
+<!-- Map View -->
+<div class="pos-r h-100 w-100"
+     map-lazy-load="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlTGdM8F8vrAcLW9dBaH-hPku8JJaFgu4">
+    <!-- Map UI using ng-maps -->
+    <ng-map class="w-100 h-100" map-initialized="vm.mapInitialized(map)" center="[0, 0]" zoom="2">
+        <!-- Markers on map -->
+        <custom-marker  ng-repeat="marker in objMap.markers" ng-if="marker.isShowing()" title="{{marker.name}}"
+                        position="[{{marker.position.lat()}}, {{marker.position.lng()}}]"
+                        on-click="vm.markerClick($index)">
+            <div class="pos-r">
+                <div class="marker" ng-class="{'active': objMap.selectedMarker == marker}">
+                    {{marker.name}}
+                </div>
+            </div>
+        </custom-marker>
+    </ng-map>
+</div>

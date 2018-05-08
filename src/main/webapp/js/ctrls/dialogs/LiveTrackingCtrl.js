@@ -3,8 +3,34 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $interval, $localStorage, ToastService, DialogService, reps) {
+app.controller('LiveTrackingCtrl', function (   $scope, $rootScope, $mdDialog, $timeout, $localStorage,
+                                                ToastService, DialogService,
+                                                ObjMap, ObjMarker,
+                                                reps) {
+    /* ------------------------------- Scope APIs -----------------------------------*/
     var vm = this
+
+    // Init user info
+    vm.reps         = reps
+    vm.selectedRep  = vm.reps[0]
+
+    // Init web socket relates vars
+    var socket = new SockJS('/ws-endpoint')
+    var wsClient = Stomp.over(socket)
+    var bFirstUpdate = true
+
+    // Create marker for each rep
+    var markers = []
+    vm.reps.forEach(function (rep) {
+        // Create marker object
+        markers.push(new ObjMarker(rep.id, rep.name, new google.maps.LatLng(0, 0)))
+
+        // Add status to rep
+        rep.status = Constants.Tracking.ERROR_WAITING
+    })
+
+    // Create map object
+    vm.map = new ObjMap(markers)
 
     /* ------------------------------- Scope APIs -----------------------------------*/
     // APIs to refresh rep status
@@ -31,9 +57,16 @@ app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $int
         // Update Selected Rep
         vm.selectedRep = vm.reps[idx]
 
+        // Set selected marker
+        vm.map.selectedMarker = vm.map.markers[idx]
+
         // Center map on this marker
-        var marker = $scope.mapParams.markers[idx]
-        $scope.$broadcast(Constants.Events.MAP_CENTER, {latitude: marker.latitude, longitude: marker.longitude})
+        vm.map.setCenter(vm.map.selectedMarker.position)
+    }
+
+    vm.onMarkerClick = function (idx) {
+        // Update Selected Rep
+        vm.selectedRep = vm.reps[idx]
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/
@@ -42,12 +75,6 @@ app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $int
         // Subscribe to tracking channels
         wsClient.subscribe("/user/txc/tracking-update", trackingUpdateCb)
         wsClient.subscribe("/user/txc/tracking-error", trackingErrorCb)
-
-
-        // Start periodic Data Refresh
-        refreshCb = $interval(function () {
-            // Do Nothing. Digest cycle runs automatically
-        }, 1000)
 
         // Send Refresh Reps request
         vm.refreshAll()
@@ -71,17 +98,19 @@ app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $int
         rep.status = Constants.Tracking.ERROR_NONE
 
         // Get marker object for this rep
-        var marker = $scope.mapParams.markers[vm.reps.indexOf(rep)]
+        var marker = vm.map.markers[vm.reps.indexOf(rep)]
 
         // Update marker details
-        marker.latitude = msgBody.latitude
-        marker.longitude = msgBody.longitude
+        marker.position = new google.maps.LatLng(msgBody.latitude, msgBody.longitude)
 
         // If this is the first update, set map center
         if (bFirstUpdate) {
             bFirstUpdate = false
-            $scope.$broadcast(Constants.Events.MAP_CENTER, {latitude: marker.latitude, longitude: marker.longitude})
+            vm.map.setCenter(marker.position)
         }
+
+        // Execute empty timeout so that digest cycle runs
+        $timeout(function () {}, 0)
     }
 
     function trackingErrorCb(message) {
@@ -92,6 +121,9 @@ app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $int
 
         // Update status
         rep.status = msgBody.errorCode
+
+        // Execute empty timeout so that digest cycle runs
+        $timeout(function () {}, 0)
     }
 
     // APi to get rep by ID
@@ -106,51 +138,11 @@ app.controller('LiveTrackingCtrl', function ($scope, $rootScope, $mdDialog, $int
         return rep
     }
 
-    /* ------------------------------- INIT -----------------------------------*/
-    // Init Objects
-    vm.reps = reps
-    vm.selectedRep = vm.reps[0]
-    var refreshCb = null
-    var bFirstUpdate = true
+    /* ------------------------------- Event listeners -----------------------------------*/
+    // Set Scope Destroy listener so that socket is always closed when window closes
+    $scope.$on('$destroy', function () {wsClient.disconnect()})
 
-    // Init web socket relates vars
-    var socket = new SockJS('/ws-endpoint')
-    var wsClient = Stomp.over(socket)
-
-    // Init Map Parameters
-    $scope.mapParams = {}
-    $scope.mapParams.markers = []
-
-    // Create marker for each
-    vm.reps.forEach(function (rep) {
-        // Add marker
-        $scope.mapParams.markers.push({
-            title: rep.name,
-            latitude: 0,
-            longitude: 0
-        })
-
-        // Add status to rep
-        rep.status = Constants.Tracking.ERROR_WAITING
-    })
-    
-    // Set event listeners
-    $scope.$on(Constants.Events.MAP_MARKER_CLICK, function (event, params) {
-        // Perform List click action
-        vm.listItemClick(params.idx)
-    })
-
-    // Set Scope Destroy listener to close socket
-    $scope.$on('$destroy', function () {
-        // Close Websocket
-        wsClient.disconnect()
-
-        // Stop periodic updates
-        if (refreshCb) {
-            $interval.cancel(refreshCb)
-        }
-    })
-
+    /* ------------------------------- Post Init -----------------------------------*/
     // Connect Websocket
     wsClient.connect({id: $localStorage.id}, wsConnectSuccess, wsConnectError)
 })

@@ -63,6 +63,6 @@
         </div>
 
         <!-- Include Map View -->
-        <ng-include class="ml-2 flex-3" src="'/static/views/modules/Map.html'"></ng-include>
+        <nv-map class="m-2 flex-3" obj-map="$ctrl.map" on-marker-click="$ctrl.onMarkerClick(idx)"></nv-map>
     </div>
 </md-dialog>

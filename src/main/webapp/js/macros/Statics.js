@@ -95,3 +95,12 @@ Statics.validateNumber = function (num) {
 
     return true
 }
+
+// Method to validate a latlng
+Statics.isPositionValid = function (pos) {
+    if (pos != null && pos.lat() != 0 && pos.lng() != 0) {
+        return true
+    }
+
+    return false
+}
