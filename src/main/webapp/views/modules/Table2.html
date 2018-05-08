@@ -128,7 +128,7 @@
                     <input type="button" value="" class="ib-base ib-xs ib-hover ib-link" title="Open Image"
                            ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_PHOTO ||
                                                          column.type == vm.TemplateConst.FIELD_TYPE_SIGN)"
-                           ng-click="$root.Statics.absorbEvent($event); vm.showImage(value)"/>
+                           ng-click="$root.Statics.absorbEvent($event); vm.showImage(value, $index)"/>
 
                     <!-- Button to open location -->
                     <input type="button" value="" class="ib-base ib-xs ib-hover ib-map" title="Open Location"
