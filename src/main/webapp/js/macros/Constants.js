@@ -316,3 +316,9 @@ Constants.Date = {
     FORMAT_FRONTEND_SHORT:  "DD/MM",
     FORMAT_FILE_SUFFIX:     "_DD_MM_YY_HHmm"
 }
+
+/* ------------------------------- Map -----------------------------------*/
+Constants.Map = {
+    // Default map values
+    DEFAULT_ZOOM:       14
+}

@@ -351,3 +351,18 @@ app.directive('templateValuesEditor', function () {
         templateUrl: '/static/views/directives/templateValuesEditor.html'
     }
 })
+
+// Directive to showing map
+app.directive('nvMap', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            objMap:         '=',
+            onMarkerClick:  '&'
+        },
+        // Controller and view
+        controller: 'NvMapCtrl as vm',
+        templateUrl: '/static/views/directives/nvMap.html'
+    }
+})
