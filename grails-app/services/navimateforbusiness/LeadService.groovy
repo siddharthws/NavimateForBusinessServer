@@ -205,6 +205,16 @@ class LeadService {
         return null
     }
 
+    // Method to get through last updated
+    def getForUserByIdRemoved(User user, String id) {
+        def leads = getForUserByFilter(user, [_ids: [id], includeRemoved: true], [:], []).leads
+
+        if (leads) {
+            return leads[0]
+        }
+        return null
+    }
+
     // Method to get lead for user by name
     def getForUserByName(User user, String name) {
         def leads = getForUserByFilter(user, [name: [equal: name]], [:], []).leads
