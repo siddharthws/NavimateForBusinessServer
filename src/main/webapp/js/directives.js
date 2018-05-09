@@ -129,6 +129,23 @@ app.directive('inputBox', function () {
 })
 
 // Directive for table pagination
+app.directive('inputUl', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            label:      '@',
+            type:       '@',
+            model:      '=',
+            bShowError: '=',
+            err:        '='
+        },
+        // view
+        templateUrl: '/static/views/directives/inputUl.html'
+    }
+})
+
+// Directive for table pagination
 app.directive('textBox', function () {
     return {
         restrict: 'E',
