@@ -31,7 +31,7 @@ class AppApiController {
         // Set individual params
         acra.stacktrace = acraJson.STACK_TRACE
         acra.versionName = acraJson.BUILD_CONFIG.VERSION_NAME
-        acra.appId = acraJson.CUSTOM_DATA?.appId
+        acra.appId = acraJson.CUSTOM_DATA?.id
         acra.phone = acraJson.PHONE_MODEL
 
         // Save ACRA Object
