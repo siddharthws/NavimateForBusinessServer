@@ -43,4 +43,5 @@ databaseChangeLog = {
     include file: 'update-task-lead-id.groovy'
     include file: 'add-user-about.groovy'
     include file: 'add-form-is-remove.groovy'
+    include file: 'add-acra-details.groovy'
 }

@@ -27,6 +27,14 @@ class AppApiController {
 
         // Save JSON in database
         Acra acra = new Acra(acraData: acraJson.toString())
+
+        // Set individual params
+        acra.stacktrace = acraJson.STACK_TRACE
+        acra.versionName = acraJson.BUILD_CONFIG.VERSION_NAME
+        acra.appId = acraJson.CUSTOM_DATA?.appId
+        acra.phone = acraJson.PHONE_MODEL
+
+        // Save ACRA Object
         acra.save(failOnError: true, flush: true)
 
         //Send succes
