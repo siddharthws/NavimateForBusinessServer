@@ -14,26 +14,7 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
 
             AuthService.login($scope.email, $scope.password)
                 .then(
-                    function (response) {
-
-                        // Save access token
-                        $localStorage.accessToken = response.data.accessToken
-
-                        // Save user information
-                        $localStorage.id    = response.data.id
-                        $localStorage.name  = response.data.name
-                        $localStorage.role  = response.data.role
-
-                        // Save Company Information
-                        $localStorage.companyName = response.data.companyName
-
-                        // Save Admin Specific Information
-                        if ($localStorage.role == Constants.Role.ADMIN) {
-                            $localStorage.apiKey = response.data.apiKey
-                            $localStorage.startHr = response.data.startHr
-                            $localStorage.endHr = response.data.endHr
-                        }
-
+                    function () {
                         // Check if user wants to be remembered
                         if ($scope.bRemember) {
                             // Expiration date of cookies
@@ -100,7 +81,7 @@ app.controller('LoginCtrl', function ($scope, $rootScope, $mdDialog, $state, $ht
 
     $scope.register = function () {
         // Launch register dialog
-        DialogService.register("", "", "")
+        DialogService.register(null)
     }
 
     $scope.cancel = function () {
