@@ -1,0 +1,12 @@
+<!-- Underlined input Box with Label -->
+<div class="pos-r fbx-v">
+    <!-- Label -->
+    <label ng-class="{'active': bActive || model}">{{label}}</label>
+
+    <!-- Input -->
+    <input type="{{type}}" ng-model="model" ng-class="{'err': bShowError && err.length > 0}"
+           ng-focus="bActive = true" ng-blur="bActive = false">
+
+    <!-- Error Text -->
+    <span class="text-error align-self-end" ng-if="bShowError && err.length > 0">{{err}}</span>
+</div>

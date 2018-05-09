@@ -99,3 +99,33 @@ input.img-icon:hover {
     background-color: #37bcf244;
     border-color: #37bcf2;
 }
+
+/*
+ * Underlined Input styling
+ */
+input-ul input {
+    color: white;
+    background-color: transparent;
+    border: none;
+    border-bottom: solid 1px rgba(255, 255, 255, 0.5);
+    margin-top: 0.5em;
+}
+
+input-ul input.err {
+    border-color: red;
+}
+
+input-ul label {
+    position: absolute;
+    pointer-events: none;
+    font-weight: bold;
+    margin: 0.75em 0 0 0.25em;
+    color: rgba(255, 255, 255, 0.5);
+    transition: 250ms;
+}
+
+input-ul label.active {
+    margin: 0em;
+    font-size: 0.7em;
+    transition: 250ms;
+}
