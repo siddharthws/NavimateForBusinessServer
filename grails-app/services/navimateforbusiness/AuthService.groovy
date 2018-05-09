@@ -16,7 +16,7 @@ class AuthService {
         def user
 
         //parsing the role as Enum
-        navimateforbusiness.Role role = input.role as navimateforbusiness.Role
+        navimateforbusiness.Role role = navimateforbusiness.Role.fromValue(input.role)
 
         //register a new admin
         if(role == navimateforbusiness.Role.ADMIN) {

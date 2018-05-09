@@ -6,18 +6,16 @@
     </div>
 
     <form class="d-flex flex-column" ng-submit="register()">
-        <select class="ml-auto btn-shiny" ng-model="role" ng-options="role for role in roles"
-                ng-class="{'has-error': bShowError && !role}">
-            <option value="" ng-disabled="true">-- Select Role --</option>
-        </select>
-        <input class="input-underlined" ng-model="name" type="text" placeholder="Enter your name..."
-               ng-class="{'has-error': bShowError && !name}">
-        <input class="input-underlined" ng-model="companyName" type="text" placeholder="Enter company name..."
-               ng-class="{'has-error': bShowError && !companyName}">
-        <input class="input-underlined" ng-model="email" type="text" placeholder="Enter email..."
-               ng-class="{'has-error': bShowError && !email}">
-        <input class="input-underlined" ng-model="password" type="password" placeholder="Enter password..."
-               ng-class="{'has-error': bShowError && !password}">
+        <dropdown class="align-self-end w-25" text="regInfo.role.name" items="roles" on-select="regInfo.role = roles[idx]"></dropdown>
+
+        <input class="input-underlined" ng-model="regInfo.name" type="text" placeholder="Enter your name..."
+               ng-class="{'has-error': bShowError && !regInfo.name}">
+        <input class="input-underlined" ng-model="regInfo.companyName" type="text" placeholder="Enter company name..."
+               ng-class="{'has-error': bShowError && !regInfo.companyName}">
+        <input class="input-underlined" ng-model="regInfo.email" type="text" placeholder="Enter email..."
+               ng-class="{'has-error': bShowError && !regInfo.email}">
+        <input class="input-underlined" ng-model="regInfo.password" type="password" placeholder="Enter password..."
+               ng-class="{'has-error': bShowError && !regInfo.password}">
         <input class="input-underlined" ng-model="confirmPassword" type="password" placeholder="Confirm password..."
                ng-class="{'has-error': bShowError && !confirmPassword}">
         <input type="submit" class="hidden-element"/>

@@ -30,7 +30,7 @@ class AuthApiController {
         render resp as JSON
     }
 
-    def register() {
+    def validateRegistration() {
         def input = request.JSON
 
         // Validate User
@@ -39,19 +39,38 @@ class AuthApiController {
         }
 
         //parsing the role as Enum
-        Role role = input.role as Role
+        Role role = Role.fromValue(input.role)
 
-        //check if company already exist for admin
-        def existingCompany=Account.findByName(input.companyName)
-        if(existingCompany && (role == Role.ADMIN)) {
-            throw new ApiException("Company name already exists", Constants.HttpCodes.CONFLICT)
-        }
-
-        //check if the user with email already exist
-        def existingUser = User.findByEmailAndRole(input.email, Role.ADMIN) ?: User.findByEmailAndRole(input.email, Role.MANAGER)
+        // Check if the user with email already exist
+        def existingUser = User.findByEmail(input.email)
         if (existingUser) {
             throw new ApiException("User with email already exists", Constants.HttpCodes.CONFLICT)
         }
+
+        // Validate company name for Admin / Manager appropriately
+        def existingCompany = Account.findByName(input.companyName)
+        if(existingCompany && (role == Role.ADMIN)) {
+            throw new ApiException("Company name already exists", Constants.HttpCodes.CONFLICT)
+        } else if ((role == Role.MANAGER || role == Role.CC) && !existingCompany) {
+            throw new ApiException("Company name does not exist", Constants.HttpCodes.CONFLICT)
+        }
+
+        // generate OTP
+        Random rnd = new Random()
+        int otpInt = 100000 + rnd.nextInt(900000)
+        String otp = String.valueOf(otpInt)
+
+        // Send verification Email with OTP
+        def message = otp + " is your OTP for navimate verification."
+        def subject = "Navimate OTP Verification"
+        emailService.sendMail(input.email, subject, message)
+
+        def resp = [otp: otp]
+        render resp as JSON
+    }
+
+    def register() {
+        def input = request.JSON
 
         //register the user
         authService.register(input)
@@ -98,23 +117,6 @@ class AuthApiController {
         if (accessToken) {
             authService.logout(accessToken)
         }
-        def resp = [success: true]
-        render resp as JSON
-    }
-
-    def email() {
-        // Check Params
-        def otp = request.JSON.otp
-        def email = request.JSON.email
-        if (!otp || !email) {
-            throw new ApiException("Email / OTP not found...", Constants.HttpCodes.BAD_REQUEST)
-        }
-
-        // Send Mail
-        def message = otp + " is your OTP for navimate verification."
-        def subject = "Navimate OTP Verification"
-        emailService.sendMail(email, subject, message)
-
         def resp = [success: true]
         render resp as JSON
     }
