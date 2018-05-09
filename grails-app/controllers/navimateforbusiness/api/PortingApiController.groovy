@@ -117,13 +117,6 @@ class PortingApiController {
         }
     }
 
-    // Remove all ACRA entries
-    def removeAcra() {
-        Acra.findAll().each {it ->
-            it.delete(flush: true)
-        }
-    }
-
     def publicLeads() {
         FindIterable fi = LeadM.find(eq("visibility", Visibility.PRIVATE.name()))
         fi.each {LeadM it ->

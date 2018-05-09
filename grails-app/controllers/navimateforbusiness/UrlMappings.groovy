@@ -97,7 +97,6 @@ class UrlMappings {
         "/api/port/fixManagers"            (controller: "PortingApi") {action = [GET: "fixManagers"]}
         "/api/port/fixFcms"                (controller: "PortingApi") {action = [GET: "fixFcms"]}
         "/api/port/fixIsRemoved"           (controller: "PortingApi") {action = [GET: "fixIsRemoved"]}
-        "/api/port/removeAcra"             (controller: "PortingApi") {action = [GET: "removeAcra"]}
         "/api/port/publicLeads"            (controller: "PortingApi") {action = [GET: "publicLeads"]}
 
         /*------------------------- Other APIs --------------------------*/
@@ -115,6 +114,7 @@ class UrlMappings {
         // App related APIs
         "/api/app/update"           (controller: "AppApi") {action = [POST: "checkForUpdate"]}
         "/api/app/acra"             (controller: "AppApi") {action = [POST: "acra"]}
+        "/api/acra/clear"           (controller: "AppApi") {action = [GET: "clearAcra"]}
 
         // Photo Related APIs
         "/api/photos/upload"        (controller: "PhotoApi") {action = [POST: "upload"]}

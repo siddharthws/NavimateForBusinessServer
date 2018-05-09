@@ -33,4 +33,11 @@ class AppApiController {
         def resp = [success: true]
         render resp as JSON
     }
+
+    // Remove all ACRA entries
+    def clearAcra() {
+        Acra.findAll().each {it ->
+            it.delete(flush: true)
+        }
+    }
 }
