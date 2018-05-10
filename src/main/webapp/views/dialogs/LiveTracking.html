@@ -17,11 +17,11 @@
                     <!-- Basic rep info -->
                     <div class="d-flex align-items-center">
                         <div class="bg-status"
-                             ng-class="{'bg-status-yellow':     (rep.status == $root.Constants.Tracking.ERROR_NO_UPDATES ||
-                                                                 rep.status == $root.Constants.Tracking.ERROR_WAITING),
+                             ng-class="{'bg-status-yellow':     (rep.status == $root.Constants.Tracking.ERROR_WAITING),
                                         'bg-status-red':        (rep.status == $root.Constants.Tracking.ERROR_OFFLINE),
                                         'bg-status-orange':     (rep.status == $root.Constants.Tracking.ERROR_NO_GPS ||
-                                                                 rep.status == $root.Constants.Tracking.ERROR_NO_PERMISSION)}"></div>
+                                                                 rep.status == $root.Constants.Tracking.ERROR_NO_PERMISSION ||
+                                                                 rep.status == $root.Constants.Tracking.ERROR_NO_UPDATES)}"></div>
                         <span class="flex-1 ml-2">
                              {{rep.name}}
                          </span>
@@ -30,33 +30,16 @@
                     </div>
 
                     <!-- Tracking info becomes visible on click -->
-                    <div ng-show="$ctrl.selectedRep == rep">
-                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_NONE">
-                            <p>Updated {{$root.Statics.getFormattedElapsedTime(rep.lastUpdateTimeMs)}} ago...</p>
-                        </div>
-                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_IDLE">
-                            <p>Idle since last {{$root.Statics.getFormattedElapsedTime(rep.lastUpdateTimeMs)}}...</p>
-                        </div>
-                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_NO_UPDATES">
-                            <p>Trying to retrieve location since last {{$root.Statics.getFormattedElapsedTime(rep.lastUpdateTimeMs)}} !!!</p>
-                        </div>
-                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_OFFLINE">
-                            <p>User is offline. Possible reasons :</p>
-                            <ol>
-                                <li>Phone is switched OFF</li>
-                                <li>App is not running</li>
-                                <li>Internet is not available in phone</li>
-                            </ol>
-                        </div>
-                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_NO_GPS">
-                            <p>User disabled his GPS {{$root.Statics.getFormattedElapsedTime(rep.lastUpdateTimeMs)}} ago !!!</p>
-                        </div>
-                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_NO_PERMISSION">
-                            <p>User has not provided location permission !!!</p>
-                        </div>
-                        <div ng-show="rep.status == $root.Constants.Tracking.ERROR_WAITING">
-                            <p>Trying to retrieve user location. This may take few minutes...</p>
-                        </div>
+                    <div ng-if="$ctrl.selectedRep == rep" class="fbx-h justify-content-between">
+                        <!-- Status Message -->
+                        <span class="text-bold">
+                            {{$root.Constants.Tracking.STATUS_MESSAGES[rep.status]}}
+                        </span>
+
+                        <!-- Last Updated time period -->
+                        <span class="text-italic" ng-if="rep.lastUpdateTimeMs">
+                            Updated {{$root.Statics.getFormattedElapsedTime(rep.lastUpdateTimeMs)}} ago...
+                        </span>
                     </div>
                 </div>
             </div>
