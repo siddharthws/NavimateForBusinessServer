@@ -3,7 +3,7 @@ package navimateforbusiness.api
 import grails.gorm.transactions.Transactional
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
-import navimateforbusiness.TrackingObject
+import navimateforbusiness.Tracking
 import navimateforbusiness.User
 import navimateforbusiness.WebsocketClient
 import org.grails.web.json.JSONObject
@@ -54,7 +54,7 @@ class TrackingApiController {
 
         // Parse Tracking object
         JSONObject msgJson = new JSONObject(messageMap)
-        TrackingObject trackObj = trackingService.fromJson(msgJson, repClient.user)
+        Tracking trackObj = trackingService.fromJson(msgJson, repClient.user)
 
         // Send tracking update to each client
         managerClients.each {WebsocketClient managerClient ->

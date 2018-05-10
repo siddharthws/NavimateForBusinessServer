@@ -3,10 +3,31 @@ package navimateforbusiness
 import grails.gorm.transactions.Transactional
 import org.grails.web.json.JSONObject
 
+import com.mongodb.client.FindIterable
+import static com.mongodb.client.model.Filters.and
+import static com.mongodb.client.model.Filters.eq
+
 @Transactional
 class TrackingService {
     // Service injection
     def stompSessionService
+
+    def getForRep(User rep) {
+        // Prepare mongo filters
+        def mongoFilters = []
+
+        // Add accountId filter
+        mongoFilters.push(eq("accountId", rep.accountId))
+
+        // Add Rep ID Filter
+        mongoFilters.push(eq("repId", rep.id))
+
+        // Get results
+        FindIterable fi = Tracking.find(and(mongoFilters))
+
+        // Return response
+        return fi[0]
+    }
 
     // API to handle tracking request
     def startTracking(navimateforbusiness.WebsocketClient managerClient, User rep) {
@@ -14,7 +35,7 @@ class TrackingService {
         navimateforbusiness.WebsocketClient repClient = stompSessionService.getClientFromUserId(rep.id)
         if (!repClient || !repClient.session.isOpen()) {
             // Rep is offline. Send tracking update with offline status
-            navimateforbusiness.TrackingObject trackObj = new navimateforbusiness.TrackingObject(rep: rep)
+            Tracking trackObj = new navimateforbusiness.Tracking(repId: rep.id)
             handleTrackingUpdate(managerClient, trackObj)
             return
         }
@@ -33,34 +54,39 @@ class TrackingService {
         }
     }
 
-    def handleTrackingUpdate(navimateforbusiness.WebsocketClient managerClient,
-                             navimateforbusiness.TrackingObject trackObj) {
+    def handleTrackingUpdate(navimateforbusiness.WebsocketClient managerClient, Tracking trackObj) {
         // Send error code to manager
         stompSessionService.sendMessage("/txc/tracking-update", managerClient, new JSONObject(toJson(trackObj)))
     }
 
     def fromJson(def json, User rep) {
-        double lat = json.lat ?: 0
-        double lng = json.lng ?: 0
-        long timestamp = json.timestamp ?: 0
-        float speed = json.speed ?: 0
-        int status = json.status
+        // Find existing object or create a new one
+        Tracking trackObj = getForRep(rep)
+        if (!trackObj) {
+            trackObj = new Tracking(accountId: rep.account.id, repId: rep.id, dateCreated: new Date())
+        }
 
-        return new navimateforbusiness.TrackingObject(  position: new navimateforbusiness.LatLng(lat, lng),
-                                                        lastUpdated: timestamp,
-                                                        status: status,
-                                                        rep: rep,
-                                                        speed: speed)
+        // Update from JSON params
+        trackObj.lat = json.lat ?: trackObj.lat
+        trackObj.lng = json.lng ?: trackObj.lng
+        trackObj.speed = json.speed ?: trackObj.speed
+        trackObj.locUpdateTime = json.timestamp ? new Date(json.timestamp) : trackObj.locUpdateTime
+        trackObj.status = json.status
+
+        // Update last update time
+        trackObj.lastUpdated = new Date()
+
+        trackObj
     }
 
-    def toJson(navimateforbusiness.TrackingObject trackObj) {
+    def toJson(Tracking trackObj) {
         return [
-            lat: trackObj.position.lat,
-            lng: trackObj.position.lng,
-            speed: trackObj.speed,
-            timestamp: trackObj.lastUpdated,
-            status: trackObj.status,
-            repId: trackObj.rep.id
+            lat:            trackObj.lat,
+            lng:            trackObj.lng,
+            speed:          trackObj.speed,
+            timestamp:      trackObj.locUpdateTime ? trackObj.locUpdateTime.time : 0,
+            status:         trackObj.status,
+            repId:          trackObj.repId
         ]
     }
 }
