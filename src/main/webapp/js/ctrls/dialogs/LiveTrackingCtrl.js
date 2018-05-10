@@ -3,7 +3,7 @@
  */
 
 // Controller for Alert Dialog
-app.controller('LiveTrackingCtrl', function (   $scope, $rootScope, $mdDialog, $timeout, $localStorage,
+app.controller('LiveTrackingCtrl', function (   $scope, $rootScope, $mdDialog, $interval, $localStorage,
                                                 ToastService, DialogService,
                                                 ObjMap, ObjMarker,
                                                 reps) {
@@ -18,6 +18,9 @@ app.controller('LiveTrackingCtrl', function (   $scope, $rootScope, $mdDialog, $
     var socket = new SockJS('/ws-endpoint')
     var wsClient = Stomp.over(socket)
     var bFirstUpdate = true
+
+    // Refresh Callback to trigger screen update
+    var refreshCb = null
 
     // Create marker for each rep
     var markers = []
@@ -74,7 +77,9 @@ app.controller('LiveTrackingCtrl', function (   $scope, $rootScope, $mdDialog, $
     function wsConnectSuccess () {
         // Subscribe to tracking channels
         wsClient.subscribe("/user/txc/tracking-update", trackingUpdateCb)
-        wsClient.subscribe("/user/txc/tracking-error", trackingErrorCb)
+
+        // Start refresh callbacks to trigger screen updates
+        refreshCb = $interval(function () {}, 1000)
 
         // Send Refresh Reps request
         vm.refreshAll()
@@ -92,38 +97,22 @@ app.controller('LiveTrackingCtrl', function (   $scope, $rootScope, $mdDialog, $
         // Get rep from message ID
         var rep = getRepById(msgBody.repId)
 
-        // Update rep properties
-        rep.lastUpdateTimeMs = msgBody.timestamp
-        rep.speed = msgBody.speed
-        rep.status = Constants.Tracking.ERROR_NONE
+        // parse params as per status
+        rep.status = msgBody.status
+        if (rep.status == Constants.Tracking.ERROR_NONE) {
+            rep.lastUpdateTimeMs = msgBody.timestamp
+            rep.speed = msgBody.speed
 
-        // Get marker object for this rep
-        var marker = vm.map.markers[vm.reps.indexOf(rep)]
+            // Update marker position
+            var marker = vm.map.markers[vm.reps.indexOf(rep)]
+            marker.position = new google.maps.LatLng(msgBody.lat, msgBody.lng)
 
-        // Update marker details
-        marker.position = new google.maps.LatLng(msgBody.latitude, msgBody.longitude)
-
-        // If this is the first update, set map center
-        if (bFirstUpdate) {
-            bFirstUpdate = false
-            vm.map.setCenter(marker.position)
+            // If this is the first update, set map center
+            if (bFirstUpdate) {
+                bFirstUpdate = false
+                vm.map.setCenter(marker.position)
+            }
         }
-
-        // Execute empty timeout so that digest cycle runs
-        $timeout(function () {}, 0)
-    }
-
-    function trackingErrorCb(message) {
-        var msgBody = JSON.parse(message.body)
-
-        // Get rep from message
-        var rep = getRepById(msgBody.repId)
-
-        // Update status
-        rep.status = msgBody.errorCode
-
-        // Execute empty timeout so that digest cycle runs
-        $timeout(function () {}, 0)
     }
 
     // APi to get rep by ID
@@ -140,7 +129,15 @@ app.controller('LiveTrackingCtrl', function (   $scope, $rootScope, $mdDialog, $
 
     /* ------------------------------- Event listeners -----------------------------------*/
     // Set Scope Destroy listener so that socket is always closed when window closes
-    $scope.$on('$destroy', function () {wsClient.disconnect()})
+    $scope.$on('$destroy', function () {
+        // Stop periodic updates
+        if (refreshCb) {
+            $interval.cancel(refreshCb)
+        }
+
+        // Disconnect client
+        wsClient.disconnect()
+    })
 
     /* ------------------------------- Post Init -----------------------------------*/
     // Connect Websocket

@@ -38,7 +38,17 @@ Constants.Tracking = {
     ERROR_NO_UPDATES:       3,
     ERROR_NO_GPS:           4,
     ERROR_NO_PERMISSION:    5,
-    ERROR_OFFLINE:          6
+    ERROR_OFFLINE:          6,
+
+    STATUS_MESSAGES: [
+        "Active",
+        "Idle",
+        "Waiting for location",
+        "Location unavailable",
+        "GPS is disabled",
+        "Location permission denied",
+        "Phone is offline / switched off"
+    ]
 }
 
 /* ------------------------------- Dashboard navigation -----------------------------------*/
