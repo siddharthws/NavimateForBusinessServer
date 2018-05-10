@@ -4,7 +4,7 @@ package navimateforbusiness
  */
 class TrackingObject {
     User rep
-    int status = navimateforbusiness.Constants.Tracking.STATUS_WAITING
+    int status = navimateforbusiness.Constants.Tracking.ERROR_OFFLINE
     navimateforbusiness.LatLng position = new navimateforbusiness.LatLng()
     long lastUpdated = System.currentTimeMillis()
     float speed = 0.0f
