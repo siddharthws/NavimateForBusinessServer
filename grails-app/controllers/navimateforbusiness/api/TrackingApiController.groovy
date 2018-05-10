@@ -1,6 +1,9 @@
 package navimateforbusiness.api
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.ApiException
+import navimateforbusiness.Constants
+import navimateforbusiness.TrackingObject
 import navimateforbusiness.User
 import navimateforbusiness.WebsocketClient
 import org.grails.web.json.JSONObject
@@ -9,6 +12,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 
 class TrackingApiController {
 
+    def userService
     def trackingService
     def stompSessionService
 
@@ -20,9 +24,11 @@ class TrackingApiController {
 
         // Parse message to repIds
         def repIds = messageMap.reps
+        client.reps.clear()
         repIds.each {repId ->
             // Get Rep
-            User rep = User.findById(repId)
+            User rep = userService.getRepForUserById(client.user, repId)
+            client.reps.push(rep)
 
             // Request Tracking from rep
             trackingService.startTracking(client, rep)
@@ -32,40 +38,28 @@ class TrackingApiController {
     @MessageMapping("/tracking-update")
     protected void trackingUpdate(SimpMessageHeaderAccessor sha, Map messageMap) {
         // Get client
-        WebsocketClient client = stompSessionService.getClientFromPrincipalName(sha.user.name)
+        WebsocketClient repClient = stompSessionService.getClientFromPrincipalName(sha.user.name)
+        if (!repClient) {
+            // Throw Exception
+            throw new ApiException("Rep's client not found for tracking update", Constants.HttpCodes.CONFLICT)
+        }
 
-        // Get rep
-        User rep = client.user
-
-        // Check if rep's manager is connected
-        WebsocketClient managerClient = stompSessionService.getClientFromUserId(rep.manager.id)
-        if (!managerClient || !managerClient.session.isOpen()) {
-            // Disconnect rep
-            trackingService.stopTracking(rep)
+        // Check if anyone has requested this rep's tracking
+        List<WebsocketClient> managerClients = stompSessionService.getClientsFromRep(repClient.user)
+        if (!managerClients) {
+            // Stop tracking rep
+            trackingService.stopTracking(repClient.user)
             return
         }
 
-        // Handle Tracking update
-        trackingService.handleTrackingUpdate(managerClient, rep, new JSONObject(messageMap))
-    }
+        // Parse Tracking object
+        JSONObject msgJson = new JSONObject(messageMap)
+        TrackingObject trackObj = trackingService.fromJson(msgJson, repClient.user)
 
-    @MessageMapping("/tracking-error")
-    protected void trackingError(SimpMessageHeaderAccessor sha, Map messageMap) {
-        // Get client
-        WebsocketClient client = stompSessionService.getClientFromPrincipalName(sha.user.name)
-
-        // Get rep
-        User rep = client.user
-
-        // Check if rep's manager is connected
-        WebsocketClient managerClient = stompSessionService.getClientFromUserId(rep.manager.id)
-        if (!managerClient || !managerClient.session.isOpen()) {
-            // Disconnect rep
-            trackingService.stopTracking(rep)
-            return
+        // Send tracking update to each client
+        managerClients.each {WebsocketClient managerClient ->
+            // Send Update
+            trackingService.handleTrackingUpdate(managerClient, trackObj)
         }
-
-        // Handle Tracking update
-        trackingService.handleTrackingError(managerClient, rep, new JSONObject(messageMap))
     }
 }

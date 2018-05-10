@@ -4,6 +4,27 @@ package navimateforbusiness
  * Created by Siddharth on 17-09-2017.
  */
 class LatLng {
-    def latitude = 0
-    def longitude = 0
+    double lat = 0
+    double lng = 0
+
+    LatLng() {}
+
+    LatLng(double lat, double lng) {
+        this.lat = lat
+        this.lng = lng
+    }
+
+    @Override
+    String toString() {
+        return String.valueOf(lat) + "," + String.valueOf(lng)
+    }
+
+    String fromString(String source) {
+        // Get LatLng Array
+        double[] latlng = source.split(',')
+
+        // Extract into Lat and Lng
+        this.lat = latlng[0] ?: 0
+        this.lng = latlng[1] ?: 0
+    }
 }

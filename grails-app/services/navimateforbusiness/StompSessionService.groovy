@@ -132,6 +132,11 @@ class StompSessionService {
         activeClients.find {it -> it.user.id == id}
     }
 
+    // API to get websocket client from user id
+    def getClientsFromRep(User rep) {
+        activeClients.findAll {it -> it.hasRep(rep) && it.session.isOpen()}
+    }
+
     // API to register heartbeat for user
     def registerHeartbeat(Principal principal) {
         // Find Client

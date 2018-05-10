@@ -16,4 +16,10 @@ class WebsocketClient {
     WebSocketSession session
     User user
     long lastHeartbeatTimeMs = 0L
+    List<User> reps = []
+
+    def hasRep(User rep) {
+        def foundRep = reps.find {it -> it.id == rep.id}
+        return foundRep ? true : false
+    }
 }
