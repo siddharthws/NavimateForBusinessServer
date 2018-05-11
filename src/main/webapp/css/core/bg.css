@@ -22,8 +22,8 @@
 
 /* -- Classes to put a status icon as background for an empty div -- */
 .bg-status         {
-    height: 25px;
-    width: 25px;
+    height: 15px;
+    width: 15px;
     background: transparent url("/static/images/ic_status_green.png") center / cover no-repeat;
 }
 .bg-status-yellow  {   background-image: url("/static/images/ic_status_yellow.png");  }
