@@ -99,10 +99,11 @@ app.controller('LiveTrackingCtrl', function (   $scope, $rootScope, $mdDialog, $
 
         // parse params as per status
         rep.status = msgBody.status
-        if (rep.status == Constants.Tracking.ERROR_NONE) {
-            rep.lastUpdateTimeMs = msgBody.timestamp
-            rep.speed = msgBody.speed
 
+        rep.lastUpdateTimeMs = msgBody.timestamp
+        rep.speed = msgBody.speed
+
+        if (msgBody.lat || msgBody.lng) {
             // Update marker position
             var marker = vm.map.markers[vm.reps.indexOf(rep)]
             marker.position = new google.maps.LatLng(msgBody.lat, msgBody.lng)

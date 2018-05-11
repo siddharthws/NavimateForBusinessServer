@@ -33,7 +33,7 @@ Statics.getFormattedElapsedTime = function (timeMs) {
     } else if (elapsedTimeS < 24 * 60 * 60) {
         timeText = Math.round(elapsedTimeS / (60 * 60))
         unitText = "hour"
-    } else if (elapsedTimeS < 60 * 60) {
+    } else {
         timeText = Math.round(elapsedTimeS / (24 * 60 * 60))
         unitText = "day"
     }
