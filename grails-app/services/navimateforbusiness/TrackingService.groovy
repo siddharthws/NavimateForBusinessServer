@@ -100,6 +100,22 @@ class TrackingService {
         ]
     }
 
+    // Method to service rep disconnect event
+    def clientDisconnected(navimateforbusiness.WebsocketClient client) {
+        if (client.user.role == navimateforbusiness.Role.REP) {
+            // Send error status to each manager client
+            def clients = stompSessionService.getClientsFromRep(client.user)
+            clients.each {navimateforbusiness.WebsocketClient managerClient ->
+                // prepare error tracking object
+                Tracking trackObj = getLatestForRep(client.user)
+                trackObj.status = navimateforbusiness.Constants.Tracking.ERROR_OFFLINE
+
+                // Send tracking update
+                handleTrackingUpdate(managerClient, trackObj)
+            }
+        }
+    }
+
     // Method to get a tracking object with latest location information for given rep
     private def getLatestForRep(User rep) {
         // Get tracking object of rep
