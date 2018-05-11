@@ -61,5 +61,8 @@ class TrackingApiController {
             // Send Update
             trackingService.handleTrackingUpdate(managerClient, trackObj)
         }
+
+        // Save tracking object
+        trackObj.save(flush: true, failOnError: true)
     }
 }

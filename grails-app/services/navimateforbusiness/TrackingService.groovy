@@ -10,6 +10,7 @@ import static com.mongodb.client.model.Filters.eq
 @Transactional
 class TrackingService {
     // Service injection
+    def formService
     def stompSessionService
 
     def getForRep(User rep) {
@@ -33,15 +34,24 @@ class TrackingService {
     def startTracking(navimateforbusiness.WebsocketClient managerClient, User rep) {
         // Check if rep is online
         navimateforbusiness.WebsocketClient repClient = stompSessionService.getClientFromUserId(rep.id)
-        if (!repClient || !repClient.session.isOpen()) {
-            // Rep is offline. Send tracking update with offline status
-            Tracking trackObj = new navimateforbusiness.Tracking(repId: rep.id)
-            handleTrackingUpdate(managerClient, trackObj)
-            return
+
+        // prepare tracking object
+        Tracking trackObj = getLatestForRep(rep)
+
+        // Set status
+        if (repClient && repClient.session.isOpen()) {
+            trackObj.status = navimateforbusiness.Constants.Tracking.ERROR_WAITING
+        } else {
+            trackObj.status = navimateforbusiness.Constants.Tracking.ERROR_OFFLINE
         }
 
+        // Send tracking update to manager
+        handleTrackingUpdate(managerClient, trackObj)
+
         // Send tracking request to rep
-        stompSessionService.sendMessage("/txc/start-tracking", repClient, null)
+        if (repClient && repClient.session.isOpen()) {
+            stompSessionService.sendMessage("/txc/start-tracking", repClient, null)
+        }
     }
 
     // API to handle tracking related messages
@@ -84,9 +94,31 @@ class TrackingService {
             lat:            trackObj.lat,
             lng:            trackObj.lng,
             speed:          trackObj.speed,
-            timestamp:      trackObj.locUpdateTime ? trackObj.locUpdateTime.time : 0,
+            timestamp:      trackObj.locUpdateTime.time,
             status:         trackObj.status,
             repId:          trackObj.repId
         ]
+    }
+
+    // Method to get a tracking object with latest location information for given rep
+    private def getLatestForRep(User rep) {
+        // Get tracking object of rep
+        Tracking trackObj = getForRep(rep)
+        if (!trackObj) {
+            trackObj = new Tracking(accountId: rep.accountId, repId: rep.id)
+        }
+
+        // Get latest form submission of rep with a valid latlng
+        def forms = formService.getForUser(rep)
+        Form latestForm = forms.find {it -> it.latitude || it.longitude}
+
+        // Update location params from form if tracking object is invalid / older
+        if (latestForm && trackObj.locUpdateTime < latestForm.lastUpdated) {
+            trackObj.lat             = latestForm.latitude
+            trackObj.lng             = latestForm.longitude
+            trackObj.locUpdateTime   = latestForm.lastUpdated
+        }
+
+        trackObj
     }
 }

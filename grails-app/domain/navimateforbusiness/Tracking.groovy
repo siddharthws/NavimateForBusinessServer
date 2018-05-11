@@ -16,7 +16,7 @@ class Tracking {
     // Last tracking update for this rep
     Double lat = 0
     Double lng = 0
-    Date locUpdateTime = new Date()
+    Date locUpdateTime = new Date(0)
 
     // User speed
     float speed = 0.0f
