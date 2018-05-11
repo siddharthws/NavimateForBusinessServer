@@ -19,6 +19,7 @@ class StompSessionService {
 
     // Simple Message Broker to send messaged from server
     SimpMessagingTemplate brokerMessagingTemplate
+    def trackingService
 
     // Hack to maintain unmapped session temporarily
     // Happens because service's instance cannot be injected into CustomSubProtocolWebsocketHandler
@@ -84,6 +85,9 @@ class StompSessionService {
         if (client) {
             activeClients.remove(client)
         }
+
+        // Send tracking update if required
+        trackingService.clientDisconnected(client)
     }
 
     // API to clean sessions
