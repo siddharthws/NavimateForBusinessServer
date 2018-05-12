@@ -83,6 +83,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/home/forgotPassword.html',
         controller: 'ForgotPasswordCtrl as vm'
     })
+    .state('home.register', {
+        url: '/register',
+        templateUrl: '/static/views/home/register.html',
+        controller: 'RegisterCtrl as vm'
+    })
+    .state('home.otp', {
+        url: '/otp',
+        templateUrl: '/static/views/home/otp.html',
+        controller: 'OtpCtrl as vm'
+    })
     .state('legal', {
         url: '/legal',
         templateUrl: '/static/views/legal.html'

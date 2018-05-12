@@ -79,6 +79,12 @@ Constants.Role = {
     NVM_ADMIN:  5
 }
 
+Constants.Role.REGISTRATION = [
+    {id: Constants.Role.ADMIN,      name: "Admin"},
+    {id: Constants.Role.CC,         name: "Customer Care"},
+    {id: Constants.Role.MANAGER,    name: "Manager"}
+]
+
 Constants.Visibility = {
     PUBLIC :       1,
     PRIVATE:       2

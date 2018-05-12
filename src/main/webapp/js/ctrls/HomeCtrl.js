@@ -6,6 +6,16 @@ app.controller('HomeCtrl', function ($scope, $state) {
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
 
+    // Registration Info
+    // variable is attached to scope since ti is required
+    // by both OTP verification screen and registration screen
+    $scope.regInfo = {  name: "",
+                        email: "",
+                        password: "",
+                        role: Constants.Role.REGISTRATION[0],
+                        companyName: "",
+                        confirmPassword: ""}
+
     /*------------------------------------ Public Methods --------------------------------*/
     // Method to handle action button
     vm.getBtnText = function () {
