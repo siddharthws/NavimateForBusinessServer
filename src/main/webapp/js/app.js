@@ -67,17 +67,10 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
   $stateProvider
       // Homepage Mappings
     .state('home', {
-        url: '/',
+        url: '/home',
+        abstract: true,
         templateUrl: '/static/views/home.html',
-        controller: 'HomeCtrl'
-    })
-    .state('login', {
-        url: '/',
-        templateUrl: '/static/views/home.html',
-        controller: 'HomeCtrl',
-        params: {
-            login: true
-        }
+        controller: 'HomeCtrl as vm'
     })
     .state('legal', {
         url: '/legal',

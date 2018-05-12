@@ -31,6 +31,12 @@
     background-size: 50%;
 }
 
+.ib-xl {
+    height: 8em;
+    width: 8em;
+    background-size: 100%;
+}
+
 /* Hoverable Image buttons */
 .ib-hover:hover {
     background-color: #37bcf2;
