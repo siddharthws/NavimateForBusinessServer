@@ -58,9 +58,9 @@ md-toast.md-center {
     left: -9999px;
 }
 
-.overflow-auto {
-    overflow: auto;
-}
+/* Classes to set overflow property */
+.overflow-auto      {  overflow: auto;  }
+.overflow-hidden    {  overflow: hidden;  }
 
 td.has-error, div.has-error, select.has-error {
     border: 1px solid red;

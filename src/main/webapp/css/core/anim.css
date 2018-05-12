@@ -1,0 +1,24 @@
+.anim-slide {
+    position: absolute;
+    animation-timing-function: cubic-bezier(.07, .7, .43, .98);
+}
+
+/* Enter animation - Sliding from right */
+.anim-slide.ng-enter {
+    transition: 1s;
+    left: 100%;
+}
+
+.anim-slide.ng-enter-active {
+     left: 0%;
+ }
+
+/* Exit animation - Sliding to left */
+.anim-slide.ng-leave {
+    transition: 1s;
+    left: 0%;
+}
+
+.anim-slide.ng-leave-active {
+    left: -100%;
+}

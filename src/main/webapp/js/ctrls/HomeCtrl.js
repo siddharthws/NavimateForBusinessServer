@@ -2,35 +2,41 @@
  * Created by Siddharth on 01-09-2017.
  */
 
-app.controller('HomeCtrl', function ($scope, $window, $state, DialogService) {
+app.controller('HomeCtrl', function ($scope, $state) {
+    /*------------------------------------ INIT --------------------------------*/
+    var vm = this
 
-    $scope.login = function () {
-        DialogService.login()
-    }
-
-    $scope.register = function () {
-        DialogService.register(null)
-    }
-
-    $scope.explore=function(){
-        if ($("#div_feature").is(':hidden')) {
-            $("#div_feature").show(2000);
-            $("#btn_explore").text("Hide Features");
-        } else {
-            $("#div_feature").slideUp(3000);
-            $("#btn_explore").text("Explore Features");
+    /*------------------------------------ Public Methods --------------------------------*/
+    // Method to handle action button
+    vm.getBtnText = function () {
+        // Check state and return appropriate text
+        if ($state.current.name == 'home.login') {
+            return "Register"
+        } else if ($state.current.name == 'home.register') {
+            return "Login"
         }
     }
-    
-    $scope.downloadApp = function () {
-        $window.location.href = 'https://play.google.com/store/apps/details?id=com.biz.navimate'
+
+    vm.isBtnVisible = function () {
+        // Button should be visible on login / register states only
+        return ($state.current.name == 'home.login') || ($state.current.name == 'home.register')
     }
 
-    $scope.facebook = function () {
-        $window.location.href = 'https://www.facebook.com/navimateapp/'
+    vm.btnClick = function () {
+        if ($state.current.name == 'home.login') {
+            // Go to register page
+            $state.go("home.register")
+        } else if ($state.current.name == 'home.register') {
+            // Go to login page
+            $state.go("home.login")
+        }
     }
 
-    if ($state.params.login) {
-        DialogService.login()
+    // Method to redirect to navimateapp.com
+    vm.knowMore = function () {
+        // Placeholder
     }
+
+    /*------------------------------------ Private Methods --------------------------------*/
+    /*------------------------------------ Post Init --------------------------------*/
 })
