@@ -1,5 +1,9 @@
 <!-- HTML template for Registration -->
 <form class="fbx-v w-50" ng-submit="vm.validateRegistration()" ng-if="!vm.bWaiting && !vm.bOtp">
+    <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
+    <input class="hidden-element" type="text" name="fakeusernameremembered"/>
+    <input class="hidden-element" type="password" name="fakepasswordremembered"/>
+
     <!-- Role Selector -->
     <dropdown class="w-25 ml-auto" text="regInfo.role.name" items="$root.Constants.Role.REGISTRATION"
               on-select="regInfo.role = $root.Constants.Role.REGISTRATION[idx]"></dropdown>

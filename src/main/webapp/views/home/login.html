@@ -1,5 +1,8 @@
 <!-- HTML template for Login -->
 <form class="fbx-v w-50" ng-submit="vm.login()" ng-if="!vm.bWaiting">
+    <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
+    <input class="hidden-element" type="text" name="fakeusernameremembered"/>
+    <input class="hidden-element" type="password" name="fakepasswordremembered"/>
 
     <!-- Input elements for credentials -->
     <input-ul type="text" model="vm.email" label="EMAIL ADDRESS"
