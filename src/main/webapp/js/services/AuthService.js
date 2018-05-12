@@ -94,6 +94,29 @@ app.service('AuthService', function($q, $http, $localStorage) {
         return deferred.promise
     }
 
+    this.forgotPassword = function (email) {
+        // Create deferred object
+        var deferred = $q.defer()
+
+        $http({
+            method:     'POST',
+            url:        '/api/auth/forgotPassword',
+            data:       {
+                email:    email
+            }
+        }).then(
+            function (response) {
+                deferred.resolve()
+            },
+            function (error) {
+                deferred.reject(error.data.error)
+            }
+        )
+
+        // Return promise
+        return deferred.promise
+    }
+
     this.logout = function ()
     {
         return $http({

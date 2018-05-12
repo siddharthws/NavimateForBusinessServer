@@ -1,0 +1,27 @@
+<!-- HTML template for Login -->
+<form class="fbx-v w-50" ng-submit="vm.login()" ng-if="!vm.bWaiting">
+
+    <!-- Input elements for credentials -->
+    <input-ul type="text" model="vm.email" label="EMAIL ADDRESS"
+              b-show-error="vm.bInputError" err="vm.emailErr()"></input-ul>
+    <input-ul class="mt-1" type="password" model="vm.password" label="PASSWORD"
+              b-show-error="vm.bInputError" err="vm.passwordErr()"></input-ul>
+
+    <!-- Other Login controls -->
+    <div class="fbx-h">
+        <!-- Remember me checkbox -->
+        <md-checkbox class="text-white cb-white" ng-model="vm.bRemember">Remember Me</md-checkbox>
+
+        <!-- Forgot Password button -->
+        <a ui-sref="home.forgotPassword" class="text-white ml-auto">Forgot Password ?</a>
+    </div>
+
+    <!-- Login button -->
+    <button class="align-self-center mt-3 bttn bttn-rounded" ng-click="vm.login()">Login</button>
+
+    <!-- Hidden input element to handle 'Enter' key -->
+    <input type="submit" class="hidden-element"/>
+</form>
+
+<!-- Waiting UI -->
+<loading msg="Logging In..." b-white="true" ng-if="vm.bWaiting"></loading>

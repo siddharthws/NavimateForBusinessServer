@@ -22,7 +22,7 @@ app.factory('httpResponseInterceptor', ['$q', '$injector',
             responseError: function error(response) {
                 switch (response.status) {
                     case 401:
-                        $injector.get('$state').go('login')
+                        $injector.get('$state').go('home.login')
                         break;
                     default:
                         console.log("Unknown error from server : " + response.status)
@@ -58,7 +58,8 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
     $httpProvider.interceptors.push('httpResponseInterceptor');
 
     // Configure URL mapping for non existent URLs
-  $urlRouterProvider.when('', '/')
+  $urlRouterProvider.when('', '/home/login')
+  $urlRouterProvider.when('/', '/home/login')
   $urlRouterProvider.when('/dashboard', '/dashboard/team/manage')
   $urlRouterProvider.when('/dashboard/team', '/dashboard/team/manage')
   $urlRouterProvider.when('/dashboard/tasks', '/dashboard/tasks/manage')
@@ -71,6 +72,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         abstract: true,
         templateUrl: '/static/views/home.html',
         controller: 'HomeCtrl as vm'
+    })
+    .state('home.login', {
+        url: '/login',
+        templateUrl: '/static/views/home/login.html',
+        controller: 'LoginCtrl as vm'
+    })
+    .state('home.forgotPassword', {
+        url: '/forgotPassword',
+        templateUrl: '/static/views/home/forgotPassword.html',
+        controller: 'ForgotPasswordCtrl as vm'
     })
     .state('legal', {
         url: '/legal',
