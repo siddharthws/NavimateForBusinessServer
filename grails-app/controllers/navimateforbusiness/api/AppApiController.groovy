@@ -42,6 +42,21 @@ class AppApiController {
         render resp as JSON
     }
 
+    def getAcra() {
+        def acras = Acra.findAll ()
+
+        def resp = [count: acras.size(), acras: []]
+        acras.each {Acra acra ->
+            resp.acras.push([
+                versionName : acra.versionName,
+                phone       : acra.phone,
+                appId       : acra.appId,
+                stacktrace  : acra.stacktrace
+            ])
+        }
+        render resp as JSON
+    }
+
     // Remove all ACRA entries
     def clearAcra() {
         Acra.findAll().each {it ->

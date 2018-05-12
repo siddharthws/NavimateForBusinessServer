@@ -115,6 +115,7 @@ class UrlMappings {
         "/api/app/update"           (controller: "AppApi") {action = [POST: "checkForUpdate"]}
         "/api/app/acra"             (controller: "AppApi") {action = [POST: "acra"]}
         "/api/acra/clear"           (controller: "AppApi") {action = [GET: "clearAcra"]}
+        "/api/acra/get"             (controller: "AppApi") {action = [GET: "getAcra"]}
 
         // Photo Related APIs
         "/api/photos/upload"        (controller: "PhotoApi") {action = [POST: "upload"]}
