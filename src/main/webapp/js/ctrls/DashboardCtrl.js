@@ -50,7 +50,7 @@ app.controller('DashboardCtrl',
                 function (response) {
                     $rootScope.hideWaitingDialog()
                     $localStorage.accessToken = ""
-                    $state.go("home")
+                    $state.go("home.login")
                 },
                 function (error) {
                     $rootScope.hideWaitingDialog()

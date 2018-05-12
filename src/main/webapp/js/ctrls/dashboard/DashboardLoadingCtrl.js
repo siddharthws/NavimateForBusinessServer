@@ -41,7 +41,7 @@ app.controller("DashboardLoadingCtrl",
             ToastService.toast("Unable to load data !!!")
 
             // Go to login screen
-            $state.go('login')
+            $state.go('home.login')
         }
         /*------------------------------------ Post INIT --------------------------------*/
         // Sync Templates
