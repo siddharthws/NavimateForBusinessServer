@@ -24,8 +24,9 @@
     width: 70px;
 }
 
-/* Loader inside active element */
-.active .loader-path {
+/* Colored Loader */
+.active .loader-path,
+.loader-white .loader-path {
     stroke: white;
 }
 

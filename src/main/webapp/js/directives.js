@@ -30,6 +30,19 @@ app.directive('loader', function () {
     }
 })
 
+// Loader directive
+app.directive('loading', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            msg:               '@',
+            bWhite:            '@'
+        },
+        templateUrl: '/static/views/directives/loading.html'
+    }
+})
+
 // Directive for binding file read
 app.directive("fileread", function () {
     return {
