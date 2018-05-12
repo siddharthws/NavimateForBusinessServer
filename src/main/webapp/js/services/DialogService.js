@@ -27,27 +27,6 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
-    // Launch Login Dialog
-    this.login = function () {
-        // Show Dialog
-        $mdDialog.show({    templateUrl: '/static/views/dialogs/Login.html',
-                            controller: 'LoginCtrl',
-                            clickOutsideToClose: true
-        })
-    }
-
-    // Launch Register Dialog
-    this.register = function (regInfo) {
-        // Show Dialog
-        $mdDialog.show({    templateUrl: '/static/views/dialogs/Register.html',
-                            controller: 'RegisterCtrl',
-                            clickOutsideToClose: true,
-                            locals: {
-                                regInfo: regInfo
-                            }
-        })
-    }
-
     // Team Editor Dialog
     this.teamEditor = function (ids, cb) {
         // Show Dialog
@@ -116,19 +95,6 @@ app.service('DialogService', function($mdDialog) {
                             clickOutsideToClose: false,
                             locals: {
                                 reps: reps
-                            }
-        })
-    }
-
-    // Launch Email Verify Dialog
-    this.emailVerify = function (regInfo, otp) {
-        // Show Dialog
-        $mdDialog.show({    templateUrl: '/static/views/dialogs/EmailVerify.html',
-                            controller: 'EmailVerifyCtrl',
-                            clickOutsideToClose: false,
-                            locals: {
-                                regInfo: regInfo,
-                                otp: otp
                             }
         })
     }
