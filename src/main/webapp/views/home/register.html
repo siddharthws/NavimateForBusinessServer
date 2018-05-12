@@ -1,0 +1,28 @@
+<!-- HTML template for Registration -->
+<form class="fbx-v w-50" ng-submit="vm.validateRegistration()" ng-if="!vm.bWaiting && !vm.bOtp">
+    <!-- Role Selector -->
+    <dropdown class="w-25 ml-auto" text="regInfo.role.name" items="$root.Constants.Role.REGISTRATION"
+              on-select="regInfo.role = $root.Constants.Role.REGISTRATION[idx]"></dropdown>
+
+
+    <!-- Input elements for entering info -->
+    <input-ul type="text" model="regInfo.name" label="NAME"
+              b-show-error="vm.bInputError" err="vm.nameErr()"></input-ul>
+    <input-ul class="mt-1" type="text" model="regInfo.email" label="EMAIL ADDRESS"
+              b-show-error="vm.bInputError" err="vm.emailErr()"></input-ul>
+    <input-ul class="mt-1" type="text" model="regInfo.companyName" label="COMPANY NAME"
+              b-show-error="vm.bInputError" err="vm.companyErr()"></input-ul>
+    <input-ul class="mt-1" type="password" model="regInfo.password" label="PASSWORD"
+              b-show-error="vm.bInputError" err="vm.passwordErr()"></input-ul>
+    <input-ul class="mt-1" type="password" model="regInfo.confirmPassword" label="CONFIRM PASSWORD"
+              b-show-error="vm.bInputError" err="vm.confirmPasswordErr()"></input-ul>
+
+    <!-- Login button -->
+    <button class="align-self-center mt-3 bttn bttn-rounded" ng-click="vm.validateRegistration()">Register</button>
+
+    <!-- Hidden input element to handle 'Enter' key -->
+    <input type="submit" class="hidden-element"/>
+</form>
+
+<!-- Waiting Spinner -->
+<loading msg="Validating Info..." b-white="true" ng-if="vm.bWaiting"></loading>

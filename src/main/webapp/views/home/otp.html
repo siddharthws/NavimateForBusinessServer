@@ -1,0 +1,24 @@
+<!-- HTML template for Login -->
+<form class="fbx-v w-50" ng-submit="vm.register()" ng-if="!vm.bWaiting">
+    <!-- Go Back Button -->
+    <a ui-sref="home.register" class="text-white"><< Go Back</a>
+
+    <!-- Input elements for credentials -->
+    <input-ul type="text" model="vm.otp" label="6-digit OTP"
+              b-show-error="vm.bInputError" err="vm.otpErr()"></input-ul>
+
+    <!-- Description -->
+    <span class="text-white text-right">
+        We have sent a 6-digit OTP to {{regInfo.email}}<br/>
+        Enter the OTP above to verify your email and finish registration
+    </span>
+
+    <!-- Action button -->
+    <button class="align-self-center mt-3 bttn bttn-rounded" ng-click="vm.register()">Verify</button>
+
+    <!-- Hidden input element to handle 'Enter' key -->
+    <input type="submit" class="hidden-element"/>
+</form>
+
+<!-- Waiting Spinner -->
+<loading msg="Verifying Email..." b-white="true" ng-if="vm.bWaiting"></loading>
