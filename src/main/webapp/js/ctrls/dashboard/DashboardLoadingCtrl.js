@@ -4,7 +4,7 @@
 
 app.controller("DashboardLoadingCtrl",
     function ($rootScope, $localStorage, $state,
-              ToastService, TemplateService, TeamService) {
+              TemplateService, TeamService) {
         /*------------------------------------ INIT --------------------------------*/
         var vm = this
 
@@ -36,9 +36,6 @@ app.controller("DashboardLoadingCtrl",
         function errorCb() {
             // Set error flag
             bError = true
-
-            // Show error toast
-            ToastService.toast("Unable to load data !!!")
 
             // Go to login screen
             $state.go('home.login')

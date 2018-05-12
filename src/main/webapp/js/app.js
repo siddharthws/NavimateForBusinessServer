@@ -60,6 +60,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
     // Configure URL mapping for non existent URLs
   $urlRouterProvider.when('', '/home/login')
   $urlRouterProvider.when('/', '/home/login')
+  $urlRouterProvider.when('/home', '/home/login')
   $urlRouterProvider.when('/dashboard', '/dashboard/team/manage')
   $urlRouterProvider.when('/dashboard/team', '/dashboard/team/manage')
   $urlRouterProvider.when('/dashboard/tasks', '/dashboard/tasks/manage')
