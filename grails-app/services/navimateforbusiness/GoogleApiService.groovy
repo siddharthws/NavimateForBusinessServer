@@ -52,14 +52,12 @@ class GoogleApiService {
             // Check status
             if (respJson && (respJson.status == "OK")) {
                 // Push new latlng into list
-                latlngs.push(new navimateforbusiness.LatLng(
-                        latitude: respJson.results[0].geometry.location.lat,
-                        longitude: respJson.results[0].geometry.location.lng
-                ))
+                latlngs.push(new navimateforbusiness.LatLng(respJson.results[0].geometry.location.lat,
+                                                            respJson.results[0].geometry.location.lng))
             }
             else {
                 // Push empty LatLng into the list
-                latlngs.push(new navimateforbusiness.LatLng(latitude: 0, longitude: 0))
+                latlngs.push(new navimateforbusiness.LatLng(0, 0))
             }
 
             // Mandatory 50 second delay between suucessive requests (recommended by google)
@@ -78,7 +76,7 @@ class GoogleApiService {
             // Access Google APIs & get response Json
             def urlParams = [
                     key:    API_KEY,
-                    latlng: latlng.latitude + "," + latlng.longitude
+                    latlng: latlng.lat + "," + latlng.lng
             ]
             def request = new RestBuilder(connectTimeout:1000, readTimeout:20000)
             def response = request.get("https://maps.googleapis.com/maps/api/geocode/json?key={key}&latlng={latlng}") {
