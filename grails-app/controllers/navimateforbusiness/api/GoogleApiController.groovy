@@ -44,8 +44,7 @@ class GoogleApiController {
         }
 
         // Access Google APIs
-        LatLng[] latlngs = [new LatLng( latitude: params.latitude,
-                                        longitude: params.longitude)]
+        LatLng[] latlngs = [new LatLng(Double.parseDouble(params.latitude), Double.parseDouble(params.longitude))]
         def addresses = googleApiService.reverseGeocode(latlngs)
 
         // Send single response

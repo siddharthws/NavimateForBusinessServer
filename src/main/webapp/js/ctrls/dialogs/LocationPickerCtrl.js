@@ -35,8 +35,8 @@ app.controller('LocationPickerCtrl', function ($scope, $mdDialog, GoogleApiServi
                 vm.bConverting = false
 
                 // Update cache
-                vm.lat = latlng.latitude
-                vm.lng = latlng.longitude
+                vm.lat = latlng.lat
+                vm.lng = latlng.lng
 
                 // Recenter map
                 centerMap()
