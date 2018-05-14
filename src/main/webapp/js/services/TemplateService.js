@@ -7,6 +7,12 @@ app.service('TemplateService', function($q, $http, $localStorage, ObjTemplate) {
     vm.cache = []
 
     /* ----------------------------- Public APIs --------------------------------*/
+    // Method to reset Service
+    vm.reset = function () {
+        // Reset cache
+        vm.cache = []
+    }
+
     //API to sync all templates
     vm.sync = function (){
         // Prepare deferred object
