@@ -11,6 +11,15 @@ app.service('LeadService', function($q, $http, $localStorage, ObjLead, TemplateS
     var bOngoing = false
 
     /* ----------------------------- APIs --------------------------------*/
+    // Method to reset Service
+    vm.reset = function () {
+        // Reset cache
+        vm.cache = []
+
+        // Init Lead Table
+        vm.table = new ObjTable2(Constants.Table.TYPE_LEAD, vm.getColumnsCb, vm.getRowsCb, vm.getFilterCb, vm.getSorterCb, vm.getExportFilterCb)
+    }
+
     // API to get task data
     vm.sync = function (ids){
         if (bOngoing) {

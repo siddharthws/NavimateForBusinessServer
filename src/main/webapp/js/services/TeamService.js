@@ -14,6 +14,13 @@ app.service('TeamService', function($q, $http, $localStorage, ObjUser) {
     var bOngoing = false
 
     /* ----------------------------- APIs --------------------------------*/
+    // Method to reset Service
+    vm.reset = function () {
+        // Reset cache
+        vm.cache = []
+        vm.managers = []
+    }
+
     // API to get task data
     vm.sync = function (ids){
         // Cancel on going request if any

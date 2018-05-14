@@ -8,6 +8,12 @@ app.service('LocReportDS', function($http, $localStorage, $q) {
     vm.cache = []
 
     /* ----------------------------- APIs --------------------------------*/
+    // Method to reset Service
+    vm.reset = function () {
+        // Reset cache
+        vm.cache = []
+    }
+
     //API to get Lead data
     vm.sync = function (repId, date){
         var deferred = $q.defer()

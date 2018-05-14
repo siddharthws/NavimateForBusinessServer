@@ -11,6 +11,12 @@ app.service('TaskService', function($q, $http, $localStorage, ObjTask) {
     var bOngoing = false
 
     /* ----------------------------- APIs --------------------------------*/
+    // Method to reset Service
+    vm.reset = function () {
+        // Reset cache
+        vm.cache = []
+    }
+
     // API to get task data
     vm.sync = function (ids){
         if (bOngoing) {

@@ -4,7 +4,8 @@
 
 app.controller('DashboardCtrl',
                 function (  $scope, $rootScope, $state, $window, $localStorage, $timeout,
-                            AuthService, DialogService, ToastService, NavService, LocationService) {
+                            AuthService, DialogService, ToastService, NavService, LocationService,
+                            LeadService, LocReportDS, TableService, TaskService, TeamService, TemplateService) {
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
 
@@ -72,6 +73,17 @@ app.controller('DashboardCtrl',
     }
 
     /*------------------------------------EVENT LISTENERS --------------------------------*/
+    // Reset all data when user navigates away from dashboard
+    $scope.$on('$destroy', function () {
+        // Clear Cached Data
+        TableService.reset()
+        TaskService.reset()
+        LeadService.reset()
+        LocReportDS.reset()
+        TemplateService.reset()
+        TeamService.reset()
+    })
+
     /*------------------------------------Post Init --------------------------------*/
     // remove cover after 100ms. This is done so that when user is on dashboard and he refreshes
     // refreshes the webpage, the page should not flicker before redirecting to loading screen
