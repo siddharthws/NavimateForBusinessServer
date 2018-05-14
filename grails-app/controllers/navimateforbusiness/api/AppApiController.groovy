@@ -2,6 +2,8 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import navimateforbusiness.Acra
+import navimateforbusiness.Constants
+import org.grails.web.json.JSONObject
 
 class AppApiController {
     static final int MIN_APP_VERSION_CODE       = 28
@@ -47,10 +49,13 @@ class AppApiController {
 
         def resp = [count: acras.size(), acras: []]
         acras.each {Acra acra ->
+            def acraJson = new JSONObject(acra.acraData)
             resp.acras.push([
                 versionName : acra.versionName,
                 phone       : acra.phone,
                 appId       : acra.appId,
+                sdk         : acraJson.BUILD.VERSION.SDK_INT,
+                date        : acra.dateCreated.format(Constants.Date.FORMAT_BACKEND, Constants.Date.TIMEZONE_IST),
                 stacktrace  : acra.stacktrace
             ])
         }
