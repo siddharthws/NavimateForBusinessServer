@@ -44,7 +44,7 @@ Constants.Tracking = {
         "Active",
         "Idle",
         "Waiting for location",
-        "Location unavailable",
+        "Waiting...",
         "GPS is disabled",
         "Location permission denied",
         "Phone is offline / switched off"
