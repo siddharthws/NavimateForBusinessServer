@@ -10,13 +10,13 @@ app.factory('ObjFilter', function() {
             case Constants.Template.FIELD_TYPE_TEXT:
             case Constants.Template.FIELD_TYPE_RADIOLIST:
             case Constants.Template.FIELD_TYPE_CHECKLIST:
-            case Constants.Template.FIELD_TYPE_CHECKBOX:
-            case Constants.Template.FIELD_TYPE_TASK: {
+            case Constants.Template.FIELD_TYPE_CHECKBOX: {
                 this.type = Constants.Filter.TYPE_TEXT
                 this.value = ""
                 break
             }
-            case Constants.Template.FIELD_TYPE_LEAD:  {
+            case Constants.Template.FIELD_TYPE_LEAD:
+            case Constants.Template.FIELD_TYPE_TASK: {
                 this.type = Constants.Filter.TYPE_OBJECT
                 this.value = ""
                 break

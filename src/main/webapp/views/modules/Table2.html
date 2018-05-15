@@ -142,11 +142,11 @@
 
                     <!-- Link to open Lead  -->
                     <a href  ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_LEAD )"
-                       ng-click="$root.Statics.absorbEvent($event); vm.viewLead(row.id)">{{value}}</a>
+                       ng-click="$root.Statics.absorbEvent($event); vm.viewLead(value.id)">{{value.name}}</a>
 
                     <!-- Link to open Task -->
                     <a href  ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_TASK )"
-                       ng-click="$root.Statics.absorbEvent($event); vm.viewTask(value)">{{value}}</a>
+                       ng-click="$root.Statics.absorbEvent($event); vm.viewTask(value.id)">{{value.name}}</a>
                 </td>
             </tr>
             </tbody>

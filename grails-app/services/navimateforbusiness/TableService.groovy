@@ -83,7 +83,7 @@ class TableService {
             LeadM lead = leadService.getForUserById(user, task.leadid)
 
             // Add row data for mandatory columns
-            values[0] = String.valueOf(task.id)
+            values[0] = [id: task.id, name: "$task.id"]
             values[1] = [id:lead.id, name:lead.name]
             values[2] = (lead.latitude || lead.longitude) ? lead.latitude + "," + lead.longitude : '-'
             values[3] = task.manager.name
@@ -153,7 +153,7 @@ class TableService {
                                                 navimateforbusiness.Constants.Date.TIMEZONE_IST)
             values[5] = (form.latitude || form.longitude) ? form.latitude + "," + form.longitude : '-'
             values[6] = lead ? [id:lead.id , name:lead.name] : "-"
-            values[7] = form.task ? String.valueOf(form.task.id) : "-"
+            values[7] = form.task ? [id: form.task.id, name: "$form.task.id"] : "-"
             values[8] = form.taskStatus ? form.taskStatus.name() : "-"
 
             // Iterate through template values

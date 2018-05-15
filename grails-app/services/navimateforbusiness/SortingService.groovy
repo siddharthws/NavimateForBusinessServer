@@ -48,9 +48,12 @@ class SortingService {
 
         if (colType == navimateforbusiness.Constants.Template.FIELD_TYPE_DATE) {
             SimpleDateFormat sdf = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_FRONTEND)
-            sortableValue = value ? sdf.parse(value) : ''
+            sortableValue = (value != '-') ? sdf.parse(value) : ''
+        } else if ( colType == navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD ||
+                    colType == navimateforbusiness.Constants.Template.FIELD_TYPE_TASK) {
+            sortableValue = (value != '-') ? value.name : ''
         } else {
-            sortableValue = value ? value.toLowerCase() : ''
+            sortableValue = (value != '-') ? value.toLowerCase() : ''
         }
 
         sortableValue

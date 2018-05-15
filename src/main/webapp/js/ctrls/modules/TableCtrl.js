@@ -89,8 +89,9 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state, $ht
     //API to show Task Information Dialog
     vm.viewTask = function (id) {
         // Open Task Viewer dialog
-        DialogService.taskViewer(parseInt(id))
+        DialogService.taskViewer(id)
     }
+
     /*
      * Paging related methods
      */

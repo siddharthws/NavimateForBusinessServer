@@ -61,7 +61,9 @@ class FiltrService {
                     // Check if filter is applied
                     if (filter.value) {
                         // Check if value passes the filter
-                        if (!value.name.toLowerCase().contains(filter.value.toLowerCase())) {
+                        if (value == '-') {
+                            bFiltered = false
+                        } else if (!value.name.toLowerCase().contains(filter.value.toLowerCase())) {
                             bFiltered = false
                         }
                     }
