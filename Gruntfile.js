@@ -15,7 +15,7 @@ module.exports = function(grunt) {
                     'src/main/webapp/js/ctrls/**/*.js',
                     'src/main/webapp/js/macros/*.js',
                     'src/main/webapp/js/services/*.js',
-                    'src/main/webapp/js/objects/*.js']}
+                    'src/main/webapp/js/objects/**/*.js']}
             }
         },
         cssmin: {
