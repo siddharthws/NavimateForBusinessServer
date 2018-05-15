@@ -14,7 +14,6 @@ Constants.Events = {
     TABLE_INIT:             "event_table_init",
     TABLE_EXPORT:           "event_table_export",
     TABLE_TOGGLE_COLUMNS:   "event_table_toggle_columns",
-    TABLE_CLEAR_FILTERS:    "event_table_clear_filters",
     TABLE_SYNC:             "event_table_sync",
     TABLE_RESET:            "event_table_reset",
 

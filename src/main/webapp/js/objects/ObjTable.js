@@ -144,9 +144,23 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
             return deferred.promise
         }
 
-        // Method to clear all filters
-        vm.clearFilters = function () {
-            initFilters()
+        // Method to reset the table
+        vm.reset = function () {
+            // Reste pager
+            vm.pager = {
+                startIdx:   0,
+                count:      Constants.Table.DEFAULT_COUNT_PER_PAGE
+            }
+
+            // Reset sorting
+            vm.sortOrder = []
+
+            // Reset selected rows
+            vm.selectedRows = []
+
+            // Reset rows & columns
+            vm.rows = []
+            vm.columns = []
         }
 
         // Method to get number of pages based on data
