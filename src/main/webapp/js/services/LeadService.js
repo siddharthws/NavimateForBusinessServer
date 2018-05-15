@@ -190,7 +190,7 @@ app.service('LeadService', function($q, $http, $localStorage, ObjLead, TemplateS
             var row = {id: lead.id, name: lead.name, values: values}
 
             // Add data in mandatory columns
-            row.values[Constants.Table.ID_LEAD_NAME]       = lead.name
+            row.values[Constants.Table.ID_LEAD_NAME]       = {id: lead.id, name: lead.name}
             row.values[Constants.Table.ID_LEAD_ADDRESS]    = lead.address
             row.values[Constants.Table.ID_LEAD_LOCATION]   = lead.lat && lead.lng ? lead.lat + ',' + lead.lng : '-'
             row.values[Constants.Table.ID_LEAD_TEMPLATE]   = lead.template.name
