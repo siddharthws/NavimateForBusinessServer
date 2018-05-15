@@ -9,7 +9,8 @@ var app = angular.module("navimate", [
   'angularjs-dropdown-multiselect',
   'ngFileSaver',
   'angular.filter',
-  'chart.js'
+  'chart.js',
+  'md.time.picker'
 ]);
 
 // Http Response interceptor to parse certain types of error codes
