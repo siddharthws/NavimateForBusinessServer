@@ -269,22 +269,16 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state, $ht
         vm.table.selectedRows = []
 
         // Sync data
-        sync(true)
+        sync(false)
     })
 
     // Clear Filter Event
-    $scope.$on(Constants.Events.TABLE_CLEAR_FILTERS, function (event, args) {
-        // Reset selection / paging etc...
-        vm.table.pager.startIdx = 0
+    $scope.$on(Constants.Events.TABLE_RESET, function (event, args) {
+        // Reset table
+        vm.table.reset()
 
-        // Reset selected rows
-        vm.table.selectedRows = []
-
-        // Re-initialize filters
-        vm.table.clearFilters()
-
-        // Sync data
-        sync(false)
+        // Sync data along with columns
+        sync(true)
     })
 
     // Toggle columns event

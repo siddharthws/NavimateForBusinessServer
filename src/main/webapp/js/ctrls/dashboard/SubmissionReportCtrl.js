@@ -27,9 +27,9 @@ app.controller("SubmissionReportCtrl",
         $scope.$broadcast(Constants.Events.TABLE_EXPORT)
     }
 
-    vm.clearFilters = function () {
+    vm.reset = function () {
         // Broadcast Clear Filter Event
-        $scope.$broadcast(Constants.Events.TABLE_CLEAR_FILTERS)
+        $scope.$broadcast(Constants.Events.TABLE_RESET)
     }
 
     vm.toggleColumns = function () {
