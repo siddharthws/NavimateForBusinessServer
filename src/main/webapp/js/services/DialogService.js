@@ -233,4 +233,18 @@ app.service('DialogService', function($mdDialog) {
             }
         })
     }
+
+    this.dateTimePicker = function (date, cb) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/DateTimePicker.html',
+            controller: 'DateTimePickerCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                date: date,
+                cb: cb
+            }
+        })
+    }
 })

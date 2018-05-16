@@ -1,0 +1,17 @@
+<!-- View for date time picker dialog -->
+<md-dialog class="dialog-container box box-dialog">
+    <div class="fbx-v align-items-center justify-content-around">
+        <!-- Date picker -->
+        <md-calendar ng-model="vm.date" class="bdr-bottom-lighgrey"></md-calendar>
+
+        <!-- Time picker -->
+        <md-time-picker class="w-100 bdr-bottom-lighgrey" ng-model="vm.time" message="vm.message" no-auto-switch></md-time-picker>
+
+        <!-- Buttons-->
+        <div class="fbx-h align-self-end">
+            <button class="btn-shiny" ng-click="vm.pick()">Pick</button>
+            <button class="btn-shiny" ng-click="vm.clear()">Clear</button>
+            <button class="btn-shiny" ng-click="vm.close()">Close</button>
+        </div>
+    </div>
+</md-dialog>
