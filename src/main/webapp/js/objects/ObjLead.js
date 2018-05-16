@@ -27,6 +27,33 @@ app.factory('ObjLead', function(TemplateService, ObjValue) {
         return new ObjLead(this.id, this.name, this.address, this.lat, this.lng, this.template, values)
     }
 
+    // Method to parse data into row
+    ObjLead.prototype.toRow = function (table) {
+        // Create new row object with blank value for each column
+        var values = Statics.getArray(table.columns.length)
+        values.fill('-')
+
+        // Add id and name to row object
+        var row = {id: this.id, name: this.name, values: values}
+
+        // Add data in mandatory columns
+        row.values[Constants.Table.ID_LEAD_NAME]       = {id: this.id, name: this.name}
+        row.values[Constants.Table.ID_LEAD_ADDRESS]    = this.address
+        row.values[Constants.Table.ID_LEAD_LOCATION]   = this.lat && this.lng ? this.lat + ',' + this.lng : '-'
+        row.values[Constants.Table.ID_LEAD_TEMPLATE]   = this.template.name
+
+        // Iterate through template values in lead
+        this.values.forEach(function (value) {
+            // Get column for field
+            var column = table.getColumnForField(value.field)
+
+            // Add string value at appropriate index in row
+            row.values[column.id] = value.getDisplayString()
+        })
+
+        return row
+    }
+
     // ----------------------------------- Validation APIs ------------------------------------//
     ObjLead.prototype.isValid = function () {
         if (this.getNameErr().length) {
