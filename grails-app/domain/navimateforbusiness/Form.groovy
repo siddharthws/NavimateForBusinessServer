@@ -7,7 +7,7 @@ class Form {
     Date lastUpdated
 
     // Removal flag
-    boolean isRemoved
+    boolean isRemoved = false
 
     static belongsTo = [
             account:    Account,
@@ -26,9 +26,7 @@ class Form {
     // Task status while submitting this form
     navimateforbusiness.TaskStatus taskStatus
 
-    static mappedBy = [
-            task: 'forms'
-    ]
+    static mappedBy = []
 
     static constraints = {
         task        nullable: true
