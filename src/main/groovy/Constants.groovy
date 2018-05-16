@@ -76,11 +76,7 @@ class Constants {
 
     class Date {
         // Date Formats
-        public static final String FORMAT_BACKEND   = "yyyy-MM-dd HH:mm:ss"
-        public static final String FORMAT_FRONTEND  = "dd-MM-yyyy"
-
-        // Time Formats
-        public static final String FORMAT_TIME = "HH:mm:ss"
+        public static final String FORMAT_LONG      = "yyyy-MM-dd HH:mm:ss"
 
         // Timezones
         public static final TimeZone TIMEZONE_IST = TimeZone.getTimeZone('Asia/Calcutta')

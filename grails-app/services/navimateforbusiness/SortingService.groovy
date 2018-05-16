@@ -46,10 +46,7 @@ class SortingService {
     def getSortableValue (int colType, def value) {
         def sortableValue
 
-        if (colType == navimateforbusiness.Constants.Template.FIELD_TYPE_DATE) {
-            SimpleDateFormat sdf = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_FRONTEND)
-            sortableValue = (value != '-') ? sdf.parse(value) : ''
-        } else if ( colType == navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD ||
+        if ( colType == navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD ||
                     colType == navimateforbusiness.Constants.Template.FIELD_TYPE_TASK) {
             sortableValue = (value != '-') ? value.name : ''
         } else {

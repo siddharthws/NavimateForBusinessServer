@@ -49,7 +49,8 @@ class AppApiController {
                 phone       : acraJson.PHONE_MODEL,
                 appId       : acraJson.CUSTOM_DATA?.id,
                 sdk         : acraJson.BUILD.VERSION.SDK_INT,
-                date        : acra.dateCreated.format(Constants.Date.FORMAT_BACKEND, Constants.Date.TIMEZONE_IST),
+                date        : acra.dateCreated.format(  Constants.Date.FORMAT_LONG,
+                                                        Constants.Date.TIMEZONE_IST),
                 stacktrace  : acraJson.STACK_TRACE,
             ])
         }

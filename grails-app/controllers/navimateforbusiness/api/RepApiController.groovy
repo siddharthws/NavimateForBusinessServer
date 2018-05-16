@@ -4,7 +4,6 @@ import grails.converters.JSON
 import navimateforbusiness.AccountSettings
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
-import navimateforbusiness.DomainToJson
 import navimateforbusiness.Form
 import navimateforbusiness.LeadM
 import navimateforbusiness.Role
@@ -58,7 +57,7 @@ class RepApiController {
 
         if (rep.account) {
             Date lastSyncTime = new Date(request.JSON.lastSyncTime)
-            String lastSyncTimeString = lastSyncTime.format(Constants.Date.FORMAT_BACKEND)
+            String lastSyncTimeString = lastSyncTime.format(Constants.Date.FORMAT_LONG)
 
             // Fill Template Response
             def templates = templateService.getForUserAfterLastUpdated(rep, lastSyncTime)
