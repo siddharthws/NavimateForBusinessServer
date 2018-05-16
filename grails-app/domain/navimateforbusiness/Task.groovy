@@ -24,7 +24,7 @@ class Task {
 
     // Task properties
     navimateforbusiness.TaskStatus status = navimateforbusiness.TaskStatus.OPEN
-    int period
+    int period = 0
 
     // Templated data for task information
     Data templateData
@@ -32,16 +32,7 @@ class Task {
     // Form template to be used
     Template formTemplate
 
-    // Data
-    static hasMany = [
-            forms:      Form,
-            visits:     Visit
-    ]
-
-    static mappedBy = [
-            manager:            'createdTasks',
-            rep:                'assignedTasks'
-    ]
+    static mappedBy = []
 
     static constraints = {
         rep             nullable: true
@@ -51,7 +42,6 @@ class Task {
     }
 
     static mapping = {
-        period defaultValue: 0
         autoTimestamp false
     }
 }

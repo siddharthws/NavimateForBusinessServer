@@ -27,12 +27,7 @@ class User {
 
     // Data
     static hasMany = [
-            reps:           User,
-            leads:          Lead,
-            createdTasks:   Task,
-            assignedTasks:  Task,
-            forms:          Form,
-            visits:         Visit
+            reps:           User
     ]
 
     static constraints = {

@@ -30,12 +30,6 @@ class AppApiController {
         // Save JSON in database
         Acra acra = new Acra(acraData: acraJson.toString())
 
-        // Set individual params
-        acra.stacktrace = acraJson.STACK_TRACE
-        acra.versionName = acraJson.BUILD_CONFIG.VERSION_NAME
-        acra.appId = acraJson.CUSTOM_DATA?.id
-        acra.phone = acraJson.PHONE_MODEL
-
         // Save ACRA Object
         acra.save(failOnError: true, flush: true)
 
@@ -51,12 +45,12 @@ class AppApiController {
         acras.each {Acra acra ->
             def acraJson = new JSONObject(acra.acraData)
             resp.acras.push([
-                versionName : acra.versionName,
-                phone       : acra.phone,
-                appId       : acra.appId,
+                versionName : acraJson.BUILD_CONFIG.VERSION_NAME,
+                phone       : acraJson.PHONE_MODEL,
+                appId       : acraJson.CUSTOM_DATA?.id,
                 sdk         : acraJson.BUILD.VERSION.SDK_INT,
                 date        : acra.dateCreated.format(Constants.Date.FORMAT_BACKEND, Constants.Date.TIMEZONE_IST),
-                stacktrace  : acra.stacktrace
+                stacktrace  : acraJson.STACK_TRACE,
             ])
         }
         render resp as JSON

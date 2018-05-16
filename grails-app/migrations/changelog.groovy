@@ -44,4 +44,5 @@ databaseChangeLog = {
     include file: 'add-user-about.groovy'
     include file: 'add-form-is-remove.groovy'
     include file: 'add-acra-details.groovy'
+    include file: 'update-db--misc-cleanup.groovy'
 }
