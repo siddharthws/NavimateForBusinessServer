@@ -4,11 +4,12 @@
 
 app.factory('ObjColumn', function(ObjFilter) {
     // ----------------------------------- Constructor ------------------------------------//
-    function ObjColumn (id, name, type, fieldId) {
+    function ObjColumn (id, name, type, fieldId, label) {
         this.id = id
         this.name = name
         this.type = type
         this.fieldId = fieldId
+        this.label = label
         this.filter = new ObjFilter(type)
         this.size = Constants.Table.COL_SIZE_L
     }

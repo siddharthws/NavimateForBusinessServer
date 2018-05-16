@@ -3,7 +3,7 @@
  */
 
 app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
-    ObjTable2 = function (type, getColumnsCb, parseServerResponseCb, parseFilterCb, parseSorterCb, exportParamsCb) {
+    ObjTable2 = function (type, getColumnsCb, parseServerResponseCb) {
         // ----------------------------------- INIT ------------------------------------//
         var vm = this
 
@@ -55,8 +55,8 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
                     'X-Auth-Token':    $localStorage.accessToken
                 },
                 data:       {
-                    filter: parseFilterCb(),
-                    sorter: parseSorterCb(),
+                    filter: getFilters(),
+                    sorter: getSorter(),
                     pager: vm.pager
                 }
             }).then(
@@ -125,9 +125,9 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
                 },
                 responseType: 'arraybuffer',
                 data:       {
-                    filter: parseFilterCb(),
-                    sorter: parseSorterCb(),
-                    exportParams: exportParamsCb()
+                    filter: getFilters(),
+                    sorter: getSorter(),
+                    exportParams: getExportParams()
                 }
             }).then(
                 function (response) {
@@ -157,8 +157,8 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
                     'X-Auth-Token':    $localStorage.accessToken
                 },
                 data:       {
-                    filter: parseFilterCb(),
-                    sorter: parseSorterCb(),
+                    filter: getFilters(),
+                    sorter: getSorter(),
                     pager: vm.pager
                 }
             }).then(
@@ -199,6 +199,31 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
             return -1
         }
 
+        // Method to get column for a given field
+        vm.getColumnForField = function (field) {
+            // Find column which matches field title and type
+            var colIdx = -1
+            for (var i = 0; i < vm.columns.length; i++) {
+                if (vm.columns[i].fieldId == field.id) {
+                    colIdx = i
+                    break
+                }
+            }
+
+            return colIdx >= 0 ? vm.columns[colIdx] : null
+        }
+
+        // Method to get column by id
+        vm.getColumnById = function (id) {
+            for (var i = 0; i < vm.columns.length; i++) {
+                if (vm.columns[i].id == id) {
+                    return vm.columns[i]
+                }
+            }
+
+            return null
+        }
+
         // ----------------------------------- Private Methods ------------------------------------//
 
         // Method to refresh column sizes as per latest data
@@ -235,15 +260,56 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
             })
         }
 
-        // Method to get column by id
-        vm.getColumnById = function (id) {
-            for (var i = 0; i < vm.columns.length; i++) {
-                if (vm.columns[i].id == id) {
-                    return vm.columns[i]
-                }
+        function getFilters () {
+            // Prepare column filters for server
+            var colFilters = {}
+
+            // iterate through all columns
+            vm.columns.forEach(function (column) {
+                colFilters[column.label] = column.filter.toJson()
+            })
+
+            // Return filter object
+            return colFilters
+        }
+
+        function getSorter () {
+            var sorter = []
+
+            vm.sortOrder.forEach(function (colId) {
+                // Get column
+                var column = vm.getColumnById(colId)
+
+                // prepare sort object
+                var sortObj = {}
+                sortObj[column.label] = column.filter.sort
+
+                // Push sorting object to sorter
+                sorter.push(sortObj)
+            })
+
+            return sorter
+        }
+
+        function getExportParams() {
+            var params = {
+                columns: [],
+                selection: vm.getSelectedIds()
             }
 
-            return null
+            // Iterate through columns in current order
+            vm.columns.forEach(function (column) {
+                if (column.filter.bShow) {
+                    // Push to params
+                    params.columns.push({
+                        field: column.label,
+                        label: column.name,
+                        type: column.type
+                    })
+                }
+            })
+
+            return params
         }
     }
 
