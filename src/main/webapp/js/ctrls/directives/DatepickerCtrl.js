@@ -4,14 +4,28 @@
  * Controller for Date Picker Directive
  */
 
-app.controller('datepickerCtrl', function ($scope, $timeout) {
+app.controller('datepickerCtrl', function ($scope, $timeout, DialogService) {
     /* ------------------------------ INIT --------------------------------- */
     $scope.rawDate = null
 
     /* ------------------------------ Public APIs --------------------------------- */
-    $scope.dateChanged = function () {
-        // Update date model to required format
-        $scope.dateModel = moment($scope.rawDate.toString()).format($scope.modelFormat)
+    $scope.pickDate = function () {
+        // Launch Date Time Picker dialog with callback
+        DialogService.dateTimePicker($scope.rawDate, handleDateChange)
+    }
+
+    /* ------------------------------ Private APIs --------------------------------- */
+    // Callback to handle a date change event
+    function handleDateChange(date) {
+        // Update cache
+        $scope.rawDate = date
+
+        // Update model
+        if ($scope.rawDate) {
+            $scope.dateModel = $scope.rawDate.format($scope.modelFormat)
+        } else {
+            $scope.dateModel = null
+        }
 
         // Trigger callback on next digest cycle
         $timeout(function () {
@@ -19,24 +33,10 @@ app.controller('datepickerCtrl', function ($scope, $timeout) {
         })
     }
 
-    /* ------------------------------ Private APIs --------------------------------- */
-    // Update displayed text using date model
-    function updateFromModel () {
-        if ($scope.dateModel) {
-            // Update display text in required format
-            $scope.displayText = moment($scope.dateModel, $scope.modelFormat).format($scope.displayFormat)
-        } else {
-            // Update display text to empty
-            $scope.displayText = ""
-        }
-    }
-
     /* ------------------------------ Listeners --------------------------------- */
-    $scope.$watch('dateModel', function () {
-        updateFromModel()
-    })
-
     /* ------------------------------ Post INIT --------------------------------- */
-    // Update display text from model
-    updateFromModel()
+    // Init raw date from date model
+    if ($scope.dateModel) {
+        $scope.rawDate = moment($scope.dateModel, $scope.modelFormat).toDate()
+    }
 })

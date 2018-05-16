@@ -104,3 +104,8 @@ Statics.isPositionValid = function (pos) {
 
     return false
 }
+
+// Attach format method to Date prototype
+Date.prototype.format = function (format) {
+    return moment(this.toString()).format(format)
+}
