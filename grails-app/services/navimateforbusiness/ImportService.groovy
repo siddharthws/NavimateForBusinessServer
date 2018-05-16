@@ -270,15 +270,14 @@ class ImportService {
                     break
 
                 case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
-                    // Ensure date is in correct format
                     if (value) {
                         try {
-                            SimpleDateFormat df = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_FRONTEND)
+                            // Parse date form importing format to long format
+                            SimpleDateFormat df = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_LONG)
                             Date date = df.parse(value)
-                            value = date.format(navimateforbusiness.Constants.Date.FORMAT_BACKEND)
                         } catch (Exception e) {
                             // Bad date formatting
-                            throw new navimateforbusiness.ApiException("Date in cell " + getCellAddress(colIdx, rowIdx) + " must be in " + navimateforbusiness.Constants.Date.FORMAT_FRONTEND + " format", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                            throw new navimateforbusiness.ApiException("Could not parse date in cell " + getCellAddress(colIdx, rowIdx), navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
                         }
                     }
                     break

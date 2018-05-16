@@ -4,8 +4,6 @@ import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import com.mongodb.client.FindIterable
 
-import java.text.SimpleDateFormat
-
 import static com.mongodb.client.model.Filters.*
 
 @Transactional
@@ -235,14 +233,6 @@ class LeadService {
         return null
     }
 
-    // Method to get through last updated
-    def getForUserAfterLastUpdated(User user, Date date) {
-        def leads = getForUserByFilter(user, [includeRemoved: true,
-                                              updateTime: [from: date.format(navimateforbusiness.Constants.Date.FORMAT_BACKEND,
-                                                                             navimateforbusiness.Constants.Date.TIMEZONE_IST)]], [:], []).leads
-        leads
-    }
-
     // ----------------------- Public APIs ---------------------------//
     // Methods to convert lead objects to / from JSON
     def toJson(LeadM lead, User user) {
@@ -322,8 +312,9 @@ class LeadService {
             lead["$field.id"] = json.values.find {it -> it.fieldId == field.id}.value
         }
 
-        // Add date info
-        String currentTime = new Date().format(navimateforbusiness.Constants.Date.FORMAT_BACKEND, navimateforbusiness.Constants.Date.TIMEZONE_IST)
+        // Add date info in long format
+        String currentTime = new Date().format( navimateforbusiness.Constants.Date.FORMAT_LONG,
+                                                navimateforbusiness.Constants.Date.TIMEZONE_IST)
         if (!lead.createTime) {
             lead.createTime = currentTime
         }
@@ -376,10 +367,6 @@ class LeadService {
                         case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX:
                             value = value ? "yes" : "no"
                             break
-                        case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
-                            SimpleDateFormat sdf = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_BACKEND)
-                            value = value ? sdf.parse(value).format(navimateforbusiness.Constants.Date.FORMAT_FRONTEND) : ""
-                            break
                         case navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST:
                             if (value) {
                                 def valueJson = JSON.parse(value)
@@ -430,7 +417,8 @@ class LeadService {
 
         // Remove lead
         lead.isRemoved = true
-        lead.updateTime = new Date().format(navimateforbusiness.Constants.Date.FORMAT_BACKEND, navimateforbusiness.Constants.Date.TIMEZONE_IST)
+        lead.updateTime = new Date().format(navimateforbusiness.Constants.Date.FORMAT_LONG,
+                                            navimateforbusiness.Constants.Date.TIMEZONE_IST)
         lead.save(failOnError: true, flush: true)
     }
 
