@@ -16,7 +16,7 @@ app.factory('ObjValue', function(TemplateService) {
         switch (this.field.type) {
             case Constants.Template.FIELD_TYPE_DATE:
                 if (this.value && this.value.length) {
-                    return moment(this.value, Constants.Date.FORMAT_BACKEND).format(Constants.Date.FORMAT_FRONTEND)
+                    return moment(this.value, Constants.Date.FORMAT_LONG).format(Constants.Date.FORMAT_DATE_ONLY)
                 }
                 break
             case Constants.Template.FIELD_TYPE_RADIOLIST:

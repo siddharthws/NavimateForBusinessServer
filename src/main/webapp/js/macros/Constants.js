@@ -326,9 +326,9 @@ Constants.Filter = {
 
 Constants.Date = {
     // Date format types
-    FORMAT_BACKEND:         "YYYY-MM-DD HH:mm:ss",
-    FORMAT_FRONTEND:        "DD-MM-YYYY",
-    FORMAT_FRONTEND_SHORT:  "DD/MM",
+    FORMAT_LONG:            "YYYY-MM-DD HH:mm:ss",
+    FORMAT_SHORT:           "D/MM h:mm A",
+    FORMAT_DATE_ONLY:       "DD MMMM YYYY",
     FORMAT_FILE_SUFFIX:     "_DD_MM_YY_HHmm"
 }
 

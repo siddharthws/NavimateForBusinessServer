@@ -84,13 +84,13 @@
                         <!-- Date filter -->
                         <div class="d-flex flex-1 align-items-center" ng-if="column.filter.type == vm.FilterConst.TYPE_DATE">
                             <datepicker class="flex-1" ng-class="{'active' : column.filter.value.from}" hint="From"
-                                        model-format="{{$root.Constants.Date.FORMAT_BACKEND}}"
-                                        display-format="{{$root.Constants.Date.FORMAT_FRONTEND_SHORT}}"
+                                        model-format="{{$root.Constants.Date.FORMAT_LONG}}"
+                                        display-format="{{$root.Constants.Date.FORMAT_SHORT}}"
                                         date-model="column.filter.value.from" date-change="vm.filterUpdated()"></datepicker>
                             <span class="mx-1">-</span>
                             <datepicker class="flex-1" ng-class="{'active' : column.filter.value.to}" hint="Till"
-                                        model-format="{{$root.Constants.Date.FORMAT_BACKEND}}"
-                                        display-format="{{$root.Constants.Date.FORMAT_FRONTEND_SHORT}}"
+                                        model-format="{{$root.Constants.Date.FORMAT_LONG}}"
+                                        display-format="{{$root.Constants.Date.FORMAT_SHORT}}"
                                         date-model="column.filter.value.to" date-change="vm.filterUpdated()"></datepicker>
                         </div>
                     </div>
