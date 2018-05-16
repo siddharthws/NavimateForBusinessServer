@@ -97,8 +97,14 @@ class LeadService {
                 return
             }
 
-            def value = filter.value
+            // Apply blanks filter
             Boolean bNoBlanks = filter.bNoBlanks ?: false
+            if (bNoBlanks) {
+                mongoFilters.push(ne("$key", null))
+                mongoFilters.push(ne("$key", ""))
+            }
+
+            def value = filter.value
 
             switch (field.type) {
                 case navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT:
@@ -158,9 +164,6 @@ class LeadService {
                         mongoFilters.push(lte("$key", "$value.to"))
                     }
                     break
-            }
-            if (bNoBlanks) {
-                mongoFilters.push(ne("$key", null))
             }
         }
 
