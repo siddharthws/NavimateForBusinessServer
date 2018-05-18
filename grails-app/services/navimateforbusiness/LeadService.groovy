@@ -18,173 +18,26 @@ class LeadService {
     def templateService
     def fieldService
     def taskService
+    def mongoService
 
     // ----------------------- Getter APIs ---------------------------//
     // Method to search leads in mongo database using filter, pager and sorter
     def getForUserByFilter(User user, def filters, def pager, def sorter) {
         // Prepare mongo filters
-        def mongoFilters = []
-
-        // Add accountId and isRemoved flag filters
-        mongoFilters.push(eq("accountId", user.accountId))
-
-        // Add isRemoved filter by default (unless specified in filters
-        if (!filters?.includeRemoved) {
-            mongoFilters.push(ne("isRemoved", true))
-        }
-
-        // Add role specific filters
-        if (user.role == Role.MANAGER) {
-            // Objects should either be owned by user or publicly visible for a manager to view it
-            mongoFilters.push(or(   eq("ownerId", user.id),
-                                    eq("visibility", Visibility.PUBLIC.name())))
-        } else if (user.role == Role.REP) {
-            // Objects should either be owned by rep's manager or publicly visible for a rep to view it
-            mongoFilters.push(or(   eq("ownerId", user.manager.id),
-                                    eq("visibility", Visibility.PUBLIC.name())))
-        }
-
-        // Apply ID filters if any
-        if (filters?._ids) {
-            def idFilters = []
-            filters._ids.each {id -> idFilters.push(eq("_id", id))}
-            mongoFilters.push(or(idFilters))
-        }
-
-        // Atleast sort the objects by name
-        if (!sorter) {
-            sorter = [[name: Constants.Filter.SORT_ASC]]
-        }
-
-        // Apply date filter
-        if (filters?.createTime?.from)  {mongoFilters.push(gte("createTime", "$filters.createTime.from"))}
-        if (filters?.createTime?.to)    {mongoFilters.push(lte("createTime", "$filters.createTime.to"))}
-        if (filters?.updateTime?.from)  {mongoFilters.push(gte("updateTime", "$filters.updateTime.from"))}
-        if (filters?.updateTime?.to)    {mongoFilters.push(lte("updateTime", "$filters.updateTime.to"))}
-
-        // Apply Ext ID filters if any
-        if (filters?.extId) {mongoFilters.push(eq("extId", filters.extId))}
-
-        // Apply Name filters if any
-        if (filters?.name?.equal) {mongoFilters.push(eq("name", "$filters.name.equal"))}
-        if (filters?.name?.value) {mongoFilters.push(regex("name", /.*$filters.name.value.*/, 'i'))}
-
-        // Apply address / location filter
-        if (filters?.address?.value) {mongoFilters.push(regex("address", /.*$filters.address.value.*/, 'i'))}
-        if (filters?.location?.bNoBlanks) {mongoFilters.push(and(ne("latitude", 0), ne("longitude", 0)))}
-
-        // Apply Template Filter
-        if (filters?.template?.value) {
-            def templates = templateService.getForUserByType(user, Constants.Template.TYPE_LEAD)
-            def templateFilters = []
-            templates.each {it ->
-                if (it.name.toLowerCase().contains(filters.template.value.toLowerCase())) {
-                    templateFilters.push(eq("templateId", it.id))
-                }
-            }
-            if (templateFilters) {
-                mongoFilters.push(or(templateFilters))
-            } else {
-                mongoFilters.push(eq("templateId", null))
-            }
-        }
-
-        // Get all fields present in filters
-        def templates = templateService.getForUserByType(user, Constants.Template.TYPE_LEAD)
-        def fields = []
-        templates.each {template -> fields.addAll(fieldService.getForTemplate(template))}
-        fields.each {field ->
-            def key = "$field.id"
-            def filter = filters[key]
-
-            // Ignore if filter not found
-            if (!filter) {
-                return
-            }
-
-            // Apply blanks filter
-            Boolean bNoBlanks = filter.bNoBlanks ?: false
-            if (bNoBlanks) {
-                mongoFilters.push(ne("$key", null))
-                mongoFilters.push(ne("$key", ""))
-            }
-
-            def value = filter.value
-
-            switch (field.type) {
-                case Constants.Template.FIELD_TYPE_TEXT:
-                    if (value) {
-                        mongoFilters.push(regex("$key", /.*$value.*/, 'i'))
-                    }
-                    break
-                case Constants.Template.FIELD_TYPE_RADIOLIST:
-                    if (value) {
-                        // Get list of option indexes in field that contain the filter value
-                        def json = JSON.parse(field.value)
-                        def idxFilters = []
-                        json.options.eachWithIndex {it, i ->
-                            if (it.toLowerCase().contains(value.toLowerCase())) {
-                                idxFilters.push(regex("$key", /.*\"selection\":$i.*/))
-                            }
-                        }
-                        if (idxFilters) {
-                            mongoFilters.push(or(idxFilters))
-                        } else {
-                            mongoFilters.push(eq("$key", null))
-                        }
-                    }
-                    break
-                case Constants.Template.FIELD_TYPE_CHECKLIST:
-                    if (value) {
-                        // Get list of option indexes in field that contain the filter value
-                        def json = JSON.parse(field.value)
-                        def optFilters = []
-                        json.eachWithIndex {it, i ->
-                            if (it.name.toLowerCase().contains(value.toLowerCase())) {
-                                optFilters.push(regex("$key", /.*\"name\":\"$it.name\",\"selection\":true.*/))
-                            }
-                        }
-                        if (optFilters) {
-                            mongoFilters.push(or(optFilters))
-                        } else {
-                            mongoFilters.push(eq("$key", null))
-                        }
-                    }
-                    break
-                case Constants.Template.FIELD_TYPE_CHECKBOX:
-                    if (value) {
-                        if ("yes".contains(value.toLowerCase())) {
-                            mongoFilters.push(eq("$key", "true"))
-                        } else if ("no".contains(value.toLowerCase())) {
-                            mongoFilters.push(eq("$key", "false"))
-                        }
-                    }
-                    break
-                case Constants.Template.FIELD_TYPE_NUMBER:
-                case Constants.Template.FIELD_TYPE_DATE:
-                    if (value.from) {
-                        mongoFilters.push(gte("$key", "$value.from"))
-                    }
-                    if (value.to) {
-                        mongoFilters.push(lte("$key", "$value.to"))
-                    }
-                    break
-            }
-        }
+        def mongoFilters = mongoService.getLeadFilters(user, filters)
 
         // Get results
         FindIterable fi = LeadM.find(and(mongoFilters))
         int rowCount = fi.size()
 
-        // Apply Sorting
-        if (sorter) {
-            def sortBson = [:]
-            sorter.each {sortObj ->
-                def key = sortObj.keySet()[0]
-                sortBson[key] = sortObj[key]
-            }
-            fi = fi.sort(sortBson)
+        // Apply Sorting with atleast name
+        if (!sorter) {sorter = [[name: Constants.Filter.SORT_ASC]]}
+        def sortBson = [:]
+        sorter.each {sortObj ->
+            def key = sortObj.keySet()[0]
+            sortBson[key] = sortObj[key]
         }
+        fi = fi.sort(sortBson)
 
         // Apply paging
         if (pager.startIdx) {fi = fi.skip(pager.startIdx)}
