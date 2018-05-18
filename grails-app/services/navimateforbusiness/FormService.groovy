@@ -77,7 +77,7 @@ class FormService {
     // Methods to convert form objects to / from JSON
     def toJson(Form form, User user) {
         // Get lead for this form
-        LeadM lead = form.task ? leadService.getForUserById(user, form.task.leadid) : null
+        LeadM lead = form.task ? leadService.getForUserByFilter(user, [ids: [form.task.leadid]]) : null
 
         // Convert template properties to JSON
         def json = [
@@ -171,7 +171,7 @@ class FormService {
         String dis = "-"
 
         if (form.task) {
-            LeadM lead = leadService.getForUserById(user, form.task.leadid)
+            LeadM lead = leadService.getForUserByFilter(user, [ids: [form.task.leadid]])
             if (lead && (lead.latitude || lead.longitude) && (form.latitude || form.longitude)) {
                 // Get distance in meters
                 long dist = distance(lead.latitude, form.latitude, lead.longitude, form.longitude)

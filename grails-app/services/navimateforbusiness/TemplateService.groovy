@@ -156,7 +156,7 @@ class TemplateService {
                 break
             case Constants.Template.TYPE_LEAD:
                 // Remove all leads associated with this template
-                def leads = leadService.getForUserByFilter(user, [template: [value: template.name]], [:], []).leads
+                def leads = leadService.getAllForUserByFilter(user, [template: [value: template.name]])
                 leads.each {LeadM lead ->
                     leadService.remove(user, lead)
                 }
@@ -183,7 +183,7 @@ class TemplateService {
                 break
             case Constants.Template.TYPE_LEAD:
                 // Get all affected leads
-                def leads = leadService.getForUserByFilter(user, [template: [value: template.name]], [:], []).leads
+                def leads = leadService.getAllForUserByFilter(user, [template: [value: template.name]])
                 leads.each {LeadM lead -> reps.addAll(leadService.getAffectedReps(user, lead)) }
                 break
             case Constants.Template.TYPE_TASK:

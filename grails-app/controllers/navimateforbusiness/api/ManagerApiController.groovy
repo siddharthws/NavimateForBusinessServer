@@ -90,7 +90,7 @@ class ManagerApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Find leads with given IDs
-        def leads = leadService.getForUserByFilter(user, [_ids: request.JSON.ids], [:], []).leads
+        def leads = leadService.getAllForUserByFilter(user, [ids: request.JSON.ids])
 
         // Throw exception if all tasks not found
         if (leads.size() != request.JSON.ids.size()) {
@@ -114,7 +114,7 @@ class ManagerApiController {
         def sorter = request.JSON.sorter
 
         // get leads for this user
-        def filteredLeads = leadService.getForUserByFilter(user, filter, pager, sorter)
+        def filteredLeads = leadService.getAllForUserByFPS(user, filter, pager, sorter)
 
         // Send JSON Response
         def resp = [
@@ -164,7 +164,7 @@ class ManagerApiController {
         def sorter = request.JSON.sorter
 
         // get leads for this user
-        def filteredLeads = leadService.getForUserByFilter(user, filter, [:], sorter)
+        def filteredLeads = leadService.getAllForUserByFPS(user, filter, [:], sorter)
 
         // Ensure number of rows are less than max limit
         if (filteredLeads.leads.size() > Constants.Table.MAX_SELECTION_COUNT) {
@@ -190,7 +190,7 @@ class ManagerApiController {
         def exportParams = request.JSON.exportParams
 
         // get leads for this user
-        def leads = leadService.getForUserByFilter(user, filter, [:], sorter).leads
+        def leads = leadService.getAllForUserByFPS(user, filter, [:], sorter).leads
 
         // Extract selected leads if applicable
         if (params.selection) {

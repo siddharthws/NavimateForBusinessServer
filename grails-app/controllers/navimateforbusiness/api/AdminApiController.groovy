@@ -110,7 +110,7 @@ class AdminApiController {
         def reps = []
         request.JSON.ids.each {id ->
             // Get lead with this id
-            LeadM lead = leadService.getForUserById(user, id)
+            LeadM lead = leadService.getForUserByFilter(user, [ids: [id]])
             if (!lead) {
                 throw new ApiException("Lead not found...", Constants.HttpCodes.BAD_REQUEST)
             }

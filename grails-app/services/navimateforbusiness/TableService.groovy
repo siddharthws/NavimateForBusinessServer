@@ -83,7 +83,7 @@ class TableService {
             columns.each {it -> values.push('-')}
 
             // Get lead for this task
-            LeadM lead = leadService.getForUserById(user, task.leadid)
+            LeadM lead = leadService.getForUserByFilter(user, [ids: [task.leadid]])
 
             // Add row data for mandatory columns
             values[0] = [id: task.id, name: "$task.id"]
@@ -142,7 +142,7 @@ class TableService {
             columns.each { it -> values.push('-') }
 
             // Get lead for this task
-            LeadM lead = form.task ? leadService.getForUserById(user, form.task.leadid) : null
+            LeadM lead = form.task ? leadService.getForUserByFilter(user, [ids: [form.task.leadid]]) : null
 
             // Add row data for mandatory columns
             values[0] = form.owner.manager.name

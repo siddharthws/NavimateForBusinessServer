@@ -1,9 +1,7 @@
 package navimateforbusiness
 
-import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import com.mongodb.client.FindIterable
-import navimateforbusiness.enums.Role
 import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.enums.Visibility
 import navimateforbusiness.util.ApiException
@@ -22,8 +20,8 @@ class LeadService {
 
     // ----------------------- Getter APIs ---------------------------//
     // Method to search leads in mongo database using filter, pager and sorter
-    def getForUserByFilter(User user, def filters, def pager, def sorter) {
-        // Prepare mongo filters
+    def getAllForUserByFPS(User user, def filters, def pager, def sorter) {
+        // Get mongo filters
         def mongoFilters = mongoService.getLeadFilters(user, filters)
 
         // Get results
@@ -54,44 +52,14 @@ class LeadService {
         ]
     }
 
-    // Method to get lead for user by id
-    def getForUserById(User user, String id) {
-        def leads = getForUserByFilter(user, [_ids: [id]], [:], []).leads
-
-        if (leads) {
-            return leads[0]
-        }
-        return null
+    // method to get list of leads using filters
+    List<LeadM> getAllForUserByFilter(User user, def filters) {
+        getAllForUserByFPS(user, filters, [:], []).leads
     }
 
-    // Method to get through last updated
-    def getForUserByIdRemoved(User user, String id) {
-        def leads = getForUserByFilter(user, [_ids: [id], includeRemoved: true], [:], []).leads
-
-        if (leads) {
-            return leads[0]
-        }
-        return null
-    }
-
-    // Method to get lead for user by name
-    def getForUserByName(User user, String name) {
-        def leads = getForUserByFilter(user, [name: [equal: name]], [:], []).leads
-
-        if (leads) {
-            return leads[0]
-        }
-        return null
-    }
-
-    // Method to get lead for user by id
-    def getForUserByExtId(User user, String extId) {
-        def leads = getForUserByFilter(user, [extId: extId], [:], []).leads
-
-        if (leads) {
-            return leads[0]
-        }
-        return null
+    // Method to get a single lead using filters
+    LeadM getForUserByFilter(User user, def filters) {
+        getAllForUserByFilter(user, filters)[0]
     }
 
     // ----------------------- Public APIs ---------------------------//
@@ -123,12 +91,12 @@ class LeadService {
 
         // Get existing template or create new
         if (json.id) {
-            lead = getForUserById(user, json.id)
+            lead = getForUserByFilter(user, [ids: [json.id]])
             if (!lead) {
                 throw new ApiException("Illegal access to lead", Constants.HttpCodes.BAD_REQUEST)
             }
         } else if (json.extId) {
-            lead = getForUserByExtId(user, json.extId)
+            lead = getForUserByFilter(user, [extId: json.extId])
         }
 
         // Create new lead object if not found

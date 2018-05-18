@@ -152,9 +152,9 @@ class ImportService {
     def parseTaskRow(def columns, def row, int rowIdx, User user) {
         int leadIdx = columns.indexOf("Lead")
         def leadId = row[leadIdx]
-        def lead = leadService.getForUserByExtId(user, leadId)
+        def lead = leadService.getForUserByFilter(user, [extId: leadId])
         if (!lead) {
-            lead = leadService.getForUserByName(user, leadId)
+            lead = leadService.getForUserByFilter(user, [name: [equal: leadId]])
         }
         if (!lead) {
             throw new ApiException("Lead not found at " + getCellAddress(leadIdx, rowIdx), Constants.HttpCodes.BAD_REQUEST)

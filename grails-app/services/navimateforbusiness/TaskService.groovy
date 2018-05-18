@@ -136,7 +136,7 @@ class TaskService {
     // Methods to convert task objects to / from JSON
     def toJson(Task task, User user) {
         // Get lead for this task
-        LeadM lead = leadService.getForUserById(user, task.leadid)
+        LeadM lead = leadService.getForUserByFilter(user, [ids: [task.leadid]])
 
         // Convert template properties to JSON
         def json = [
