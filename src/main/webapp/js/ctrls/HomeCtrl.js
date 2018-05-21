@@ -2,7 +2,7 @@
  * Created by Siddharth on 01-09-2017.
  */
 
-app.controller('HomeCtrl', function ($scope, $state) {
+app.controller('HomeCtrl', function ($scope, $state, $window) {
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
 
@@ -44,7 +44,7 @@ app.controller('HomeCtrl', function ($scope, $state) {
 
     // Method to redirect to navimateapp.com
     vm.knowMore = function () {
-        // Placeholder
+        $window.open("https://www.navimateapp.com", "_blank")
     }
 
     /*------------------------------------ Private Methods --------------------------------*/
