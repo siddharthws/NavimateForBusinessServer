@@ -126,7 +126,7 @@ class FormService {
         if (!form.dateCreated) {
             form.dateCreated = new Date(json.timestamp)
         }
-        form.lastUpdated = new Date(json.timestamp)
+        form.lastUpdated = new Date()
 
         form
     }

@@ -129,10 +129,10 @@ class TrackingService {
         Form latestForm = forms.find {it -> it.latitude || it.longitude}
 
         // Update location params from form if tracking object is invalid / older
-        if (latestForm && trackObj.locUpdateTime < latestForm.lastUpdated) {
+        if (latestForm && trackObj.locUpdateTime < latestForm.dateCreated) {
             trackObj.lat             = latestForm.latitude
             trackObj.lng             = latestForm.longitude
-            trackObj.locUpdateTime   = latestForm.lastUpdated
+            trackObj.locUpdateTime   = latestForm.dateCreated
         }
 
         trackObj
