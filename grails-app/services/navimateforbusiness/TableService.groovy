@@ -15,6 +15,7 @@ class TableService {
     // ----------------------- Constants ---------------------------//
     // ----------------------- Dependencies ---------------------------//
     def templateService
+    def formService
     def leadService
     def fieldService
 
@@ -148,9 +149,10 @@ class TableService {
             values[3] = form.dateCreated.format(navimateforbusiness.Constants.Date.FORMAT_LONG,
                                                 navimateforbusiness.Constants.Date.TIMEZONE_IST)
             values[4] = (form.latitude || form.longitude) ? form.latitude + "," + form.longitude : '-'
-            values[5] = lead ? [id:lead.id , name:lead.name] : "-"
-            values[6] = form.task ? [id: form.task.id, name: "$form.task.id"] : "-"
-            values[7] = form.taskStatus ? form.taskStatus.name() : "-"
+            values[5] = formService.getDistance(user, form)
+            values[6] = lead ? [id:lead.id , name:lead.name] : "-"
+            values[7] = form.task ? [id: form.task.id, name: "$form.task.id"] : "-"
+            values[8] = form.taskStatus ? form.taskStatus.name() : "-"
 
             // Iterate through template values
             form.submittedData.values.each {value ->
@@ -451,13 +453,14 @@ class TableService {
         columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
         columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_DATE, "Date"))
         columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
-        columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD, "Lead"))
-        columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_TASK, "Task ID"))
-        columns.push(createColumn(7, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Task Status"))
+        columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Distance"))
+        columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD, "Lead"))
+        columns.push(createColumn(7, navimateforbusiness.Constants.Template.FIELD_TYPE_TASK, "Task ID"))
+        columns.push(createColumn(8, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Task Status"))
 
         // Add templated columns through form templates
         List<Template> templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_FORM)
-        columns += getTemplatedColumns(templates, 8)
+        columns += getTemplatedColumns(templates, 9)
 
         columns
     }
