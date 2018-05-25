@@ -3,6 +3,8 @@ package navimateforbusiness
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import grails.plugins.rest.client.RestBuilder
+import navimateforbusiness.LatLng
+import org.grails.web.json.JSONArray
 
 @Transactional
 class GoogleApiService {
@@ -100,5 +102,52 @@ class GoogleApiService {
         }
 
         addresses
+    }
+
+    def snapToRoads(List<navimateforbusiness.LatLng> points) {
+        // Get results from google using 100 points at a time
+        int numPoints = points.size()
+        int numLoops = Math.ceil(numPoints / 100)
+
+        def snappedPoints = []
+        for (int i = 0; i < numLoops; i++) {
+            // Wait for 100 ms on all loops except first
+            if (i > 0) {sleep(100)}
+
+            // Get start Index
+            int startIdx = i * 100
+
+            // Get 100 points from start Index
+            def snapPoints = points.subList(startIdx, Math.min(startIdx + 100, points.size()))
+
+            // Get string from list of points
+            String path = ""
+            snapPoints.each { path += path.length() ? '|' + it.lat + "," + it.lng : it.lat + "," + it.lng}
+
+            // Get snapped result from google
+            def urlParams = [
+                    key:   API_KEY,
+                    path:  path
+            ]
+            def request = new RestBuilder(connectTimeout:1000, readTimeout:20000)
+            def response = request.get("https://roads.googleapis.com/v1/snapToRoads?key={key}&path={path}&interpolate=true") {
+                urlVariables urlParams
+            }
+
+            // Extract each snapped point from response and feed to local array
+            def respJson = response.json
+            respJson.snappedPoints.each {it ->
+                // Check if this point is present in original data
+                if (it.originalIndex) {
+                    // Update original index
+                    it.originalIndex += startIdx
+                }
+
+                // Add point to snapped points response
+                snappedPoints.push(it)
+            }
+        }
+
+        return snappedPoints
     }
 }
