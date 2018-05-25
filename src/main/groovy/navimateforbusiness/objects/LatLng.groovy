@@ -1,4 +1,4 @@
-package navimateforbusiness
+package navimateforbusiness.objects
 
 /**
  * Created by Siddharth on 17-09-2017.
@@ -14,17 +14,22 @@ class LatLng {
         this.lng = lng
     }
 
+    LatLng(String string) {
+        // Get LatLng Array
+        double[] latlng = string.split(',')
+
+        // Extract into Lat and Lng
+        this.lat = latlng[0] ?: 0
+        this.lng = latlng[1] ?: 0
+    }
+
     @Override
     String toString() {
         return String.valueOf(lat) + "," + String.valueOf(lng)
     }
 
-    String fromString(String source) {
-        // Get LatLng Array
-        double[] latlng = source.split(',')
-
-        // Extract into Lat and Lng
-        this.lat = latlng[0] ?: 0
-        this.lng = latlng[1] ?: 0
+    @Override
+    boolean equals(def that) {
+        return this.lat == that.lat && this.lng == that.lng
     }
 }
