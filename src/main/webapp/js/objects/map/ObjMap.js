@@ -28,6 +28,9 @@ app.factory('ObjMap', function($timeout, LocationService) {
             // Set map
             vm.gMap = googleMap
 
+            // Set event listeners
+            google.maps.event.addListener(googleMap, 'idle', idleListener);
+
             // Center Map on init
             vm.recenter()
 
@@ -106,6 +109,77 @@ app.factory('ObjMap', function($timeout, LocationService) {
             }
 
             return bounds
+        }
+
+        //update cluster event
+        function clusterMarkers (){
+            // Ignore if map is not initialized
+            if (vm.gMap == null) {
+                return
+            }
+
+            // hide all markers as default in idle state
+            vm.markers.forEach(function (marker) {
+                marker.bShow = false
+            })
+
+            // Get map projection
+            var overlay = new google.maps.OverlayView()
+            overlay.setMap(vm.gMap)
+            var projection = overlay.getProjection()
+
+            // Set marker visibility as per clustering
+            var visibleMarkers = []
+
+            // Add all markers that need to be excluded from cluster into visible markers
+            vm.markers.forEach(function (marker) {
+                if (marker.bExcludeFromClustering) {
+                    marker.bShow = true
+                    visibleMarkers.push(marker)
+                }
+            })
+
+            // Add other markers to clusters
+            for(var i = 0; i < vm.markers.length; i++) {
+                var marker = vm.markers[i]
+
+                // Skip if non clusterable marker
+                if (marker.bExcludeFromClustering) {
+                    continue
+                }
+
+                // Skip the markers that are not inside the current map-view
+                if(!vm.gMap.getBounds().contains(marker.position)) {
+                    continue
+                }
+
+                // Check if this marker ishould be shown based on other markers which are already showing
+                var bShow = true
+                for (var j = 0; j < visibleMarkers.length; j++) {
+                    var visMarker = visibleMarkers[j]
+                    var extBounds = visMarker.getExtendedBounds(projection)
+                    if (extBounds.contains(marker.position)) {
+                        bShow = false
+                        break
+                    }
+                }
+
+                // Show the marker if required
+                marker.bShow = bShow
+
+                // Add to visible markers if showing
+                if (bShow) {
+                    visibleMarkers.push(marker)
+                }
+            }
+        }
+
+
+        // ----------------------------------- Event listeners ------------------------------------//
+        // Listener for map idle event
+        function idleListener() {
+            // Re cluster the markers when mad is idle
+            $timeout(clusterMarkers, 0)
         }
 
         // ----------------------------------- Post Init ------------------------------------//
