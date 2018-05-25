@@ -1,9 +1,22 @@
 <!-- View for date picker directive -->
-<div class="d-flex align-items-center justify-content-center" ng-click="pickDate()">
-    <!-- Calendar Icon -->
-    <img src="/static/images/ic_calendar.png" class="ib-base ib-xs">
+<div class="fbx-v">
+    <!-- Label -->
+    <span class="text-label">{{hint}}</span>
 
     <!-- Date Text -->
-    <span ng-if="!rawDate" class="ml-1 text-nowrap">{{hint}}</span>
-    <span ng-if="rawDate" class="ml-1 text-nowrap">{{rawDate.format(displayFormat)}}</span>
+    <div class="fbx-h box box-sm cursor-pointer px-2" ng-click="pickDate()"
+         ng-class="{'box-bordered': !bShowError || err.length == 0,
+                    'box-error': bShowError && err.length > 0}">
+        <!-- Calendar Icon -->
+        <img src="/static/images/ic_calendar.png" class="ib-base ib-xs">
+
+        <!-- Text to show when date is not selected -->
+        <span ng-if="!rawDate" class="ml-1 text-nowrap">Not Set</span>
+
+        <!-- Text to show when date is selected -->
+        <span ng-if="rawDate" class="ml-1 text-nowrap">{{rawDate.format(displayFormat)}}</span>
+    </div>
+
+    <!-- Error Text -->
+    <span class="text-error align-self-end" ng-if="bShowError && err.length > 0">{{err}}</span>
 </div>

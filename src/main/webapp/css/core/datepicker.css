@@ -6,14 +6,6 @@
     display: none;
 }
 
-datepicker {
-    padding: 0em 0.25em;
-    background-color: transparent;
-    border: solid 1px lightgray;
-    border-radius: 0.25em;
-    cursor: pointer;
-}
-
 /* Date picker in active state */
 datepicker.active {
     border-color: #37bcf2;
