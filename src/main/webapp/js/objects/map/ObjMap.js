@@ -18,9 +18,12 @@ app.factory('ObjMap', function($timeout, LocationService) {
 
         // Selected marker
         vm.selectedMarker = null
-        if (vm.markers.length) {
+        if (vm.markers && vm.markers.length) {
             vm.selectedMarker = vm.markers[0]
         }
+
+        // Polyline related info
+        vm.polylines = []
 
         // ----------------------------------- Public methods ------------------------------------//
         // Method to initialize google map

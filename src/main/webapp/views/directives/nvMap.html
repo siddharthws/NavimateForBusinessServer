@@ -13,5 +13,10 @@
                 </div>
             </div>
         </custom-marker>
+
+        <!-- Polylines on map -->
+        <shape ng-repeat="polyline in objMap.polylines" name="polyline" path="{{polyline.path}}"
+               geodesic="true" stroke-color="{{polyline.color}}" stroke-opacity="1.0" stroke-weight="5">
+        </shape>
     </ng-map>
 </div>
