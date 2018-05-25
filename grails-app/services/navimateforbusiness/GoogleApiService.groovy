@@ -1,10 +1,8 @@
 package navimateforbusiness
 
-import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import grails.plugins.rest.client.RestBuilder
-import navimateforbusiness.LatLng
-import org.grails.web.json.JSONArray
+import navimateforbusiness.objects.LatLng
 
 @Transactional
 class GoogleApiService {
@@ -53,13 +51,15 @@ class GoogleApiService {
 
             // Check status
             if (respJson && (respJson.status == "OK")) {
+                // get location from first result
+                def location = respJson.results[0].geometry.location
+
                 // Push new latlng into list
-                latlngs.push(new navimateforbusiness.LatLng(respJson.results[0].geometry.location.lat,
-                                                            respJson.results[0].geometry.location.lng))
+                latlngs.push(new LatLng(location.lat, location.lng))
             }
             else {
                 // Push empty LatLng into the list
-                latlngs.push(new navimateforbusiness.LatLng(0, 0))
+                latlngs.push(new LatLng())
             }
 
             // Mandatory 50 second delay between suucessive requests (recommended by google)
@@ -71,7 +71,7 @@ class GoogleApiService {
         latlngs
     }
 
-    def reverseGeocode(navimateforbusiness.LatLng[] latlngs) {
+    def reverseGeocode(LatLng[] latlngs) {
         // Prepare array of latlngs for all addresses
         def addresses = []
         latlngs.eachWithIndex {latlng, i ->
@@ -104,7 +104,7 @@ class GoogleApiService {
         addresses
     }
 
-    def snapToRoads(List<navimateforbusiness.LatLng> points) {
+    def snapToRoads(List<LatLng> points) {
         // Get results from google using 100 points at a time
         int numPoints = points.size()
         int numLoops = Math.ceil(numPoints / 100)
