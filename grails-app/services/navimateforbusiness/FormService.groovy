@@ -144,7 +144,7 @@ class FormService {
 
         if (form.task) {
             LeadM lead = leadService.getForUserById(user, form.task.leadid)
-            if ((lead.latitude || lead.longitude) && (form.latitude || form.longitude)) {
+            if (lead && (lead.latitude || lead.longitude) && (form.latitude || form.longitude)) {
                 // Get distance in meters
                 long dist = distance(lead.latitude, form.latitude, lead.longitude, form.longitude)
                 if (dist > 1000) {
