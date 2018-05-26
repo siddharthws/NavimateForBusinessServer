@@ -16,11 +16,11 @@ class LatLng {
 
     LatLng(String string) {
         // Get LatLng Array
-        double[] latlng = string.split(',')
+        def latlng = string.split(',')
 
         // Extract into Lat and Lng
-        this.lat = latlng[0] ?: 0
-        this.lng = latlng[1] ?: 0
+        this.lat = latlng[0] ? Double.valueOf(latlng[0]) : 0
+        this.lng = latlng[1] ? Double.valueOf(latlng[1]) : 0
     }
 
     @Override
@@ -31,5 +31,9 @@ class LatLng {
     @Override
     boolean equals(def that) {
         return this.lat == that.lat && this.lng == that.lng
+    }
+
+    boolean isValid() {
+        return (lat || lng)
     }
 }
