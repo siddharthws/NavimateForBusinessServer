@@ -3,12 +3,12 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.ApiException
 import navimateforbusiness.Constants
-import navimateforbusiness.User
 
 class UserApiController {
 
     def authService
     def reportService
+    def userService
 
     def changePassword() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -29,17 +29,20 @@ class UserApiController {
     def getLocationReport() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get and validate params
-        long repId = params.long('repId')
-        String date = params.selectedDate
+        // Get date from params
+        String rawDate = params.selectedDate
+        Date date = Constants.Formatters.LONG.parse(rawDate)
+        Date dateOnly = new Date(date.time).clearTime()
 
         // Get rep from params
-        def rep = User.findByAccountAndId(user.account, repId)
+        long repId = params.long('repId')
+        def rep = userService.getRepForUserById(user, repId)
 
         // Get Report for this rep
-        def resp = reportService.getLocationReport(rep, date)
+        def report = reportService.getLocationReport(rep, dateOnly)
 
         // Send response
+        def resp = [report: report]
         render resp as JSON
     }
 }
