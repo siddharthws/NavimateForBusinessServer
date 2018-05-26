@@ -42,7 +42,7 @@ app.service('NavService', function($localStorage, ObjMenu, ObjTab) {
         Constants.Role.MANAGER,
         [
             new ObjTab("SUBMISSIONS", "reports-submission", Constants.Role.MANAGER),
-            //new ObjTab("MOVEMENT", "reports-movement", Constants.Role.MANAGER)
+            new ObjTab("MOVEMENT", "reports-movement", Constants.Role.MANAGER)
         ]
     )
 

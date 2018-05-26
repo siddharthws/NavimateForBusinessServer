@@ -1,23 +1,37 @@
 <!-- Location Report HTML -->
-<!-- Toolbar -->
-<div class="d-flex justify-content-around p-2">
-    <div class="d-flex flex-column justify-content-around">
-        <select class="btn-shiny" ng-model="$ctrl.selectedRep" ng-options="rep.name for rep in $ctrl.team" ng-change="$ctrl.showReport()">
-            <option value="" ng-disabled="true">-- Select Rep --</option>
-        </select>
-        <md-datepicker ng-model="$ctrl.selectedDate" md-placeholder="-- Select Date --" ng-change="$ctrl.showReport()"></md-datepicker>
-    </div>
+<div class="pos-r flex-1">
+    <!-- Map View -->
+    <nv-map class="h-100 w-100" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;" obj-map="$ctrl.map" on-marker-click="$ctrl.onMarkerClick(idx)"></nv-map>
 
-    <div class="doughnut-container">
-        <canvas class="chart chart-doughnut" chart-data="$ctrl.data" chart-labels="$ctrl.labels"
-                chart-colors="$ctrl.colors" chart-options="$ctrl.options">
-        </canvas>
-        <div class="doughnut-label w-100 h-100 d-flex flex-1 justify-content-center align-items-center flex-column">
-            <h3 class="font-weight-bold">50%</h3>
-            <span class="font-weight-bold">ACTIVE</span>
+    <!-- Descriptor -->
+    <div class="movement-report-descriptor box box-dialog fbx-v">
+        <div class="fbx-h">
+            <!-- Rep Selector -->
+            <pick-n-view label="Representative" text="$ctrl.selectedRep.name"
+                         on-pick="$ctrl.pickRep()" on-view="$ctrl.viewRep()"></pick-n-view>
+
+            <!-- Date Selector -->
+            <datepicker class="ml-2" hint="Select Date" date-model="$ctrl.selectedDate" date-change="$ctrl.sync()"
+                        model-format="{{$root.Constants.Date.FORMAT_LONG}}"
+                        display-format="{{$root.Constants.Date.FORMAT_DATE_ONLY}}"></datepicker>
+        </div>
+
+        <!-- Total Distance -->
+        <div class="text-grey mt-2">
+            <span>Distance Covered: </span>
+            <span class="text-bold">{{$ctrl.distance}} km</span>
+        </div>
+
+        <!-- Show start and end time -->
+        <div class="fbx-h justify-content-around text-grey mt-2" ng-if="$ctrl.startTime && $ctrl.endTime">
+            <span class="text-bold">Start: {{$ctrl.startTime}}</span>
+            <span class="text-bold">End: {{$ctrl.endTime}}</span>
+        </div>
+
+        <!-- Show marker specific information -->
+        <div class="fbx-h justify-content-around text-grey mt-2" ng-if="$ctrl.selection">
+            <span class="text-bold">Speed: {{$ctrl.selection.speed}} km/hr</span>
+            <span class="text-bold">Battery: {{$ctrl.selection.battery}}%</span>
         </div>
     </div>
 </div>
-
-<!-- Include Map View -->
-<ng-include class="flex-1" src="'/static/views/modules/Map.html'"></ng-include>

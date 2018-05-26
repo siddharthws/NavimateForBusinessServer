@@ -2,19 +2,21 @@
  * Created by Chandel on 11-02-2018.
  */
 
-app.controller("MovementReportCtrl", function ($rootScope, $scope, LocReportDS) {
+app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, LocReportDS, DialogService, TableService, ObjMap, ObjMarker, ObjPolyline) {
     /*-------------------------------------- INIT ---------------------------------------------*/
     var vm = this
 
-    // Set menu and option
-    $scope.nav.item       = Constants.DashboardNav.Menu[Constants.DashboardNav.ITEM_REPORTS]
-    $scope.nav.option     = Constants.DashboardNav.Options[Constants.DashboardNav.OPTION_LOCATION]
+    // Set Active Tab and Menu
+    NavService.setActive(NavService.reports, 1)
 
     // Init Variables
-    vm.team = []
     vm.selectedRep = null
     vm.selectedDate = ""
     vm.report = []
+    vm.selection = null
+
+    // Init Map
+    vm.map = new ObjMap([])
 
     // Init Map parameters
     $scope.mapParams = {}
@@ -25,6 +27,10 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, LocReportDS) 
     vm.colors = ['#4CAF50','#CFD8DC'];
     vm.options = {cutoutPercentage: 85}
 
+    // Start and end time of report
+    vm.startTime = null
+    vm.endTime = null
+
     /*-------------------------------------- Public APIs ---------------------------------------*/
     vm.sync = function() {
         // Get report only if both date and rep are selected
@@ -32,20 +38,17 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, LocReportDS) 
             // Reset report
             vm.report = []
 
-            // Format the selected the date to 'yyyy-MM-dd' format
-            vm.formattedDateString = moment(vm.selectedDate).format('YYYY-MM-DD')
-
             // Start Async Request to get data
             $rootScope.showWaitingDialog("Getting Report...")
-            LocReportDS.sync(vm.selectedRep.id, vm.formattedDateString).then(
+            LocReportDS.sync(vm.selectedRep.id, vm.selectedDate).then(
                 // Success Callback
                 function () {
                     // Set report to cache
-                    vm.report = LocReportDS.cache
+                    vm.report = LocReportDS.cache.report.points
+                    vm.distance = LocReportDS.cache.report.distance
 
                     // Update map markers and polyline
-                    updatePolylines()
-                    updateMarkers()
+                    updateMap()
 
                     // Hide dialog
                     $rootScope.hideWaitingDialog()
@@ -59,51 +62,85 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, LocReportDS) 
         }
     }
 
-    /*-------------------------------------- Private APIs ---------------------------------------*/
-    // Function to create polyline from report
-    function updatePolylines() {
-        // Reset map polyline
-        $scope.mapParams.polylines = []
-
-        var path =[]
-        if(vm.report.length){
-            // Create path array
-            vm.report.forEach(function (reportObj, i) {
-                // Check if object has no error
-                if (reportObj.status == Constants.Tracking.ERROR_NONE) {
-                    // Add lat lng to path
-                    path.push([reportObj.latitude, reportObj.longitude])
-                }
-            })
-
-            //push path in polyline
-            $scope.mapParams.polylines.push({
-                color : "#37bcf2",
-                path : path
-            })
-        }
+    vm.pickRep = function () {
+        DialogService.tablePicker("Pick Representative", TableService.teamTable, function (id, name) {
+            vm.selectedRep = {id: id, name: name}
+            vm.sync()
+        })
     }
 
-    // Function to create markers from report
-    function updateMarkers () {
-        // Reste map markers
-        $scope.mapParams.markers = []
+    vm.viewRep = function () {
+        DialogService.teamViewer(vm.selectedRep.id)
+    }
 
-        if(vm.syncData.length != 0){
+    vm.onMarkerClick = function (idx) {
+        vm.selection = vm.report[vm.map.markers[idx].id]
+    }
+
+    /*-------------------------------------- Private APIs ---------------------------------------*/
+
+    // Function to create markers from report
+    function updateMap () {
+        // init polylines and markers from report
+        var polylines = []
+        var markers = []
+        if(vm.report.length){
+            // Get list of indexes where status is changing
+            var changeIdxs = [0]
+            for (var i = 0; i < vm.report.length - 1; i++) {
+                if (vm.report[i].status != vm.report[i+1].status) {
+                    changeIdxs.push(i+1)
+                }
+            }
+
+            // Create polylines from list of indexes where status changes
+            for (var i = 0; i < changeIdxs.length; i++) {
+                // Get first and last index for this polyline
+                var firstIndex = changeIdxs[i]
+                var lastIndex = (i != changeIdxs.length - 1) ? changeIdxs[i+1] : vm.report.length - 1
+
+                // Create a new polyline with new status color from this point
+                var reportObj = vm.report[firstIndex]
+                var polyColor = reportObj.status == Constants.Tracking.ERROR_NONE ? '#37bcf2' : '#ff0000'
+                var polyline = new ObjPolyline([], polyColor)
+
+                // Add points to polyline
+                for (var j = firstIndex; j <= lastIndex; j++) {
+                    polyline.path.push([vm.report[j].latitude, vm.report[j].longitude])
+                }
+
+                // Add to list of polylines
+                polylines.push(polyline)
+            }
+
             // Create marker for each element in report
             vm.report.forEach(function (reportObj, i) {
-                // Check if object has no error
-                if (reportObj.status == Constants.Tracking.ERROR_NONE) {
-                    // Add marker
-                    $scope.mapParams.markers.push({
-                        bshow: true,
-                        title: reportObj.time,
-                        latitude: reportObj.latitude,
-                        longitude: reportObj.longitude
-                    })
+                // Add marker if time is valid
+                if (reportObj.time) {
+                    var marker = new ObjMarker(i, reportObj.time, new google.maps.LatLng(reportObj.latitude, reportObj.longitude))
+                    markers.push(marker)
                 }
             })
+
+            // Add start and end text to first and last markers
+            if (markers.length) {
+                markers[0].bg = Constants.Map.MARKER_GREEN
+                markers[0].bExcludeFromClustering = true
+                vm.startTime = markers[0].name
+                markers[markers.length - 1].bg = Constants.Map.MARKER_RED
+                markers[markers.length - 1].bExcludeFromClustering = true
+                vm.endTime = markers[markers.length - 1].name
+            }
         }
+
+        // set map markers
+        vm.map.markers = markers
+
+        // Set map polyline
+        vm.map.polylines = polylines
+
+        // Re-center map
+        vm.map.recenter()
     }
 
 })
