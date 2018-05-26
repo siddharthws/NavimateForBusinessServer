@@ -335,5 +335,10 @@ Constants.Date = {
 /* ------------------------------- Map -----------------------------------*/
 Constants.Map = {
     // Default map values
-    DEFAULT_ZOOM:       14
+    DEFAULT_ZOOM:       14,
+
+    // Marker Types
+    MARKER_DEFAULT:    1,
+    MARKER_GREEN:      2,
+    MARKER_RED:        3
 }
