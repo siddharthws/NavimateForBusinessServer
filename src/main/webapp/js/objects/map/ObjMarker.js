@@ -5,7 +5,7 @@
 app.factory('ObjMarker', function() {
 
     // Class definition for marker object
-    ObjMarker = function (id, name, position) {
+    ObjMarker = function (id, name, position, bg, icon) {
         // ----------------------------------- Init ------------------------------------//
         var vm = this
 
@@ -13,6 +13,8 @@ app.factory('ObjMarker', function() {
         vm.id = id
         vm.name = name
         vm.position = position
+        vm.icon = icon
+        vm.bg = bg ? bg : Constants.Map.MARKER_DEFAULT
         vm.bExcludeFromClustering = false
 
         // Show marker by default

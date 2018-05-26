@@ -4,13 +4,11 @@
 .marker {
     cursor: pointer;
     font-size: 1rem;
-    height: 1.5em;
-    padding-right: 1.0em;
-    padding-left: 1.0em;
-    background: white;
-    color: darkgray;
+    padding: 0.25em 1em;
+    background: #b3e6fa;
+    color: #444444;
     border-radius: 0.25em;
-    border: white solid 1px;
+    border: #b3e6fa solid 1px;
     box-shadow: 0px 0px 10px 1px darkgray;
     text-align: center;
     max-width: 15em;
@@ -21,7 +19,21 @@
     text-overflow: ellipsis;
 }
 
-.marker.active {
+.marker.marker-green {
+    background: #00E676;
+    border-color: #00E676;
+    color: white;
+}
+
+.marker.marker-red {
+    background: #FF3D00;
+    border-color: #FF3D00;
+    color: white;
+}
+
+.marker.active,
+.marker.marker-green.active,
+.marker.marker-red.active{
     background: #37bcf2;
     color: white;
     border-color: #37bcf2;
@@ -44,9 +56,24 @@
     /* Triangular shape with borders */
     border-style: solid;
     border-width: 0.5em 0.5em 0;
-    border-color: white transparent;
+    border-color: #b3e6fa transparent;
 }
 
-.marker.active::before {
+.marker.marker-green::before {
+    border-color: #00E676 transparent;
+}
+
+.marker.marker-red::before {
+    border-color: #FF3D00 transparent;
+}
+
+.marker.active::before,
+.marker.marker-green.active::before,
+.marker.marker-red.active::before {
     border-color: #37bcf2 transparent;
+}
+
+.marker img {
+    width: 2em;
+    height: auto;
 }

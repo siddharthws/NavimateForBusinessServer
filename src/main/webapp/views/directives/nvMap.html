@@ -8,8 +8,11 @@
                         position="[{{marker.position.lat()}}, {{marker.position.lng()}}]"
                         on-click="vm.markerClick($index)">
             <div class="pos-r">
-                <div class="marker" ng-class="{'active': objMap.selectedMarker == marker}">
-                    {{marker.name}}
+                <div class="marker" ng-class="{ 'active': objMap.selectedMarker == marker,
+                                                'marker-green': marker.bg == $root.Constants.Map.MARKER_GREEN,
+                                                'marker-red':   marker.bg == $root.Constants.Map.MARKER_RED}">
+                    <span ng-if="marker.name">{{marker.name}}</span>
+                    <img ng-if="marker.icon" ng-src="{{marker.icon}}">
                 </div>
             </div>
         </custom-marker>
