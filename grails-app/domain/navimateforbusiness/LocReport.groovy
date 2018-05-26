@@ -15,12 +15,13 @@ class LocReport {
     Date submitDate
 
     // Encoded polyline for getting roads information
-    String encPolyline
+    String encPolyline = ""
 
     // Total distance travelled in report
     long distance = 0
 
     static constraints = {
+        encPolyline nullable: true
     }
 
     static mapping = {

@@ -19,7 +19,6 @@ databaseChangeLog = {
             }
 
             column(name: "enc_polyline", type: "longtext") {
-                constraints(nullable: "false")
             }
 
             column(name: "account_id", type: "BIGINT") {
