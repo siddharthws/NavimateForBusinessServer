@@ -2,18 +2,17 @@ package navimateforbusiness.api
 
 import com.mongodb.client.FindIterable
 import navimateforbusiness.Account
-import navimateforbusiness.Acra
 import navimateforbusiness.Data
 import navimateforbusiness.Form
 import navimateforbusiness.LeadM
 import grails.plugins.rest.client.RestBuilder
-import navimateforbusiness.Role
+import navimateforbusiness.enums.Role
 import navimateforbusiness.Task
 
 import grails.converters.JSON
 import navimateforbusiness.User
 import navimateforbusiness.Template
-import navimateforbusiness.Visibility
+import navimateforbusiness.enums.Visibility
 
 import static com.mongodb.client.model.Filters.eq
 

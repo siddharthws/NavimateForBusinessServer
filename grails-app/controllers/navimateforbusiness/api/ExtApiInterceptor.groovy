@@ -1,8 +1,8 @@
 package navimateforbusiness.api
 
-import navimateforbusiness.ApiException
+import navimateforbusiness.util.ApiException
 import navimateforbusiness.ApiKey
-import navimateforbusiness.Constants
+import navimateforbusiness.util.Constants
 import org.grails.web.json.JSONException
 import org.grails.web.json.JSONObject
 

@@ -2,16 +2,16 @@ package navimateforbusiness.api
 
 /*import grails.converters.JSON
 import navimateforbusiness.Account
-import navimateforbusiness.ApiException
+import navimateforbusiness.util.ApiException
 import navimateforbusiness.ApiKey
-import navimateforbusiness.Constants
+import navimateforbusiness.util.Constants
 import navimateforbusiness.DomainToJson
 import navimateforbusiness.Data
 import navimateforbusiness.Form
 import navimateforbusiness.Lead
-import navimateforbusiness.Role
+import navimateforbusiness.enums.Role
 import navimateforbusiness.Task
-import navimateforbusiness.TaskStatus
+import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.User
 import navimateforbusiness.Value
@@ -645,7 +645,7 @@ class ExtApiController {
             // If user not found by ext Id or Email, create a new one
             if (!user) {
                 user  = new User(   account:    account,
-                                    role:       navimateforbusiness.Role.MANAGER)
+                                    role:       navimateforbusiness.enums.Role.MANAGER)
             }
 
             // Update user info
@@ -673,7 +673,7 @@ class ExtApiController {
 
             // If user not found by ext Id or Email, create a new one
             if (!user) {
-                user  = new User(   role:       navimateforbusiness.Role.REP)
+                user  = new User(   role:       navimateforbusiness.enums.Role.REP)
             }
 
             // Update user info
@@ -699,7 +699,7 @@ class ExtApiController {
             // If lead not found by ext Id, create a new one
             if (!lead) {
                 lead  = new Lead(account:    account,
-                                 visibility: navimateforbusiness.Visibility.PUBLIC)
+                                 visibility: navimateforbusiness.enums.Visibility.PUBLIC)
             }
 
             // Populate extID, title and isRemoved Status

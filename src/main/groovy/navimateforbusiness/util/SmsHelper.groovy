@@ -1,4 +1,4 @@
-package navimateforbusiness
+package navimateforbusiness.util
 
 public class SmsHelper
 {
@@ -22,7 +22,7 @@ public class SmsHelper
         }
 
         // Send Request
-        navimateforbusiness.HttpHelper httpHelper = new navimateforbusiness.HttpHelper(smsUrl);
+        HttpHelper httpHelper = new HttpHelper(smsUrl);
         String messageId = httpHelper.Execute("", "GET", new HashMap<String, String>());
 
         // Check Returned MSG ID

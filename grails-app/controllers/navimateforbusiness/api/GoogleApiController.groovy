@@ -1,8 +1,8 @@
 package navimateforbusiness.api
 
 import grails.converters.JSON
-import navimateforbusiness.ApiException
-import navimateforbusiness.Constants
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 import navimateforbusiness.objects.LatLng
 
 class GoogleApiController {

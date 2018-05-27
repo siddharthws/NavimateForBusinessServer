@@ -1,8 +1,7 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
-
-import java.text.SimpleDateFormat
+import navimateforbusiness.util.Constants
 
 @Transactional
 class SortingService {
@@ -24,11 +23,11 @@ class SortingService {
 
             // Check type of sorting required
             switch (sortObj.type) {
-                case navimateforbusiness.Constants.Filter.SORT_ASC:
+                case Constants.Filter.SORT_ASC:
                     // Sort rows in ascending order
                     sortedRows = sortedRows.sort {row -> getSortableValue(type, row.values[colId])}
                     break
-                case navimateforbusiness.Constants.Filter.SORT_DESC:
+                case Constants.Filter.SORT_DESC:
                     // Sort rows in ascending order
                     sortedRows = sortedRows.sort {row -> getSortableValue(type, row.values[colId])}
 
@@ -46,8 +45,8 @@ class SortingService {
     def getSortableValue (int colType, def value) {
         def sortableValue
 
-        if ( colType == navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD ||
-                    colType == navimateforbusiness.Constants.Template.FIELD_TYPE_TASK) {
+        if ( colType == Constants.Template.FIELD_TYPE_LEAD ||
+                    colType == Constants.Template.FIELD_TYPE_TASK) {
             sortableValue = (value != '-') ? value.name : ''
         } else {
             sortableValue = (value != '-') ? value.toLowerCase() : ''

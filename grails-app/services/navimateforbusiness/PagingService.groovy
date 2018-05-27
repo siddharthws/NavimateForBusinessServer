@@ -1,6 +1,8 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 
 @Transactional
 class PagingService {
@@ -14,7 +16,7 @@ class PagingService {
 
         // Validate count
         if (count < 0) {
-            throw new navimateforbusiness.ApiException("Invalid pager", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("Invalid pager", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Populate array with paged objects

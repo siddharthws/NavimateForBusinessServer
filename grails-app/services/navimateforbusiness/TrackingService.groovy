@@ -1,6 +1,8 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.enums.Role
+import navimateforbusiness.util.Constants
 import org.grails.web.json.JSONObject
 
 import com.mongodb.client.FindIterable
@@ -40,9 +42,9 @@ class TrackingService {
 
         // Set status
         if (repClient && repClient.session.isOpen()) {
-            trackObj.status = navimateforbusiness.Constants.Tracking.ERROR_WAITING
+            trackObj.status = Constants.Tracking.ERROR_WAITING
         } else {
-            trackObj.status = navimateforbusiness.Constants.Tracking.ERROR_OFFLINE
+            trackObj.status = Constants.Tracking.ERROR_OFFLINE
         }
 
         // Send tracking update to manager
@@ -102,13 +104,13 @@ class TrackingService {
 
     // Method to service rep disconnect event
     def clientDisconnected(navimateforbusiness.WebsocketClient client) {
-        if (client.user.role == navimateforbusiness.Role.REP) {
+        if (client.user.role == Role.REP) {
             // Send error status to each manager client
             def clients = stompSessionService.getClientsFromRep(client.user)
             clients.each {navimateforbusiness.WebsocketClient managerClient ->
                 // prepare error tracking object
                 Tracking trackObj = getLatestForRep(client.user)
-                trackObj.status = navimateforbusiness.Constants.Tracking.ERROR_OFFLINE
+                trackObj.status = Constants.Tracking.ERROR_OFFLINE
 
                 // Send tracking update
                 handleTrackingUpdate(managerClient, trackObj)

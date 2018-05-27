@@ -3,6 +3,7 @@ package navimateforbusiness
 import grails.gorm.transactions.Transactional
 import grails.plugins.rest.client.RestBuilder
 import navimateforbusiness.objects.LatLng
+import navimateforbusiness.util.ApiException
 
 @Transactional
 class GoogleApiService {
@@ -28,7 +29,7 @@ class GoogleApiService {
             respJson.predictions.each { prediction ->  results.push(prediction.description) }
         }
         else {
-            throw new navimateforbusiness.ApiException("Google API call failed with status : " + respJson.status)
+            throw new ApiException("Google API call failed with status : " + respJson.status)
         }
 
         results
@@ -92,7 +93,7 @@ class GoogleApiService {
                 addresses.push([address: respJson.results[0].formatted_address])
             }
             else {
-                throw new navimateforbusiness.ApiException("Google API call failed with status : " + respJson.status)
+                throw new ApiException("Google API call failed with status : " + respJson.status)
             }
 
             // Mandatory 50 second delay between suucessive requests (recommended by google)

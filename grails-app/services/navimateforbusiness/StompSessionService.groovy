@@ -1,6 +1,9 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.enums.Role
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 import org.grails.web.json.JSONObject
 import org.springframework.context.event.EventListener
 import org.springframework.messaging.simp.SimpMessagingTemplate
@@ -43,7 +46,7 @@ class StompSessionService {
         // Find session in unmapped sessions
         def unmappedSession = unmappedSessions.find{it -> it.session.principal.name == sha.user.name}
         if (!unmappedSession) {
-            throw new navimateforbusiness.ApiException("Could not find session ", navimateforbusiness.Constants.HttpCodes.INTERNAL_SERVER_ERROR)
+            throw new ApiException("Could not find session ", Constants.HttpCodes.INTERNAL_SERVER_ERROR)
         }
 
         // Remove from unmapped sessions
@@ -57,7 +60,7 @@ class StompSessionService {
             unmappedSession.session.close()
 
             // Throw error
-            throw new navimateforbusiness.ApiException("Invalid User ID", navimateforbusiness.Constants.HttpCodes.INTERNAL_SERVER_ERROR)
+            throw new ApiException("Invalid User ID", Constants.HttpCodes.INTERNAL_SERVER_ERROR)
         }
 
         // Close any old session that this user has
@@ -118,7 +121,7 @@ class StompSessionService {
 
         // Close rep client sessions whose heartbeat has expired (2 minutes)
         activeClients.each {client ->
-            if (client.user.role == navimateforbusiness.Role.REP) {
+            if (client.user.role == Role.REP) {
                 if ((currentTimeMs - client.lastHeartbeatTimeMs) > 2*60*1000) {
                     client.session.close()
                 }
@@ -146,7 +149,7 @@ class StompSessionService {
         // Find Client
         def client = getClientFromPrincipalName(principal.name)
         if (!client) {
-            throw new navimateforbusiness.ApiException("Non existent client for heartbeat", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("Non existent client for heartbeat", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Update last heartbeat

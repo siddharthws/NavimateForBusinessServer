@@ -1,5 +1,7 @@
 package navimateforbusiness
 
+import navimateforbusiness.util.Constants
+
 class Tracking {
     static mapWith = "mongo"
 
@@ -11,7 +13,7 @@ class Tracking {
     Long repId
 
     // Tracking Status
-    int status = navimateforbusiness.Constants.Tracking.ERROR_OFFLINE
+    int status = Constants.Tracking.ERROR_OFFLINE
 
     // Last tracking update for this rep
     Double lat = 0

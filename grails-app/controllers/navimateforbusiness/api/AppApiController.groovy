@@ -2,7 +2,7 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import navimateforbusiness.Acra
-import navimateforbusiness.Constants
+import navimateforbusiness.util.Constants
 import org.grails.web.json.JSONObject
 
 class AppApiController {

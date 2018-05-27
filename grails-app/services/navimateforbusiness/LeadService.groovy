@@ -3,6 +3,11 @@ package navimateforbusiness
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import com.mongodb.client.FindIterable
+import navimateforbusiness.enums.Role
+import navimateforbusiness.enums.TaskStatus
+import navimateforbusiness.enums.Visibility
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 
 import static com.mongodb.client.model.Filters.*
 
@@ -29,14 +34,14 @@ class LeadService {
         }
 
         // Add role specific filters
-        if (user.role == navimateforbusiness.Role.MANAGER) {
+        if (user.role == Role.MANAGER) {
             // Objects should either be owned by user or publicly visible for a manager to view it
             mongoFilters.push(or(   eq("ownerId", user.id),
-                                    eq("visibility", navimateforbusiness.Visibility.PUBLIC.name())))
-        } else if (user.role == navimateforbusiness.Role.REP) {
+                                    eq("visibility", Visibility.PUBLIC.name())))
+        } else if (user.role == Role.REP) {
             // Objects should either be owned by rep's manager or publicly visible for a rep to view it
             mongoFilters.push(or(   eq("ownerId", user.manager.id),
-                                    eq("visibility", navimateforbusiness.Visibility.PUBLIC.name())))
+                                    eq("visibility", Visibility.PUBLIC.name())))
         }
 
         // Apply ID filters if any
@@ -48,7 +53,7 @@ class LeadService {
 
         // Atleast sort the objects by name
         if (!sorter) {
-            sorter = [[name: navimateforbusiness.Constants.Filter.SORT_ASC]]
+            sorter = [[name: Constants.Filter.SORT_ASC]]
         }
 
         // Apply date filter
@@ -70,7 +75,7 @@ class LeadService {
 
         // Apply Template Filter
         if (filters?.template?.value) {
-            def templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_LEAD)
+            def templates = templateService.getForUserByType(user, Constants.Template.TYPE_LEAD)
             def templateFilters = []
             templates.each {it ->
                 if (it.name.toLowerCase().contains(filters.template.value.toLowerCase())) {
@@ -85,7 +90,7 @@ class LeadService {
         }
 
         // Get all fields present in filters
-        def templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_LEAD)
+        def templates = templateService.getForUserByType(user, Constants.Template.TYPE_LEAD)
         def fields = []
         templates.each {template -> fields.addAll(fieldService.getForTemplate(template))}
         fields.each {field ->
@@ -107,12 +112,12 @@ class LeadService {
             def value = filter.value
 
             switch (field.type) {
-                case navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT:
+                case Constants.Template.FIELD_TYPE_TEXT:
                     if (value) {
                         mongoFilters.push(regex("$key", /.*$value.*/, 'i'))
                     }
                     break
-                case navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST:
+                case Constants.Template.FIELD_TYPE_RADIOLIST:
                     if (value) {
                         // Get list of option indexes in field that contain the filter value
                         def json = JSON.parse(field.value)
@@ -129,7 +134,7 @@ class LeadService {
                         }
                     }
                     break
-                case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST:
+                case Constants.Template.FIELD_TYPE_CHECKLIST:
                     if (value) {
                         // Get list of option indexes in field that contain the filter value
                         def json = JSON.parse(field.value)
@@ -146,7 +151,7 @@ class LeadService {
                         }
                     }
                     break
-                case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX:
+                case Constants.Template.FIELD_TYPE_CHECKBOX:
                     if (value) {
                         if ("yes".contains(value.toLowerCase())) {
                             mongoFilters.push(eq("$key", "true"))
@@ -155,8 +160,8 @@ class LeadService {
                         }
                     }
                     break
-                case navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER:
-                case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
+                case Constants.Template.FIELD_TYPE_NUMBER:
+                case Constants.Template.FIELD_TYPE_DATE:
                     if (value.from) {
                         mongoFilters.push(gte("$key", "$value.from"))
                     }
@@ -267,7 +272,7 @@ class LeadService {
         if (json.id) {
             lead = getForUserById(user, json.id)
             if (!lead) {
-                throw new navimateforbusiness.ApiException("Illegal access to lead", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Illegal access to lead", Constants.HttpCodes.BAD_REQUEST)
             }
         } else if (json.extId) {
             lead = getForUserByExtId(user, json.extId)
@@ -278,7 +283,7 @@ class LeadService {
             lead = new LeadM(
                     accountId: user.account.id,
                     ownerId: user.id,
-                    visibility: navimateforbusiness.Visibility.PUBLIC,
+                    visibility: Visibility.PUBLIC,
                     isRemoved: false,
                     extId: json.extId
             )
@@ -316,8 +321,8 @@ class LeadService {
         }
 
         // Add date info in long format
-        String currentTime = new Date().format( navimateforbusiness.Constants.Date.FORMAT_LONG,
-                                                navimateforbusiness.Constants.Date.TIMEZONE_IST)
+        String currentTime = new Date().format( Constants.Date.FORMAT_LONG,
+                                                Constants.Date.TIMEZONE_IST)
         if (!lead.createTime) {
             lead.createTime = currentTime
         }
@@ -334,9 +339,9 @@ class LeadService {
 
         // Validate data
         if (!leads) {
-            throw new navimateforbusiness.ApiException("No rows to export", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("No rows to export", Constants.HttpCodes.BAD_REQUEST)
         } else if (!params.columns) {
-            throw new navimateforbusiness.ApiException("No columns to export", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("No columns to export", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Create one export object for each selected row
@@ -361,22 +366,22 @@ class LeadService {
 
                     // Parse special values as per column type
                     switch (column.type) {
-                        case navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO:
-                        case navimateforbusiness.Constants.Template.FIELD_TYPE_SIGN:
+                        case Constants.Template.FIELD_TYPE_PHOTO:
+                        case Constants.Template.FIELD_TYPE_SIGN:
                             if (value) {
                                 value = "https://biz.navimateapp.com/#/photos?name=" + value
                             }
                             break
-                        case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX:
+                        case Constants.Template.FIELD_TYPE_CHECKBOX:
                             value = value ? "yes" : "no"
                             break
-                        case navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST:
+                        case Constants.Template.FIELD_TYPE_RADIOLIST:
                             if (value) {
                                 def valueJson = JSON.parse(value)
                                 value = valueJson.options[valueJson.selection]
                             }
                             break
-                        case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST:
+                        case Constants.Template.FIELD_TYPE_CHECKLIST:
                             if (value) {
                                 def valueJson = JSON.parse(value)
                                 value = ""
@@ -420,8 +425,8 @@ class LeadService {
 
         // Remove lead
         lead.isRemoved = true
-        lead.updateTime = new Date().format(navimateforbusiness.Constants.Date.FORMAT_LONG,
-                                            navimateforbusiness.Constants.Date.TIMEZONE_IST)
+        lead.updateTime = new Date().format(Constants.Date.FORMAT_LONG,
+                                            Constants.Date.TIMEZONE_IST)
         lead.save(failOnError: true, flush: true)
     }
 
@@ -431,7 +436,7 @@ class LeadService {
 
         // Get reps from all open tasks with this lead
         def tasks = taskService.getForUserByLead(user, lead)
-        def openTasks = tasks.findAll {Task it -> it.status == navimateforbusiness.TaskStatus.OPEN}
+        def openTasks = tasks.findAll {Task it -> it.status == TaskStatus.OPEN}
         openTasks.each {Task task ->
             if (task.rep) {reps.push(task.rep)}
         }

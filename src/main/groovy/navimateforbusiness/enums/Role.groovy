@@ -1,4 +1,4 @@
-package navimateforbusiness
+package navimateforbusiness.enums
 
 enum Role {
     REP(1), MANAGER(2), CC(3), ADMIN(4), NVM_ADMIN(5)

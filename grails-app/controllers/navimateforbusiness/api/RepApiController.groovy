@@ -2,14 +2,14 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import navimateforbusiness.AccountSettings
-import navimateforbusiness.ApiException
-import navimateforbusiness.Constants
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 import navimateforbusiness.Form
 import navimateforbusiness.LeadM
-import navimateforbusiness.Role
-import navimateforbusiness.SmsHelper
+import navimateforbusiness.enums.Role
+import navimateforbusiness.util.SmsHelper
 import navimateforbusiness.Task
-import navimateforbusiness.TaskStatus
+import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.User
 

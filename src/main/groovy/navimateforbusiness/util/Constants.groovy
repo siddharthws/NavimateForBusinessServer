@@ -1,4 +1,4 @@
-package navimateforbusiness
+package navimateforbusiness.util
 
 import navimateforbusiness.objects.LatLng
 
@@ -98,10 +98,10 @@ class Constants {
     }
 
     class Formatters {
-        public static final SimpleDateFormat LONG = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_LONG)
-        public static final SimpleDateFormat DATE = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_DATE_ONLY)
-        public static final SimpleDateFormat TIME = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_TIME_ONLY)
-        public static final SimpleDateFormat TIME_SHORT = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_TIME_SHORT)
+        public static final SimpleDateFormat LONG = new SimpleDateFormat(Constants.Date.FORMAT_LONG)
+        public static final SimpleDateFormat DATE = new SimpleDateFormat(Constants.Date.FORMAT_DATE_ONLY)
+        public static final SimpleDateFormat TIME = new SimpleDateFormat(Constants.Date.FORMAT_TIME_ONLY)
+        public static final SimpleDateFormat TIME_SHORT = new SimpleDateFormat(Constants.Date.FORMAT_TIME_SHORT)
     }
 
     class Notifications {

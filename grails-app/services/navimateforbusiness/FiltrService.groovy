@@ -1,6 +1,7 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.util.Constants
 
 @Transactional
 class FiltrService {
@@ -46,7 +47,7 @@ class FiltrService {
         } else {
             // Apply filters using filter types
             switch (filter.type) {
-                case navimateforbusiness.Constants.Filter.TYPE_TEXT:
+                case Constants.Filter.TYPE_TEXT:
                     // Check if filter is applied
                     if (filter.value) {
                         // Check if value passes the filter
@@ -55,7 +56,7 @@ class FiltrService {
                         }
                     }
                     break
-                case navimateforbusiness.Constants.Filter.TYPE_OBJECT:
+                case Constants.Filter.TYPE_OBJECT:
                     // Check if filter is applied
                     if (filter.value) {
                         // Check if value passes the filter
@@ -66,7 +67,7 @@ class FiltrService {
                         }
                     }
                     break
-                case navimateforbusiness.Constants.Filter.TYPE_NUMBER:
+                case Constants.Filter.TYPE_NUMBER:
                     // Check if 'from' filter is applied
                     if (filter.value.from) {
                         // Check if value passes the filter
@@ -93,7 +94,7 @@ class FiltrService {
                         }
                     }
                     break
-                case navimateforbusiness.Constants.Filter.TYPE_DATE:
+                case Constants.Filter.TYPE_DATE:
                     // Check if 'from' filter is applied
                     if (filter.value.from) {
                         if (value != '-') {

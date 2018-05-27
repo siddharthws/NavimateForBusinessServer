@@ -1,12 +1,13 @@
 package navimateforbusiness
 
 import grails.converters.JSON
+import navimateforbusiness.util.ApiException
 
 class UtilsController {
 
     def handleError() {
         def cause = request.exception?.cause
-        while ((cause) && !(cause instanceof navimateforbusiness.ApiException)) {
+        while ((cause) && !(cause instanceof ApiException)) {
             cause = cause.cause
         }
 

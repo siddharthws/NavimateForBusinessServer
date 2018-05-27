@@ -1,5 +1,7 @@
 package navimateforbusiness
 
+import navimateforbusiness.enums.Role
+
 class User {
 
     // Timestamp
@@ -19,7 +21,7 @@ class User {
     String about
 
     // Account Information
-    navimateforbusiness.Role role
+    Role role
     static belongsTo = [
             account: Account,
             manager: User

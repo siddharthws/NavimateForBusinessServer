@@ -1,6 +1,8 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 
 @Transactional
 class FieldService {
@@ -47,7 +49,7 @@ class FieldService {
             // Find this field in the template
             field = getForTemplateById(template, fieldJson.id)
             if (!field) {
-                throw new navimateforbusiness.ApiException("Illegal access to field", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Illegal access to field", Constants.HttpCodes.BAD_REQUEST)
             }
         } else {
             field = new Field(account: template.account)

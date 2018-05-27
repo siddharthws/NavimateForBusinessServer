@@ -1,5 +1,7 @@
 package navimateforbusiness
 
+import navimateforbusiness.enums.TaskStatus
+
 class Task {
 
     // Timestamp
@@ -23,7 +25,7 @@ class Task {
     String leadid
 
     // Task properties
-    navimateforbusiness.TaskStatus status = navimateforbusiness.TaskStatus.OPEN
+    TaskStatus status = TaskStatus.OPEN
     int period = 0
 
     // Templated data for task information

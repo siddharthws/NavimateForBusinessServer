@@ -2,6 +2,9 @@ package navimateforbusiness
 
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.enums.Role
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 import org.apache.commons.lang.RandomStringUtils
 
 @Transactional
@@ -16,10 +19,10 @@ class AuthService {
         def user
 
         //parsing the role as Enum
-        navimateforbusiness.Role role = navimateforbusiness.Role.fromValue(input.role)
+        Role role = Role.fromValue(input.role)
 
         //register a new admin
-        if(role == navimateforbusiness.Role.ADMIN) {
+        if(role == Role.ADMIN) {
             // Create and save a new account
             account = new Account(name: input.companyName)
             account.save(flush: true, failOnError: true)
@@ -39,7 +42,7 @@ class AuthService {
                     email: input.email,
                     password: input.password,
                     account: account,
-                    role: navimateforbusiness.Role.ADMIN)
+                    role: Role.ADMIN)
 
             // Save
             user.save(flush: true, failOnError: true)
@@ -60,11 +63,11 @@ class AuthService {
         }
 
         //register a new manager
-        else if(role == navimateforbusiness.Role.MANAGER) {
+        else if(role == Role.MANAGER) {
             // Open existing account
             account = Account.findByName(input.companyName)
             if(!account){
-                throw new navimateforbusiness.ApiException("Company name does not exist", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Company name does not exist", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Create and save a new Manager
@@ -72,16 +75,16 @@ class AuthService {
                     email: input.email,
                     password: input.password,
                     account: account,
-                    role: navimateforbusiness.Role.MANAGER)
+                    role: Role.MANAGER)
 
             // Save
             user.save(flush: true, failOnError: true)
         }
-        else if(role == navimateforbusiness.Role.CC) {
+        else if(role == Role.CC) {
             // Open existing account
             account = Account.findByName(input.companyName)
             if(!account){
-                throw new navimateforbusiness.ApiException("Company name does not exist", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Company name does not exist", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Create and save a new customer care
@@ -89,7 +92,7 @@ class AuthService {
                                 email: input.email,
                                 password: input.password,
                                 account: account,
-                                role: navimateforbusiness.Role.CC)
+                                role: Role.CC)
 
             // Save
             user.save(flush: true, failOnError: true)
@@ -130,32 +133,32 @@ class AuthService {
     boolean authenticate(String accessToken) {
         // Validate Token
         if (!accessToken) {
-            throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
         }
 
         // Check if access token is logged in
         def sessionDataStr = redisService.get("accessToken:$accessToken")
         def sessionData
         if (!sessionDataStr) {
-            throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
         } else {
             sessionData = JSON.parse(sessionDataStr)
             if (!sessionData) {
-                throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
+                throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
             }
         }
 
         // Check if user is valid
         def user = User.get(sessionData.userId)
         if (!user) {
-            throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
         }
 
         // Check if token is expired
         def currentTime = System.currentTimeMillis()
         def elapsedTime = currentTime - sessionData.accessTime
         if (elapsedTime > (60 * 60 * 1000)) {
-            throw new navimateforbusiness.ApiException("Unauthorized", navimateforbusiness.Constants.HttpCodes.UNAUTHORIZED)
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
         }
 
         // Update token access time
@@ -186,15 +189,15 @@ class AuthService {
                 owner: manager,
                 account: manager.account,
                 name: "Default",
-                type: navimateforbusiness.Constants.Template.TYPE_FORM,
+                type: Constants.Template.TYPE_FORM,
                 dateCreated: new Date(),
                 lastUpdated: new Date()
         )
 
         // Create some default fields
-        Field notesField = new Field(account: manager.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Notes", bMandatory: false, value: "")
-        Field amountField = new Field(account: manager.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER, title: "Amount", bMandatory: false, value: "0")
-        Field photoField = new Field(account: manager.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO, title: "Photo", bMandatory: false, value: "")
+        Field notesField = new Field(account: manager.account, type: Constants.Template.FIELD_TYPE_TEXT, title: "Notes", bMandatory: false, value: "")
+        Field amountField = new Field(account: manager.account, type: Constants.Template.FIELD_TYPE_NUMBER, title: "Amount", bMandatory: false, value: "0")
+        Field photoField = new Field(account: manager.account, type: Constants.Template.FIELD_TYPE_PHOTO, title: "Photo", bMandatory: false, value: "")
 
         // Add fields to template
         defaultTemplate.addToFields(notesField)
@@ -206,12 +209,12 @@ class AuthService {
 
     Template createDefaultLeadTemplate(User user) {
         // Create a default Lead template
-        Template template = new Template(account: user.account, owner: user, name: "Default", type: navimateforbusiness.Constants.Template.TYPE_LEAD, dateCreated: new Date(), lastUpdated: new Date())
+        Template template = new Template(account: user.account, owner: user, name: "Default", type: Constants.Template.TYPE_LEAD, dateCreated: new Date(), lastUpdated: new Date())
 
         // Create Fields for the template
-        Field descField     = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false, value: "")
-        Field phoneField    = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Phone", bMandatory: false, value: "")
-        Field emailField    = new Field(account: user.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Email", bMandatory: false, value: "")
+        Field descField     = new Field(account: user.account, type: Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false, value: "")
+        Field phoneField    = new Field(account: user.account, type: Constants.Template.FIELD_TYPE_TEXT, title: "Phone", bMandatory: false, value: "")
+        Field emailField    = new Field(account: user.account, type: Constants.Template.FIELD_TYPE_TEXT, title: "Email", bMandatory: false, value: "")
 
         // Add fields to template
         template.addToFields(descField)
@@ -223,10 +226,10 @@ class AuthService {
 
     Template createDefaultTaskTemplate(User admin) {
         // Create a default Task template
-        Template template = new Template(account: admin.account, owner: admin, name: "Default", type: navimateforbusiness.Constants.Template.TYPE_TASK, dateCreated: new Date(), lastUpdated: new Date())
+        Template template = new Template(account: admin.account, owner: admin, name: "Default", type: Constants.Template.TYPE_TASK, dateCreated: new Date(), lastUpdated: new Date())
 
         // Create Fields for the template
-        Field descField     = new Field(account: admin.account, type: navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false, value: "")
+        Field descField     = new Field(account: admin.account, type: Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false, value: "")
 
         // Add fields to template
         template.addToFields(descField)

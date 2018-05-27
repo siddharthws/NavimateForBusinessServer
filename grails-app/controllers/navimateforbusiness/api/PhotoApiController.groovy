@@ -2,9 +2,8 @@ package navimateforbusiness.api
 
 import com.amazonaws.services.s3.model.ObjectMetadata
 import grails.converters.JSON
-import grails.io.IOUtils
-import navimateforbusiness.ApiException
-import navimateforbusiness.Constants
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 import navimateforbusiness.User
 
 class PhotoApiController {

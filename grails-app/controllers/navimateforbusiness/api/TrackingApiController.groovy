@@ -1,8 +1,8 @@
 package navimateforbusiness.api
 
 import grails.gorm.transactions.Transactional
-import navimateforbusiness.ApiException
-import navimateforbusiness.Constants
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 import navimateforbusiness.Tracking
 import navimateforbusiness.User
 import navimateforbusiness.WebsocketClient

@@ -1,5 +1,7 @@
 package navimateforbusiness
 
+import navimateforbusiness.enums.Visibility
+
 class Lead {
 
     // Timestamp
@@ -7,7 +9,7 @@ class Lead {
     Date lastUpdated
 
     // Visibility of Lead
-    navimateforbusiness.Visibility visibility
+    Visibility visibility
 
     // External ID for API access
     String extId

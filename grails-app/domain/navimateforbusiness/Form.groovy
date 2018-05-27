@@ -1,5 +1,7 @@
 package navimateforbusiness
 
+import navimateforbusiness.enums.TaskStatus
+
 class Form {
 
     // Timestamp
@@ -24,7 +26,7 @@ class Form {
     Data submittedData
 
     // Task status while submitting this form
-    navimateforbusiness.TaskStatus taskStatus
+    TaskStatus taskStatus
 
     static mappedBy = []
 

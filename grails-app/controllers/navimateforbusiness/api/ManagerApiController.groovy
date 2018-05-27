@@ -2,13 +2,13 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import grails.core.GrailsApplication
-import navimateforbusiness.ApiException
-import navimateforbusiness.Constants
+import navimateforbusiness.util.Constants
 import navimateforbusiness.LeadM
 import navimateforbusiness.Task
-import navimateforbusiness.TaskStatus
+import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.Template
-import navimateforbusiness.Visibility
+import navimateforbusiness.enums.Visibility
+import navimateforbusiness.util.ApiException
 
 // APIs exposed to users with manager access or higher
 class ManagerApiController {
@@ -428,7 +428,7 @@ class ManagerApiController {
         request.JSON.ids.each {id ->
             Task task = taskService.getForUserById(user, id)
             if (!task) {
-                throw new navimateforbusiness.ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Remove task
@@ -452,7 +452,7 @@ class ManagerApiController {
         request.JSON.ids.each {id ->
             Task task = taskService.getForUserById(user, id)
             if (!task) {
-                throw new navimateforbusiness.ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Update and save task
@@ -476,7 +476,7 @@ class ManagerApiController {
         request.JSON.ids.each {id ->
             Task task = taskService.getForUserById(user, id)
             if (!task) {
-                throw new navimateforbusiness.ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Task not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Update and save task

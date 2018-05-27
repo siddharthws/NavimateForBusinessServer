@@ -1,5 +1,7 @@
 package navimateforbusiness
 
+import navimateforbusiness.enums.Visibility
+
 class LeadM {
     static mapWith = "mongo"
 
@@ -23,7 +25,7 @@ class LeadM {
     Long ownerId
 
     // Visibility of Lead
-    navimateforbusiness.Visibility visibility
+    Visibility visibility
 
     // Remove Flag
     boolean isRemoved = false

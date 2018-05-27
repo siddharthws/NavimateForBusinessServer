@@ -3,10 +3,10 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import navimateforbusiness.Account
 import navimateforbusiness.AccountSettings
-import navimateforbusiness.ApiException
+import navimateforbusiness.util.ApiException
 import navimateforbusiness.ApiKey
-import navimateforbusiness.Constants
-import navimateforbusiness.Role
+import navimateforbusiness.util.Constants
+import navimateforbusiness.enums.Role
 import navimateforbusiness.User
 
 class AuthApiController {

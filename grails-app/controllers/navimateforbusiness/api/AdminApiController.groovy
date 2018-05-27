@@ -1,11 +1,9 @@
 package navimateforbusiness.api
 
-import navimateforbusiness.ApiException
-import navimateforbusiness.Constants
+import navimateforbusiness.util.Constants
 import navimateforbusiness.LeadM
-import navimateforbusiness.SmsHelper
-import navimateforbusiness.Task
-import navimateforbusiness.TaskStatus
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.SmsHelper
 import navimateforbusiness.Template
 import navimateforbusiness.User
 import grails.converters.JSON
@@ -161,7 +159,7 @@ class AdminApiController {
             // Get Template
             Template template = templateService.getForUserById(user, id)
             if (!template) {
-                throw new navimateforbusiness.ApiException("Template not found...", Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Template not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Remove Template

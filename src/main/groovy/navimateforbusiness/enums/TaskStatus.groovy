@@ -1,4 +1,4 @@
-package navimateforbusiness
+package navimateforbusiness.enums
 
 /**
  * Created by Siddharth on 20-08-2017.

@@ -1,6 +1,10 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.enums.Role
+import navimateforbusiness.enums.TaskStatus
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 
 @Transactional
 class FormService {
@@ -17,14 +21,14 @@ class FormService {
         List<Form> forms = []
 
         switch (user.role) {
-            case navimateforbusiness.Role.ADMIN:
-            case navimateforbusiness.Role.MANAGER:
+            case Role.ADMIN:
+            case Role.MANAGER:
                 userService.getRepsForUser(user).each {it -> forms.addAll(Form.findAllByAccountAndIsRemovedAndOwner(user.account, false, it)) }
                 break
-            case navimateforbusiness.Role.CC:
+            case Role.CC:
                 // No forms returned for customer care
                 break
-            case navimateforbusiness.Role.REP:
+            case Role.REP:
                 forms = Form.findAllByAccountAndIsRemovedAndOwner(user.account, false, user)
                 break
         }
@@ -82,7 +86,7 @@ class FormService {
         if (json.id) {
             form = getForUserById(user, json.id)
             if (!form) {
-                throw new navimateforbusiness.ApiException("Illegal access to form", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Illegal access to form", Constants.HttpCodes.BAD_REQUEST)
             }
         } else {
             form = new Form(
@@ -96,11 +100,11 @@ class FormService {
             // Add task
             form.task = taskService.getForUserById(user, json.taskId)
             if (!form.task) {
-                throw new navimateforbusiness.ApiException("Illegal access to task", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Illegal access to task", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Add task status
-            form.taskStatus = json.closeTask ? navimateforbusiness.TaskStatus.CLOSED : navimateforbusiness.TaskStatus.OPEN
+            form.taskStatus = json.closeTask ? TaskStatus.CLOSED : TaskStatus.OPEN
         }
 
         // Add location info

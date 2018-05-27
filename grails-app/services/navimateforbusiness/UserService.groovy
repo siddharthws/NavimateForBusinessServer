@@ -1,6 +1,9 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.enums.Role
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 
 @Transactional
 class UserService {
@@ -11,14 +14,14 @@ class UserService {
         List<User> reps
 
         switch (user.role) {
-            case navimateforbusiness.Role.ADMIN:
-            case navimateforbusiness.Role.CC:
+            case Role.ADMIN:
+            case Role.CC:
                 // Get all reps of company
-                reps = User.findAllByAccountAndRole(user.account, navimateforbusiness.Role.REP)
+                reps = User.findAllByAccountAndRole(user.account, Role.REP)
                 break
-            case navimateforbusiness.Role.MANAGER:
+            case Role.MANAGER:
                 // Get all reps under this manager
-                reps = User.findAllByAccountAndRoleAndManager(user.account, navimateforbusiness.Role.REP, user)
+                reps = User.findAllByAccountAndRoleAndManager(user.account, Role.REP, user)
                 break
         }
 
@@ -31,7 +34,7 @@ class UserService {
 
     // Method to get all managers under a user
     List<User> getManagersForUser(User user) {
-        List<User> managers = User.findAllByAccountAndRole(user.account, navimateforbusiness.Role.MANAGER)
+        List<User> managers = User.findAllByAccountAndRole(user.account, Role.MANAGER)
 
         // Sort managers in increasing order of name
         managers.sort{it.name}
@@ -110,14 +113,14 @@ class UserService {
 
         // Ensure rep is present in this user's account
         if (rep && rep.account && rep.account != user.account) {
-            throw new navimateforbusiness.ApiException("User with phone number " + json.phone + " belongs to another account..." )
+            throw new ApiException("User with phone number " + json.phone + " belongs to another account..." )
         }
 
         // Get user by ID
         if (!rep && json.id) {
             rep = getRepForUserById(user, json.id)
             if (!rep) {
-                throw new navimateforbusiness.ApiException("Invalid user id requested", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Invalid user id requested", Constants.HttpCodes.BAD_REQUEST)
             }
         }
 
@@ -130,12 +133,12 @@ class UserService {
         }
 
         if (!manager) {
-            throw new navimateforbusiness.ApiException("Invalid manager assigned", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("Invalid manager assigned", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Create new rep if required
         if (!rep) {
-            rep = new User(role: navimateforbusiness.Role.REP)
+            rep = new User(role: Role.REP)
         }
 
         // Update params using JSON
@@ -154,13 +157,13 @@ class UserService {
     def updateAccountSettings(User user, def settingsJson) {
         // Validate JSON
         if (!settingsJson.startHr || !settingsJson.endHr) {
-            throw new navimateforbusiness.ApiException("Invalid input", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("Invalid input", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Validate hours
         if (((settingsJson.startHr < 0) || (settingsJson.startHr > 23)) ||
             ((settingsJson.endHr < 0) || (settingsJson.endHr > 23))) {
-            throw new navimateforbusiness.ApiException("Invalid time of day", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("Invalid time of day", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Update account settings for this user

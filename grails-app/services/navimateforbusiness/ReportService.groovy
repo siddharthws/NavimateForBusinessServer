@@ -2,6 +2,8 @@ package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
 import navimateforbusiness.objects.LatLng
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 
 @Transactional
 class ReportService {
@@ -13,7 +15,7 @@ class ReportService {
         // Get report for this user on this date
         def locReport = LocReport.findByAccountAndOwnerAndSubmitDate(rep.account, rep, date)
         if (!locReport) {
-            throw new navimateforbusiness.ApiException("Report not found", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("Report not found", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Get snapped latlngs for the report
@@ -23,7 +25,7 @@ class ReportService {
         def submissions = LocSubmission.findAllByAccountAndReport(rep.account, locReport).sort {it.submitDate}
 
         // Iterate through each snapped point to create report for frontend
-        int status = navimateforbusiness.Constants.Tracking.ERROR_NONE
+        int status = Constants.Tracking.ERROR_NONE
         snappedPoints.eachWithIndex {LatLng point, i ->
             // Create a report element for response
             def reportObjJson = [
@@ -39,7 +41,7 @@ class ReportService {
             def submission = submissions.find {it.roadsIdx == i}
             if (submission) {
                 // Add time, speed, battery information information
-                reportObjJson.time = navimateforbusiness.Constants.Formatters.TIME_SHORT.format(submission.submitDate)
+                reportObjJson.time = Constants.Formatters.TIME_SHORT.format(submission.submitDate)
                 reportObjJson.speed = submission.speed
                 reportObjJson.battery = submission.battery
 
@@ -93,7 +95,7 @@ class ReportService {
 
             // Update total distance travelled
             def roadPoints = googleRoadsResp.collect {new LatLng(it.location.latitude, it.location.longitude)}
-            long distanceM = navimateforbusiness.Constants.getLatlngListDistance(roadPoints)
+            long distanceM = Constants.getLatlngListDistance(roadPoints)
             report.distance = distanceM / 1000
 
             report.save(flush: true, failOnError: true)

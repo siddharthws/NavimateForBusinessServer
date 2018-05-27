@@ -1,6 +1,10 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.enums.Role
+import navimateforbusiness.enums.TaskStatus
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 
 @Transactional
 class TaskService {
@@ -19,22 +23,22 @@ class TaskService {
 
         // Get leads as per access level
         switch (user.role) {
-            case navimateforbusiness.Role.ADMIN:
+            case Role.ADMIN:
                 // Get all unremoved tasks created of account
                 tasks = Task.findAllByAccountAndIsRemoved(user.account, false)
                 break
 
-            case navimateforbusiness.Role.CC:
+            case Role.CC:
                 // Get all unremoved tasks created by this user
                 tasks = Task.findAllByAccountAndIsRemovedAndCreator(user.account, false, user)
                 break
 
-            case navimateforbusiness.Role.MANAGER:
+            case Role.MANAGER:
                 // Get all unremoved tasks created by this user
                 tasks = Task.findAllByAccountAndIsRemovedAndManager(user.account, false, user)
                 break
 
-            case navimateforbusiness.Role.REP:
+            case Role.REP:
                 // Get all unremoved tasks assigned to this rep
                 tasks = Task.findAllByAccountAndIsRemovedAndRep(user.account, false, user)
                 break
@@ -54,22 +58,22 @@ class TaskService {
 
         // Get leads as per access level
         switch (user.role) {
-            case navimateforbusiness.Role.ADMIN:
+            case Role.ADMIN:
                 // Get all unremoved tasks created of account
                 tasks = Task.findAllByAccount(user.account)
                 break
 
-            case navimateforbusiness.Role.CC:
+            case Role.CC:
                 // Get all unremoved tasks created by this user
                 tasks = Task.findAllByAccountAndCreator(user.account, user)
                 break
 
-            case navimateforbusiness.Role.MANAGER:
+            case Role.MANAGER:
                 // Get all unremoved tasks created by this user
                 tasks = Task.findAllByAccountAndManager(user.account, user)
                 break
 
-            case navimateforbusiness.Role.REP:
+            case Role.REP:
                 // Get all unremoved tasks assigned to this rep
                 tasks = Task.findAllByAccountAndRep(user.account, user)
                 break
@@ -163,7 +167,7 @@ class TaskService {
         if (json.id) {
             task = getForUserById(user, json.id)
             if (!task) {
-                throw new navimateforbusiness.ApiException("Illegal access to task", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Illegal access to task", Constants.HttpCodes.BAD_REQUEST)
             }
         } else {
             task = new Task(
@@ -183,7 +187,7 @@ class TaskService {
         }
 
         if (!manager) {
-            throw new navimateforbusiness.ApiException("Invalid manager assigned", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("Invalid manager assigned", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Set parameters from JSON
@@ -191,7 +195,7 @@ class TaskService {
         task.creator = user
         task.rep = rep
         task.leadid = json.leadId
-        task.status = navimateforbusiness.TaskStatus.fromValue(json.status)
+        task.status = TaskStatus.fromValue(json.status)
         task.period = json.period
         task.formTemplate = templateService.getForUserById(user, json.formTemplateId)
 
@@ -228,7 +232,7 @@ class TaskService {
         }
 
         // Close & Remove task
-        task.status = navimateforbusiness.TaskStatus.CLOSED
+        task.status = TaskStatus.CLOSED
         task.isRemoved = true
         task.lastUpdated = new Date()
         task.save(failOnError: true, flush: true)

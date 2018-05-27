@@ -2,6 +2,8 @@ package navimateforbusiness
 
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 import org.apache.poi.hssf.usermodel.HSSFDateUtil
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.DataFormatter
@@ -90,8 +92,8 @@ class TableService {
             values[3] = task.manager.name
             values[4] = task.rep ? task.rep.name : 'Unassigned'
             values[5] = task.creator.name
-            values[6] = task.dateCreated.format(navimateforbusiness.Constants.Date.FORMAT_LONG,
-                                                navimateforbusiness.Constants.Date.TIMEZONE_IST)
+            values[6] = task.dateCreated.format(Constants.Date.FORMAT_LONG,
+                                                Constants.Date.TIMEZONE_IST)
             values[7] = task.period
             values[8] = task.formTemplate.name
             values[9] = task.templateData.template.name
@@ -146,8 +148,8 @@ class TableService {
             values[0] = form.owner.manager.name
             values[1] = form.owner.name
             values[2] = form.submittedData.template.name
-            values[3] = form.dateCreated.format(navimateforbusiness.Constants.Date.FORMAT_LONG,
-                                                navimateforbusiness.Constants.Date.TIMEZONE_IST)
+            values[3] = form.dateCreated.format(Constants.Date.FORMAT_LONG,
+                                                Constants.Date.TIMEZONE_IST)
             values[4] = (form.latitude || form.longitude) ? form.latitude + "," + form.longitude : '-'
             values[5] = formService.getDistance(user, form)
             values[6] = lead ? [id:lead.id , name:lead.name] : "-"
@@ -222,7 +224,7 @@ class TableService {
     def parseExcel(def file) {
         // Validate File
         if (file.empty) {
-            throw new navimateforbusiness.ApiException("Invalid File uploaded", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("Invalid File uploaded", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Convert file to workbook
@@ -230,7 +232,7 @@ class TableService {
         try {
             workbook = new XSSFWorkbook(file.getInputStream())
         } catch (Exception e) {
-            throw new navimateforbusiness.ApiException("Invalid File uploaded", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("Invalid File uploaded", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Get sheet from workbook
@@ -243,7 +245,7 @@ class TableService {
         for (cell in headerRow.cellIterator()) {
             // Validate cell
             if (!cell) {
-                throw new navimateforbusiness.ApiException("Column names cannot be empty", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Column names cannot be empty", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Get and validate cell value
@@ -251,12 +253,12 @@ class TableService {
 
             // Check for null value
             if (!cellValue) {
-                throw new navimateforbusiness.ApiException("Column names cannot be empty", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Column names cannot be empty", Constants.HttpCodes.BAD_REQUEST)
             }
 
             // Check for duplicate columns
             if (columns.contains(cellValue)) {
-                throw new navimateforbusiness.ApiException("Duplicate column names are not allowed", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Duplicate column names are not allowed", Constants.HttpCodes.BAD_REQUEST)
             }
 
             columns.push(cellValue)
@@ -293,7 +295,7 @@ class TableService {
                                 HSSFDateUtil.isCellDateFormatted(cell)) {
                         // Format date value in long format
                         Date date = cell.getDateCellValue()
-                        SimpleDateFormat sdf = new SimpleDateFormat(navimateforbusiness.Constants.Date.FORMAT_LONG)
+                        SimpleDateFormat sdf = new SimpleDateFormat(Constants.Date.FORMAT_LONG)
                         value = sdf.format(date)
                     } else {
                         value = df.formatCellValue(cell)
@@ -317,7 +319,7 @@ class TableService {
 
         // Ensure atleast 1 row is present
         if (!rows.size()) {
-            throw new navimateforbusiness.ApiException("No Rows Found", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("No Rows Found", Constants.HttpCodes.BAD_REQUEST)
         }
 
         return [
@@ -334,9 +336,9 @@ class TableService {
 
         // Validate data
         if (!table.rows.size()) {
-            throw new navimateforbusiness.ApiException("No rows to export", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("No rows to export", Constants.HttpCodes.BAD_REQUEST)
         } else if (!params.order) {
-            throw new navimateforbusiness.ApiException("No columns to export", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+            throw new ApiException("No columns to export", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Create array of selected rows that need to be exported
@@ -372,18 +374,18 @@ class TableService {
 
                 // Parse special values as per column type
                 switch (column.type) {
-                    case navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION:
+                    case Constants.Template.FIELD_TYPE_LOCATION:
                         if (value != '-') {
                             value = "https://www.google.com/maps/search/?api=1&query=" + value
                         }
                         break
-                    case navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD:
+                    case Constants.Template.FIELD_TYPE_LEAD:
                         if (value != "-") {
                             value = value.name
                         }
                         break
-                    case navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO:
-                    case navimateforbusiness.Constants.Template.FIELD_TYPE_SIGN:
+                    case Constants.Template.FIELD_TYPE_PHOTO:
+                    case Constants.Template.FIELD_TYPE_SIGN:
                         if (value != '-') {
                             value = "https://biz.navimateapp.com/#/photos?name=" + value
                         }
@@ -408,13 +410,13 @@ class TableService {
         def columns = []
 
         // Add mandatory columns for leads
-        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD, "Name"))
-        columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Address"))
-        columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
-        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
+        columns.push(createColumn(0, Constants.Template.FIELD_TYPE_LEAD, "Name"))
+        columns.push(createColumn(1, Constants.Template.FIELD_TYPE_TEXT, "Address"))
+        columns.push(createColumn(2, Constants.Template.FIELD_TYPE_LOCATION, "Location"))
+        columns.push(createColumn(3, Constants.Template.FIELD_TYPE_TEXT, "Template"))
 
         // Add templated columns through lead templates
-        List<Template> templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_LEAD)
+        List<Template> templates = templateService.getForUserByType(user, Constants.Template.TYPE_LEAD)
         columns += getTemplatedColumns(templates, 4)
 
         columns
@@ -425,20 +427,20 @@ class TableService {
         def columns = []
 
         // Add mandatory columns for tasks
-        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TASK, "ID"))
-        columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD, "Lead"))
-        columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
-        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Manager"))
-        columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Rep"))
-        columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Created By"))
-        columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_DATE, "Create Date"))
-        columns.push(createColumn(7, navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER, "Period"))
-        columns.push(createColumn(8, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Form"))
-        columns.push(createColumn(9, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
-        columns.push(createColumn(10, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Status"))
+        columns.push(createColumn(0, Constants.Template.FIELD_TYPE_TASK, "ID"))
+        columns.push(createColumn(1, Constants.Template.FIELD_TYPE_LEAD, "Lead"))
+        columns.push(createColumn(2, Constants.Template.FIELD_TYPE_LOCATION, "Location"))
+        columns.push(createColumn(3, Constants.Template.FIELD_TYPE_TEXT, "Manager"))
+        columns.push(createColumn(4, Constants.Template.FIELD_TYPE_TEXT, "Rep"))
+        columns.push(createColumn(5, Constants.Template.FIELD_TYPE_TEXT, "Created By"))
+        columns.push(createColumn(6, Constants.Template.FIELD_TYPE_DATE, "Create Date"))
+        columns.push(createColumn(7, Constants.Template.FIELD_TYPE_NUMBER, "Period"))
+        columns.push(createColumn(8, Constants.Template.FIELD_TYPE_TEXT, "Form"))
+        columns.push(createColumn(9, Constants.Template.FIELD_TYPE_TEXT, "Template"))
+        columns.push(createColumn(10, Constants.Template.FIELD_TYPE_TEXT, "Status"))
 
         // Add templated columns through task templates
-        List<Template> templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_TASK)
+        List<Template> templates = templateService.getForUserByType(user, Constants.Template.TYPE_TASK)
         columns += getTemplatedColumns(templates, 11)
 
         columns
@@ -448,18 +450,18 @@ class TableService {
         def columns = []
 
         // Add mandatory columns for forms
-        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Manager"))
-        columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Representative"))
-        columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Template"))
-        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_DATE, "Date"))
-        columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION, "Location"))
-        columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Distance"))
-        columns.push(createColumn(6, navimateforbusiness.Constants.Template.FIELD_TYPE_LEAD, "Lead"))
-        columns.push(createColumn(7, navimateforbusiness.Constants.Template.FIELD_TYPE_TASK, "Task ID"))
-        columns.push(createColumn(8, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Task Status"))
+        columns.push(createColumn(0, Constants.Template.FIELD_TYPE_TEXT, "Manager"))
+        columns.push(createColumn(1, Constants.Template.FIELD_TYPE_TEXT, "Representative"))
+        columns.push(createColumn(2, Constants.Template.FIELD_TYPE_TEXT, "Template"))
+        columns.push(createColumn(3, Constants.Template.FIELD_TYPE_DATE, "Date"))
+        columns.push(createColumn(4, Constants.Template.FIELD_TYPE_LOCATION, "Location"))
+        columns.push(createColumn(5, Constants.Template.FIELD_TYPE_TEXT, "Distance"))
+        columns.push(createColumn(6, Constants.Template.FIELD_TYPE_LEAD, "Lead"))
+        columns.push(createColumn(7, Constants.Template.FIELD_TYPE_TASK, "Task ID"))
+        columns.push(createColumn(8, Constants.Template.FIELD_TYPE_TEXT, "Task Status"))
 
         // Add templated columns through form templates
-        List<Template> templates = templateService.getForUserByType(user, navimateforbusiness.Constants.Template.TYPE_FORM)
+        List<Template> templates = templateService.getForUserByType(user, Constants.Template.TYPE_FORM)
         columns += getTemplatedColumns(templates, 9)
 
         columns
@@ -469,12 +471,12 @@ class TableService {
         def columns = []
 
         // Add mandatory columns for team
-        columns.push(createColumn(0, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Name"))
-        columns.push(createColumn(1, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Phone"))
-        columns.push(createColumn(2, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Role"))
-        columns.push(createColumn(3, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Manager"))
-        columns.push(createColumn(4, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "About"))
-        columns.push(createColumn(5, navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT, "Active"))
+        columns.push(createColumn(0, Constants.Template.FIELD_TYPE_TEXT, "Name"))
+        columns.push(createColumn(1, Constants.Template.FIELD_TYPE_TEXT, "Phone"))
+        columns.push(createColumn(2, Constants.Template.FIELD_TYPE_TEXT, "Role"))
+        columns.push(createColumn(3, Constants.Template.FIELD_TYPE_TEXT, "Manager"))
+        columns.push(createColumn(4, Constants.Template.FIELD_TYPE_TEXT, "About"))
+        columns.push(createColumn(5, Constants.Template.FIELD_TYPE_TEXT, "Active"))
 
         columns
     }
@@ -525,27 +527,27 @@ class TableService {
 
         // Parse to string as per field type
         switch (value.field.type) {
-            case navimateforbusiness.Constants.Template.FIELD_TYPE_TEXT:
-            case navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO:
-            case navimateforbusiness.Constants.Template.FIELD_TYPE_SIGN:
-            case navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION:
-            case navimateforbusiness.Constants.Template.FIELD_TYPE_DATE:
+            case Constants.Template.FIELD_TYPE_TEXT:
+            case Constants.Template.FIELD_TYPE_PHOTO:
+            case Constants.Template.FIELD_TYPE_SIGN:
+            case Constants.Template.FIELD_TYPE_LOCATION:
+            case Constants.Template.FIELD_TYPE_DATE:
                 valueString = value.value ? value.value : '-'
                 break
-            case navimateforbusiness.Constants.Template.FIELD_TYPE_NUMBER:
+            case Constants.Template.FIELD_TYPE_NUMBER:
                 valueString = String.valueOf(value.value)
                 break
-            case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKBOX:
+            case Constants.Template.FIELD_TYPE_CHECKBOX:
                 valueString = Boolean.valueOf(value.value) ? "Yes" : "No"
                 break
-            case navimateforbusiness.Constants.Template.FIELD_TYPE_RADIOLIST:
+            case Constants.Template.FIELD_TYPE_RADIOLIST:
                 // Parse to JSON Object
                 def valueJson = JSON.parse(value.value)
 
                 // Get Option at selection index
                 valueString = valueJson.options[valueJson.selection]
                 break
-            case navimateforbusiness.Constants.Template.FIELD_TYPE_CHECKLIST:
+            case Constants.Template.FIELD_TYPE_CHECKLIST:
                 // Parse to JSON Object
                 def valueJson = JSON.parse(value.value)
 
@@ -573,9 +575,9 @@ class TableService {
     // Method to create a column using type and name
     private def createColumn(int id, int type, String name) {
         // Set sort status of column
-        boolean bSortable = !(  type == navimateforbusiness.Constants.Template.FIELD_TYPE_PHOTO ||
-                                type == navimateforbusiness.Constants.Template.FIELD_TYPE_SIGN ||
-                                type == navimateforbusiness.Constants.Template.FIELD_TYPE_LOCATION)
+        boolean bSortable = !(  type == Constants.Template.FIELD_TYPE_PHOTO ||
+                                type == Constants.Template.FIELD_TYPE_SIGN ||
+                                type == Constants.Template.FIELD_TYPE_LOCATION)
 
         return [
                 id:     id,

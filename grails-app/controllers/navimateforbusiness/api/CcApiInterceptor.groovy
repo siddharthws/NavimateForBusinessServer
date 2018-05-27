@@ -1,8 +1,8 @@
 package navimateforbusiness.api
 
-import navimateforbusiness.ApiException
-import navimateforbusiness.Constants
-import navimateforbusiness.Role
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
+import navimateforbusiness.enums.Role
 
 
 class CcApiInterceptor {

@@ -1,6 +1,9 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.enums.TaskStatus
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 
 @Transactional
 class TemplateService {
@@ -95,7 +98,7 @@ class TemplateService {
         if (json.id) {
             template = getForUserById(user, json.id)
             if (!template) {
-                throw new navimateforbusiness.ApiException("Illegal access to template", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Illegal access to template", Constants.HttpCodes.BAD_REQUEST)
             }
         } else {
             template = new Template(
@@ -132,7 +135,7 @@ class TemplateService {
     def remove(User user, Template template) {
         // Remove all objects associatedw= with this template
         switch (template.type) {
-            case navimateforbusiness.Constants.Template.TYPE_FORM:
+            case Constants.Template.TYPE_FORM:
                 // Remove all forms associated with this template
                 def forms = formService.getForUserByTemplate(user, template)
                 forms.each {Form form ->
@@ -144,14 +147,14 @@ class TemplateService {
                     taskService.remove(user, task)
                 }
                 break
-            case navimateforbusiness.Constants.Template.TYPE_TASK:
+            case Constants.Template.TYPE_TASK:
                 // Remove all tasks associated with this template
                 def tasks = taskService.getForUserByTemplate(user, template)
                 tasks.each {Task task ->
                     taskService.remove(user, task)
                 }
                 break
-            case navimateforbusiness.Constants.Template.TYPE_LEAD:
+            case Constants.Template.TYPE_LEAD:
                 // Remove all leads associated with this template
                 def leads = leadService.getForUserByFilter(user, [template: [value: template.name]], [:], []).leads
                 leads.each {LeadM lead ->
@@ -172,21 +175,21 @@ class TemplateService {
 
         // Add FCMs as per template type
         switch (template.type) {
-            case navimateforbusiness.Constants.Template.TYPE_FORM:
+            case Constants.Template.TYPE_FORM:
                 // Get FCMs for all affected tasks
                 def tasks = taskService.getForUserByFormTemplate(user, template)
-                def openTasks = tasks.findAll {Task it -> it.status == navimateforbusiness.TaskStatus.OPEN}
+                def openTasks = tasks.findAll {Task it -> it.status == TaskStatus.OPEN}
                 openTasks.each {Task task -> if (task.rep) {reps.push(task.rep)} }
                 break
-            case navimateforbusiness.Constants.Template.TYPE_LEAD:
+            case Constants.Template.TYPE_LEAD:
                 // Get all affected leads
                 def leads = leadService.getForUserByFilter(user, [template: [value: template.name]], [:], []).leads
                 leads.each {LeadM lead -> reps.addAll(leadService.getAffectedReps(user, lead)) }
                 break
-            case navimateforbusiness.Constants.Template.TYPE_TASK:
+            case Constants.Template.TYPE_TASK:
                 // Get FCMs for all affected tasks
                 def tasks = taskService.getForUserByTemplate(user, template)
-                def openTasks = tasks.findAll {Task it -> it.status == navimateforbusiness.TaskStatus.OPEN}
+                def openTasks = tasks.findAll {Task it -> it.status == TaskStatus.OPEN}
                 openTasks.each {Task task -> if (task.rep) {reps.push(task.rep)} }
                 break
         }

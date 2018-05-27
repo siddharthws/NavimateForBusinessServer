@@ -1,6 +1,9 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
+import navimateforbusiness.enums.Role
+import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 
 @Transactional
 class TemplateDataService {
@@ -30,7 +33,7 @@ class TemplateDataService {
         if (dataJson.id) {
             data = getForUserById(user, dataJson.id)
             if (!data) {
-                throw new navimateforbusiness.ApiException("Template Data is unavailable", navimateforbusiness.Constants.HttpCodes.BAD_REQUEST)
+                throw new ApiException("Template Data is unavailable", Constants.HttpCodes.BAD_REQUEST)
             }
         }
 
@@ -77,7 +80,7 @@ class TemplateDataService {
         }
 
         // Admin has all access
-        if (user.role == navimateforbusiness.Role.ADMIN) {
+        if (user.role == Role.ADMIN) {
             return true
         }
 
