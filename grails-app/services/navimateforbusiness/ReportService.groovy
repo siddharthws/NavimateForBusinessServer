@@ -113,10 +113,10 @@ class ReportService {
         // Iterate through report
         reportJson.each {rowJson ->
             // Get submission date
-            Date submitDate = new Date(rowJson.timestamp)
+            Date submitDate = Constants.Date.IST(new Date(rowJson.timestamp))
 
             // Get date only portion
-            Date submitDateOnly = new Date(rowJson.timestamp)
+            Date submitDateOnly = Constants.Date.IST(new Date(rowJson.timestamp))
             submitDateOnly.clearTime()
 
             // Check if location report exists for this date, otherwise create a new one
