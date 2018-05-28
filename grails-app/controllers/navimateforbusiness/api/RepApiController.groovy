@@ -100,6 +100,7 @@ class RepApiController {
             leads.each {LeadM it -> resp.leads.leads.push(leadService.toJson(it, rep))}
         }
 
+        log.error("Sync Input from " + rep.id + " = " + new Date(request.JSON.lastSyncTime).toString() + " :: Sync Response : " + resp.toString())
         render resp as JSON
     }
 
@@ -201,6 +202,7 @@ class RepApiController {
 
         // Get report elements from request
         def reportJson = request.JSON.report
+        log.error("Syncing report from " + rep.id + " = " + reportJson.toString())
 
         // Extract and save location report objects
         reportService.saveLocationReport(rep, reportJson)
