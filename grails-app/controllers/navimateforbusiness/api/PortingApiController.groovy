@@ -6,6 +6,7 @@ import navimateforbusiness.Data
 import navimateforbusiness.Form
 import navimateforbusiness.LeadM
 import grails.plugins.rest.client.RestBuilder
+import navimateforbusiness.LocSubmission
 import navimateforbusiness.enums.Role
 import navimateforbusiness.Task
 
@@ -13,6 +14,7 @@ import grails.converters.JSON
 import navimateforbusiness.User
 import navimateforbusiness.Template
 import navimateforbusiness.enums.Visibility
+import navimateforbusiness.util.Constants
 
 import static com.mongodb.client.model.Filters.eq
 
@@ -120,6 +122,13 @@ class PortingApiController {
         FindIterable fi = LeadM.find(eq("visibility", Visibility.PRIVATE.name()))
         fi.each {LeadM it ->
             it.visibility = Visibility.PUBLIC
+            it.save(flush: true, failOnError: true)
+        }
+    }
+
+    def fixSubmitDates() {
+        LocSubmission.findAll().each {
+            it.submitDate = Constants.Date.IST(it.submitDate)
             it.save(flush: true, failOnError: true)
         }
     }
