@@ -29,10 +29,9 @@
 
         <!-- Date Field Editor -->
         <div class="fbx-v" ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_DATE">
-            <span class="text-label">{{value.field.title}}</span>
-            <datepicker hint="Select" date-model="value.value"
+            <datepicker hint="{{value.field.title}}" date-model="value.value"
                         model-format="{{$root.Constants.Date.FORMAT_LONG}}"
-                        display-format="{{$root.Constants.Date.FORMAT_DATE_ONLY}}"></datepicker>
+                        display-format="{{$root.Constants.Date.FORMAT_DESCRIPTIVE}}"></datepicker>
             <!-- Error Text -->
             <span class="text-error align-self-end" ng-if="bShowError && value.getErr().length > 0">{{value.getErr()}}</span>
         </div>

@@ -328,6 +328,7 @@ Constants.Date = {
     // Date format types
     FORMAT_LONG:            "YYYY-MM-DD HH:mm:ss",
     FORMAT_SHORT:           "D/MM h:mm A",
+    FORMAT_DESCRIPTIVE:     "DD MMM YYYY h:mm A",
     FORMAT_DATE_ONLY:       "DD MMMM YYYY",
     FORMAT_FILE_SUFFIX:     "_DD_MM_YY_HHmm"
 }
