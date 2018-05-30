@@ -37,6 +37,20 @@ app.controller('TeamEditorCtrl', function ( $scope, $rootScope, $mdDialog, $loca
         vm.selectedUser = rep
     }
 
+    vm.copy = function () {
+        // Clone selected lead
+        var clonedUser = vm.selectedUser.Clone()
+
+        // Remove ID
+        clonedUser.id = null
+
+        // Add to array
+        vm.team.push(clonedUser)
+
+        // Mark as selected
+        vm.selectedUser = clonedUser
+    }
+
     // Method to update manager
     vm.updateManager = function (idx) {
         var id = vm.managers[idx].id

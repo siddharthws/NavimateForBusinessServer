@@ -60,8 +60,11 @@
             <!-- Dialog title -->
             <h4 class="align-self-end"><u>Task Editor</u></h4>
 
-            <!-- Add new button -->
-            <imagebutton class="m-1" image="/static/images/ic_add_white.png" text="Add New" ng-click="vm.add()"></imagebutton>
+            <!-- Add / Copy new button -->
+            <div class="fbx-h m-1">
+                <imagebutton class="flex-1" image="/static/images/ic_add_white.png" text="Add New" ng-click="vm.add()"></imagebutton>
+                <imagebutton class="flex-1 ml-2" image="/static/images/ic_copy_white.png" text="Copy" ng-click="vm.copy()"></imagebutton>
+            </div>
 
             <!-- Item List -->
             <div class="list list-blend flex-1">

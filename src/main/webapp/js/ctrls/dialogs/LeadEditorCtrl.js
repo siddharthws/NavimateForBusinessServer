@@ -48,6 +48,20 @@ app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog,
         vm.updateTemplate(0)
     }
 
+    vm.copy = function () {
+        // Clone selected lead
+        var clonedLead = vm.selectedLead.Clone()
+
+        // Remove ID
+        clonedLead.id = null
+
+        // Add to array
+        vm.leads.push(clonedLead)
+
+        // Mark as selected
+        vm.selectedLead = clonedLead
+    }
+
     vm.updateTemplate = function (idx) {
         // Get template by ID
         var id = vm.templates[idx].id
