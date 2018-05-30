@@ -64,6 +64,20 @@ app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog, $loca
         vm.updateTemplate(0)
     }
 
+    vm.copy = function () {
+        // Clone selected lead
+        var clonedTask = vm.selectedTask.Clone()
+
+        // Remove ID
+        clonedTask.id = null
+
+        // Add to array
+        vm.tasks.push(clonedTask)
+
+        // Mark as selected
+        vm.selectedTask = clonedTask
+    }
+
     vm.updateManager = function (idx) {
         var id = vm.managers[idx].id
         if (id == $localStorage.id) {

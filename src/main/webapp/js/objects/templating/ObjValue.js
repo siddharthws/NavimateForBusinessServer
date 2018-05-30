@@ -76,6 +76,10 @@ app.factory('ObjValue', function(TemplateService) {
         return err
     }
 
+    ObjValue.prototype.Clone = function () {
+        return ObjValue.fromJson(ObjValue.toJson(this))
+    }
+
     // ----------------------------------- Private APIs ------------------------------------//
     // ----------------------------------- Static APIs ------------------------------------//
     // Methods to convert between Frontend Field Object and JSON
