@@ -20,14 +20,14 @@
 }
 
 .marker.marker-green {
-    background: #00E676;
-    border-color: #00E676;
+    background:     #43a047;
+    border-color:   #43a047;
     color: white;
 }
 
 .marker.marker-red {
-    background: #FF3D00;
-    border-color: #FF3D00;
+    background:     #ef5350;
+    border-color:   #ef5350;
     color: white;
 }
 
@@ -60,11 +60,11 @@
 }
 
 .marker.marker-green::before {
-    border-color: #00E676 transparent;
+    border-color: #43a047 transparent;
 }
 
 .marker.marker-red::before {
-    border-color: #FF3D00 transparent;
+    border-color: #ef5350 transparent;
 }
 
 .marker.active::before,

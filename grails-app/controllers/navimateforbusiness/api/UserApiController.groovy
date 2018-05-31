@@ -8,6 +8,7 @@ class UserApiController {
 
     def authService
     def reportService
+    def formService
     def userService
 
     def changePassword() {
@@ -41,8 +42,14 @@ class UserApiController {
         // Get Report for this rep
         def report = reportService.getLocationReport(rep, dateOnly)
 
+        // Add forms submitted by rep on this date with valid latlng
+        def forms = formService.getForUser(rep)
+        forms = forms.findAll {it.dateCreated.clearTime() == dateOnly}
+        forms = forms.findAll {it.latitude || it.longitude}
+        def formResp = forms.collect {[id: it.id, lat: it.latitude, lng: it.longitude]}
+
         // Send response
-        def resp = [report: report]
+        def resp = [report: report, forms: formResp]
         render resp as JSON
     }
 }
