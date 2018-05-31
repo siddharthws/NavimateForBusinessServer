@@ -2,6 +2,7 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import grails.core.GrailsApplication
+import navimateforbusiness.Form
 import navimateforbusiness.util.Constants
 import navimateforbusiness.LeadM
 import navimateforbusiness.Task
@@ -489,6 +490,31 @@ class ManagerApiController {
     }
 
     // ----------------------- FORM APIs ----------------------- //
+    def getFormsById () {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // get tasks for this user
+        def forms = formService.getForUser(user)
+
+        // Find tasks with given IDs
+        def selectedForms = []
+        request.JSON.ids.each {id -> selectedForms.push(forms.find {it -> it.id == id}) }
+
+        // Throw exception if all tasks not found
+        if (selectedForms.size() != request.JSON.ids.size() ||
+            selectedForms.findAll {it == null}.size() > 0) {
+            throw new ApiException("Invalid task IDs requested", Constants.HttpCodes.BAD_REQUEST)
+
+        }
+
+        // Prepare JSON response
+        def resp = []
+        selectedForms.each {Form form -> resp.push(formService.toJson(form, user))}
+
+        render resp as JSON
+    }
+
     def getFormTable() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))

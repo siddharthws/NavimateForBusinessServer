@@ -76,7 +76,31 @@ class FormService {
 
     // Methods to convert form objects to / from JSON
     def toJson(Form form, User user) {
-        return null
+        // Get lead for this form
+        LeadM lead = form.task ? leadService.getForUserById(user, form.task.leadid) : null
+
+        // Convert template properties to JSON
+        def json = [
+                id:             form.id,
+                rep:            [id: form.owner.id, name: form.owner.name],
+                lat:            form.latitude,
+                lng:            form.longitude,
+                submitTime:     Constants.Formatters.LONG.format(Constants.Date.IST(form.dateCreated)),
+                templateId:     form.submittedData.template.id,
+                distance:       getDistance(user, form),
+                task:           form.task ? [id: form.task.id, name: String.valueOf(form.task.id)] : null,
+                lead:           lead ? [id: lead.id, name: lead.name] : null,
+                status:         form.task ? form.taskStatus : null,
+                values:         []
+        ]
+
+        // Convert template values to JSON
+        def values = form.submittedData.values.sort {it -> it.id}
+        values.each {value ->
+            json.values.push([fieldId: value.field.id, value: value.value])
+        }
+
+        json
     }
 
     Form fromJson(def json, User user) {
