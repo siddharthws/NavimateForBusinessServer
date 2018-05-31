@@ -13,6 +13,7 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, L
     vm.selectedRep = null
     vm.selectedDate = ""
     vm.report = []
+    vm.forms = []
     vm.selection = null
 
     // Init Map
@@ -46,6 +47,7 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, L
                     // Set report to cache
                     vm.report = LocReportDS.cache.report.points
                     vm.distance = LocReportDS.cache.report.distance
+                    vm.forms = LocReportDS.cache.forms
 
                     // Update map markers and polyline
                     updateMap()
@@ -74,7 +76,15 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, L
     }
 
     vm.onMarkerClick = function (idx) {
-        vm.selection = vm.report[vm.map.markers[idx].id]
+        // Get selected marker
+        var selectedMarker = vm.map.markers[idx]
+
+        // Trigger Form Viewer dialog if this is a form marker otherwise mark report selection
+        if (selectedMarker.icon) {
+            DialogService.formViewer(selectedMarker.id)
+        } else {
+            vm.selection = vm.report[selectedMarker.id]
+        }
     }
 
     /*-------------------------------------- Private APIs ---------------------------------------*/
@@ -132,6 +142,14 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, L
                 vm.endTime = markers[markers.length - 1].name
             }
         }
+
+        // Add markers for forms
+        vm.forms.forEach(function (form) {
+            var formMarker = new ObjMarker( form.id, null, new google.maps.LatLng(form.lat, form.lng),
+                                            Constants.Map.MARKER_GREEN, "static/images/ic_report_white.png")
+            formMarker.bExcludeFromClustering = true
+            markers.push(formMarker)
+        })
 
         // set map markers
         vm.map.markers = markers
