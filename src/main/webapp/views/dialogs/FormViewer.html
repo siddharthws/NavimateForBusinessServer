@@ -1,0 +1,69 @@
+
+<md-dialog class="dialog-container box box-dialog py-3 px-5 w-50 h-75">
+    <!-- Main container for user information -->
+    <div class="fbx-v h-100">
+        <!-- Dialog Title -->
+        <h4><b>{{"Form: " + vm.obj.id}}</b></h4>
+
+        <!-- Error / Waiting UI -->
+        <div ng-if="vm.bLoading || vm.bLoadError" class="align-self-center">
+            <!-- Waiting Spinner -->
+            <div class="fbx-h fbx-center-children" ng-if="vm.bLoading">
+                <loader></loader>
+                <h4 class="ml-1 text-grey">Loading...</h4>
+            </div>
+
+            <!-- Error UI -->
+            <div class="fbx-h fbx-center-children" ng-if="vm.bLoadError">
+                <img src="/static/images/ic_smiley_sad.png">
+                <h4 class="ml-1 text-grey">Could not get data...</h4>
+            </div>
+        </div>
+
+        <!-- Dialog Content -->
+        <div class="fbx-v flex-1 overflow-auto mt-2 dialog-editor-content" ng-if="!vm.bLoading && !vm.bLoadError">
+            <!-- Representative -->
+            <text-box class="mr-4" label="Submitted By (Rep)" text="{{vm.obj.rep.name}}"></text-box>
+
+            <div class="fbx-h mt-2">
+                <!-- Task -->
+                <text-box class="mr-4" label="Task ID" text="{{vm.obj.task ? vm.obj.task.name : '-'}}"></text-box>
+
+                <!-- Status -->
+                <text-box class="mr-4" label="Task Status" text="{{vm.obj.task ? vm.obj.status : '-'}}"></text-box>
+
+                <!-- Lead -->
+                <text-box class="mr-4" label="Lead" text="{{vm.obj.lead ? vm.obj.lead.name : '-'}}"></text-box>
+            </div>
+
+            <!-- Form Params -->
+            <div class="fbx-h mt-2">
+                <!-- Location View Button -->
+                <imagebutton class="mr-4" image="/static/images/icon_location_grey.png" text="Submit Location"
+                             ng-if="vm.obj.lat || vm.obj.lng" b-transparent="true" ng-click="vm.viewLocation()"></imagebutton>
+                <text-box class="mr-4" label="Submit Location" text="-" ng-if="!vm.obj.lat && !vm.obj.lng"></text-box>
+
+                <!-- Distance -->
+                <text-box class="mr-4" label="Distance from Lead" text="{{vm.obj.distance}}"></text-box>
+
+                <!-- Submit Time -->
+                <text-box class="mr-4" label="Submit Time" text="{{vm.obj.submitTime}}"></text-box>
+            </div>
+
+            <!-- Template Name -->
+            <text-box class="mr-4 mt-2" label="Template" text="{{vm.obj.template.name}}"></text-box>
+
+            <!-- Template Params -->
+            <div class="fbx-h mt-2 flex-wrap">
+                <!-- Template values -->
+                <div ng-repeat="value in vm.obj.values" class="mr-4 mt-2">
+                    <!-- Values with string display -->
+                    <text-box label="{{value.field.title}}" text="{{value.getDisplayString()}}"></text-box>
+                </div>
+            </div>
+        </div>
+
+        <!-- Close Buttons -->
+        <button class="btn-shiny align-self-end" ng-click="vm.close()">Close</button>
+    </div>
+</md-dialog>

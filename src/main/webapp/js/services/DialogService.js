@@ -221,6 +221,19 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
+    this.formViewer = function (id) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/FormViewer.html',
+            controller: 'FormViewerCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                id:  id
+            }
+        })
+    }
+
     this.FieldSettings = function (field) {
         // Show Dialog
         $mdDialog.show({
