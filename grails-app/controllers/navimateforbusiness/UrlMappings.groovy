@@ -56,6 +56,7 @@ class UrlMappings {
         "/api/manager/tasks/remove"      (controller: "ManagerApi") {action = [POST: "removeTasks"]}
 
         // Form Related APIs
+        "/api/manager/forms/getByIds"    (controller: "ManagerApi") {action = [POST: "getFormsById"]}
         "/api/manager/forms/getTable"    (controller: "ManagerApi") {action = [POST: "getFormTable"]}
         "/api/manager/forms/getIds"      (controller: "ManagerApi") {action = [POST: "getFormIds"]}
         "/api/manager/forms/export"      (controller: "ManagerApi") {action = [POST: "exportForms"]}
