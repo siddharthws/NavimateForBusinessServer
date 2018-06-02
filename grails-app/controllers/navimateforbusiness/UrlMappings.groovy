@@ -100,6 +100,7 @@ class UrlMappings {
         "/api/port/fixIsRemoved"           (controller: "PortingApi") {action = [GET: "fixIsRemoved"]}
         "/api/port/publicLeads"            (controller: "PortingApi") {action = [GET: "publicLeads"]}
         "/api/port/fixDates"               (controller: "PortingApi") {action = [GET: "fixSubmitDates"]}
+        "/api/port/refreshLocReport"       (controller: "PortingApi") {action = [GET: "refreshLocReport"]}
 
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs

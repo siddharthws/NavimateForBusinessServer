@@ -6,6 +6,7 @@ import navimateforbusiness.Data
 import navimateforbusiness.Form
 import navimateforbusiness.LeadM
 import grails.plugins.rest.client.RestBuilder
+import navimateforbusiness.LocReport
 import navimateforbusiness.LocSubmission
 import navimateforbusiness.enums.Role
 import navimateforbusiness.Task
@@ -130,6 +131,13 @@ class PortingApiController {
         LocSubmission.findAll().each {
             it.submitDate = Constants.Date.IST(it.submitDate)
             it.save(flush: true, failOnError: true)
+        }
+    }
+
+    def reportService
+    def refreshLocReport() {
+        LocReport.findAll().each {report ->
+            reportService.refreshLocReport(report)
         }
     }
 }

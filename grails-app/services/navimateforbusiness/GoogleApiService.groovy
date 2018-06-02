@@ -4,6 +4,7 @@ import grails.gorm.transactions.Transactional
 import grails.plugins.rest.client.RestBuilder
 import navimateforbusiness.objects.LatLng
 import navimateforbusiness.util.ApiException
+import navimateforbusiness.util.Constants
 
 @Transactional
 class GoogleApiService {
@@ -138,10 +139,12 @@ class GoogleApiService {
             // Extract each snapped point from response and feed to local array
             def respJson = response.json
             respJson.snappedPoints.each {it ->
+                it.point = new LatLng(it.location.latitude, it.location.longitude)
+
                 // Check if this point is present in original data
                 if (it.originalIndex) {
                     // Update original index
-                    it.originalIndex += startIdx
+                    it.origIdx = it.originalIndex + startIdx
                 }
 
                 // Add point to snapped points response
@@ -149,6 +152,26 @@ class GoogleApiService {
             }
         }
 
-        return snappedPoints
+        return [points: snappedPoints]
+    }
+
+    def directions(start, end) {
+        def resp = [points: []]
+
+        // Get snapped result from google
+        def request = new RestBuilder(connectTimeout:1000, readTimeout:20000)
+        def url = "https://maps.googleapis.com/maps/api/directions/json?origin="+start.toString()+"&destination="+end.toString()+"&key="+API_KEY
+        def response = request.get(url)
+
+        // Extract each snapped point from response and feed to local array
+        def respJson = response.json
+        if (respJson.status != "OK") {throw new ApiException("Unable to get response form directions API " + respJson.toString())}
+
+        def steps = respJson.routes[0].legs[0].steps
+        resp.points.push(start)
+        steps.each { resp.points.addAll(Constants.decodePolyline(it.polyline.points)) }
+        resp.points.push(end)
+
+        resp
     }
 }

@@ -21,7 +21,7 @@ class LocSubmission {
     int battery
 
     // Mapping to index in roads array
-    int roadsIdx
+    int roadsIdx = -2
 
     static constraints = {
         roadsIdx nullable: true

@@ -70,40 +70,12 @@ class ReportService {
         def validSubmissions = submissions.findAll {new LatLng(it.latlngString).isValid()}
 
         // Check if all valid submissions have a valid road index
-        def noRoadSubmission = validSubmissions.findAll {!it.roadsIdx}
-        if (noRoadSubmission) {
-            // Collect all LatLngs
-            def latlngs = validSubmissions.collect {new LatLng(it.latlngString)}
-
-            // Get road snapped results from google
-            def googleRoadsResp = googleApiService.snapToRoads(latlngs)
-
-            // Update road indexes for all submissions
-            validSubmissions.eachWithIndex { LocSubmission it, int i ->
-                def roadsResult = googleRoadsResp.find {i == it.originalIndex}
-                if (roadsResult) {
-                    it.roadsIdx = googleRoadsResp.indexOf(roadsResult)
-                } else {
-                    it.roadsIdx = -1
-                }
-
-                it.save(flush: true, failOnError: true)
-            }
-
-            // Update encoded polyline in report
-            report.encPolyline = encodePolyline(googleRoadsResp)
-
-            // Update total distance travelled
-            def roadPoints = googleRoadsResp.collect {new LatLng(it.location.latitude, it.location.longitude)}
-            long distanceM = Constants.getLatlngListDistance(roadPoints)
-            report.distance = distanceM / 1000
-
-            report.save(flush: true, failOnError: true)
-        }
+        def noRoadSubmission = validSubmissions.findAll {it.roadsIdx == -2}
+        if (noRoadSubmission) { refreshLocReport(report) }
 
         // Return decoded polyline for report
         if (report.encPolyline) {
-            return decodePolyline(report.encPolyline)
+            return Constants.decodePolyline(report.encPolyline)
         } else {
             return []
         }
@@ -141,78 +113,136 @@ class ReportService {
         }
     }
 
-    /**
-     * Decodes an encoded path string into a sequence of LatLngs.
-     */
-    def decodePolyline(String encodedPath) {
-        int len = encodedPath.length();
+    private def getSmoothPath(List<LatLng> path) {
+        // Get input array form path
+        def inputArr = getInputArr(path)
 
-        // For speed we preallocate to an upper bound on the final length, then
-        // truncate the array before returning.
-        def path = []
-        int index = 0;
-        int lat = 0;
-        int lng = 0;
+        // Get google response for each input element
+        def respArr = getPathFromGoogle(inputArr)
 
-        while (index < len) {
-            int result = 1;
-            int shift = 0;
-            int b;
-            while ({
-                b = encodedPath.charAt(index++) - 63 - 1;
-                result += b << shift;
-                shift += 5;
-                b >= 0x1f
-            }());
-            lat += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+        // Parse input and response to a list of points with original indexes
+        def smoothPath = parseToSmoothPath(path, inputArr, respArr)
 
-            result = 1;
-            shift = 0;
-            while ({
-                b = encodedPath.charAt(index++) - 63 - 1;
-                result += b << shift;
-                shift += 5;
-                b >= 0x1f
-            }());
-            lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
-
-            path.add(new LatLng(lat * 1e-5, lng * 1e-5));
-        }
-
-        return path;
+        smoothPath
     }
 
-    /**
-     * Encodes a sequence of LatLngs into an encoded path string.
-     */
-    def encodePolyline(def path) {
-        long lastLat = 0;
-        long lastLng = 0;
+    private def getInputArr(List<LatLng> path) {
+        def inputArr = []
 
-        final StringBuffer result = new StringBuffer();
+        // Create input array as per point distances in path
+        for (int i  = 0; i < path.size() - 1; i++) {
+            // Get distance between this and next point
+            int distance = Constants.getDistanceBetweenCoordinates(path[i], path[i+1])
 
-        for (def point : path) {
-            long lat = Math.round(point.location.latitude * 1e5);
-            long lng = Math.round(point.location.longitude * 1e5);
+            if(distance <= 500) {
+                // Get the last added input
+                def lastAddedInput = inputArr ? inputArr.last() : null
 
-            long dLat = lat - lastLat;
-            long dLng = lng - lastLng;
+                // Add new if last one is invalid
+                if (!lastAddedInput || lastAddedInput.type == "directions") {
+                    lastAddedInput = [type: "roads", points: []]
+                    inputArr.push(lastAddedInput)
+                }
 
-            encode(dLat, result);
-            encode(dLng, result);
+                // Add this point to input
+                lastAddedInput.points.push(path[i])
 
-            lastLat = lat;
-            lastLng = lng;
+                // Add next point if it is the last point
+                if (i + 1 == path.size() - 1) {
+                    lastAddedInput.points.push(path[i + 1])
+                }
+            } else {
+                // Add as directions input
+                inputArr.push([type: "directions", start: path[i], end: path[i+1]])
+            }
         }
-        return result.toString();
+
+        inputArr
     }
 
-    void encode(long v, StringBuffer result) {
-        v = v < 0 ? ~(v << 1) : v << 1;
-        while (v >= 0x20) {
-            result.append(Character.toChars((int) ((0x20 | (v & 0x1f)) + 63)));
-            v >>= 5;
+    private def getPathFromGoogle(def arr) {
+        def respArr = []
+
+        arr.each {def entry ->
+            if (entry.type == "directions") {
+                // Get response form directions API
+                def resp = googleApiService.directions(entry.start, entry.end)
+                respArr.push(resp)
+            } else {
+                // Get response from roads API
+                def resp = googleApiService.snapToRoads(entry.points)
+                respArr.push(resp)
+            }
         }
-        result.append(Character.toChars((int) (v + 63)));
+
+        respArr
+    }
+
+    private def parseToSmoothPath(def origList, def inArr, def outArr) {
+        def smoothPath = []
+
+        // Thorw exception if input and output array are of different sizes
+        if (inArr.size() != outArr.size()) {
+            throw new ApiException("Illegal input and output for getting path", Constants.HttpCodes.INTERNAL_SERVER_ERROR)
+        }
+
+        for (int i = 0; i < inArr.size(); i++) {
+            // Get inptu and output elements
+            def inElem = inArr[i]
+            def outElem = outArr[i]
+
+            // Check type of element
+            if (inElem.type == "directions") {
+                // Add start point to array
+                smoothPath.push([point: outElem.points.first(), origIdx: origList.indexOf(inElem.start)])
+
+                // Push all points between first and last
+                outElem.points.subList(1, outElem.points.size() - 2).each {smoothPath.push([point: it])}
+
+                // Add endpoint to array
+                smoothPath.push([point: outElem.points.last(), origIdx: origList.indexOf(inElem.end)])
+            } else {
+                // Add all points to smooth path with correct indexes
+                int idxOffset = origList.indexOf(outElem.points[0])
+                outElem.points.findAll {it.origIdx}.each {it.origIdx += idxOffset}
+
+                // Add all points to smooth points
+                smoothPath.addAll(outElem.points)
+            }
+        }
+
+        smoothPath
+    }
+
+    def refreshLocReport(LocReport report) {
+        // Get all latlngs from report
+        def submissions = LocSubmission.findAllByAccountAndReport(report.account, report).sort {it.submitDate}
+        def validSubmissions = submissions.findAll {new LatLng(it.latlngString).isValid()}
+        def latlngs = validSubmissions.collect {new LatLng(it.latlngString)}
+
+        // Convert LatLngs to a smooth Path
+        def smoothPath = getSmoothPath(latlngs)
+
+        // Update road indexes for all submissions
+        validSubmissions.eachWithIndex { LocSubmission it, int i ->
+            def roadsResult = smoothPath.find {i == it.origIdx}
+            if (roadsResult) {
+                it.roadsIdx = smoothPath.indexOf(roadsResult)
+            } else {
+                it.roadsIdx = -1
+            }
+
+            it.save(flush: true, failOnError: true)
+        }
+
+        // Update encoded polyline in report
+        def smoothLatLngs = smoothPath.collect {it.point}
+        report.encPolyline = Constants.encodePolyline(smoothLatLngs)
+
+        // Update total distance travelled
+        long distanceM = Constants.getLatlngListDistance(smoothLatLngs)
+        report.distance = distanceM / 1000
+
+        report.save(flush: true, failOnError: true)
     }
 }
