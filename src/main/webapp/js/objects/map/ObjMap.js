@@ -79,7 +79,7 @@ app.factory('ObjMap', function($timeout, LocationService) {
                 return
             }
 
-            // ry centering using marker bounds
+            // try centering using marker & polyline bounds
             var bounds = getMarkerBounds()
             if (!bounds.isEmpty() && Statics.isPositionValid(bounds.getCenter())) {
                 vm.gMap.fitBounds(bounds)
@@ -98,8 +98,16 @@ app.factory('ObjMap', function($timeout, LocationService) {
         function getMarkerBounds() {
             var bounds = new google.maps.LatLngBounds()
 
+            // Get marker bounds
             vm.markers.forEach(function (marker) {
                 bounds.extend(marker.position)
+            })
+
+            // Get polyline bounds
+            vm.polylines.forEach(function (polyline) {
+                polyline.path.forEach(function (point) {
+                    bounds.extend(new google.maps.LatLng(point[0], point[1]))
+                })
             })
 
             // Don't zoom in too far on only one marker
