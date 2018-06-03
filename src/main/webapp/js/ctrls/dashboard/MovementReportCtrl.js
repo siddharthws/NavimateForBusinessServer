@@ -2,7 +2,9 @@
  * Created by Chandel on 11-02-2018.
  */
 
-app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, LocReportDS, DialogService, TableService, ObjMap, ObjMarker, ObjPolyline) {
+app.controller("MovementReportCtrl", function ( $rootScope, $scope, $timeout,
+                                                NavService, LocReportDS, DialogService, TableService,
+                                                ObjMap, ObjMarker, ObjPolyline) {
     /*-------------------------------------- INIT ---------------------------------------------*/
     var vm = this
 
@@ -32,6 +34,9 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, L
     vm.startTime = null
     vm.endTime = null
 
+    // Flags
+    vm.bPlaying = false
+
     /*-------------------------------------- Public APIs ---------------------------------------*/
     vm.sync = function() {
         // Get report only if both date and rep are selected
@@ -59,6 +64,9 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, L
                 function () {
                     // Hide dialog
                     $rootScope.hideWaitingDialog()
+
+                    // Show error alert
+                    DialogService.alert("Location Report not available !!!")
                 }
             )
         }
@@ -84,6 +92,46 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, L
             DialogService.formViewer(selectedMarker.id)
         } else {
             vm.selection = vm.report[selectedMarker.id]
+        }
+    }
+
+    vm.play = function () {
+        // Reset markers and polyline
+        vm.map.markers = [new ObjMarker(0, "", new google.maps.LatLng(0, 0))]
+        vm.map.polylines = [new ObjPolyline([], '#37bcf2')]
+
+        // Set playing flag
+        vm.bPlaying = true
+
+        // Start play callbacks
+        $timeout(cbPlay, 0)
+    }
+
+    function cbPlay() {
+        // Get marker and polyline to update
+        var polyline = vm.map.polylines[0]
+        var marker = vm.map.markers[0]
+
+        // Get report element to process
+        var reportObj = vm.report[polyline.path.length]
+
+        // Update marker
+        marker.position = new google.maps.LatLng(reportObj.latitude, reportObj.longitude)
+        if (reportObj.time) {
+            marker.name = reportObj.time
+        }
+
+        // Update polyline
+        polyline.path.push([reportObj.latitude, reportObj.longitude])
+
+        // Check if whole rpeort has been displayed
+        if (polyline.path.length < vm.report.length) {
+            // Schedule next callback after 16 ms
+            $timeout(cbPlay, 16)
+        } else {
+            // Exit play callbacks
+            $timeout(updateMap, 1000)
+            vm.bPlaying = false
         }
     }
 
@@ -128,6 +176,7 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, L
                 // Add marker if time is valid
                 if (reportObj.time) {
                     var marker = new ObjMarker(i, reportObj.time, new google.maps.LatLng(reportObj.latitude, reportObj.longitude))
+                    marker.bShow = false
                     markers.push(marker)
                 }
             })
@@ -135,9 +184,11 @@ app.controller("MovementReportCtrl", function ($rootScope, $scope, NavService, L
             // Add start and end text to first and last markers
             if (markers.length) {
                 markers[0].bg = Constants.Map.MARKER_GREEN
+                markers[0].bShow = true
                 markers[0].bExcludeFromClustering = true
                 vm.startTime = markers[0].name
                 markers[markers.length - 1].bg = Constants.Map.MARKER_RED
+                markers[markers.length - 1].bShow = true
                 markers[markers.length - 1].bExcludeFromClustering = true
                 vm.endTime = markers[markers.length - 1].name
             }

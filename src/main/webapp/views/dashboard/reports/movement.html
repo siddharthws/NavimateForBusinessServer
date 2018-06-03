@@ -17,21 +17,26 @@
         </div>
 
         <!-- Total Distance -->
-        <div class="text-grey mt-2">
-            <span>Distance Covered: </span>
-            <span class="text-bold">{{$ctrl.distance}} km</span>
-        </div>
+        <div ng-if="$ctrl.report.length">
+            <div class="text-grey mt-2">
+                <span>Distance Covered: </span>
+                <span class="text-bold">{{$ctrl.distance}} km</span>
+            </div>
 
-        <!-- Show start and end time -->
-        <div class="fbx-h justify-content-around text-grey mt-2" ng-if="$ctrl.startTime && $ctrl.endTime">
-            <span class="text-bold">Start: {{$ctrl.startTime}}</span>
-            <span class="text-bold">End: {{$ctrl.endTime}}</span>
-        </div>
+            <!-- Show start and end time -->
+            <div class="fbx-h justify-content-around text-grey mt-2" ng-if="$ctrl.startTime && $ctrl.endTime">
+                <span class="text-bold">Start: {{$ctrl.startTime}}</span>
+                <span class="text-bold">End: {{$ctrl.endTime}}</span>
+            </div>
 
-        <!-- Show marker specific information -->
-        <div class="fbx-h justify-content-around text-grey mt-2" ng-if="$ctrl.selection">
-            <span class="text-bold">Speed: {{$ctrl.selection.speed}} km/hr</span>
-            <span class="text-bold">Battery: {{$ctrl.selection.battery}}%</span>
+            <!-- Show marker specific information -->
+            <div class="fbx-h justify-content-around text-grey mt-2" ng-if="$ctrl.selection">
+                <span class="text-bold">Speed: {{$ctrl.selection.speed}} km/hr</span>
+                <span class="text-bold">Battery: {{$ctrl.selection.battery}}%</span>
+            </div>
+
+            <!-- Play Button -->
+            <imagebutton ng-if="!$ctrl.bPlaying" text="Play" image="/static/images/ic_play_white.png" ng-click="$ctrl.play()"></imagebutton>
         </div>
     </div>
 </div>
