@@ -2,6 +2,7 @@ package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
 import navimateforbusiness.enums.Role
+import navimateforbusiness.objects.LatLng
 import navimateforbusiness.util.Constants
 import org.grails.web.json.JSONObject
 
@@ -135,6 +136,22 @@ class TrackingService {
             trackObj.lat             = latestForm.latitude
             trackObj.lng             = latestForm.longitude
             trackObj.locUpdateTime   = latestForm.dateCreated
+        }
+
+        // Get latest valid report submission for the rep
+        LocSubmission lastValidSubmission
+        def reports = LocReport.findAllByAccountAndOwner(rep.account, rep).sort{it.submitDate}.reverse()
+        for (int i = 0; i < reports.size() && !lastValidSubmission; i++) {
+            def submissions = LocSubmission.findAllByAccountAndReport(rep.account, reports[i]).sort {it.submitDate}.reverse()
+            def validSubs = submissions.findAll {new LatLng(it.latlngString).isValid()}
+            lastValidSubmission = validSubs ? validSubs[0] : null
+        }
+
+        // Update location params from form if tracking object is invalid / older
+        if (lastValidSubmission && trackObj.locUpdateTime < lastValidSubmission.submitDate) {
+            trackObj.lat             = new LatLng(lastValidSubmission.latlngString).lat
+            trackObj.lng             = new LatLng(lastValidSubmission.latlngString).lng
+            trackObj.locUpdateTime   = lastValidSubmission.submitDate
         }
 
         trackObj
