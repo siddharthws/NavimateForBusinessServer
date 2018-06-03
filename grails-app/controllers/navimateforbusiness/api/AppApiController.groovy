@@ -7,7 +7,7 @@ import org.grails.web.json.JSONObject
 
 class AppApiController {
     static final int MIN_APP_VERSION_CODE       = 33
-    static final int CURRENT_APP_VERSION_CODE   = 34
+    static final int CURRENT_APP_VERSION_CODE   = 35
 
     def checkForUpdate() {
         int appVersionCode = request.JSON.versionCode
