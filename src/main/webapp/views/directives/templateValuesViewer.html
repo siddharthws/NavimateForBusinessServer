@@ -1,0 +1,20 @@
+<div class="fbx-h align-items-start flex-wrap">
+    <!-- Array of viewer components of different types depending on value field -->
+    <div ng-repeat="value in values" class="mr-5 mt-3">
+        <!-- Photo / Signature -->
+        <div class="box box-sm fbx-v"
+             ng-if="(value.value != '-') &&
+                    (value.field.type == $root.Constants.Template.FIELD_TYPE_PHOTO ||
+                     value.field.type == $root.Constants.Template.FIELD_TYPE_SIGN)">
+            <span class="text-label">{{value.field.title}}</span>
+            <input type="button" value="" class="ib-base ib-xs ib-hover ib-link" title="Open Image"
+                   ng-click="vm.showImage(value)"/>
+        </div>
+
+        <!-- Values with string display -->
+        <text-box ng-if="(value.field.type != $root.Constants.Template.FIELD_TYPE_PHOTO &&
+                          value.field.type != $root.Constants.Template.FIELD_TYPE_SIGN) ||
+                         value.value == '-'"
+                  label="{{value.field.title}}" text="{{value.getDisplayString()}}"></text-box>
+    </div>
+</div>

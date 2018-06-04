@@ -382,6 +382,20 @@ app.directive('templateValuesEditor', function () {
     }
 })
 
+// Directive to view template values array
+app.directive('templateValuesViewer', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            values:      '='
+        },
+        // Controller and view
+        controller: 'TemplateValuesViewerCtrl as vm',
+        templateUrl: '/static/views/directives/templateValuesViewer.html'
+    }
+})
+
 // Directive to showing map
 app.directive('nvMap', function () {
     return {
