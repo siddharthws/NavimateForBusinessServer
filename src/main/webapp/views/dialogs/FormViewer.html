@@ -54,13 +54,7 @@
             <text-box class="mr-4 mt-2" label="Template" text="{{vm.obj.template.name}}"></text-box>
 
             <!-- Template Params -->
-            <div class="fbx-h mt-2 flex-wrap">
-                <!-- Template values -->
-                <div ng-repeat="value in vm.obj.values" class="mr-4 mt-2">
-                    <!-- Values with string display -->
-                    <text-box label="{{value.field.title}}" text="{{value.getDisplayString()}}"></text-box>
-                </div>
-            </div>
+            <template-values-viewer class="fbx-h mt-2 flex-wrap" values="vm.obj.values"></template-values-viewer>
         </div>
 
         <!-- Close Buttons -->
