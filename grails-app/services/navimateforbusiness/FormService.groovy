@@ -90,7 +90,7 @@ class FormService {
                 distance:       getDistance(user, form),
                 task:           form.task ? [id: form.task.id, name: String.valueOf(form.task.id)] : null,
                 lead:           lead ? [id: lead.id, name: lead.name] : null,
-                status:         form.task ? form.taskStatus : null,
+                status:         form.task ? form.taskStatus.name() : null,
                 values:         []
         ]
 
