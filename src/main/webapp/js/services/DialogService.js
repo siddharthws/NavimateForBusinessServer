@@ -10,6 +10,7 @@ app.service('DialogService', function($mdDialog) {
         $mdDialog.show({    templateUrl: '/static/views/dialogs/Alert.html',
                             controller: 'AlertCtrl',
                             clickOutsideToClose: true,
+                            multiple: true,
                             locals: { message: message }
         })
     }
@@ -20,6 +21,7 @@ app.service('DialogService', function($mdDialog) {
         $mdDialog.show({    templateUrl: '/static/views/dialogs/Confirm.html',
                             controller: 'ConfirmCtrl',
                             clickOutsideToClose: true,
+                            multiple: true,
                             locals: {
                                 message:    message,
                                 yesCb:      yesCb
