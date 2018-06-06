@@ -66,6 +66,14 @@ app.service('NavService', function($localStorage, ObjMenu, ObjTab) {
         ]
     )
 
+    vm.inventory = new ObjMenu(
+        "INVENTORY",
+        "ic_inventory.png",
+        Constants.Role.MANAGER,
+        [
+            new ObjTab("MANAGE", "inventory-manage", Constants.Role.MANAGER)
+        ]
+    )
     /* ----------------------------- APIs --------------------------------*/
     vm.setActive = function(menu, tabIdx) {
         // Set active menu and tab
