@@ -7,14 +7,17 @@ class ProductM {
     String id
 
     // Creation / Update time
-    String dateCreated
-    String lastUpdated
+    Date dateCreated
+    Date lastUpdated
 
     // Account of Product
     Long accountId
 
     // Uploader of Product
     Long ownerId
+
+    // Remove Flag
+    boolean isRemoved = false
 
     // Product ID
     String productId

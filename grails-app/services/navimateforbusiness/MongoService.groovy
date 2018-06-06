@@ -65,6 +65,27 @@ class MongoService {
         return filters
     }
 
+    def getProductFilters(User user, def colFilters) {
+        def filters = []
+
+        // Add all mandatory filters
+        filters.addAll(getMandatoryFilters(user, colFilters))
+
+        // Apply Name filters if any
+        if (colFilters.name?.equal) {filters.push(eq("name", "$colFilters.name.equal"))}
+        if (colFilters.name?.value) {filters.push(regex("name", /.*$colFilters.name.value.*/, 'i'))}
+
+        // Apply product ID filters
+        if (colFilters.productId?.equal) {filters.push(eq("productId", "$colFilters.productId.equal"))}
+        if (colFilters.productId?.value) {filters.push(regex("productId", /.*$colFilters.productId.value.*/, 'i'))}
+
+        // Add all template related filters
+        def templates = templateService.getForUserByType(user, Constants.Template.TYPE_PRODUCT)
+        filters.addAll(getTemplateFilters(templates, colFilters))
+
+        return filters
+    }
+
     // ----------------------- Private Methods ---------------------------//
     // Method to get mandatory filters for all domains
     private def getMandatoryFilters(User user, def colFilters) {
