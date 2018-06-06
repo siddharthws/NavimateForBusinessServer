@@ -241,7 +241,12 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         url: '/company/settings',
         templateUrl: '/static/views/dashboard/company/settings.html',
         controller: 'CompanySettingsCtrl as $ctrl'
-      })
+    })
+    .state('dashboard.inventory-manage', {
+          url: '/inventory/manage',
+          templateUrl: '/static/views/dashboard/inventory/manage.html',
+          controller: 'InventoryManageCtrl as vm'
+    })
     .state('photos', {
           url: '/photos?name',
           templateUrl: '/static/views/photos.html',
