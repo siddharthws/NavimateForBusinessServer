@@ -22,6 +22,19 @@ import static com.mongodb.client.model.Filters.eq
 
 class PortingApiController {
 
+    def leadService
+    def templateService
+    def taskService
+    def formService
+    def reportService
+
+    def taskPublicId() {
+        Task.findAll().each {
+            it.publicId = String.valueOf(it.id)
+            it.save(flush: true, failOnError: true)
+        }
+    }
+
     def fixManagers() {
         // Iterate through all tasks
         Task.findAll().eachWithIndex { Task task, int i ->
@@ -81,10 +94,6 @@ class PortingApiController {
     }
 
     // Post is Removed so that all dependencies are satisfied
-    def templateService
-    def taskService
-    def leadService
-    def formService
     def fixIsRemoved() {
         // Hack
         def data = Data.findById(6129)
@@ -135,7 +144,6 @@ class PortingApiController {
         }
     }
 
-    def reportService
     def refreshLocReport() {
         LocReport.findAll().each {report ->
             reportService.refreshLocReport(report)

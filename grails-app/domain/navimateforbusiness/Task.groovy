@@ -11,6 +11,9 @@ class Task {
     // External ID for API access
     String extId
 
+    // Public ID given by user
+    String publicId
+
     //Remove Flags
     boolean isRemoved = false
 
@@ -44,6 +47,7 @@ class Task {
         extId           nullable: true
         leadid          nullable: true
         lead            nullable: true
+        publicId        nullable: true
     }
 
     static mapping = {

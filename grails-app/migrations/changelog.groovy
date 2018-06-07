@@ -47,4 +47,5 @@ databaseChangeLog = {
     include file: 'update-db--misc-cleanup.groovy'
     include file: 'add-loc-report.groovy'
     include file: 'update-task-resolution-time.groovy'
+    include file: 'update-task-public-id.groovy'
 }
