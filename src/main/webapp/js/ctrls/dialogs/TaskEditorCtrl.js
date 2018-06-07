@@ -43,6 +43,7 @@ app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog, $loca
         // Create empty task
         var task = new ObjTask( null,
                                 null,
+                                null,
                                 {id: $localStorage.id, name: $localStorage.name},
                                 null,
                                 Constants.Task.STATUS_OPEN,

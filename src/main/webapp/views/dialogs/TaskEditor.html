@@ -22,6 +22,9 @@
             <!-- Task information form -->
             <div class="fbx-v w-100 h-100 overflow-auto align-items-start" ng-if="!vm.bLoading && !vm.bLoadError">
                 <div class="fbx-h">
+                    <!-- Public ID -->
+                    <input-box class="mr-4" label="ID" model="vm.selectedTask.publicId"></input-box>
+
                     <!-- Lead -->
                     <pick-n-view class="mr-4" label="Lead" text="vm.selectedTask.lead.name" on-pick="vm.pickLead()" on-view="vm.viewLead()"
                                  b-show-error="vm.bInputError" err="vm.selectedTask.getLeadErr()"></pick-n-view>

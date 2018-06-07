@@ -4,8 +4,9 @@
 
 app.factory('ObjTask', function(TemplateService, ObjValue) {
     // ----------------------------------- Constructor ------------------------------------//
-    function ObjTask (id, lead, manager, rep, status, period, formTemplate, template, values) {
+    function ObjTask (id, publicId, lead, manager, rep, status, period, formTemplate, template, values) {
         this.id             = id
+        this.publicId       = publicId
         this.lead           = lead
         this.manager        = manager
         this.rep            = rep
@@ -31,7 +32,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         })
 
         // Return clone of task object
-        return new ObjTask(this.id, lead, manager, rep, this.status, this.period, this.formTemplate, this.template, values)
+        return new ObjTask(this.id, this.publicId, lead, manager, rep, this.status, this.period, this.formTemplate, this.template, values)
     }
 
     // ----------------------------------- Validation APIs ------------------------------------//
@@ -99,6 +100,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         })
 
         return new ObjTask( json.id,
+                            json.publicId,
                             json.lead,
                             json.manager,
                             json.rep,
@@ -119,6 +121,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         // Return field JSON
         return {
             id:             task.id,
+            publicId:       task.publicId,
             leadId:         task.lead.id,
             managerId:      task.manager ? task.manager.id : 0,
             repId:          task.rep ? task.rep.id : null,
