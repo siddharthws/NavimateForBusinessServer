@@ -141,6 +141,7 @@ class TaskService {
         // Convert template properties to JSON
         def json = [
                 id: task.id,
+                publicId: task.publicId,
                 lead: [id: lead.id, name: lead.name],
                 manager: [id: task.manager.id, name: task.manager.name],
                 rep: task.rep ? [id: task.rep.id, name: task.rep.name] : null,
@@ -196,6 +197,7 @@ class TaskService {
         task.creator = user
         task.rep = rep
         task.leadid = json.leadId
+        task.publicId = json.publicId ?: "-"
         task.status = TaskStatus.fromValue(json.status)
         task.period = json.period
         task.formTemplate = templateService.getForUserById(user, json.formTemplateId)

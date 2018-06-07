@@ -86,7 +86,7 @@ class TableService {
             LeadM lead = leadService.getForUserByFilter(user, [ids: [task.leadid]])
 
             // Add row data for mandatory columns
-            values[0] = [id: task.id, name: "$task.id"]
+            values[0] = [id: task.id, name: task.publicId]
             values[1] = [id:lead.id, name:lead.name]
             values[2] = (lead.latitude || lead.longitude) ? lead.latitude + "," + lead.longitude : '-'
             values[3] = task.manager.name
@@ -158,7 +158,7 @@ class TableService {
             values[5] = distanceKm != -1 ? distanceKm + " km" : "-"
 
             values[6] = lead ? [id:lead.id , name:lead.name] : "-"
-            values[7] = form.task ? [id: form.task.id, name: "$form.task.id"] : "-"
+            values[7] = form.task ? [id: form.task.id, name: form.task.publicId] : "-"
             values[8] = form.taskStatus ? form.taskStatus.name() : "-"
             values[9] = form.task ? form.task.resolutionTimeHrs != -1 ? form.task.resolutionTimeHrs : "-" : "-"
 
