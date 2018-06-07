@@ -52,7 +52,7 @@ class ProductService {
     }
 
     // method to get list of products using filters
-    List<productM> getAllForUserByFilter(User user, def filters) {
+    List<ProductM> getAllForUserByFilter(User user, def filters) {
         getAllForUserByFPS(user, filters, [:], []).products
     }
 
