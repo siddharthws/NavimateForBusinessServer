@@ -13,6 +13,7 @@ class AuthApiController {
 
     def authService
     def emailService
+    def userService
 
     def forgotPassword() {
         // Validate user
@@ -103,6 +104,10 @@ class AuthApiController {
             // Add API key
             ApiKey apiKey = ApiKey.findByAccount(user.account)
             resp += [apiKey: apiKey.key]
+
+            //Add no of Employees
+            def employees = userService.getAllForAccount(user.account)
+            resp += [companySize: employees.size()]
 
             // Add account settings
             AccountSettings settings = AccountSettings.findByAccount(user.account)

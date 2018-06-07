@@ -145,6 +145,7 @@ app.service('AuthService', function($q, $http, $localStorage) {
             $localStorage.apiKey = response.data.apiKey
             $localStorage.startHr = response.data.startHr
             $localStorage.endHr = response.data.endHr
+            $localStorage.companySize = response.data.companySize
         }
     }
 })
