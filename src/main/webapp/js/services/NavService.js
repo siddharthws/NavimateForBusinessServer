@@ -53,7 +53,8 @@ app.service('NavService', function($localStorage, ObjMenu, ObjTab) {
         [
             new ObjTab("FORM", "templates-form", Constants.Role.ADMIN),
             new ObjTab("LEAD", "templates-lead", Constants.Role.ADMIN),
-            new ObjTab("TASK", "templates-task", Constants.Role.ADMIN)
+            new ObjTab("TASK", "templates-task", Constants.Role.ADMIN),
+           // new ObjTab("INVENTORY", "templates-inventory", Constants.Role.ADMIN)
         ]
     )
 

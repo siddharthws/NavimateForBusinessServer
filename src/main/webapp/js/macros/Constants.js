@@ -252,6 +252,7 @@ Constants.Template = {
     TYPE_FORM:          1,
     TYPE_LEAD:          2,
     TYPE_TASK:          3,
+    TYPE_INVENTORY:     4,
 
     // Template Field types
     FIELD_TYPE_TEXT:            1,
@@ -305,6 +306,15 @@ Constants.Template.LEAD_FIELD_TYPES = [
 ]
 
 Constants.Template.TASK_FIELD_TYPES = [
+    Constants.Template.FIELD_TYPE_TEXT,
+    Constants.Template.FIELD_TYPE_NUMBER,
+    Constants.Template.FIELD_TYPE_RADIOLIST,
+    Constants.Template.FIELD_TYPE_CHECKLIST,
+    Constants.Template.FIELD_TYPE_CHECKBOX,
+    Constants.Template.FIELD_TYPE_DATE
+]
+
+Constants.Template.INVENTORY_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_TEXT,
     Constants.Template.FIELD_TYPE_NUMBER,
     Constants.Template.FIELD_TYPE_RADIOLIST,

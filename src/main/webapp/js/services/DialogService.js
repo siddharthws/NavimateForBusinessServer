@@ -89,6 +89,16 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
+    // Launch Inventory Template Editor Dialog
+    this.inventoryTemplateEditor = function (template, cb) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/InventoryTemplateEditor.html',
+            controller: 'InventoryTemplateEditorCtrl as $ctrl',
+            clickOutsideToClose: true,
+            locals: { template: template, cb: cb }
+        })
+    }
+
     // Launch Live Tracking Dialog
     this.liveTracking = function (reps) {
         // Show Dialog
