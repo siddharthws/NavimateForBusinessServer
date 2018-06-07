@@ -79,6 +79,10 @@ class FormService {
         // Get lead for this form
         LeadM lead = form.task ? leadService.getForUserByFilter(user, [ids: [form.task.leadid]]) : null
 
+        // Get distance string
+        double distanceKm = getDistance(user, form)
+        String distance = distanceKm != -1 ? distanceKm + " km" : "-"
+
         // Convert template properties to JSON
         def json = [
                 id:             form.id,
@@ -87,7 +91,7 @@ class FormService {
                 lng:            form.longitude,
                 submitTime:     Constants.Formatters.LONG.format(Constants.Date.IST(form.dateCreated)),
                 templateId:     form.submittedData.template.id,
-                distance:       getDistance(user, form),
+                distance:       distance,
                 task:           form.task ? [id: form.task.id, name: String.valueOf(form.task.id)] : null,
                 lead:           lead ? [id: lead.id, name: lead.name] : null,
                 status:         form.task ? form.taskStatus.name() : null,
@@ -168,18 +172,15 @@ class FormService {
     }
 
     def getDistance(User user, Form form) {
-        String dis = "-"
+        double dis = -1
 
         if (form.task) {
             LeadM lead = leadService.getForUserByFilter(user, [ids: [form.task.leadid]])
             if (lead && (lead.latitude || lead.longitude) && (form.latitude || form.longitude)) {
                 // Get distance in meters
                 long dist = distance(lead.latitude, form.latitude, lead.longitude, form.longitude)
-                if (dist > 1000) {
-                    dis = ((int) (dist / 1000)) + " km"
-                } else {
-                    dis = String.valueOf(dist) + " mtr"
-                }
+                dis = (double) dist / (double) 1000
+                dis = Constants.round(dis, 2)
             }
         }
 

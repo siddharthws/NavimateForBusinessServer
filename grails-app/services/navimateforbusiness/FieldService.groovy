@@ -1,5 +1,6 @@
 package navimateforbusiness
 
+import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
@@ -62,6 +63,41 @@ class FieldService {
         field.bMandatory = fieldJson.settings ? fieldJson.settings.bMandatory : false
 
         field
+    }
+
+    String formatForExport(int type, def value) {
+        String returnValue = ""
+
+        // Parse special values as per column type
+        switch (type) {
+            case Constants.Template.FIELD_TYPE_PHOTO:
+            case Constants.Template.FIELD_TYPE_SIGN:
+                returnValue = "https://biz.navimateapp.com/#/photos?name=" + value
+                break
+            case Constants.Template.FIELD_TYPE_CHECKBOX:
+                returnValue = value ? "yes" : "no"
+                break
+            case Constants.Template.FIELD_TYPE_RADIOLIST:
+                def valueJson = JSON.parse(value)
+                returnValue = valueJson.options[valueJson.selection]
+                break
+            case Constants.Template.FIELD_TYPE_CHECKLIST:
+                def valueJson = JSON.parse(value)
+                valueJson.each {option ->
+                    if (option.selection) {
+                        if (returnValue) {
+                            returnValue += ", " + option.name
+                        } else {
+                            returnValue = option.name
+                        }
+                    }
+                }
+                break
+            default:
+                returnValue = value
+        }
+
+        returnValue
     }
     // ----------------------- Private APIs ---------------------------//
 }

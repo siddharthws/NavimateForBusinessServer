@@ -152,7 +152,11 @@ class TableService {
             values[3] = form.dateCreated.format(Constants.Date.FORMAT_LONG,
                                                 Constants.Date.TIMEZONE_IST)
             values[4] = (form.latitude || form.longitude) ? form.latitude + "," + form.longitude : '-'
-            values[5] = formService.getDistance(user, form)
+
+            // Get distance string
+            double distanceKm = formService.getDistance(user, form)
+            values[5] = distanceKm != -1 ? distanceKm + " km" : "-"
+
             values[6] = lead ? [id:lead.id , name:lead.name] : "-"
             values[7] = form.task ? [id: form.task.id, name: "$form.task.id"] : "-"
             values[8] = form.taskStatus ? form.taskStatus.name() : "-"

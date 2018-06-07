@@ -185,40 +185,8 @@ class LeadService {
                     value = "https://www.google.com/maps/search/?api=1&query=" + lead.latitude + "," + lead.longitude
                 } else {
                     value = lead["$column.field"]
-
-                    // Parse special values as per column type
-                    switch (column.type) {
-                        case Constants.Template.FIELD_TYPE_PHOTO:
-                        case Constants.Template.FIELD_TYPE_FILE:
-                        case Constants.Template.FIELD_TYPE_SIGN:
-                            if (value) {
-                                value = "https://biz.navimateapp.com/#/photos?name=" + value
-                            }
-                            break
-                        case Constants.Template.FIELD_TYPE_CHECKBOX:
-                            value = value ? "yes" : "no"
-                            break
-                        case Constants.Template.FIELD_TYPE_RADIOLIST:
-                            if (value) {
-                                def valueJson = JSON.parse(value)
-                                value = valueJson.options[valueJson.selection]
-                            }
-                            break
-                        case Constants.Template.FIELD_TYPE_CHECKLIST:
-                            if (value) {
-                                def valueJson = JSON.parse(value)
-                                value = ""
-                                valueJson.each {option ->
-                                    if (option.selection) {
-                                        if (value) {
-                                            value += ", " + option.name
-                                        } else {
-                                            value = option.name
-                                        }
-                                    }
-                                }
-                            }
-                            break
+                    if (value) {
+                        value = fieldService.formatForExport(column.type, value)
                     }
                 }
 
