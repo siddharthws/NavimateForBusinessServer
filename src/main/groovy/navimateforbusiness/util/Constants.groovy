@@ -38,6 +38,7 @@ class Constants {
         public static final int TYPE_FORM                 = 1
         public static final int TYPE_LEAD                 = 2
         public static final int TYPE_TASK                 = 3
+        public static final int TYPE_INVENTORY            = 4
 
         // Field types
         public static final int FIELD_TYPE_NONE           = 0

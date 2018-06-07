@@ -60,6 +60,9 @@ class AuthService {
 
             Template defTaskTemplate = createDefaultTaskTemplate(user)
             defTaskTemplate.save(flush: true, failOnError: true)
+
+            Template defInventoryTemplate = createDefaultInventoryTemplate(user)
+            defInventoryTemplate.save(flush: true, failOnError: true)
         }
 
         //register a new manager
@@ -233,6 +236,21 @@ class AuthService {
 
         // Add fields to template
         template.addToFields(descField)
+
+        template
+    }
+
+    Template createDefaultInventoryTemplate(User admin) {
+        // Create a default Inventory template
+        Template template = new Template(account: admin.account, owner: admin, name: "Default", type: Constants.Template.TYPE_INVENTORY, dateCreated: new Date(), lastUpdated: new Date())
+
+        // Create Fields for the template
+        Field unitsField            = new Field(account: admin.account, type: Constants.Template.FIELD_TYPE_NUMBER, title: "Units", bMandatory: false, value: "0")
+        Field pricePerUnitField     = new Field(account: admin.account, type: Constants.Template.FIELD_TYPE_NUMBER, title: "Price Per Unit", bMandatory: false, value: "0")
+
+        // Add fields to template
+        template.addToFields(unitsField)
+        template.addToFields(pricePerUnitField)
 
         template
     }
