@@ -12,7 +12,7 @@ import navimateforbusiness.util.Constants
 import static com.mongodb.client.model.Filters.*
 
 @Transactional
-class ProductService {
+class InventoryService {
     // ----------------------- Dependencies ---------------------------//
     def templateService
     def fieldService
@@ -127,5 +127,19 @@ class ProductService {
 
         product
     }
+
+    // Method to remove a lead object
+    def remove(User user, ProductM product) {
+        // Remove product
+        product.isRemoved = true
+        product.lastUpdated = new Date()
+        product.save(failOnError: true, flush: true)
+    }
+
+    // Method to get FCMs associated with the product
+    def getAffectedReps (User user, ProductM product) {
+        return []
+    }
+
     // ----------------------- Private APIs ---------------------------//
 }

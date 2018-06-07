@@ -237,6 +237,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/templates/task.html',
         controller: 'TaskTemplatesCtrl as $ctrl'
     })
+    .state('dashboard.templates-inventory', {
+        url: '/templates/inventory',
+        templateUrl: '/static/views/dashboard/templates/inventory.html',
+        controller: 'InventoryTemplatesCtrl as $ctrl'
+    })
     .state('dashboard.company-settings', {
         url: '/company/settings',
         templateUrl: '/static/views/dashboard/company/settings.html',
