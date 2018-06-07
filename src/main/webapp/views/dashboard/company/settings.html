@@ -1,35 +1,39 @@
 <!-- Company Settings HTML -->
+
 <div class="d-flex flex-column p-4">
-    <div>
-        <span class="text-bold">Company : </span>
-        <span>{{$ctrl.companyName}}</span>
+    <div class="fbx-v fbx-center-children">
+        <img src="/static/images/ic_logo.png" class="ib-base ib-xl ">
+        <span class="text-bold text-blue d-flex justify-content-center">{{$ctrl.companyName}}</span>
     </div>
-    <div>
-        <span class="text-bold">API Key : </span>
-        <span>{{$ctrl.apiKey}}</span>
+    <hr class="w-100">
+    <div class="fbx-h justify-content-around">
+        <div class="fbx-v justify-content-center">
+            <div class="fbx-v">
+                <span class="text-label">Company size</span>
+                <span class="ml-2">{{$ctrl.companySize}}</span>
+            </div>
+            <br>
+            <div class="fbx-v">
+                <span class="text-label">API Key</span>
+                <span class="ml-2">{{$ctrl.apiKey}}</span>
+            </div>
+        </div>
+        <div class="vr"></div>
+        <div class="fbx-v">
+            <span class="text-label">Working Hours</span>
+            <div class="fbx-h align-items-center ml-2">
+                <span>Day Start</span>
+                <span>
+                    <md-time-picker class="w-100" ng-model="$ctrl.dayStart" message="vm.message" no-auto-switch no-meridiem></md-time-picker>
+                </span>
+            </div>
+            <div class="fbx-h align-items-center  ml-2">
+                <span>Day End</span>
+                <span class="ml-2">
+                    <md-time-picker class="w-100" ng-model="$ctrl.dayEnd" message="vm.message" no-auto-switch no-meridiem></md-time-picker>
+                </span>
+            </div><br>
+            <button class="align-self-center btn-shiny ml-4" ng-click="$ctrl.update()">Update</button>
+        </div>
     </div>
-    <span class="centered mt-2">Set the Working Hours</span>
-    <div class="d-flex align-items-center ml-2">
-        <span>Start Time</span>
-        <button type="button" class="btn-shiny" ng-click="$ctrl.decrementStartHr()">
-            -
-        </button>
-        <span>{{$ctrl.startHr + ": 00"}}</span>
-        <button type="button" class="btn-shiny" ng-click="$ctrl.incrementStartHr()">
-            +
-        </button>
-    </div>
-    <div class="d-flex align-items-center  ml-2">
-        <span>End Time</span>
-        <button type="button" class="btn-shiny" ng-click="$ctrl.decrementEndHr()">
-            -
-        </button>
-        <span>{{$ctrl.endHr + ": 00"}}</span>
-        <button type="button" class="btn-shiny" ng-click="$ctrl.incrementEndHr()">
-            +
-        </button>
-    </div>
-</div>
-<div>
-    <button class="btn-shiny ml-4" ng-click="$ctrl.update()">Update</button>
 </div>

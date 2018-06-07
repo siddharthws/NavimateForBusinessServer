@@ -2,79 +2,70 @@
  * Created by Chandel on 06-02-2018.
  */
 
-app.controller("CompanySettingsCtrl",
-                function ($scope, $localStorage ,$rootScope, $http,
-                          ToastService, NavService) {
+app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScope, $http,
+                                                ToastService, NavService) {
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
 
     // Set Active Tab and Menu
     NavService.setActive(NavService.company, 0)
 
-    vm.startHr = $localStorage.startHr
-    vm.endHr = $localStorage.endHr
+    vm.message = {
+        hour: 'Hour is required',
+        minute: 'Minute is required',
+        meridiem: 'Meridiem is required'
+    }
 
+    //get company details from local storage
     vm.companyName      = $localStorage.companyName
     vm.apiKey           = $localStorage.apiKey
+    vm.companySize      = $localStorage.companySize
 
     /*-------------------------------- Scope APIs --------------------------------*/
-    vm.incrementStartHr = function () {
-            if(vm.startHr == 23) {
-                vm.startHr = 0
-            }
-            else {
-                vm.startHr++
-            }
-    }
-
-    vm.incrementEndHr = function () {
-        if(vm.endHr == 23) {
-            vm.endHr = 0
-        }
-        else {
-            vm.endHr++
-        }
-    }
-
-    vm.decrementStartHr = function () {
-        if(vm.startHr == 0) {
-            vm.startHr = 23
-        }
-        else {
-            vm.startHr--
-        }
-    }
-
-
-    vm.decrementEndHr = function () {
-        if(vm.endHr == 0) {
-            vm.endHr = 23
-        }
-        else {
-            vm.endHr--
-        }
-    }
-
     vm.update = function () {
-        $rootScope.showWaitingDialog("Please wait while settings are updating...")
-        $http({
-            method:     'POST',
-            url:        '/api/admin/accSettings',
-            headers:    {
-                'X-Auth-Token':    $localStorage.accessToken
-            },
-            data:       {
-                startHr  : vm.startHr,
-                endHr    : vm.endHr
-            }
-        }).then(
-            function (response) {
-                $rootScope.hideWaitingDialog()
-                ToastService.toast("Settings Successfully Updated!!!")
-            },
-            function (error) {
-                $rootScope.hideWaitingDialog()
-                ToastService.toast("Failed to Update settings!!!")
-            })
+        //set day start and day end
+        var startHr = vm.dayStart.getHours()
+        var endHr = vm.dayEnd.getHours()
+
+        //check for valid selection of working hours
+        if (startHr >= endHr) {
+            ToastService.toast("Day End must be greater than Day Start!!!")
+        } else {
+            $rootScope.showWaitingDialog("Please wait while settings are updating...")
+            $http({
+                method: 'POST',
+                url: '/api/admin/accSettings',
+                headers: {
+                    'X-Auth-Token': $localStorage.accessToken
+                },
+                data: {
+                    startHr: startHr,
+                    endHr: endHr
+                }
+            }).then(
+                function (response) {
+                    $localStorage.startHr = startHr
+                    $localStorage.endHr = endHr
+
+                    initTime()
+
+                    $rootScope.hideWaitingDialog()
+                    ToastService.toast("Settings Successfully Updated!!!")
+                },
+                function (error) {
+                    $rootScope.hideWaitingDialog()
+                    ToastService.toast("Failed to Update settings!!!")
+                })
+        }
     }
+
+    /*-------------------------------- Private APIs --------------------------------*/
+    function initTime() {
+        //get working hours from local storage
+        vm.dayStart = new Date(0,0,0,$localStorage.startHr,0,0,0)
+        vm.dayEnd = new Date(0,0,0,$localStorage.endHr,0,0,0)
+    }
+
+    /*-------------------------------- Post Init --------------------------------*/
+    initTime()
 });

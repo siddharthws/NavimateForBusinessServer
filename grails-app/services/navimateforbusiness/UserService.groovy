@@ -86,6 +86,14 @@ class UserService {
         manager
     }
 
+    //Method to get all users for an account
+    def getAllForAccount(Account account){
+        //Get all employees for account
+        List<User> employees = User.findAllByAccount(account)
+
+        employees
+    }
+
     /* ------------------------------------ Converter APIs ------------------------------------ */
     // User Object to / from JSON
     def toJson(User user) {
