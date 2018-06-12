@@ -46,8 +46,10 @@ app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog, $loca
                                 null,
                                 {id: $localStorage.id, name: $localStorage.name},
                                 null,
+                                {id: $localStorage.id, name: $localStorage.name},
                                 Constants.Task.STATUS_OPEN,
                                 0,
+                                null,
                                 null,
                                 null,
                                 [])

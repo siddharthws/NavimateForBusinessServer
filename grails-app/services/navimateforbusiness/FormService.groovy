@@ -87,6 +87,7 @@ class FormService {
         def json = [
                 id:             form.id,
                 rep:            [id: form.owner.id, name: form.owner.name],
+                manager:        [id: form.owner.manager.id, name: form.owner.manager.name],
                 lat:            form.latitude,
                 lng:            form.longitude,
                 submitTime:     Constants.Formatters.LONG.format(Constants.Date.IST(form.dateCreated)),

@@ -142,12 +142,14 @@ class TaskService {
         def json = [
                 id: task.id,
                 publicId: task.publicId,
-                lead: [id: lead.id, name: lead.name],
+                lead: [id: lead.id, name: lead.name, lat: lead.latitude, lng: lead.longitude],
                 manager: [id: task.manager.id, name: task.manager.name],
                 rep: task.rep ? [id: task.rep.id, name: task.rep.name] : null,
+                creator: [id: task.creator.id, name: task.creator.name],
                 status: task.status.value,
                 resolutionTime: task.resolutionTimeHrs,
                 period: task.period,
+                dateCreated: Constants.Formatters.LONG.format(Constants.Date.IST(task.dateCreated)),
                 formTemplateId: task.formTemplate.id,
                 templateId: task.templateData.template.id,
                 values: []

@@ -4,14 +4,16 @@
 
 app.factory('ObjTask', function(TemplateService, ObjValue) {
     // ----------------------------------- Constructor ------------------------------------//
-    function ObjTask (id, publicId, lead, manager, rep, status, period, formTemplate, template, values) {
+    function ObjTask (id, publicId, lead, manager, rep, creator, status, period, dateCreated, formTemplate, template, values) {
         this.id             = id
         this.publicId       = publicId
         this.lead           = lead
         this.manager        = manager
         this.rep            = rep
+        this.creator        = creator
         this.status         = status
         this.period         = period
+        this.dateCreated    = dateCreated
         this.formTemplate   = formTemplate
         this.template       = template
         this.values         = values
@@ -21,9 +23,10 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
     // Method to clone a task object
     ObjTask.prototype.Clone = function () {
         // Create clone for lead and rep
-        var lead = this.lead  ? {id: this.lead.id, name: this.lead.name} : null
+        var lead = this.lead  ? {id: this.lead.id, name: this.lead.name, lat: this.lead.lat, lng: this.lead.lng} : null
         var manager = this.manager  ? {id: this.manager.id, name: this.manager.name} : null
         var rep = this.rep  ? {id: this.rep.id, name: this.rep.name} : null
+        var creator = this.creator  ? {id: this.creator.id, name: this.creator.name} : null
 
         // Create clone for values
         var values = []
@@ -32,7 +35,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         })
 
         // Return clone of task object
-        return new ObjTask(this.id, this.publicId, lead, manager, rep, this.status, this.period, this.formTemplate, this.template, values)
+        return new ObjTask(this.id, this.publicId, lead, manager, rep, creator, this.status, this.period, this.dateCreated, this.formTemplate, this.template, values)
     }
 
     // ----------------------------------- Validation APIs ------------------------------------//
@@ -104,8 +107,10 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
                             json.lead,
                             json.manager,
                             json.rep,
+                            json.creator,
                             json.status,
                             json.period,
+                            json.dateCreated,
                             TemplateService.getById(json.formTemplateId),
                             TemplateService.getById(json.templateId),
                             values)
