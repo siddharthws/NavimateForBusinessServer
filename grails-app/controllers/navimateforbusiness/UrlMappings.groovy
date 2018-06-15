@@ -60,6 +60,7 @@ class UrlMappings {
         "/api/manager/forms/getTable"    (controller: "ManagerApi") {action = [POST: "getFormTable"]}
         "/api/manager/forms/getIds"      (controller: "ManagerApi") {action = [POST: "getFormIds"]}
         "/api/manager/forms/export"      (controller: "ManagerApi") {action = [POST: "exportForms"]}
+        "/api/manager/forms/remove"      (controller: "ManagerApi") {action = [POST: "removeForms"]}
 
         // Template related APIs
         "/api/manager/templates/getAll"  (controller: "ManagerApi") {action = [POST: "getTemplates"]}

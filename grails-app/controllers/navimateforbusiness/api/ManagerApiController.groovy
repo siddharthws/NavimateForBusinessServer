@@ -608,6 +608,23 @@ class ManagerApiController {
         exportService.export('excel', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
     }
 
+    def removeForms() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        request.JSON.ids.each {id ->
+            Form form = formService.getForUserById(user, id)
+            if (!form) {
+                throw new ApiException("Form not found...", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Remove form
+            formService.remove(user, form)
+        }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     // ----------------------- Template APIs ----------------------- //
     def getTemplates() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))

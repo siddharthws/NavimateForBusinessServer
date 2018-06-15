@@ -5,6 +5,17 @@
     <imagebutton class="ml-2" image="/static/images/ic_reset_white.png" text="Reset" ng-click="$ctrl.reset()"></imagebutton>
     <imagebutton class="ml-2" image="/static/images/ic_customize_table_white.png" text="Columns" ng-click="$ctrl.toggleColumns()"></imagebutton>
     <imagebutton class="ml-2" image="/static/images/ic_export_white.png" text="Export" ng-click="$ctrl.export()"></imagebutton>
+
+    <div class="dropdown">
+        <button class="btn-shiny d-flex justify-content-around align-items-center" data-toggle="dropdown"
+                ng-disabled="!$ctrl.table.selectedRows.length">
+            <span>Actions</span>
+            <img class="img-icon ml-2" src="/static/images/ic_dropdown_light.png"/>
+        </button>
+        <div class="dropdown-menu">
+            <button class="dropdown-item" ng-click="$ctrl.remove()">Remove</button>
+        </div>
+    </div>
 </div>
 
 <!-- Table -->
