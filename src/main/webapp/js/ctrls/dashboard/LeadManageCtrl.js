@@ -87,7 +87,7 @@ app.controller("LeadManageCtrl",
                 // Make Http call to remove leads
                 $http({
                     method: 'POST',
-                    url: '/api/admin/leads/remove',
+                    url: '/api/manager/leads/remove',
                     headers: {
                         'X-Auth-Token': $localStorage.accessToken
                     },

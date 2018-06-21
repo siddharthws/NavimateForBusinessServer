@@ -20,8 +20,6 @@ class UrlMappings {
         "/api/admin/accSettings"        (controller: "AdminApi") {action = [POST: "updateSettings"]}
         "/api/admin/team/edit"          (controller: "AdminApi") {action = [POST: "editTeam"]}
         "/api/admin/team/remove"        (controller: "AdminApi") {action = [POST: "removeTeam"]}
-        "/api/admin/leads/edit"         (controller: "AdminApi") {action = [POST: "editLeads"]}
-        "/api/admin/leads/remove"       (controller: "AdminApi") {action = [POST: "removeLeads"]}
         "/api/admin/templates/edit"     (controller: "AdminApi") {action = [POST: "editTemplates"]}
         "/api/admin/templates/remove"   (controller: "AdminApi") {action = [POST: "removeTemplates"]}
         "/api/admin/team/import"        (controller: "AdminApi") {action = [POST: "importTeam"]}
@@ -41,6 +39,8 @@ class UrlMappings {
         "/api/manager/leads/getByIds"    (controller: "ManagerApi") {action = [POST: "getLeadsById"]}
         "/api/manager/leads/getTable"    (controller: "ManagerApi") {action = [POST: "getLeadTable"]}
         "/api/manager/leads/getIds"      (controller: "ManagerApi") {action = [POST: "getLeadIds"]}
+        "/api/manager/leads/edit"        (controller: "ManagerApi") {action = [POST: "editLeads"]}
+        "/api/manager/leads/remove"      (controller: "ManagerApi") {action = [POST: "removeLeads"]}
         "/api/manager/leads/search"      (controller: "ManagerApi") {action = [POST: "searchLeads"]}
         "/api/manager/leads/export"      (controller: "ManagerApi") {action = [POST: "exportLeads"]}
         "/api/manager/leads/import"      (controller: "ManagerApi") {action = [POST: "importLeads"]}

@@ -91,7 +91,7 @@ app.service('LeadService', function($q, $http, $localStorage, ObjLead, TemplateS
         // Trigger request
         $http({
             method:     'POST',
-            url:        '/api/admin/leads/edit',
+            url:        '/api/manager/leads/edit',
             headers:    {
                 'X-Auth-Token':    $localStorage.accessToken
             },

@@ -76,57 +76,6 @@ class AdminApiController {
         render resp as JSON
     }
 
-    def editLeads() {
-        // Get user object
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Parse lead JSON to task objects
-        def leads = []
-        def reps = []
-        request.JSON.leads.each {leadJson ->
-            // Parse to lead object and assign update & create time
-            LeadM lead = leadService.fromJson(leadJson, user)
-
-            leads.push(lead)
-            reps.addAll(leadService.getAffectedReps(user, lead))
-        }
-
-        // Save tasks
-        leads.each {it -> it.save(flush: true, failOnError: true)}
-
-        // Collect FCM Ids of affected reps & notify each rep
-        fcmService.notifyUsers(reps, Constants.Notifications.TYPE_LEAD_UPDATE)
-
-        // Return response
-        def resp = [success: true]
-        render resp as JSON
-    }
-
-    def removeLeads() {
-        // Get user
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Iterate through IDs to be remove
-        def reps = []
-        request.JSON.ids.each {id ->
-            // Get lead with this id
-            LeadM lead = leadService.getForUserByFilter(user, [ids: [id]])
-            if (!lead) {
-                throw new ApiException("Lead not found...", Constants.HttpCodes.BAD_REQUEST)
-            }
-
-            // Remove lead
-            reps.addAll(leadService.getAffectedReps(user, lead))
-            leadService.remove(user, lead)
-        }
-
-        // Collect FCM Ids of affected reps & notify each rep
-        fcmService.notifyUsers(reps, Constants.Notifications.TYPE_LEAD_UPDATE)
-
-        def resp = [success: true]
-        render resp as JSON
-    }
-
     def editTemplates() {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
