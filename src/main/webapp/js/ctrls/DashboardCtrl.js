@@ -40,7 +40,7 @@ app.controller('DashboardCtrl',
     }
 
     $rootScope.isCC = function () {
-        return $localStorage.role >= Constants.Role.CC
+        return $localStorage.role == Constants.Role.CC
     }
 
     /*------------------------------------ APIs --------------------------------*/
