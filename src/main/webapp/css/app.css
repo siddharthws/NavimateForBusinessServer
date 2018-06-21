@@ -22,9 +22,8 @@ ul.bullet {
 }
 
 /* Positioning classes */
-.pos-r {
-    position: relative;
-}
+.pos-r {position: relative;}
+.pos-a {position: absolute;}
 
 /* Horizontal Rule Styling */
 hr {

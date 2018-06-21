@@ -89,8 +89,15 @@ app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog,
     vm.save = function () {
         // Validate Entered Data
         if (validate()) {
+            // Get editable leads
+            var editableLeads = []
+            vm.leads.forEach(function (lead) {
+                if (lead.canEdit()) {editableLeads.push(lead)}
+            })
+
+            // Save in backend
             $rootScope.showWaitingDialog("Please wait while leads are edited...")
-            LeadService.edit(vm.leads).then(
+            LeadService.edit(editableLeads).then(
                 // Success callback
                 function () {
                     // Dismiss Dialog & notify user
@@ -152,7 +159,7 @@ app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog,
 
         // Validate each task
         for (var i = 0; i < vm.leads.length; i++) {
-            if (!vm.leads[i].isValid()) {
+            if (vm.leads[i].canEdit() && !vm.leads[i].isValid()) {
                 vm.bInputError = true
                 return false
             }

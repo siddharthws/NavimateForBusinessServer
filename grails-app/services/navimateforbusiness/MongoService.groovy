@@ -32,13 +32,16 @@ class MongoService {
 
         // Add role specific filters
         if (user.role == Role.MANAGER) {
-            // Objects should either be owned by user or publicly visible for a manager to view it
+            // Objects should either be owned by user or by account admin
             filters.push(or(eq("ownerId", user.id),
-                            eq("visibility", Visibility.PUBLIC.name())))
+                            eq("ownerId", user.account.admin.id)))
+        } else if (user.role == Role.CC) {
+            // Objects should either be owned by account admin
+            filters.push(eq("ownerId", user.account.admin.id))
         } else if (user.role == Role.REP) {
-            // Objects should either be owned by rep's manager or publicly visible for a rep to view it
+            // Objects should either be owned by rep's manager or admin
             filters.push(or(eq("ownerId", user.manager.id),
-                            eq("visibility", Visibility.PUBLIC.name())))
+                            eq("ownerId", user.account.admin.id)))
         }
 
         // Apply date filter

@@ -3,6 +3,7 @@ package navimateforbusiness.api
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import navimateforbusiness.Form
+import navimateforbusiness.enums.Role
 import navimateforbusiness.util.Constants
 import navimateforbusiness.LeadM
 import navimateforbusiness.Task
@@ -164,9 +165,12 @@ class ManagerApiController {
                 throw new ApiException("Lead not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
-            // Remove lead
-            reps.addAll(leadService.getAffectedReps(user, lead))
-            leadService.remove(user, lead)
+            // remove only if lead is editable by this user
+            if (user.role == Role.ADMIN || lead.ownerId == user.id) {
+                // Remove lead
+                reps.addAll(leadService.getAffectedReps(user, lead))
+                leadService.remove(user, lead)
+            }
         }
 
         // Collect FCM Ids of affected reps & notify each rep

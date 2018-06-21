@@ -2,7 +2,7 @@
  * Created by Siddharth on 20-03-2018.
  */
 
-app.factory('ObjLead', function(TemplateService, ObjValue) {
+app.factory('ObjLead', function($localStorage, TemplateService, ObjValue) {
     // ----------------------------------- Constructor ------------------------------------//
     function ObjLead (id, owner, name, address, lat, lng, template, values) {
         this.id             = id
@@ -60,6 +60,19 @@ app.factory('ObjLead', function(TemplateService, ObjValue) {
         })
 
         return row
+    }
+
+    // Method to check if lead is owned by current user
+    ObjLead.prototype.canEdit = function () {
+        // Check if current user is not owner
+        if (this.owner && this.owner.id != $localStorage.id) {
+            // Check if current user is not Admin
+            if ($localStorage.role != Constants.Role.ADMIN) {
+                return false
+            }
+        }
+
+        return true
     }
 
     // ----------------------------------- Validation APIs ------------------------------------//
