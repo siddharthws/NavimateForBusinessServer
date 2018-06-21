@@ -4,8 +4,9 @@
 
 app.factory('ObjLead', function(TemplateService, ObjValue) {
     // ----------------------------------- Constructor ------------------------------------//
-    function ObjLead (id, name, address, lat, lng, template, values) {
+    function ObjLead (id, owner, name, address, lat, lng, template, values) {
         this.id             = id
+        this.owner          = owner
         this.name           = name
         this.address        = address
         this.lat            = lat
@@ -24,7 +25,14 @@ app.factory('ObjLead', function(TemplateService, ObjValue) {
         })
 
         // Return clone of task object
-        return new ObjLead(this.id, this.name, this.address, this.lat, this.lng, this.template, values)
+        return new ObjLead( this.id,
+                            {id: this.owner.id, name: this.owner.name},
+                            this.name,
+                            this.address,
+                            this.lat,
+                            this.lng,
+                            this.template,
+                            values)
     }
 
     // Method to parse data into row
@@ -109,6 +117,7 @@ app.factory('ObjLead', function(TemplateService, ObjValue) {
 
         return new ObjLead(
             json.id,
+            json.owner,
             json.name,
             json.address,
             json.lat,

@@ -31,6 +31,7 @@ app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog,
         // Create empty task
         var lead = new ObjLead(
             null,
+            null,
             "",
             "",
             0,
@@ -54,6 +55,7 @@ app.controller('LeadEditorCtrl', function ( $scope, $rootScope, $mdDialog,
 
         // Remove ID
         clonedLead.id = null
+        clonedLead.owner = null
 
         // Add to array
         vm.leads.push(clonedLead)

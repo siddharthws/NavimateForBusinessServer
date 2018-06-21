@@ -68,6 +68,7 @@ class LeadService {
         // Convert template properties to JSON
         def json = [
                 id:         lead.id,
+                owner:      [id: lead.ownerId, name: User.findById(lead.ownerId).name],
                 name:       lead.name,
                 address:    lead.address,
                 lat:        lead.latitude,
