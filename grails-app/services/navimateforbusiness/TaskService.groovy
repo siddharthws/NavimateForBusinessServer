@@ -145,6 +145,7 @@ class TaskService {
                 manager: [id: task.manager.id, name: task.manager.name],
                 rep: task.rep ? [id: task.rep.id, name: task.rep.name] : null,
                 status: task.status.value,
+                resolutionTime: task.resolutionTimeHrs,
                 period: task.period,
                 formTemplateId: task.formTemplate.id,
                 templateId: task.templateData.template.id,
@@ -221,6 +222,18 @@ class TaskService {
         task.lastUpdated = new Date()
 
         task
+    }
+
+    // Method to get resolution time of task
+    double getResolutionTime(Task task) {
+        // Get elapsed time in millis
+        def elapsedTimeMs = System.currentTimeMillis() - task.dateCreated.time
+
+        // Get elapsed time in hrs
+        double elapsedTimeHrs = (double) elapsedTimeMs / (double) (1000 * 60 * 60 * 24)
+
+        // Round to 2 places and return
+        Constants.round(elapsedTimeHrs, 2)
     }
 
     // Method to remove a task object

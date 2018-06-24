@@ -119,6 +119,7 @@ class RepApiController {
             // Close task if required
             if (formJson.closeTask && form.task.status == TaskStatus.OPEN) {
                 form.task.status = TaskStatus.CLOSED
+                form.task.resolutionTimeHrs = taskService.getResolutionTime(form.task)
                 form.task.lastUpdated = new Date()
                 form.task.save(failOnError: true, flush: true)
             }

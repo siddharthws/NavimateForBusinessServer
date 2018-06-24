@@ -98,6 +98,7 @@ class TableService {
             values[8] = task.formTemplate.name
             values[9] = task.templateData.template.name
             values[10] = task.status.name()
+            values[11] = task.resolutionTimeHrs != -1 ? task.resolutionTimeHrs : '-'
 
             // Iterate through template values
             task.templateData.values.each {value ->
@@ -155,6 +156,7 @@ class TableService {
             values[6] = lead ? [id:lead.id , name:lead.name] : "-"
             values[7] = form.task ? [id: form.task.id, name: "$form.task.id"] : "-"
             values[8] = form.taskStatus ? form.taskStatus.name() : "-"
+            values[9] = form.task ? form.task.resolutionTimeHrs != -1 ? form.task.resolutionTimeHrs : "-" : "-"
 
             // Iterate through template values
             form.submittedData.values.each {value ->
@@ -438,10 +440,11 @@ class TableService {
         columns.push(createColumn(8, Constants.Template.FIELD_TYPE_TEXT, "Form"))
         columns.push(createColumn(9, Constants.Template.FIELD_TYPE_TEXT, "Template"))
         columns.push(createColumn(10, Constants.Template.FIELD_TYPE_TEXT, "Status"))
+        columns.push(createColumn(11, Constants.Template.FIELD_TYPE_NUMBER, "Resolved in (Hrs)"))
 
         // Add templated columns through task templates
         List<Template> templates = templateService.getForUserByType(user, Constants.Template.TYPE_TASK)
-        columns += getTemplatedColumns(templates, 11)
+        columns += getTemplatedColumns(templates, 12)
 
         columns
     }
@@ -459,10 +462,11 @@ class TableService {
         columns.push(createColumn(6, Constants.Template.FIELD_TYPE_LEAD, "Lead"))
         columns.push(createColumn(7, Constants.Template.FIELD_TYPE_TASK, "Task ID"))
         columns.push(createColumn(8, Constants.Template.FIELD_TYPE_TEXT, "Task Status"))
+        columns.push(createColumn(9, Constants.Template.FIELD_TYPE_NUMBER, "Resolved in (Hrs)"))
 
         // Add templated columns through form templates
         List<Template> templates = templateService.getForUserByType(user, Constants.Template.TYPE_FORM)
-        columns += getTemplatedColumns(templates, 9)
+        columns += getTemplatedColumns(templates, 10)
 
         columns
     }

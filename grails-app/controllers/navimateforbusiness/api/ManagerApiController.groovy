@@ -512,9 +512,12 @@ class ManagerApiController {
             }
 
             // Update and save task
-            task.status = TaskStatus.CLOSED
-            if (task.rep) {reps.push(task.rep)}
-            task.save(flush: true, failOnError: true)
+            if (task.status == TaskStatus.OPEN) {
+                task.resolutionTimeHrs = taskService.getResolutionTime(task)
+                task.status = TaskStatus.CLOSED
+                if (task.rep) {reps.push(task.rep)}
+                task.save(flush: true, failOnError: true)
+            }
         }
 
         // Collect FCM Ids of affected reps & notify each rep

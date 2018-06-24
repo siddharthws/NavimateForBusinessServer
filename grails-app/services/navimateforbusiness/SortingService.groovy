@@ -48,6 +48,8 @@ class SortingService {
         if ( colType == Constants.Template.FIELD_TYPE_LEAD ||
                     colType == Constants.Template.FIELD_TYPE_TASK) {
             sortableValue = (value != '-') ? value.name : ''
+        } else if (colType == Constants.Template.FIELD_TYPE_NUMBER) {
+            sortableValue = (value != '-') ? value : ''
         } else {
             sortableValue = (value != '-') ? value.toLowerCase() : ''
         }
