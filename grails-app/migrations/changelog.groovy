@@ -46,4 +46,5 @@ databaseChangeLog = {
     include file: 'add-acra-details.groovy'
     include file: 'update-db--misc-cleanup.groovy'
     include file: 'add-loc-report.groovy'
+    include file: 'update-task-resolution-time.groovy'
 }

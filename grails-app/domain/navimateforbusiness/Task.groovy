@@ -24,6 +24,9 @@ class Task {
     Lead lead
     String leadid
 
+    // Task resolution time in hours
+    double resolutionTimeHrs = -1
+
     // Task properties
     TaskStatus status = TaskStatus.OPEN
     int period = 0

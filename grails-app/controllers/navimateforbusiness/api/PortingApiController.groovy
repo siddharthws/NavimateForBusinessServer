@@ -14,6 +14,7 @@ import navimateforbusiness.Task
 import grails.converters.JSON
 import navimateforbusiness.User
 import navimateforbusiness.Template
+import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.enums.Visibility
 import navimateforbusiness.util.Constants
 
@@ -138,6 +139,29 @@ class PortingApiController {
     def refreshLocReport() {
         LocReport.findAll().each {report ->
             reportService.refreshLocReport(report)
+        }
+    }
+
+    def taskResolveTime() {
+        def tasks = Task.findAll()
+        tasks.each {Task task ->
+            // Get all forms submitted for this task
+            def forms = Form.findAllByTask(task)
+
+            // Get oldest form with status CLOSED
+            def closeForms = forms.findAll {it.taskStatus == TaskStatus.CLOSED}
+            if (closeForms) {
+                closeForms = closeForms.sort {it.dateCreated}
+                def closeTimeMs = closeForms[0].dateCreated.time
+
+                // Calculate resolution time and save task
+                def elapsedTimeMs = closeTimeMs - task.dateCreated.time
+                double elapsedTimeHrs = (double) elapsedTimeMs / (double) (1000 * 60 * 60)
+                task.resolutionTimeHrs = Constants.round(elapsedTimeHrs, 2)
+            } else {
+                task.resolutionTimeHrs = -1
+            }
+            task.save(flush: true, failOnError: true)
         }
     }
 }
