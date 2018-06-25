@@ -387,6 +387,7 @@ class TableService {
                         }
                         break
                     case Constants.Template.FIELD_TYPE_PHOTO:
+                    case Constants.Template.FIELD_TYPE_FILE:
                     case Constants.Template.FIELD_TYPE_SIGN:
                         if (value != '-') {
                             value = "https://biz.navimateapp.com/#/photos?name=" + value
@@ -533,6 +534,7 @@ class TableService {
         switch (value.field.type) {
             case Constants.Template.FIELD_TYPE_TEXT:
             case Constants.Template.FIELD_TYPE_PHOTO:
+            case Constants.Template.FIELD_TYPE_FILE:
             case Constants.Template.FIELD_TYPE_SIGN:
             case Constants.Template.FIELD_TYPE_LOCATION:
             case Constants.Template.FIELD_TYPE_DATE:
@@ -580,6 +582,7 @@ class TableService {
     private def createColumn(int id, int type, String name) {
         // Set sort status of column
         boolean bSortable = !(  type == Constants.Template.FIELD_TYPE_PHOTO ||
+                                type == Constants.Template.FIELD_TYPE_FILE ||
                                 type == Constants.Template.FIELD_TYPE_SIGN ||
                                 type == Constants.Template.FIELD_TYPE_LOCATION)
 

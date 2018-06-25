@@ -51,6 +51,7 @@ class Constants {
         public static final int FIELD_TYPE_LOCATION       = 7
         public static final int FIELD_TYPE_CHECKBOX       = 8
         public static final int FIELD_TYPE_DATE           = 9
+        public static final int FIELD_TYPE_FILE           = 10
 
         // Special Object Column type
         public static final int FIELD_TYPE_LEAD           = 21
