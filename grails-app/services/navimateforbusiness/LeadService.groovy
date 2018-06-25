@@ -189,6 +189,7 @@ class LeadService {
                     // Parse special values as per column type
                     switch (column.type) {
                         case Constants.Template.FIELD_TYPE_PHOTO:
+                        case Constants.Template.FIELD_TYPE_FILE:
                         case Constants.Template.FIELD_TYPE_SIGN:
                             if (value) {
                                 value = "https://biz.navimateapp.com/#/photos?name=" + value
