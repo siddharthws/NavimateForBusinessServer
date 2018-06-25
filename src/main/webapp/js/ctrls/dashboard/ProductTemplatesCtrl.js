@@ -2,7 +2,7 @@
  * Created by aroha on 07-06-2018.
  */
 
-app.controller("InventoryTemplatesCtrl",
+app.controller("ProductTemplatesCtrl",
     function (  $scope, $rootScope, $http, $localStorage, $state,
                 DialogService, ToastService, TemplateService, NavService) {
         /*------------------------------- INIT -------------------------------*/
@@ -22,14 +22,14 @@ app.controller("InventoryTemplatesCtrl",
             if (selectedItems.length != 1) {
                 ToastService.toast("Please select a single template to edit...")
             } else {
-                DialogService.inventoryTemplateEditor(selectedItems[0], function () {
+                DialogService.productTemplateEditor(selectedItems[0], function () {
                     TemplateService.sync().then(init)
                 })
             }
         }
 
         vm.create = function () {
-            DialogService.inventoryTemplateEditor(null, function () {
+            DialogService.productTemplateEditor(null, function () {
                 TemplateService.sync().then(init)
             })
         }
@@ -93,7 +93,7 @@ app.controller("InventoryTemplatesCtrl",
 
         function init() {
             // Get Template Data
-            vm.templates = TemplateService.getByType(Constants.Template.TYPE_INVENTORY)
+            vm.templates = TemplateService.getByType(Constants.Template.TYPE_PRODUCT)
 
             // Re-Init selection array with all unselected
             vm.selection = []

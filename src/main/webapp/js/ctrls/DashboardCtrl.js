@@ -19,7 +19,7 @@ app.controller('DashboardCtrl',
 
     // Prepare 2D array of menu items so that HRs can be displayed
     vm.menus = [
-        [vm.nav.team,//vm.nav.inventory,
+        [vm.nav.team,//vm.nav.product,
          vm.nav.leads, vm.nav.tasks],
         [vm.nav.reports, vm.nav.templates],
         [vm.nav.company]

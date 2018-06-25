@@ -89,11 +89,11 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
-    // Launch Inventory Template Editor Dialog
-    this.inventoryTemplateEditor = function (template, cb) {
+    // Launch Product Template Editor Dialog
+    this.productTemplateEditor = function (template, cb) {
         // Show Dialog
-        $mdDialog.show({    templateUrl: '/static/views/dialogs/InventoryTemplateEditor.html',
-            controller: 'InventoryTemplateEditorCtrl as $ctrl',
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/ProductTemplateEditor.html',
+            controller: 'ProductTemplateEditorCtrl as $ctrl',
             clickOutsideToClose: true,
             locals: { template: template, cb: cb }
         })

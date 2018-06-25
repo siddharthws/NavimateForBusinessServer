@@ -237,20 +237,20 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $compile
         templateUrl: '/static/views/dashboard/templates/task.html',
         controller: 'TaskTemplatesCtrl as $ctrl'
     })
-    .state('dashboard.templates-inventory', {
-        url: '/templates/inventory',
-        templateUrl: '/static/views/dashboard/templates/inventory.html',
-        controller: 'InventoryTemplatesCtrl as $ctrl'
+    .state('dashboard.templates-product', {
+        url: '/templates/product',
+        templateUrl: '/static/views/dashboard/templates/product.html',
+        controller: 'ProductTemplatesCtrl as $ctrl'
     })
     .state('dashboard.company-settings', {
         url: '/company/settings',
         templateUrl: '/static/views/dashboard/company/settings.html',
         controller: 'CompanySettingsCtrl as $ctrl'
     })
-    .state('dashboard.inventory-manage', {
-          url: '/inventory/manage',
-          templateUrl: '/static/views/dashboard/inventory/manage.html',
-          controller: 'InventoryManageCtrl as vm'
+    .state('dashboard.product-manage', {
+          url: '/product/manage',
+          templateUrl: '/static/views/dashboard/product/manage.html',
+          controller: 'ProductManageCtrl as vm'
     })
     .state('photos', {
           url: '/photos?name',

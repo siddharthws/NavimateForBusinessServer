@@ -12,7 +12,7 @@ import navimateforbusiness.util.Constants
 import static com.mongodb.client.model.Filters.*
 
 @Transactional
-class InventoryService {
+class ProductService {
     // ----------------------- Dependencies ---------------------------//
     def templateService
     def fieldService

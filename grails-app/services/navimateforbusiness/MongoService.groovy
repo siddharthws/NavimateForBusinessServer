@@ -83,7 +83,7 @@ class MongoService {
         if (colFilters.productId?.value) {filters.push(regex("productId", /.*$colFilters.productId.value.*/, 'i'))}
 
         // Add all template related filters
-        def templates = templateService.getForUserByType(user, Constants.Template.TYPE_INVENTORY)
+        def templates = templateService.getForUserByType(user, Constants.Template.TYPE_PRODUCT)
         filters.addAll(getTemplateFilters(templates, colFilters))
 
         return filters

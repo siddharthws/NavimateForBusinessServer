@@ -12,7 +12,7 @@ class TemplateService {
     def leadService
     def taskService
     def formService
-    def inventoryService
+    def productService
 
     // ----------------------- Getters ---------------------------//
     // Method to get all templates for a user
@@ -162,11 +162,11 @@ class TemplateService {
                     leadService.remove(user, lead)
                 }
                 break
-            case Constants.Template.TYPE_INVENTORY:
+            case Constants.Template.TYPE_PRODUCT:
                 // Remove all products associated with this template
-                def products = inventoryService.getAllForUserByFilter(user, [template: [value: template.name]])
+                def products = productService.getAllForUserByFilter(user, [template: [value: template.name]])
                 products.each {ProductM product ->
-                    inventoryService.remove(user, product)
+                    productService.remove(user, product)
                 }
                 break
         }
