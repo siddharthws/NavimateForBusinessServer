@@ -54,7 +54,7 @@ app.service('NavService', function($localStorage, ObjMenu, ObjTab) {
             new ObjTab("FORM", "templates-form", Constants.Role.ADMIN),
             new ObjTab("LEAD", "templates-lead", Constants.Role.ADMIN),
             new ObjTab("TASK", "templates-task", Constants.Role.ADMIN),
-           // new ObjTab("INVENTORY", "templates-inventory", Constants.Role.ADMIN)
+            new ObjTab("PRODUCT", "templates-product", Constants.Role.ADMIN)
         ]
     )
 
@@ -67,12 +67,12 @@ app.service('NavService', function($localStorage, ObjMenu, ObjTab) {
         ]
     )
 
-    vm.inventory = new ObjMenu(
-        "INVENTORY",
-        "ic_inventory.png",
+    vm.product = new ObjMenu(
+        "PRODUCT",
+        "ic_product.png",
         Constants.Role.MANAGER,
         [
-            new ObjTab("MANAGE", "inventory-manage", Constants.Role.MANAGER)
+            new ObjTab("MANAGE", "product-manage", Constants.Role.MANAGER)
         ]
     )
     /* ----------------------------- APIs --------------------------------*/

@@ -2,8 +2,8 @@
  * Created by aroha on 07-06-2018.
  */
 
-// Controller for Inventory Template Editor Dialog
-app.controller('InventoryTemplateEditorCtrl', function ( $scope, $rootScope, $mdDialog,
+// Controller for Product Template Editor Dialog
+app.controller('ProductTemplateEditorCtrl', function ( $scope, $rootScope, $mdDialog,
                                                     ToastService, ObjTemplate, TemplateService,
                                                     template, cb) {
     var vm = this
@@ -53,9 +53,9 @@ app.controller('InventoryTemplateEditorCtrl', function ( $scope, $rootScope, $md
         $scope.template = template.Clone()
     } else {
         // Create empty template object
-        $scope.template = new ObjTemplate(null, "", Constants.Template.TYPE_INVENTORY, [])
+        $scope.template = new ObjTemplate(null, "", Constants.Template.TYPE_PRODUCT, [])
     }
-    $scope.availableFieldTypes = Constants.Template.INVENTORY_FIELD_TYPES
+    $scope.availableFieldTypes = Constants.Template.PRODUCT_FIELD_TYPES
 
     // Add event listener
     // Event listener for Template validation success
