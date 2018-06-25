@@ -251,6 +251,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
                 // Set sizing for Location / Image columns as small
                 if (column.type == Constants.Template.FIELD_TYPE_SIGN ||
                     column.type == Constants.Template.FIELD_TYPE_PHOTO ||
+                    column.type == Constants.Template.FIELD_TYPE_FILE ||
                     column.type == Constants.Template.FIELD_TYPE_LOCATION) {
                     column.size = Constants.Table.COL_SIZE_S
                 } else {

@@ -54,6 +54,7 @@ app.factory('ObjFilter', function() {
     function isSortable() {
         // Mark non sortable for specific field types
         if (this.type == Constants.Template.FIELD_TYPE_PHOTO ||
+            this.type == Constants.Template.FIELD_TYPE_FILE ||
             this.type == Constants.Template.FIELD_TYPE_SIGN ||
             this.type == Constants.Template.FIELD_TYPE_LOCATION) {
             return false

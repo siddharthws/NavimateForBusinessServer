@@ -264,6 +264,7 @@ Constants.Template = {
     FIELD_TYPE_LOCATION:        7,
     FIELD_TYPE_CHECKBOX:        8,
     FIELD_TYPE_DATE:            9,
+    FIELD_TYPE_FILE:            10,
 
     // Special Object Column type
     FIELD_TYPE_LEAD:            21,
@@ -280,7 +281,8 @@ Constants.Template = {
         'Signature',
         'Location',
         'Checkbox',
-        'Date'
+        'Date',
+        'File Upload'
     ]
 }
 
@@ -291,6 +293,7 @@ Constants.Template.FORM_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_RADIOLIST,
     Constants.Template.FIELD_TYPE_CHECKLIST,
     Constants.Template.FIELD_TYPE_PHOTO,
+    Constants.Template.FIELD_TYPE_FILE,
     Constants.Template.FIELD_TYPE_SIGN,
     Constants.Template.FIELD_TYPE_CHECKBOX,
     Constants.Template.FIELD_TYPE_DATE
