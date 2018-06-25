@@ -41,10 +41,6 @@ app.service("FileService", function () {
         var contentType = response.headers('Content-Type')
         var linkElement = document.createElement('a');
 
-        // Add timestamp to file
-        var timestamp = moment().format(Constants.Date.FORMAT_FILE_SUFFIX)
-        filename += '_' + timestamp + '.jpg'
-
         try {
             // Create blob element to save to file
             var blob = new Blob([response.data], {type: contentType})

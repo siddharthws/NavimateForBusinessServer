@@ -24,7 +24,7 @@ app.controller('TemplateValuesViewerCtrl', function (   $rootScope, $http, $loca
             }
         }).then(
             function (response) {
-                FileService.downloadPhoto(response, value.field.title)
+                FileService.downloadPhoto(response, value.field.title + '_' + value.value)
                 $rootScope.hideWaitingDialog()
             },
             function (error) {

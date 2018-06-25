@@ -52,7 +52,7 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state, $ht
         })
             .then(
                 function (response) {
-                    FileService.downloadPhoto(response, vm.table.columns[colIdx].name)
+                    FileService.downloadPhoto(response, vm.table.columns[colIdx].name + '_' + filename)
                     $rootScope.hideWaitingDialog()
                 },
                 function (error) {
