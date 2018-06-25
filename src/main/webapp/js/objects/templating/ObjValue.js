@@ -55,6 +55,7 @@ app.factory('ObjValue', function(TemplateService) {
             case Constants.Template.FIELD_TYPE_RADIOLIST:
             case Constants.Template.FIELD_TYPE_CHECKLIST:
             case Constants.Template.FIELD_TYPE_PHOTO:
+            case Constants.Template.FIELD_TYPE_FILE:
             case Constants.Template.FIELD_TYPE_SIGN:
             case Constants.Template.FIELD_TYPE_LOCATION:
             case Constants.Template.FIELD_TYPE_DATE:

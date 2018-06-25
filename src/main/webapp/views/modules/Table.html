@@ -116,6 +116,7 @@
                                     'tbl-col-l' : column.size == vm.TableConst.COL_SIZE_L}">
                         <!-- Simple Text Value -->
                         <span ng-if="(value == '-') || (column.type != vm.TemplateConst.FIELD_TYPE_PHOTO &&
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_FILE &&
                                                         column.type != vm.TemplateConst.FIELD_TYPE_SIGN &&
                                                         column.type != vm.TemplateConst.FIELD_TYPE_LOCATION &&
                                                         column.type != vm.TemplateConst.FIELD_TYPE_LEAD &&
@@ -126,6 +127,7 @@
                         <!-- Button to open image -->
                         <input type="button" value="" class="ib-base ib-xs ib-hover ib-link" title="Open Image"
                                ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_PHOTO ||
+                                                         column.type == vm.TemplateConst.FIELD_TYPE_FILE ||
                                                          column.type == vm.TemplateConst.FIELD_TYPE_SIGN)"
                                ng-click="$root.Statics.absorbEvent($event); vm.showImage(value, $index)"/>
 
