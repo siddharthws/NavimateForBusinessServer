@@ -53,7 +53,8 @@ class RepApiController {
 
         def resp = [templates: [templates: [], remove: []],
                     leads: [leads: [], remove: []],
-                    tasks: [tasks: [], remove: []]]
+                    tasks: [tasks: [], remove: []],
+                    forms: [forms: []]]
 
         if (rep.account) {
             Date lastSyncTime = new Date(request.JSON.lastSyncTime)
@@ -97,7 +98,17 @@ class RepApiController {
                 }
             }
 
+            // Convert leads to JSON
             leads.each {LeadM it -> resp.leads.leads.push(leadService.toJson(it, rep))}
+
+            // Fill forms Response
+            if (!request.JSON.lastSyncTime) {
+                // Get all forms filled by this rep
+                def forms = formService.getForUser(rep)
+
+                // Send JSON Response for all forms
+                forms.each {Form form -> resp.forms.forms.push(formService.toJson(form, rep)) }
+            }
         }
 
         render resp as JSON
