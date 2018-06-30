@@ -245,7 +245,7 @@ class TaskService {
         def elapsedTimeMs = System.currentTimeMillis() - task.dateCreated.time
 
         // Get elapsed time in hrs
-        double elapsedTimeHrs = (double) elapsedTimeMs / (double) (1000 * 60 * 60 * 24)
+        double elapsedTimeHrs = (double) elapsedTimeMs / (double) (1000 * 60 * 60)
 
         // Round to 2 places and return
         Constants.round(elapsedTimeHrs, 2)
