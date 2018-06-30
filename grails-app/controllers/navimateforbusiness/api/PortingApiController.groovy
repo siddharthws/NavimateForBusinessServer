@@ -172,4 +172,20 @@ class PortingApiController {
             task.save(flush: true, failOnError: true)
         }
     }
+
+    def isRemoveUserFix() {
+        // Remove all forms whose reps are rmeoved
+        Form.findAll().each {Form form ->
+            if (!form.owner.account || form.owner.account.id != form.account.id) {
+                formService.remove(form.account.admin, form)
+            }
+        }
+
+        // Remove all takss whose reps are removed
+        Task.findAll().each {Task task ->
+            if (task.rep && (!task.rep.account || task.rep.account.id != task.account.id)) {
+                taskService.remove(task.account.admin, task)
+            }
+        }
+    }
 }

@@ -79,7 +79,7 @@ app.controller("TeamManageCtrl",
     vm.remove = function() {
         // Launch Confirm Dialog
         DialogService.confirm(
-            "Are you sure you want to remove these " + vm.table.selectedRows.length + " members from your team ?",
+            "You are about to remove " + vm.table.selectedRows.length + " members from your team. This will remove all tasks & forms associated with these users. Are you sure you want to continue ?",
             function () {
                 $rootScope.showWaitingDialog("Please wait while we are removing members...")
                 // Make Http call to remove members

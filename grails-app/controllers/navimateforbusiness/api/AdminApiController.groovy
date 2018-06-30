@@ -14,6 +14,8 @@ class AdminApiController {
     def authService
     def userService
     def leadService
+    def taskService
+    def formService
     def templateService
     def fcmService
     def tableService
@@ -62,6 +64,13 @@ class AdminApiController {
         // Remove selected reps
         request.JSON.ids.each {id ->
             User rep = userService.getRepForUserById(user, id)
+
+            // Remove all tasks and forms of this rep
+            def tasks = taskService.getForUserByRep(user, rep)
+            tasks.each { taskService.remove(user, it) }
+
+            def forms = formService.getForUser(rep)
+            forms.each { formService.remove(user, it) }
 
             // Remove Rep's Manager & account
             rep.manager = null

@@ -99,6 +99,17 @@ class TaskService {
         task
     }
 
+    // Method to get all tasks for a user by rep
+    def getForUserByRep(User user, User rep) {
+        // Get all tasks for user
+        def tasks = getForUser(user)
+
+        // Find tasks by rep
+        def task = tasks.findAll {Task it -> it.rep && it.rep.id == rep.id}
+
+        task
+    }
+
     // Method to get all tasks for a user by lead
     def getForUserByLead(User user, LeadM lead) {
         // Get all tasks for user
