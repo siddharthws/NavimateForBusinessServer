@@ -76,15 +76,11 @@ class RepApiController {
             taskService.getForUserRemoved(rep).each {Task task ->
                 // Check if lead was updated after sync time
                 LeadM lead = leadService.getForUserByFilter(rep, [ids: [task.leadid], includeRemoved: true])
-                if (task.dateCreated > lastSyncTime) {
+                if (lead.isRemoved) {
+                    resp.leads.remove.push(lead.id)
+                } else if ( (task.dateCreated > lastSyncTime) ||
+                            (lead.updateTime > lastSyncTimeString)) {
                     if (!leads.contains(lead)) {leads.push(lead)}
-                } else if (lead.updateTime > lastSyncTimeString) {
-                    // Remove Lead / Add JSON as required
-                    if (lead.isRemoved) {
-                        resp.leads.remove.push(lead.id)
-                    } else {
-                        if (!leads.contains(lead)) {leads.push(lead)}
-                    }
                 }
 
                 // Check if task was updated after sync time
