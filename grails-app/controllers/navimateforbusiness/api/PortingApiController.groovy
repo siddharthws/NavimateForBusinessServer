@@ -169,6 +169,7 @@ class PortingApiController {
             } else {
                 task.resolutionTimeHrs = -1
             }
+            task.lastUpdated = new Date()
             task.save(flush: true, failOnError: true)
         }
     }
