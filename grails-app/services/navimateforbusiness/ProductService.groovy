@@ -3,11 +3,10 @@ package navimateforbusiness
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import com.mongodb.client.FindIterable
-import navimateforbusiness.enums.Role
-import navimateforbusiness.enums.TaskStatus
-import navimateforbusiness.enums.Visibility
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
+import navimateforbusiness.ProductM
+
 
 import static com.mongodb.client.model.Filters.*
 
@@ -16,6 +15,7 @@ class ProductService {
     // ----------------------- Dependencies ---------------------------//
     def templateService
     def fieldService
+    def mongoService
 
     // ----------------------- Getter APIs ---------------------------//
     // Method to search products in mongo database using filter, pager and sorter
@@ -24,7 +24,7 @@ class ProductService {
         def mongoFilters = mongoService.getProductFilters(user, filters)
 
         // Get results
-        FindIterable fi = productM.find(and(mongoFilters))
+        FindIterable fi = ProductM.find(and(mongoFilters))
         int rowCount = fi.size()
 
         // Apply Sorting with atleast name
@@ -88,7 +88,7 @@ class ProductService {
 
         // Get existing template or create new
         if (json.id) {
-            product = getForUserById(user, json.id)
+            product = getForUserByFilter(user, [ids: [json.id]])
             if (!product) {
                 throw new ApiException("Illegal access to product", Constants.HttpCodes.BAD_REQUEST)
             }
@@ -128,7 +128,7 @@ class ProductService {
         product
     }
 
-    // Method to remove a lead object
+    // Method to remove a product object
     def remove(User user, ProductM product) {
         // Remove product
         product.isRemoved = true
