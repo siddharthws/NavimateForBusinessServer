@@ -6,8 +6,8 @@ import navimateforbusiness.util.Constants
 import org.grails.web.json.JSONObject
 
 class AppApiController {
-    static final int MIN_APP_VERSION_CODE       = 33
-    static final int CURRENT_APP_VERSION_CODE   = 35
+    static final int MIN_APP_VERSION_CODE       = 36
+    static final int CURRENT_APP_VERSION_CODE   = 36
 
     def checkForUpdate() {
         int appVersionCode = request.JSON.versionCode
