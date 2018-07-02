@@ -9,7 +9,7 @@ app.controller('TemplateValuesViewerCtrl', function (   $rootScope, $http, $loca
     // API to show photo on new page
     vm.showImage = function (value) {
         // Get photo from server
-        $rootScope.showWaitingDialog("Downloading Photo..")
+        $rootScope.showWaitingDialog("Downloading..")
 
         // Get Photo
         $http({
@@ -28,7 +28,7 @@ app.controller('TemplateValuesViewerCtrl', function (   $rootScope, $http, $loca
                 $rootScope.hideWaitingDialog()
             },
             function (error) {
-                DialogService.alert("Error while downloading photo")
+                DialogService.alert("Error while downloading !!!")
                 $rootScope.hideWaitingDialog()
             }
         )

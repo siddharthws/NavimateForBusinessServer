@@ -31,7 +31,7 @@ app.controller('Table2Ctrl', function (  $rootScope, $scope, $window, $state, $h
     // API to show photo on new page
     vm.showImage = function (filename) {
         // Get photo from server
-        $rootScope.showWaitingDialog("Downloading Photo..")
+        $rootScope.showWaitingDialog("Downloading..")
 
         // Get Photo
         $http({
@@ -50,7 +50,7 @@ app.controller('Table2Ctrl', function (  $rootScope, $scope, $window, $state, $h
                 $rootScope.hideWaitingDialog()
             },
             function (error) {
-                DialogService.alert("Error while downloading photo")
+                DialogService.alert("Error while downloading !!!")
                 $rootScope.hideWaitingDialog()
             }
         )

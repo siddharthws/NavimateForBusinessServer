@@ -36,7 +36,7 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state, $ht
     // API to show photo on new page
     vm.showImage = function (filename, colIdx) {
         // Get photo from server
-        $rootScope.showWaitingDialog("Downloading Photo..")
+        $rootScope.showWaitingDialog("Downloading..")
 
         // Get Photo
         $http({
