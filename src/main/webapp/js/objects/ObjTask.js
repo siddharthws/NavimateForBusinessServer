@@ -40,6 +40,9 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
 
     // ----------------------------------- Validation APIs ------------------------------------//
     ObjTask.prototype.isValid = function () {
+        if (this.getPublicIdErr().length) {
+            return false
+        }
         if (this.getLeadErr().length) {
             return false
         }
@@ -58,6 +61,14 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
             }
         }
         return true
+    }
+
+    ObjTask.prototype.getPublicIdErr = function () {
+        if (!this.publicId) {
+            return 'ID is mandatory'
+        }
+
+        return ''
     }
 
     ObjTask.prototype.getLeadErr = function () {
