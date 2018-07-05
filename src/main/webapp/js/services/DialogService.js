@@ -59,6 +59,16 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
+    // Launch Product Editor Dialog
+    this.productEditor = function (ids, cb) {
+        // Show Dialog
+        $mdDialog.show({    templateUrl: '/static/views/dialogs/ProductEditor.html',
+            controller: 'ProductEditorCtrl as vm',
+            clickOutsideToClose: true,
+            locals: { ids: ids, cb: cb }
+        })
+    }
+
     // Launch Form Template Editor Dialog
     this.formTemplateEditor = function (template, cb) {
         // Show Dialog

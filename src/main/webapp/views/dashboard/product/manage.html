@@ -1,2 +1,15 @@
 <!-- product Manage HTML -->
-<div class="d-flex align-items-center p-2 flex-wrap"></div>
+<div class="d-flex align-items-center p-2 flex-wrap">
+    <imagebutton image="/static/images/ic_add_white.png" text="Add" ng-click="vm.add()" ng-if="!$root.isCC()"></imagebutton>
+
+    <div class="dropdown"  ng-if="!$root.isCC()">
+        <button class="btn-shiny d-flex justify-content-around align-items-center" data-toggle="dropdown"
+                ng-disabled="!vm.table.selection.length">
+            <span>Actions</span>
+            <img class="img-icon ml-2" src="/static/images/ic_dropdown_light.png"/>
+        </button>
+        <div class="dropdown-menu">
+            <button class="dropdown-item" ng-click="vm.edit()">Edit</button>
+        </div>
+    </div>
+</div>

@@ -6,6 +6,7 @@ import navimateforbusiness.Form
 import navimateforbusiness.enums.Role
 import navimateforbusiness.util.Constants
 import navimateforbusiness.LeadM
+import navimateforbusiness.ProductM
 import navimateforbusiness.Task
 import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.Template
@@ -29,6 +30,7 @@ class ManagerApiController {
     def searchService
     def exportService
     def importService
+    def productService
 
     GrailsApplication grailsApplication
 
@@ -786,5 +788,41 @@ class ManagerApiController {
         // Export data
         exportService.export('csv', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
     }
+
+    // ----------------------- Product APIs ----------------------- //
+    def editProduct() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Parse product JSON to product objects
+        def products = request.JSON.products.collect { productService.fromJson(it, user) }
+
+        // Save products
+        products.each {it.save(flush: true, failOnError: true)}
+
+        // Return response
+        def resp = [success: true]
+        render resp as JSON
+    }
+
+    def getProductsById () {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Find products with given IDs
+        def products = productService.getAllForUserByFilter(user, [ids: request.JSON.ids])
+
+        // Throw exception if all tasks not found
+        if (products.size() != request.JSON.ids.size()) {
+            throw new ApiException("Invalid product IDs requested", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Prepare JSON response
+        def resp = []
+        products.each {product -> resp.push(productService.toJson(product, user))}
+
+        render resp as JSON
+    }
+
     // ----------------------- Private methods ----------------------- //
 }

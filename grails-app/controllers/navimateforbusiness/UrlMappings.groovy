@@ -65,6 +65,10 @@ class UrlMappings {
         // Template related APIs
         "/api/manager/templates/getAll"  (controller: "ManagerApi") {action = [POST: "getTemplates"]}
 
+        //Product Related APIs
+        "/api/manager/products/edit"     (controller: "ManagerApi") {action = [POST: "editProduct"]}
+        "/api/manager/products/getByIds" (controller: "ManagerApi") {action = [POST: "getProductsById"]}
+
         /*------------------------- User APIs to be removed --------------------------*/
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
         "/api/users/locationReport" (controller: "UserApi") {action = [GET: "getLocationReport"]}
