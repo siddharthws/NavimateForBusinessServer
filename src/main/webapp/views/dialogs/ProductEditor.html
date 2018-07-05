@@ -1,0 +1,70 @@
+<!-- HTML template for Alert Dialog -->
+<md-dialog class="dialog-container box box-dialog w-100 h-100">
+    <!-- Main container -->
+    <div class="fbx-h w-100 h-100">
+        <!-- Content for left side of dialog -->
+        <div class="fbx-h w-75 h-100 dialog-editor-content fbx-center-children">
+            <!-- Error Waiting UI -->
+            <div class="fbx-h">
+                <!-- Waiting Spinner -->
+                <div class="fbx-h fbx-center-children" ng-if="vm.bLoading">
+                    <loader class="loader-l"></loader>
+                    <h4 class="ml-1 text-grey">Loading...</h4>
+                </div>
+
+                <!-- Error UI -->
+                <div class="fbx-h fbx-center-children" ng-if="vm.bLoadError">
+                    <img src="/static/images/ic_smiley_sad.png">
+                    <h4 class="ml-1 text-grey">Could not get products...</h4>
+                </div>
+            </div>
+
+            <!-- Product information form -->
+            <div class="fbx-v w-100 h-100 overflow-auto align-items-start" ng-if="!vm.bLoading && !vm.bLoadError">
+
+                <!-- Product ID -->
+                <input-box label="Product ID" model="vm.selectedProduct.productId" hint="Enter product ID..."
+                           b-show-error="vm.bInputError" err="vm.selectedProduct.getNameErr()"></input-box>
+
+                <!-- Name -->
+                <input-box label="Name" model="vm.selectedProduct.name" hint="Enter product name..."
+                           b-show-error="vm.bInputError" err="vm.selectedProduct.getNameErr()"></input-box>
+
+                <!-- Template -->
+                <dropdown class="mt-2" label="Template" text="vm.selectedProduct.template.name" items="vm.templates" on-select="vm.updateTemplate(idx)"
+                          b-show-error="vm.bInputError" err="vm.selectedProduct.getTemplateErr()"></dropdown>
+
+                <!-- Template Values -->
+                <template-values-editor class="px-2 mt-2" values="vm.selectedProduct.values" b-show-error="vm.bInputError"></template-values-editor>
+            </div>
+        </div>
+
+        <!-- Content for right side of dialog -->
+        <div class="fbx-v w-25 h-100 ml-neg">
+            <!-- Dialog title -->
+            <h4 class="align-self-end"><u>Product Editor</u></h4>
+
+            <!-- Add / Copy new button -->
+            <div class="fbx-h m-1">
+                <imagebutton class="flex-1" image="/static/images/ic_add_white.png" text="Add New" ng-click="vm.add()"></imagebutton>
+                <imagebutton class="flex-1 ml-2" image="/static/images/ic_copy_white.png" text="Copy" ng-click="vm.copy()"></imagebutton>
+            </div>
+
+            <!-- Item List -->
+            <div class="list list-blend flex-1">
+                <div class="li li-blend d-flex justify-content-between" ng-repeat="product in vm.products"
+                     ng-class="{'active': vm.selectedProduct == product, 'err': vm.bInputError && !product.isValid()}"
+                     ng-click="vm.selectedProduct = product" md-ink-ripple="#000000">
+                    <span class="ml-2 text-ellipsize" >{{($index + 1) + ". " + product.name}}</span>
+                    <input type="button" value="" class="ib-base ib-xs ib-hover ib-cross" ng-click="vm.remove($index); $root.Statics.absorbEvent($event)"/>
+                </div>
+            </div>
+
+            <!-- Dialog buttons -->
+            <div class="d-flex">
+                <button class="btn-shiny flex-1" ng-click="vm.save()">Save</button>
+                <button class="btn-shiny flex-1" ng-click="vm.close()">Close</button>
+            </div>
+        </div>
+    </div>
+</md-dialog>
