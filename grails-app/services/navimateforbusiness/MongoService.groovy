@@ -54,6 +54,9 @@ class MongoService {
         // Apply Ext ID filters if any
         if (colFilters.extId) {filters.push(eq("extId", "$colFilters.extId"))}
 
+        // Apply multi select filter
+        if (colFilters.lead?.value) {filters.push(getMultiselectFilter("_id", colFilters.lead.value))}
+
         // Apply Name filters if any
         if (colFilters.name?.equal) {filters.push(eq("name", "$colFilters.name.equal"))}
         if (colFilters.name?.value) {filters.push(regex("name", /.*$colFilters.name.value.*/, 'i'))}
