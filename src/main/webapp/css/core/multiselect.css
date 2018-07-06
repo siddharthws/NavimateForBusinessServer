@@ -1,0 +1,5 @@
+multiselect-filter > div.active {
+    border-color: #37bcf2;
+    background-color: #37bcf244;
+    box-shadow: 1px 2px 5px 0px lightgray;
+}

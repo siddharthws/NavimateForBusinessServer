@@ -410,3 +410,19 @@ app.directive('nvMap', function () {
         templateUrl: '/static/views/directives/nvMap.html'
     }
 })
+
+// Directive for multiselection filters
+app.directive('multiselectFilter', function () {
+    return {
+        restrict: 'E',
+        // Isolated scope with attributes
+        scope: {
+            filter:     '=',
+            fieldType:  '@',
+            onFilterChanged: '&'
+        },
+        // Controller and view
+        controller: 'MultiselectFilterCtrl as vm',
+        templateUrl: '/static/views/directives/multiselectFilter.html'
+    }
+})

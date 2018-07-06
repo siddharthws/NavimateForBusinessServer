@@ -93,6 +93,12 @@
                                         display-format="{{$root.Constants.Date.FORMAT_SHORT}}"
                                         date-model="column.filter.value.to" date-change="vm.filterUpdated()"></datepicker>
                         </div>
+
+                        <!-- Multiselect filter -->
+                        <multiselect-filter class="flex-1" ng-if="column.filter.type == vm.FilterConst.TYPE_SELECTION"
+                                            filter="column.filter.value" field-type="{{column.type}}"
+                                            on-filter-changed="vm.filterUpdated()">
+                        </multiselect-filter>
                     </div>
                 </div>
             </th>
