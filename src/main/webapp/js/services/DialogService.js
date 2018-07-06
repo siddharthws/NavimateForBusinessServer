@@ -282,4 +282,20 @@ app.service('DialogService', function($mdDialog) {
             }
         })
     }
+
+    this.multiselect = function (title, url, filter, cb) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/MultiselectDialog.html',
+            controller: 'MultiselectDialogCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                title: title,
+                url: url,
+                filter: filter,
+                cb: cb
+            }
+        })
+    }
 })

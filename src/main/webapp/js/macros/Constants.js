@@ -224,6 +224,10 @@ Constants.Table = {
     DEFAULT_COUNT_PER_PAGE:     10,
     MAX_SELECTION_COUNT:        500,
 
+    // Multiselect types
+    MS_INCLUDE:                 1,
+    MS_EXCLUDE:                 2,
+
     // IDs for mandatory columns in leads
     ID_LEAD_NAME:               0,
     ID_LEAD_ADDRESS:            1,

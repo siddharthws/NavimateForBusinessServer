@@ -1,0 +1,34 @@
+
+<md-dialog class="dialog-container box box-dialog w-40 h-100">
+    <div class="fbx-v h-100">
+        <!-- Dialog Title -->
+        <h5><b>Select {{vm.title}}</b></h5>
+
+        <!-- Search Bar -->
+        <input type="text" class="input-box input-lg mt-2" placeholder="Search..."
+               ng-model="vm.searchText" ng-change="vm.searchTextChanged()" ng-model-options="{debounce: 500}">
+
+        <!-- List -->
+        <div class="flex-1 overflow-auto fbx-v">
+            <!-- List Items -->
+            <div ng-repeat="item in vm.list" class="li li-dropdown fbx-h align-items-center"
+                 ng-class="{'active' : vm.selection.isSelected(item.id)}" ng-click="vm.selection.toggle(item.id)">
+                <span class="flex-1 mr-5">{{item.name}}</span>
+                <span ng-show="vm.selection.isSelected(item.id)">&#10004;</span>
+            </div>
+
+            <!-- Waiting Spinner -->
+            <loader class="align-self-center" ng-if="vm.bSearching"></loader>
+
+            <!-- Load More Button -->
+            <button class="btn" ng-click="vm.loadMore()"
+                    ng-if="vm.list.length < vm.totalCount && !vm.bSearching">Load More</button>
+        </div>
+
+        <!-- Buttons -->
+        <div class="container-fluid d-flex justify-content-end">
+            <button class="btn-shiny" ng-click="vm.select()">SELECT</button>
+            <button class="btn-shiny" ng-click="vm.close()">CLOSE</button>
+        </div>
+    </div>
+</md-dialog>

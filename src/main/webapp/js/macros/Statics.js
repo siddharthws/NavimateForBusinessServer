@@ -9,6 +9,21 @@ Statics.getArray = function (size) {
     return new Array(size)
 }
 
+Array.prototype.contains = function (elem) {
+    return this.indexOf(elem) != -1
+}
+
+Array.prototype.addAll = function (arr) {
+    if (arr) {
+        var that = this
+        arr.forEach(function (elem) {
+            if (!that.contains(elem)) {
+                that.push(elem)
+            }
+        })
+    }
+}
+
 // API to absorb UI event
 Statics.absorbEvent = function (event) {
     event.stopPropagation()

@@ -78,6 +78,10 @@ class Constants {
     class Table {
         // Maximum number of rows that can be selected at once
         public static final int MAX_SELECTION_COUNT = 500
+
+        // Multiselect types
+        public static final int MS_INCLUDE = 1
+        public static final int MS_EXCLUDE = 2
     }
 
     class Date {
