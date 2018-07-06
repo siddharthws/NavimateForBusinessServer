@@ -6,15 +6,26 @@ app.service('SearchService', function($q, $http, $localStorage) {
     /* ----------------------------- INIT --------------------------------*/
     var vm  = this
 
+    var canceller = null
+    var bOngoing = false
+
     /* ----------------------------- Public APIs --------------------------------*/
-    vm.search = function (text, name, pager, canceller) {
+    vm.search = function (url, text, pager) {
+        // Cancel on going request if any
+        if (bOngoing) {
+            canceller.resolve()
+            bOngoing = false
+        }
+        canceller = $q.defer()
+
         // Init deferred object
         var deferred = $q.defer()
 
         // Trigger Search Http Request
+        bOngoing = true
         $http({
             method: 'POST',
-            url: '/api/manager/' + name + "/search",
+            url: url,
             headers: {
                 'X-Auth-Token': $localStorage.accessToken
             },
@@ -26,6 +37,9 @@ app.service('SearchService', function($q, $http, $localStorage) {
         }).then(
             // Success callback
             function (response) {
+                // Reset ongoing flag
+                bOngoing = false
+
                 // Resolve promise
                 deferred.resolve(response.data)
             },
@@ -36,7 +50,10 @@ app.service('SearchService', function($q, $http, $localStorage) {
                     return
                 }
 
-                // Reject promise
+                // Reset ongoing flag
+                bOngoing = false
+
+                // Resolve promise
                 deferred.reject()
             }
         )
