@@ -1,5 +1,6 @@
 package navimateforbusiness
 
+import com.mongodb.client.model.Filters
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import navimateforbusiness.enums.Role
@@ -126,25 +127,11 @@ class MongoService {
     private def getTemplateFilters (templates, colFilters) {
         def filters = []
 
-        // Apply Template Name Filter
+        // Apply Template Filter
         if (colFilters.template?.value) {
             // Get filter value
-            String filterVal = colFilters.template.value
-
-            // Get IDs of templates which have the filter value in their name
-            def templateFilters = []
-            templates.each {Template it ->
-                if (it.name.toLowerCase().contains(filterVal.toLowerCase())) {
-                    templateFilters.push(eq("templateId", it.id))
-                }
-            }
-
-            // Add Template ID Filter to filters
-            if (templateFilters) {
-                filters.push(or(templateFilters))
-            } else {
-                filters.push(eq("templateId", null))
-            }
+            def filterVal = colFilters.template.value
+            filters.push(getMultiselectFilter("templateId", filterVal))
         }
 
         // Get all fields in templates
@@ -266,5 +253,20 @@ class MongoService {
         }
 
         return and(filters)
+    }
+
+    private def getMultiselectFilter(String fieldName, def filterVal) {
+        def filter
+
+        switch (filterVal.type) {
+            case Constants.Table.MS_INCLUDE:
+                filter = Filters.in(fieldName, filterVal.list)
+                break
+            case Constants.Table.MS_EXCLUDE:
+                filter = Filters.nin(fieldName, filterVal.list)
+                break
+        }
+
+        filter
     }
 }

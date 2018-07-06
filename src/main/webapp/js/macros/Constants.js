@@ -274,6 +274,8 @@ Constants.Template = {
     FIELD_TYPE_LEAD:            21,
     FIELD_TYPE_TASK:            22,
 
+    FIELD_TYPE_TEMPLATE:        41,
+
     // Field Names
     FIELD_NAMES:    [
         '',
