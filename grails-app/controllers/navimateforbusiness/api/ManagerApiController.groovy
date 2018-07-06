@@ -34,6 +34,32 @@ class ManagerApiController {
 
     GrailsApplication grailsApplication
 
+    // ----------------------- Template APIs ----------------------- //
+    def searchTemplates() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get input params
+        String text = request.JSON.text
+        def pager = request.JSON.pager
+
+        // Get all for this user
+        def templates = templateService.getForUser(user)
+
+        // Perform Search
+        def fTemplates = templates.findAll {it.name.toLowerCase().contains(text.toLowerCase())}
+
+        // Apply Paging
+        def pTemplates = pagingService.apply(fTemplates, pager)
+
+        // Send response with IDs, names and total count
+        def resp = [
+                results: pTemplates.collect {[id: it.id, name: it.name]},
+                totalCount: fTemplates.size()
+        ]
+        render resp as JSON
+    }
+
     // ----------------------- Team APIs ----------------------- //
     def getTeamById () {
         // Get user object
