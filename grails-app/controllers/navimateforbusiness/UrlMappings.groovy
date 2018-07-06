@@ -28,6 +28,9 @@ class UrlMappings {
         "/api/cc/team/getManagers"   (controller: "CcApi") {action = [POST: "getManagers"]}
 
         /*------------------------- Manager APIs --------------------------*/
+        // Template related APIs
+        "/api/manager/templates/search"  (controller: "ManagerApi") {action = [POST: "searchTemplates"]}
+
         // Team related APIs
         "/api/manager/team/getByIds"     (controller: "ManagerApi") {action = [POST: "getTeamById"]}
         "/api/manager/team/search"       (controller: "ManagerApi") {action = [POST: "searchTeam"]}
