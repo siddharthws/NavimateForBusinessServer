@@ -32,6 +32,27 @@ class UserService {
         reps
     }
 
+    List<User> getNonRepsForUser(User user) {
+        def users = []
+
+        switch (user.role) {
+            case Role.ADMIN:
+            case Role.CC:
+                users = User.findAllByAccountAndRoleNotEqual(user.account, Role.REP)
+                break
+            case Role.MANAGER:
+                users = User.findAllByAccountAndRoleInList(user.account, [Role.CC, Role.ADMIN])
+                users.push(user)
+                break
+        }
+
+        // Sort reps in increasing order of name
+        users.sort{it.name}
+
+        // Return tasks
+        users
+    }
+
     // Method to get all managers under a user
     List<User> getManagersForUser(User user) {
         List<User> managers = User.findAllByAccountAndRole(user.account, Role.MANAGER)

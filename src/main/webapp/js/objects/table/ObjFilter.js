@@ -15,7 +15,9 @@ app.factory('ObjFilter', function() {
                 this.value = ""
                 break
             }
-            case Constants.Template.FIELD_TYPE_TEMPLATE: {
+            case Constants.Template.FIELD_TYPE_TEMPLATE:
+            case Constants.Template.FIELD_TYPE_REP:
+            case Constants.Template.FIELD_TYPE_NON_REP: {
                 this.type = Constants.Filter.TYPE_SELECTION
                 this.value = null
                 break
