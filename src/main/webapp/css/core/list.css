@@ -72,6 +72,11 @@
     background-color: whitesmoke;
 }
 
+.li-dropdown.active {
+    color: white;
+    background-color: #37bcf2;
+}
+
 /* Styling classes for blendable list items */
 .li-blend {
     margin: 0 1em 0 0;
