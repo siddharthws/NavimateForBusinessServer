@@ -259,33 +259,22 @@ class ManagerApiController {
     }
 
     def searchLeads() {
-        /*// Get user object
+        // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get input params
-        def text = request.JSON.text
+        String text = request.JSON.text
         def pager = request.JSON.pager
 
-        // get leads for this user
-        def leads = leadService.getForUser(user)
+        // Filter leads for this user
+        def leads = leadService.getAllForUserByFPS(user, [name: [value: text]], pager, [])
 
-        // get search results
-        leads = searchService.searchLeads(leads, text)
-        int totalCount = leads.size()
-
-        // Get pages results
-        leads = pagingService.apply(leads, pager)
-
-        // Create response array with IDs and names
+        // Send response with IDs, names and total count
         def resp = [
-                items: [],
-                totalCount: totalCount
+                results: leads.leads.collect {[id: it.id, name: it.name]},
+                totalCount: leads.rowCount
         ]
-        leads.each {it -> resp.items.push([id: it.id, name: it.name])}
-
-        // Send response
-        render resp as JSON*/
-        throw new ApiException("API unavailable")
+        render resp as JSON
     }
 
     def getLeadIds() {

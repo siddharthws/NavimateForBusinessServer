@@ -17,12 +17,12 @@ app.factory('ObjFilter', function() {
             }
             case Constants.Template.FIELD_TYPE_TEMPLATE:
             case Constants.Template.FIELD_TYPE_REP:
-            case Constants.Template.FIELD_TYPE_NON_REP: {
+            case Constants.Template.FIELD_TYPE_NON_REP:
+            case Constants.Template.FIELD_TYPE_LEAD: {
                 this.type = Constants.Filter.TYPE_SELECTION
                 this.value = null
                 break
             }
-            case Constants.Template.FIELD_TYPE_LEAD:
             case Constants.Template.FIELD_TYPE_TASK: {
                 this.type = Constants.Filter.TYPE_OBJECT
                 this.value = ""
