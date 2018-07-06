@@ -56,6 +56,8 @@ class Constants {
         // Special Object Column type
         public static final int FIELD_TYPE_LEAD           = 21
         public static final int FIELD_TYPE_TASK           = 22
+
+        public static final int FIELD_TYPE_TEMPLATE       = 41
     }
 
     // Filter related constants

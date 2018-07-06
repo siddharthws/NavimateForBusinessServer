@@ -137,7 +137,7 @@ app.service('LeadService', function($q, $http, $localStorage, ObjLead, TemplateS
         columns.push(new ObjColumn(Table_C.ID_LEAD_NAME,        "Name",     Template_C.FIELD_TYPE_LEAD,     null, "name"))
         columns.push(new ObjColumn(Table_C.ID_LEAD_ADDRESS,     "Address",  Template_C.FIELD_TYPE_TEXT,     null, "address"))
         columns.push(new ObjColumn(Table_C.ID_LEAD_LOCATION,    "Location", Template_C.FIELD_TYPE_LOCATION, null, "location"))
-        columns.push(new ObjColumn(Table_C.ID_LEAD_TEMPLATE,    "Template", Template_C.FIELD_TYPE_TEXT,     null, "template"))
+        columns.push(new ObjColumn(Table_C.ID_LEAD_TEMPLATE,    "Template", Template_C.FIELD_TYPE_TEMPLATE, null, "template"))
 
         // Iterate through each lead template
         TemplateService.getByType(Constants.Template.TYPE_LEAD).forEach(function (template) {
