@@ -58,6 +58,8 @@ class Constants {
         public static final int FIELD_TYPE_TASK           = 22
 
         public static final int FIELD_TYPE_TEMPLATE       = 41
+        public static final int FIELD_TYPE_REP            = 42
+        public static final int FIELD_TYPE_NON_REP        = 43
     }
 
     // Filter related constants

@@ -113,6 +113,56 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    def searchReps() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get input params
+        String text = request.JSON.text
+        def pager = request.JSON.pager
+
+        // Get all for this user
+        def reps = userService.getRepsForUser(user)
+
+        // Perform Search
+        reps = reps.findAll {it.name.toLowerCase().contains(text.toLowerCase())}
+
+        // Apply Paging
+        def pagedReps = pagingService.apply(reps, pager)
+
+        // Send response with IDs, names and total count
+        def resp = [
+                results: pagedReps.collect {[id: it.id, name: it.name]},
+                totalCount: reps.size()
+        ]
+        render resp as JSON
+    }
+
+    def searchNonReps() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get input params
+        String text = request.JSON.text
+        def pager = request.JSON.pager
+
+        // Get all for this user
+        def users = userService.getNonRepsForUser(user)
+
+        // Perform Search
+        users = users.findAll {it.name.toLowerCase().contains(text.toLowerCase())}
+
+        // Apply Paging
+        def pagedUsers = pagingService.apply(users, pager)
+
+        // Send response with IDs, names and total count
+        def resp = [
+                results: pagedUsers.collect {[id: it.id, name: it.name]},
+                totalCount: users.size()
+        ]
+        render resp as JSON
+    }
+
     // ----------------------- LEAD APIs ----------------------- //
     def getLeadsById () {
         // Get user object

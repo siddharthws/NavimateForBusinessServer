@@ -19,6 +19,12 @@ app.controller('MultiselectFilterCtrl', function (  $scope, $timeout,
         if ($scope.fieldType == Constants.Template.FIELD_TYPE_TEMPLATE) {
             title = 'Templates'
             url = '/api/manager/templates/search'
+        } else if ($scope.fieldType == Constants.Template.FIELD_TYPE_REP) {
+            title = 'Users'
+            url = '/api/manager/team/searchReps'
+        } else if ($scope.fieldType == Constants.Template.FIELD_TYPE_NON_REP) {
+            title = 'Users'
+            url = '/api/manager/team/searchNonReps'
         }
 
         // Trigger Multiselect dialog
