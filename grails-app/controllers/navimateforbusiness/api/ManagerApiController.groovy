@@ -716,6 +716,31 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    def searchTasks() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get input params
+        String text = request.JSON.text
+        def pager = request.JSON.pager
+
+        // Get all for this user
+        def tasks = taskService.getForUser(user)
+
+        // Perform Search
+        tasks = tasks.findAll {it.publicId.toLowerCase().contains(text.toLowerCase())}
+
+        // Apply Paging
+        def pagedTasks = pagingService.apply(tasks, pager)
+
+        // Send response with IDs, names and total count
+        def resp = [
+                results: pagedTasks.collect {[id: it.id, name: it.publicId]},
+                totalCount: tasks.size()
+        ]
+        render resp as JSON
+    }
+
     // ----------------------- FORM APIs ----------------------- //
     def getFormsById () {
         // Get user object
