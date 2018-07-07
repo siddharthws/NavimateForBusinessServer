@@ -28,6 +28,9 @@ app.controller('MultiselectFilterCtrl', function (  $scope, $timeout,
         } else if ($scope.fieldType == Constants.Template.FIELD_TYPE_LEAD) {
             title = 'Leads'
             url = '/api/manager/leads/search'
+        } else if ($scope.fieldType == Constants.Template.FIELD_TYPE_TASK) {
+            title = 'Tasks'
+            url = '/api/manager/tasks/search'
         }
 
         // Trigger Multiselect dialog

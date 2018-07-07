@@ -63,7 +63,7 @@
                     <!-- Header bottom with specialized filters for different data types -->
                     <div class="d-flex">
                         <!-- Text filter -->
-                        <input ng-if="(column.filter.type == vm.FilterConst.TYPE_TEXT ||column.filter.type == vm.FilterConst.TYPE_OBJECT)" type="text" placeholder="Search..."
+                        <input ng-if="(column.filter.type == vm.FilterConst.TYPE_TEXT)" type="text" placeholder="Search..."
                                class="input-box w-100" ng-model="column.filter.value"
                                ng-model-options="{debounce: 500}" ng-change="vm.filterUpdated()"
                                ng-class="{'active': column.filter.value}">
