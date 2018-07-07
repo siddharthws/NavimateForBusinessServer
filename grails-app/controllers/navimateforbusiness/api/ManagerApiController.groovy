@@ -35,6 +35,21 @@ class ManagerApiController {
     GrailsApplication grailsApplication
 
     // ----------------------- Template APIs ----------------------- //
+    def getTemplates() {
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get templates for this user
+        List<Template> templates = templateService.getForUser(user)
+
+        // Prepare JSON response
+        def resp = []
+        templates.each {template ->
+            resp.push(templateService.toJson(template))
+        }
+
+        render resp as JSON
+    }
+
     def searchTemplates() {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
@@ -82,6 +97,93 @@ class ManagerApiController {
         selectedTeam.each {rep -> resp.push(userService.toJson(rep))}
 
         render resp as JSON
+    }
+
+    def getTeamTable() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+
+        // Get team for this user
+        def team = userService.getRepsForUser(user)
+
+        // Convert team to tabular format
+        def table = tableService.parseTeam(user, team)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+        int totalRows = table.rows.size()
+
+        // Apply sorting to table
+        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
+
+        // Apply paging to table
+        table.rows = pagingService.apply(table.rows, filter.pager)
+
+        // Send response
+        def resp = [
+                rows: table.rows,
+                columns: request.JSON.bColumns ? table.columns : null,
+                totalRows: totalRows
+        ]
+        render resp as JSON
+    }
+
+    def getRepIds() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+
+        // get team for this user
+        def team = userService.getRepsForUser(user)
+
+        // Convert team to tabular format
+        def table = tableService.parseTeam(user, team)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+
+        // Prepare response as list of IDs & names
+        def resp = []
+        table.rows.each {row ->
+            resp.push(id: row.id, name: row.name)
+        }
+        render resp as JSON
+    }
+
+    def exportTeam() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+        def exportParams = request.JSON.exportParams
+
+        // get team for this user
+        def team = userService.getRepsForUser(user)
+
+        // Convert team to tabular format
+        def table = tableService.parseTeam(user, team)
+
+        // Apply column filters to table
+        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+
+        // Apply sorting to table
+        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
+
+        // Export table
+        def exportData = tableService.getExportData(table, exportParams)
+
+        // Set response parameters
+        response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
+        response.contentType = grailsApplication.config.getProperty("grails.mime.types.xls")
+
+        // Export data
+        exportService.export('csv', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
     }
 
     def searchTeam() {
@@ -750,110 +852,6 @@ class ManagerApiController {
         render resp as JSON
     }
 
-    // ----------------------- Template APIs ----------------------- //
-    def getTemplates() {
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Get templates for this user
-        List<Template> templates = templateService.getForUser(user)
-
-        // Prepare JSON response
-        def resp = []
-        templates.each {template ->
-            resp.push(templateService.toJson(template))
-        }
-
-        render resp as JSON
-    }
-
-    // ----------------------- Team APIs ----------------------- //
-    def getTeamTable() {
-        // Get user object
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Get filters from request
-        def filter = request.JSON.filter
-
-        // Get team for this user
-        def team = userService.getRepsForUser(user)
-
-        // Convert team to tabular format
-        def table = tableService.parseTeam(user, team)
-
-        // Apply column filters to table
-        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
-        int totalRows = table.rows.size()
-
-        // Apply sorting to table
-        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
-
-        // Apply paging to table
-        table.rows = pagingService.apply(table.rows, filter.pager)
-
-        // Send response
-        def resp = [
-                rows: table.rows,
-                columns: request.JSON.bColumns ? table.columns : null,
-                totalRows: totalRows
-        ]
-        render resp as JSON
-    }
-
-    def getRepIds() {
-        // Get user object
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Get filters from request
-        def filter = request.JSON.filter
-
-        // get team for this user
-        def team = userService.getRepsForUser(user)
-
-        // Convert team to tabular format
-        def table = tableService.parseTeam(user, team)
-
-        // Apply column filters to table
-        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
-
-        // Prepare response as list of IDs & names
-        def resp = []
-        table.rows.each {row ->
-            resp.push(id: row.id, name: row.name)
-        }
-        render resp as JSON
-    }
-
-    def exportTeam() {
-        // Get user object
-        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
-
-        // Get filters from request
-        def filter = request.JSON.filter
-        def exportParams = request.JSON.exportParams
-
-        // get team for this user
-        def team = userService.getRepsForUser(user)
-
-        // Convert team to tabular format
-        def table = tableService.parseTeam(user, team)
-
-        // Apply column filters to table
-        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
-
-        // Apply sorting to table
-        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
-
-        // Export table
-        def exportData = tableService.getExportData(table, exportParams)
-
-        // Set response parameters
-        response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
-        response.contentType = grailsApplication.config.getProperty("grails.mime.types.xls")
-
-        // Export data
-        exportService.export('csv', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
-    }
-
     // ----------------------- Product APIs ----------------------- //
     def editProduct() {
         // Get user object
@@ -888,6 +886,4 @@ class ManagerApiController {
 
         render resp as JSON
     }
-
-    // ----------------------- Private methods ----------------------- //
 }
