@@ -118,10 +118,10 @@ class MongoService {
 
         // Apply date filter
         SimpleDateFormat sdf = new SimpleDateFormat(Constants.Date.FORMAT_LONG)
-        if (colFilters.dateCreated?.from)  {filters.push(gte("dateCreated", sdf.parse(colFilters.dateCreated.from).toString()))}
-        if (colFilters.dateCreated?.to)    {filters.push(lte("dateCreated", sdf.parse(colFilters.dateCreated.to).toString()))}
-        if (colFilters.lastUpdated?.from)  {filters.push(gte("lastUpdated", sdf.parse(colFilters.lastUpdated.from).toString()))}
-        if (colFilters.lastUpdated?.to)    {filters.push(lte("lastUpdated", sdf.parse(colFilters.lastUpdated.to).toString()))}
+        if (colFilters.dateCreated?.value?.from)  {filters.push(gte("dateCreated", Constants.getISODate(sdf.parse(colFilters.dateCreated.value.from))))}
+        if (colFilters.dateCreated?.value?.to)    {filters.push(lte("dateCreated", Constants.getISODate(sdf.parse(colFilters.dateCreated.value.to))))}
+        if (colFilters.lastUpdated?.value?.from)  {filters.push(gte("lastUpdated", Constants.getISODate(sdf.parse(colFilters.lastUpdated.value.from))))}
+        if (colFilters.lastUpdated?.value?.to)    {filters.push(lte("lastUpdated", Constants.getISODate(sdf.parse(colFilters.lastUpdated.value.to))))}
 
         filters
     }
