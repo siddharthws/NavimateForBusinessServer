@@ -1,6 +1,9 @@
 package navimateforbusiness.util
 
 import navimateforbusiness.objects.LatLng
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormatter
+import org.joda.time.format.ISODateTimeFormat
 
 import java.text.SimpleDateFormat
 
@@ -88,12 +91,13 @@ class Constants {
         public static final int MS_EXCLUDE = 2
     }
 
-    class Date {
+    static class Date {
         // Date Formats
         public static final String FORMAT_LONG       = "yyyy-MM-dd HH:mm:ss"
         public static final String FORMAT_DATE_ONLY  = "yyyy-MM-dd"
         public static final String FORMAT_TIME_ONLY  = "HH:mm:ss"
         public static final String FORMAT_TIME_SHORT = "h:mm a"
+        public static final String FORMAT_UTC        = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
         // Timezones
         public static final TimeZone TIMEZONE_IST = TimeZone.getTimeZone('Asia/Calcutta')
@@ -239,5 +243,19 @@ class Constants {
             v >>= 5;
         }
         result.append(Character.toChars((int) (v + 63)));
+    }
+
+    static def getISODate(java.util.Date date) {
+        // Get date in UTC Format
+        SimpleDateFormat utcFormatter = new SimpleDateFormat(Date.FORMAT_UTC)
+        utcFormatter.setTimeZone(TimeZone.getTimeZone("UTC"))
+        def dateUtc = utcFormatter.format(date)
+
+        // Parse into ISO Format
+        DateTimeFormatter parser = ISODateTimeFormat.dateTime()
+        DateTime parsedDateTime = parser.parseDateTime(dateUtc)
+
+        // Return parsed date
+        parsedDateTime.toDate()
     }
 }
