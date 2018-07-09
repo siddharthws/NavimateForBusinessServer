@@ -4,6 +4,7 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import navimateforbusiness.Form
 import navimateforbusiness.enums.Role
+import navimateforbusiness.objects.ObjPager
 import navimateforbusiness.util.Constants
 import navimateforbusiness.LeadM
 import navimateforbusiness.ProductM
@@ -26,7 +27,6 @@ class ManagerApiController {
     def tableService
     def filtrService
     def sortingService
-    def pagingService
     def searchService
     def exportService
     def importService
@@ -56,7 +56,7 @@ class ManagerApiController {
 
         // Get input params
         String text = request.JSON.text
-        def pager = request.JSON.pager
+        def pager = new ObjPager(request.JSON.pager)
 
         // Get all for this user
         def templates = templateService.getForUser(user)
@@ -65,7 +65,7 @@ class ManagerApiController {
         def fTemplates = templates.findAll {it.name.toLowerCase().contains(text.toLowerCase())}
 
         // Apply Paging
-        def pTemplates = pagingService.apply(fTemplates, pager)
+        def pTemplates = pager.apply(fTemplates)
 
         // Send response with IDs, names and total count
         def resp = [
@@ -105,6 +105,7 @@ class ManagerApiController {
 
         // Get filters from request
         def filter = request.JSON.filter
+        def pager = new ObjPager(filter.pager)
 
         // Get team for this user
         def team = userService.getRepsForUser(user)
@@ -120,7 +121,7 @@ class ManagerApiController {
         table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Apply paging to table
-        table.rows = pagingService.apply(table.rows, filter.pager)
+        table.rows = pager.apply(table.rows)
 
         // Send response
         def resp = [
@@ -192,7 +193,7 @@ class ManagerApiController {
 
         // Get input params
         def text = request.JSON.text
-        def pager = request.JSON.pager
+        def pager = new ObjPager(request.JSON.pager)
 
         // get reps for this user
         def reps = userService.getRepsForUser(user)
@@ -202,7 +203,7 @@ class ManagerApiController {
         int totalCount = reps.size()
 
         // Get pages results
-        reps = pagingService.apply(reps, pager)
+        reps = pager.apply(reps)
 
         // Create response array with IDs and names
         def resp = [
@@ -221,7 +222,7 @@ class ManagerApiController {
 
         // Get input params
         String text = request.JSON.text
-        def pager = request.JSON.pager
+        def pager = new ObjPager(request.JSON.pager)
 
         // Get all for this user
         def reps = userService.getRepsForUser(user)
@@ -230,7 +231,7 @@ class ManagerApiController {
         reps = reps.findAll {it.name.toLowerCase().contains(text.toLowerCase())}
 
         // Apply Paging
-        def pagedReps = pagingService.apply(reps, pager)
+        def pagedReps = pager.apply(reps)
 
         // Send response with IDs, names and total count
         def resp = [
@@ -246,7 +247,7 @@ class ManagerApiController {
 
         // Get input params
         String text = request.JSON.text
-        def pager = request.JSON.pager
+        def pager = new ObjPager(request.JSON.pager)
 
         // Get all for this user
         def users = userService.getNonRepsForUser(user)
@@ -255,7 +256,7 @@ class ManagerApiController {
         users = users.findAll {it.name.toLowerCase().contains(text.toLowerCase())}
 
         // Apply Paging
-        def pagedUsers = pagingService.apply(users, pager)
+        def pagedUsers = pager.apply(users)
 
         // Send response with IDs, names and total count
         def resp = [
@@ -291,7 +292,7 @@ class ManagerApiController {
 
         // Get filters from request
         def filter = request.JSON.filter
-        def pager = request.JSON.pager
+        ObjPager pager = new ObjPager(request.JSON.pager)
         def sorter = request.JSON.sorter
 
         // get leads for this user
@@ -366,7 +367,7 @@ class ManagerApiController {
 
         // Get input params
         String text = request.JSON.text
-        def pager = request.JSON.pager
+        def pager = new ObjPager(request.JSON.pager)
 
         // Filter leads for this user
         def leads = leadService.getAllForUserByFPS(user, [name: [value: text]], pager, [])
@@ -388,7 +389,7 @@ class ManagerApiController {
         def sorter = request.JSON.sorter
 
         // get leads for this user
-        def filteredLeads = leadService.getAllForUserByFPS(user, filter, [:], sorter)
+        def filteredLeads = leadService.getAllForUserByFPS(user, filter, new ObjPager(), sorter)
 
         // Ensure number of rows are less than max limit
         if (filteredLeads.leads.size() > Constants.Table.MAX_SELECTION_COUNT) {
@@ -414,7 +415,7 @@ class ManagerApiController {
         def exportParams = request.JSON.exportParams
 
         // get leads for this user
-        def leads = leadService.getAllForUserByFPS(user, filter, [:], sorter).leads
+        def leads = leadService.getAllForUserByFPS(user, filter, new ObjPager(), sorter).leads
 
         // Extract selected leads if applicable
         if (params.selection) {
@@ -505,6 +506,7 @@ class ManagerApiController {
 
         // Get filters from request
         def filter = request.JSON.filter
+        ObjPager pager = new ObjPager(filter.pager)
 
         // get tasks for this user
         def tasks = taskService.getForUser(user)
@@ -520,7 +522,7 @@ class ManagerApiController {
         table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Apply paging to table
-        table.rows = pagingService.apply(table.rows, filter.pager)
+        table.rows = pager.apply(table.rows)
 
         // Send response
         def resp = [
@@ -722,7 +724,7 @@ class ManagerApiController {
 
         // Get input params
         String text = request.JSON.text
-        def pager = request.JSON.pager
+        def pager = new ObjPager(request.JSON.pager)
 
         // Get all for this user
         def tasks = taskService.getForUser(user)
@@ -731,7 +733,7 @@ class ManagerApiController {
         tasks = tasks.findAll {it.publicId.toLowerCase().contains(text.toLowerCase())}
 
         // Apply Paging
-        def pagedTasks = pagingService.apply(tasks, pager)
+        def pagedTasks = pager.apply(tasks)
 
         // Send response with IDs, names and total count
         def resp = [
@@ -773,6 +775,7 @@ class ManagerApiController {
 
         // Get filters from request
         def filter = request.JSON.filter
+        ObjPager pager = new ObjPager(filter.pager)
 
         // Get forms for this user
         def forms = formService.getForUser(user)
@@ -788,7 +791,7 @@ class ManagerApiController {
         table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
 
         // Apply paging to table
-        table.rows = pagingService.apply(table.rows, filter.pager)
+        table.rows = pager.apply(table.rows)
 
         // Send response
         def resp = [

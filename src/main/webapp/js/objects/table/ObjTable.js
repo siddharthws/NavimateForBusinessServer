@@ -18,7 +18,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
 
         // Pagination parameters
         vm.pager = {
-            startIdx:   0,
+            start:      0,
             count:      Constants.Table.DEFAULT_COUNT_PER_PAGE
         }
         vm.sortOrder = []
@@ -148,7 +148,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
         vm.reset = function () {
             // Reste pager
             vm.pager = {
-                startIdx:   0,
+                start:      0,
                 count:      Constants.Table.DEFAULT_COUNT_PER_PAGE
             }
 

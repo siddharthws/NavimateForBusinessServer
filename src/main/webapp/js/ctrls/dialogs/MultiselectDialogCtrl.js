@@ -16,7 +16,7 @@ app.controller('MultiselectDialogCtrl', function (  $scope, $mdDialog,
 
     // Pager
     vm.pager = {
-        startIdx: 0,
+        start: 0,
         count: Constants.Table.DEFAULT_COUNT_PER_PAGE
     }
 
@@ -31,7 +31,7 @@ app.controller('MultiselectDialogCtrl', function (  $scope, $mdDialog,
     // Method to perform search
     vm.searchTextChanged = function () {
         // Reset Pager
-        vm.pager.startIdx = 0
+        vm.pager.start = 0
 
         //Reset List
         vm.list = []
@@ -43,7 +43,7 @@ app.controller('MultiselectDialogCtrl', function (  $scope, $mdDialog,
     // Method to load more results
     vm.loadMore = function () {
         // Set pager for next set of results
-        vm.pager.startIdx = vm.pager.startIdx + vm.pager.count
+        vm.pager.start = vm.pager.start + vm.pager.count
 
         // Perform Search
         search()

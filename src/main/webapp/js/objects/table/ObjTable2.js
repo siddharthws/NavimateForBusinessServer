@@ -20,7 +20,7 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
 
         // Table Pager
         vm.pager = {
-            startIdx:   0,
+            start:      0,
             count:      Constants.Table.DEFAULT_COUNT_PER_PAGE
         }
         vm.pageCount = 0
@@ -97,7 +97,7 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
         vm.reset = function () {
             // Reset Pager
             vm.pager = {
-                startIdx:   0,
+                start:      0,
                 count:      Constants.Table.DEFAULT_COUNT_PER_PAGE
             }
 
