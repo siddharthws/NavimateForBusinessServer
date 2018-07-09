@@ -4,6 +4,7 @@ import grails.gorm.transactions.Transactional
 import com.mongodb.client.FindIterable
 import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.enums.Visibility
+import navimateforbusiness.objects.ObjPager
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 
@@ -20,7 +21,7 @@ class LeadService {
 
     // ----------------------- Getter APIs ---------------------------//
     // Method to search leads in mongo database using filter, pager and sorter
-    def getAllForUserByFPS(User user, def filters, def pager, def sorter) {
+    def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
         // Get mongo filters
         def mongoFilters = mongoService.getLeadFilters(user, filters)
 
@@ -38,12 +39,11 @@ class LeadService {
         fi = fi.sort(sortBson)
 
         // Apply paging
-        if (pager.startIdx) {fi = fi.skip(pager.startIdx)}
-        if (pager.count) {fi = fi.limit(pager.count)}
+        def pagedResults = pager.apply(fi)
 
         // Prepare leads array to return
         def leads = []
-        fi.each {LeadM lead -> leads.push(lead)}
+        pagedResults.each {LeadM lead -> leads.push(lead)}
 
         // Return response
         return [
@@ -54,7 +54,7 @@ class LeadService {
 
     // method to get list of leads using filters
     List<LeadM> getAllForUserByFilter(User user, def filters) {
-        getAllForUserByFPS(user, filters, [:], []).leads
+        getAllForUserByFPS(user, filters, new ObjPager(), []).leads
     }
 
     // Method to get a single lead using filters

@@ -108,7 +108,7 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state, $ht
         }
 
         // Reset start index
-        pager.startIdx = 0
+        pager.start = 0
 
         // Sync Data
         sync(false)
@@ -120,7 +120,7 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state, $ht
         var pager = vm.table.pager
 
         // Set start index appropriately
-        pager.startIdx = (pageNum - 1) * pager.count
+        pager.start = (pageNum - 1) * pager.count
 
         // Sync data
         sync(false)
@@ -153,7 +153,7 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state, $ht
         }
 
         // Reset start Index in pager
-        vm.table.pager.startIdx = 0
+        vm.table.pager.start = 0
 
         // Sync Data
         sync(false)
@@ -168,7 +168,7 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state, $ht
         column.bNoBlanks = !column.bNoBlanks
 
         // Reset start Index in pager
-        vm.table.pager.startIdx = 0
+        vm.table.pager.start = 0
 
         // Reset selected rows
         vm.table.selectedRows = []
@@ -180,7 +180,7 @@ app.controller('TableCtrl', function (  $rootScope, $scope, $window, $state, $ht
     // Method to perform action when any filters are changed
     vm.filterUpdated = function () {
         // Reset start Index in pager
-        vm.table.pager.startIdx = 0
+        vm.table.pager.start = 0
 
         // Reset selected rows
         vm.table.selectedRows = []

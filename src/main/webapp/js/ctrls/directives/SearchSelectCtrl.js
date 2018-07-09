@@ -21,7 +21,7 @@ app.controller('SearchSelectCtrl', function ($scope, $q, SearchService) {
 
     // Pager object
     var pager = {
-        startIdx: 0,
+        start: 0,
         count: Constants.Table.DEFAULT_COUNT_PER_PAGE
     }
     vm.totalResults = 0
@@ -33,7 +33,7 @@ app.controller('SearchSelectCtrl', function ($scope, $q, SearchService) {
     // Method to handle any text change in input box
     vm.textChanged = function () {
         // Reset pager
-        pager.startIdx = 0
+        pager.start = 0
 
         // Reset items list
         vm.items = []
@@ -54,8 +54,8 @@ app.controller('SearchSelectCtrl', function ($scope, $q, SearchService) {
             return
         }
 
-        // Update pager startIdx
-        pager.startIdx += pager.count
+        // Update pager start
+        pager.start += pager.count
 
         // Perform Search
         search()

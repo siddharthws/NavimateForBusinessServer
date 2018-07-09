@@ -111,7 +111,7 @@
                 ng-class="{'active' : vm.table.getSelectionIndex(row.id) != -1}">
                 <!-- Serial Number -->
                 <td class="tbl-col-s">
-                    {{(vm.table.pager.startIdx + $index + 1) + "."}}
+                    {{(vm.table.pager.start + $index + 1) + "."}}
                 </td>
 
                 <!-- Data returned by server -->

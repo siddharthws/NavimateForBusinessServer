@@ -3,6 +3,7 @@ package navimateforbusiness
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import com.mongodb.client.FindIterable
+import navimateforbusiness.objects.ObjPager
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 import navimateforbusiness.ProductM
@@ -19,7 +20,7 @@ class ProductService {
 
     // ----------------------- Getter APIs ---------------------------//
     // Method to search products in mongo database using filter, pager and sorter
-    def getAllForUserByFPS(User user, def filters, def pager, def sorter) {
+    def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
         // Get mongo filters
         def mongoFilters = mongoService.getProductFilters(user, filters)
 
@@ -37,12 +38,11 @@ class ProductService {
         fi = fi.sort(sortBson)
 
         // Apply paging
-        if (pager.startIdx) {fi = fi.skip(pager.startIdx)}
-        if (pager.count) {fi = fi.limit(pager.count)}
+        def pagedResults = pager.apply(fi)
 
         // Prepare products array to return
         def products = []
-        fi.each {ProductM product -> products.push(product)}
+        pagedResults.each {ProductM product -> products.push(product)}
 
         // Return response
         return [
@@ -53,7 +53,7 @@ class ProductService {
 
     // method to get list of products using filters
     List<ProductM> getAllForUserByFilter(User user, def filters) {
-        getAllForUserByFPS(user, filters, [:], []).products
+        getAllForUserByFPS(user, filters, new ObjPager(), []).products
     }
 
     // Method to get a single product using filters
