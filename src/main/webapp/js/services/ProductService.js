@@ -13,6 +13,16 @@ app.service('ProductService', function($q, $http, $localStorage, TemplateService
     var bOngoing = false
 
     /* ----------------------------- APIs --------------------------------*/
+
+    // Method to reset Service
+    vm.reset = function () {
+        // Reset cache
+        vm.cache = []
+
+        // Init Product Table
+        vm.table = new ObjTable2(Constants.Table.TYPE_PRODUCT, vm.getTableColumns, vm.parseTableResponse)
+    }
+
     // API to get product data
     vm.sync = function (ids) {
         if (bOngoing) {
@@ -117,4 +127,46 @@ app.service('ProductService', function($q, $http, $localStorage, TemplateService
         return null
     }
 
+    // Methods to get columns for different table types
+    vm.getTableColumns = function () {
+        var columns = []
+
+        // Get constant reference for usign locally
+        var Table_C = Constants.Table
+        var Template_C = Constants.Template
+
+        // Add mandatory columns
+        columns.push(new ObjColumn(Table_C.ID_PRODUCT_ID,       "ProductId",  Template_C.FIELD_TYPE_TEXT,     null, "productId"))
+        columns.push(new ObjColumn(Table_C.ID_PRODUCT_NAME,     "Name",     Template_C.FIELD_TYPE_TEXT,     null, "name"))
+        columns.push(new ObjColumn(Table_C.ID_PRODUCT_TEMPLATE, "Template", Template_C.FIELD_TYPE_TEMPLATE,     null, "template"))
+
+        // Iterate through each product template
+        TemplateService.getByType(Constants.Template.TYPE_PRODUCT).forEach(function (template) {
+            // Iterate through each field
+            template.fields.forEach(function (field, i) {
+                // Add new column to array
+                columns.push(new ObjColumn(columns.length, field.title, field.type, field.id, String(field.id)))
+            })
+        })
+
+        return columns
+    }
+
+    // Method to parse product sync response to tabular format
+    vm.parseTableResponse = function (response) {
+        // Parse response into rows for table
+        var rows = []
+        response.products.forEach(function (json) {
+            // Parse to product Object
+            var product = ObjProduct.fromJson(json)
+
+            // Add to rows
+            rows.push(product.toRow(vm.table))
+        })
+
+        return rows
+    }
+
+    // Init Product Table
+    vm.reset()
 })

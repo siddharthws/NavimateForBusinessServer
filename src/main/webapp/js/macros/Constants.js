@@ -200,6 +200,7 @@ Constants.Table = {
     TYPE_TASK:      2,
     TYPE_FORM:      3,
     TYPE_TEAM:      4,
+    TYPE_PRODUCT:   5,
 
     // Column size types
     COL_SIZE_S:         1,
@@ -217,7 +218,8 @@ Constants.Table = {
         'leads',
         'tasks',
         'forms',
-        'team'
+        'team',
+        'products'
     ],
 
     // Default rows per page
@@ -233,7 +235,12 @@ Constants.Table = {
     ID_LEAD_ADDRESS:            1,
     ID_LEAD_LOCATION:           2,
     ID_LEAD_TEMPLATE:           3,
-    ID_LEAD_LAST:               3
+    ID_LEAD_LAST:               3,
+
+    // IDs for mandatory columns in product
+    ID_PRODUCT_ID:                 0,
+    ID_PRODUCT_NAME:               1,
+    ID_PRODUCT_TEMPLATE:           2,
 }
 
 /* ------------------------------- Task -----------------------------------*/
@@ -273,6 +280,7 @@ Constants.Template = {
     // Special Object Column type
     FIELD_TYPE_LEAD:            21,
     FIELD_TYPE_TASK:            22,
+    FIELD_TYPE_PRODUCT:         23,
 
     FIELD_TYPE_TEMPLATE:        41,
     FIELD_TYPE_REP:             42,
