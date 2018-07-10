@@ -36,8 +36,8 @@ app.factory('ObjProduct', function(TemplateService, ObjValue) {
 
         // Add data in mandatory columns
         row.values[Constants.Table.ID_PRODUCT_ID]       = this.productId
-        row.values[Constants.Table.ID_PRODUCT_NAME]    = {id: this.id, name: this.name}
-        row.values[Constants.Table.ID_PRODUCT_TEMPLATE]   = this.template.name
+        row.values[Constants.Table.ID_PRODUCT_NAME]     = this.name
+        row.values[Constants.Table.ID_PRODUCT_TEMPLATE] = this.template.name
 
         // Iterate through template values in product
         this.values.forEach(function (value) {

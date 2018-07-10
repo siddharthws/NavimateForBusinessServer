@@ -914,4 +914,52 @@ class ManagerApiController {
 
         render resp as JSON
     }
+
+    def getProductTable() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+        def pager = new ObjPager(request.JSON.pager)
+        def sorter = request.JSON.sorter
+
+        // get products for this user
+        def filteredProducts = productService.getAllForUserByFPS(user, filter, pager, sorter)
+
+        // Send JSON Response
+        def resp = [
+                rowCount: filteredProducts.rowCount,
+                products: []
+        ]
+        filteredProducts.products.each {ProductM product -> resp.products.push(productService.toJson(product, user))}
+        render resp as JSON
+    }
+
+    def getProductIds() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get filters from request
+        def filter = request.JSON.filter
+        def sorter = request.JSON.sorter
+
+        // get products for this user
+        def filteredProducts = productService.getAllForUserByFPS(user, filter, new ObjPager(), sorter)
+
+        // Ensure number of rows are less than max limit
+        if (filteredProducts.products.size() > Constants.Table.MAX_SELECTION_COUNT) {
+            throw new ApiException("Too many rows. Maximum " + Constants.Table.MAX_SELECTION_COUNT + " rows can be selected at once.")
+        }
+
+        // Prepare response as list of IDs & names
+        def resp = []
+        filteredProducts.products.each {ProductM product ->
+            resp.push(id: product.id, name: product.name)
+        }
+        // Send response
+        render resp as JSON
+    }
+
+    // ----------------------- Private methods ----------------------- //
 }
