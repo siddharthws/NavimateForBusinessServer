@@ -1,29 +1,64 @@
 package navimateforbusiness
 
-import com.mongodb.client.model.Filters
+import com.mongodb.BasicDBObject
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import navimateforbusiness.enums.Role
-import navimateforbusiness.enums.Visibility
 import navimateforbusiness.util.Constants
 
 import java.text.SimpleDateFormat
-
-import static com.mongodb.client.model.Filters.and
-import static com.mongodb.client.model.Filters.eq
-import static com.mongodb.client.model.Filters.gte
-import static com.mongodb.client.model.Filters.lte
-import static com.mongodb.client.model.Filters.ne
-import static com.mongodb.client.model.Filters.or
-import static com.mongodb.client.model.Filters.regex
 
 @Transactional
 class MongoService {
     // ----------------------- Dependencies ---------------------------//
     def templateService
+    def userService
     def fieldService
 
     // ----------------------- Public Methods ---------------------------//
+    // Pipeline Generation methods
+    def getLeadPipeline(User user, def filters, def sorter) {
+        def pipeline = []
+
+        // Add match stage
+        pipeline.push(new BasicDBObject('$match', ['$and': getLeadFilters(user, filters)]))
+
+        // Add atleast basic sorting
+        if (!sorter) {sorter = [[name: Constants.Filter.SORT_ASC]]}
+
+        // Add template order column and replace in sorter if required
+        pipeline.push(getTemplateOrderStage(user, '$templateId', "template_order"))
+
+        // Replace Template Sorting Field
+        replaceSorter(sorter, "template", "template_order")
+
+        // Add sorting stage
+        pipeline.push(new BasicDBObject('$sort', getSortBson(sorter)))
+
+        pipeline
+    }
+
+    def getProductPipeline(User user, def filters, def sorter) {
+        def pipeline = []
+
+        // Add match stage
+        pipeline.push(new BasicDBObject('$match', ['$and': getProductFilters(user, filters)]))
+
+        // Add atleast basic sorting
+        if (!sorter) {sorter = [[name: Constants.Filter.SORT_ASC]]}
+
+        // Add template order column and replace in sorter if required
+        pipeline.push(getTemplateOrderStage(user, '$templateId', "template_order"))
+
+        // Replace Template Sorting Field
+        replaceSorter(sorter, "template", "template_order")
+
+        // Add sorting stage
+        pipeline.push(new BasicDBObject('$sort', getSortBson(sorter)))
+
+        pipeline
+    }
+
     // methods to get filters for different mongo collections
     def getLeadFilters(User user, def colFilters) {
         def filters = []
@@ -34,36 +69,37 @@ class MongoService {
         // Add role specific filters
         if (user.role == Role.MANAGER) {
             // Objects should either be owned by user or by account admin
-            filters.push(or(eq("ownerId", user.id),
-                            eq("ownerId", user.account.admin.id)))
+            filters.push(['$or': [['ownerId': ['$eq': user.id]],
+                                  ['ownerId': ['$eq': user.account.admin.id]]]])
         } else if (user.role == Role.CC) {
             // Objects should either be owned by account admin
-            filters.push(eq("ownerId", user.account.admin.id))
+            filters.push(['$eq': ['ownerId': user.account.admin.id]])
         } else if (user.role == Role.REP) {
             // Objects should either be owned by rep's manager or admin
-            filters.push(or(eq("ownerId", user.manager.id),
-                            eq("ownerId", user.account.admin.id)))
+            filters.push(['$or': [['ownerId': ['$eq': user.manager.id]],
+                                  ['ownerId': ['$eq': user.account.admin.id]]]])
         }
 
         // Apply date filter
-        if (colFilters.createTime?.from)  {filters.push(gte("createTime", "$colFilters.createTime.from"))}
-        if (colFilters.createTime?.to)    {filters.push(lte("createTime", "$colFilters.createTime.to"))}
-        if (colFilters.updateTime?.from)  {filters.push(gte("updateTime", "$colFilters.updateTime.from"))}
-        if (colFilters.updateTime?.to)    {filters.push(lte("updateTime", "$colFilters.updateTime.to"))}
+        if (colFilters.createTime?.from)  {filters.push(['createTime': ['$gte': "$colFilters.createTime.from"]])}
+        if (colFilters.createTime?.to)    {filters.push(['createTime': ['$lte': "$colFilters.createTime.to"]])}
+        if (colFilters.updateTime?.from)  {filters.push(['updateTime': ['$gte': "$colFilters.updateTime.from"]])}
+        if (colFilters.updateTime?.to)    {filters.push(['updateTime': ['$lte': "$colFilters.updateTime.to"]])}
 
         // Apply Ext ID filters if any
-        if (colFilters.extId) {filters.push(eq("extId", "$colFilters.extId"))}
+        if (colFilters.extId) {filters.push(['extId': ['$eq': "$colFilters.extId"]])}
 
         // Apply multi select filter
         if (colFilters.lead?.value) {filters.push(getMultiselectFilter("_id", colFilters.lead.value))}
 
         // Apply Name filters if any
-        if (colFilters.name?.equal) {filters.push(eq("name", "$colFilters.name.equal"))}
-        if (colFilters.name?.value) {filters.push(regex("name", /.*$colFilters.name.value.*/, 'i'))}
+        if (colFilters.name?.equal) {filters.push(['name': ['$eq': "$colFilters.name.equal"]])}
+        if (colFilters.name?.value) {filters.push(['name': ['$regex': /.*$colFilters.name.value.*/, '$options': 'i']])}
 
         // Apply address / location filter
-        if (colFilters.address?.value)         {filters.push(regex("address", /.*$colFilters.address.value.*/, 'i'))}
-        if (colFilters.location?.bNoBlanks)    {filters.push(and(ne("latitude", 0), ne("longitude", 0)))}
+        if (colFilters.address?.value)         {filters.push(['address': ['$regex': /.*$colFilters.address.value.*/, '$options': 'i']])}
+        if (colFilters.location?.bNoBlanks)    {filters.push(['$and': [['latitude': ['$ne': "0"]],
+                                                                       ['longitude': ['$ne': "0"]]]])}
 
         // Add all template related filters
         def templates = templateService.getForUserByType(user, Constants.Template.TYPE_LEAD)
@@ -79,12 +115,12 @@ class MongoService {
         filters.addAll(getMandatoryFilters(user, colFilters))
 
         // Apply Name filters if any
-        if (colFilters.name?.equal) {filters.push(eq("name", "$colFilters.name.equal"))}
-        if (colFilters.name?.value) {filters.push(regex("name", /.*$colFilters.name.value.*/, 'i'))}
+        if (colFilters.name?.equal) {filters.push(['name': ['$eq': "$colFilters.name.equal"]])}
+        if (colFilters.name?.value) {filters.push(['name': ['$regex': /.*$colFilters.name.value.*/, '$options': 'i']])}
 
         // Apply product ID filters
-        if (colFilters.productId?.equal) {filters.push(eq("productId", "$colFilters.productId.equal"))}
-        if (colFilters.productId?.value) {filters.push(regex("productId", /.*$colFilters.productId.value.*/, 'i'))}
+        if (colFilters.productId?.equal) {filters.push(['productId': ['$eq': "$colFilters.productId.equal"]])}
+        if (colFilters.productId?.value) {filters.push(['productId': ['$regex': /.*$colFilters.productId.value.*/, '$options': 'i']])}
 
         // Add all template related filters
         def templates = templateService.getForUserByType(user, Constants.Template.TYPE_PRODUCT)
@@ -99,29 +135,24 @@ class MongoService {
         def filters = []
 
         // Add accountId filters
-        filters.push(eq("accountId", user.accountId))
+        filters.push(['accountId': ['$eq': user.accountId]])
 
         // Add isRemoved filter by default (unless specified explicitly)
         if (!colFilters.includeRemoved) {
-            filters.push(ne("isRemoved", true))
+            filters.push(['isRemoved': ['$ne': true]])
         }
 
         // Apply ID filters if any
         if (colFilters.ids) {
-            // Create ID filters
-            def idFilters = []
-            colFilters.ids.each {id -> idFilters.push(eq("_id", id))}
-
-            // Add OR of ID filters to filters
-            filters.push(or(idFilters))
+            filters.push(['_id': ['$in': colFilters.ids]])
         }
 
         // Apply date filter
         SimpleDateFormat sdf = new SimpleDateFormat(Constants.Date.FORMAT_LONG)
-        if (colFilters.dateCreated?.value?.from)  {filters.push(gte("dateCreated", Constants.getISODate(sdf.parse(colFilters.dateCreated.value.from))))}
-        if (colFilters.dateCreated?.value?.to)    {filters.push(lte("dateCreated", Constants.getISODate(sdf.parse(colFilters.dateCreated.value.to))))}
-        if (colFilters.lastUpdated?.value?.from)  {filters.push(gte("lastUpdated", Constants.getISODate(sdf.parse(colFilters.lastUpdated.value.from))))}
-        if (colFilters.lastUpdated?.value?.to)    {filters.push(lte("lastUpdated", Constants.getISODate(sdf.parse(colFilters.lastUpdated.value.to))))}
+        if (colFilters.dateCreated?.value?.from)  {filters.push(["dateCreated": ['$gte': Constants.getISODate(sdf.parse(colFilters.dateCreated.value.from))]])}
+        if (colFilters.dateCreated?.value?.to)    {filters.push(["dateCreated": ['$lte': Constants.getISODate(sdf.parse(colFilters.dateCreated.value.to))]])}
+        if (colFilters.lastUpdated?.value?.from)  {filters.push(["lastUpdated": ['$gte': Constants.getISODate(sdf.parse(colFilters.lastUpdated.value.from))]])}
+        if (colFilters.lastUpdated?.value?.to)    {filters.push(["lastUpdated": ['$lte': Constants.getISODate(sdf.parse(colFilters.lastUpdated.value.to))]])}
 
         filters
     }
@@ -130,11 +161,11 @@ class MongoService {
     private def getTemplateFilters (templates, colFilters) {
         def filters = []
 
-        // Apply Template Filter
+        // Apply Template Filter by ID
         if (colFilters.template?.value) {
-            // Get filter value
-            def filterVal = colFilters.template.value
-            filters.push(getMultiselectFilter("templateId", filterVal))
+            filters.push(getMultiselectFilter("templateId", colFilters.template.value))
+        } else if (colFilters.template?.ids) {
+            filters.push(['templateId': ['$in': colFilters.template.ids]])
         }
 
         // Get all fields in templates
@@ -144,7 +175,7 @@ class MongoService {
         // Find and apply filter for each field
         fields.each {Field field ->
             // Get key and filter value
-            def key = "$field.id"
+            String key = "$field.id"
             def colFilter = colFilters[key]
 
             // Ignore if column filter not found
@@ -155,8 +186,8 @@ class MongoService {
             // Apply blanks filter
             Boolean bNoBlanks = colFilter.bNoBlanks ?: false
             if (bNoBlanks) {
-                filters.push(ne("$key", null))
-                filters.push(ne("$key", ""))
+                filters.push([(key): ['$ne': null]])
+                filters.push([(key): ['$ne': ""]])
             }
 
             // Apply filters specific to field type
@@ -191,20 +222,20 @@ class MongoService {
     //
     private def getTextFilter(String fieldName, String filterVal) {
         // Case insensitive regex filter
-        regex("$fieldName", /.*$filterVal.*/, 'i')
+        [(fieldName): ['$regex': /.*$filterVal.*/, '$options': 'i']]
     }
 
     private def getCheckboxFilter(String fieldName, String filterVal) {
         if ("yes".contains(filterVal.toLowerCase())) {
             // Filter to true
-            return eq("$fieldName", "true")
+            return [(fieldName): ['$eq': "true"]]
         } else if ("no".contains(filterVal.toLowerCase())) {
             // Filter to false
-            return eq("$fieldName", "false")
+            return [(fieldName): ['$eq': "false"]]
         } else {
             // Filter to invalid
-            return and( ne("$fieldName", "true"),
-                        ne("$fieldName", "false"))
+            return ['$and': [[(fieldName): ['$ne': "true"]],
+                             [(fieldName): ['$ne': "true"]]]]
         }
     }
 
@@ -213,15 +244,15 @@ class MongoService {
         def idxFilters = []
         fieldJson.options.eachWithIndex {String it, int i ->
             if (it.toLowerCase().contains(filterVal.toLowerCase())) {
-                idxFilters.push(regex("$fieldName", /.*\"selection\":$i.*/))
+                idxFilters.push([(fieldName): ['$regex': /.*\"selection\":$i.*/]])
             }
         }
 
         // Prepare and return mongo filters
         if (idxFilters) {
-            return or(idxFilters)
+            return ['$or': idxFilters]
         } else {
-            return eq("$fieldName", null)
+            return [(fieldName): ['$eq': null]]
         }
     }
 
@@ -230,15 +261,15 @@ class MongoService {
         def optFilters = []
         fieldJson.eachWithIndex {def it, int i ->
             if (it.name.toLowerCase().contains(filterVal.toLowerCase())) {
-                optFilters.push(regex("$fieldName", /.*\"name\":\"$it.name\",\"selection\":true.*/))
+                optFilters.push([(fieldName): ['$regex': /.*\"name\":\"$it.name\",\"selection\":true.*/]])
             }
         }
 
         // Prepare and return mongo filters
         if (optFilters) {
-            return or(optFilters)
+            return ['$or': optFilters]
         } else {
-            return eq("$fieldName", null)
+            return [(fieldName): ['$eq': null]]
         }
     }
 
@@ -247,15 +278,15 @@ class MongoService {
 
         // Apply greater than filter
         if (filterVal.from) {
-            filters.push(gte("$fieldName", "$filterVal.from"))
+            filters.push([(fieldName): ['$gte': "$filterVal.from"]])
         }
 
         // Apply less than filter
         if (filterVal.to) {
-            filters.push(lte("$fieldName", "$filterVal.to"))
+            filters.push([(fieldName): ['$lte': "$filterVal.to"]])
         }
 
-        return and(filters)
+        return ['$and': filters]
     }
 
     private def getMultiselectFilter(String fieldName, def filterVal) {
@@ -263,13 +294,49 @@ class MongoService {
 
         switch (filterVal.type) {
             case Constants.Table.MS_INCLUDE:
-                filter = Filters.in(fieldName, filterVal.list)
+                filter = [(fieldName): ['$in': filterVal.list]]
                 break
             case Constants.Table.MS_EXCLUDE:
-                filter = Filters.nin(fieldName, filterVal.list)
+                filter = [(fieldName): ['$nin': filterVal.list]]
                 break
         }
 
         filter
+    }
+
+    def getTemplateOrderStage(User user, String inputFieldName, String outputFieldName) {
+        // Get all Templates
+        def templates = templateService.getForUser(user)
+
+        // Sort using name
+        templates = templates.sort {it.name.toLowerCase()}
+
+        // Collect Template IDs
+        def templateIds = templates.collect {it.id}
+
+        // Create pipeline stage for adding field
+        def stage = new BasicDBObject('$addFields', [(outputFieldName): ['$indexOfArray': [templateIds, inputFieldName]]])
+
+        stage
+    }
+
+    def replaceSorter(def sorter, String from, String to) {
+        def sortObj = sorter.find {it.keySet()[0].equals(from)}
+        if (sortObj) {
+            def replaceIdx = sorter.indexOf(sortObj)
+            sorter[replaceIdx] = [(to): sorter[replaceIdx][from]]
+        }
+    }
+
+    def getSortBson(def sorter) {
+        def sorts = [:]
+
+        sorter.each {sortObj ->
+            String key = sortObj.keySet()[0]
+            int value = sortObj[key]
+            sorts[key] = value
+        }
+
+        sorts
     }
 }

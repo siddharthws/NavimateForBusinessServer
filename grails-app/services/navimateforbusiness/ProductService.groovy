@@ -22,32 +22,19 @@ class ProductService {
     // Method to search products in mongo database using filter, pager and sorter
     def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
         // Get mongo filters
-        def mongoFilters = mongoService.getProductFilters(user, filters)
+        def pipeline = mongoService.getProductPipeline(user, filters, sorter)
 
         // Get results
-        FindIterable fi = ProductM.find(and(mongoFilters))
-        int rowCount = fi.size()
-
-        // Apply Sorting with atleast name
-        if (!sorter) {sorter = [[name: Constants.Filter.SORT_ASC]]}
-        def sortBson = [:]
-        sorter.each {sortObj ->
-            def key = sortObj.keySet()[0]
-            sortBson[key] = sortObj[key]
-        }
-        fi = fi.sort(sortBson)
+        def dbResult = ProductM.aggregate(pipeline)
+        int count = dbResult.size()
 
         // Apply paging
-        def pagedResults = pager.apply(fi)
-
-        // Prepare products array to return
-        def products = []
-        pagedResults.each {ProductM product -> products.push(product)}
+        def pagedResult = pager.apply(dbResult)
 
         // Return response
         return [
-                rowCount: rowCount,
-                products: products
+                rowCount: count,
+                products: pagedResult.collect { (ProductM) it }
         ]
     }
 
