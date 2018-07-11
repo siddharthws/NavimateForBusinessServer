@@ -11,6 +11,8 @@ import navimateforbusiness.LocReport
 import navimateforbusiness.LocSubmission
 import navimateforbusiness.enums.Role
 import navimateforbusiness.Task
+import navimateforbusiness.FormM
+import navimateforbusiness.TaskM
 
 import grails.converters.JSON
 import navimateforbusiness.User
@@ -18,6 +20,7 @@ import navimateforbusiness.Template
 import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.enums.Visibility
 import navimateforbusiness.util.Constants
+import navimateforbusiness.util.ApiException
 
 import static com.mongodb.client.model.Filters.eq
 
@@ -34,6 +37,85 @@ class PortingApiController {
             it.publicId = String.valueOf(it.id)
             it.save(flush: true, failOnError: true)
         }
+    }
+
+    def mongoObjects() {
+        // Convert tasks
+        def tasks = Task.findAll()
+        tasks.eachWithIndex {Task it, int i ->
+            log.error("performing task conversion for " + i + " out of " + tasks.size())
+
+            // Get mongo lead for this task
+            LeadM lead = leadService.getForUserByFilter(it.account.admin, [ids: [it.leadid], includeRemoved: true])
+            if (!lead) {throw new ApiException("Lead with id = " + it.leadid + " not found in task " + it.id)}
+
+            TaskM task = new TaskM(
+                    accountId:          it.account.id,
+                    dateCreated:        it.dateCreated,
+                    lastUpdated:        it.lastUpdated,
+                    oldId:              it.id,
+                    extId:              it.extId,
+                    publicId:           it.publicId ?: String.valueOf(it.id),
+                    isRemoved:          it.isRemoved,
+                    creatorId:          it.creator.id,
+                    managerId:          it.manager.id,
+                    repId:              it.rep ? it.rep.id : null,
+                    lead:               lead,
+                    status:             it.status,
+                    period:             it.period,
+                    resolutionTimeHrs:  it.resolutionTimeHrs,
+                    templateId:         it.templateData.template.id,
+                    formTemplateId:     it.formTemplate.id
+            )
+
+            // Add field values
+            it.templateData.values.each {value ->
+                task[String.valueOf(value.fieldId)] = value.value
+            }
+
+            // Save task
+            task.save(failOnError: true, flush: true)
+        }
+
+        // Convert Forms
+        def forms = Form.findAll()
+        forms.eachWithIndex {Form it, int i ->
+            log.error("performing form conversion for " + i + " out of " + forms.size())
+
+            // Find task with old ID
+            TaskM task = null
+            if (it.task) {
+                task = TaskM.find(eq("oldId", it.task.id))[0]
+                if (!task) {throw new ApiException("Task with oldId = " + it.task.id + " not found")}
+            }
+
+            FormM form = new FormM(
+                    accountId:      it.account.id,
+                    dateCreated:    it.dateCreated,
+                    lastUpdated:    it.lastUpdated,
+                    oldId:          it.id,
+                    isRemoved:      it.isRemoved,
+                    ownerId:        it.owner.id,
+                    task:           task,
+                    latitude:       it.latitude,
+                    longitude:      it.longitude,
+                    distanceKm:     formService.getDistance(it.account.admin, it),
+                    taskStatus:     it.taskStatus,
+                    templateId:     it.submittedData.template.id
+            )
+
+            // Add field values
+            it.submittedData.values.each {value ->
+                form[String.valueOf(value.fieldId)] = value.value
+            }
+
+            // Save task
+            form.save(failOnError: true, flush: true)
+        }
+
+        // return response
+        def resp = [success: true]
+        render resp as JSON
     }
 
     def fixManagers() {
