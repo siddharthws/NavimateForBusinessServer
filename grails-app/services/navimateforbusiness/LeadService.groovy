@@ -23,32 +23,19 @@ class LeadService {
     // Method to search leads in mongo database using filter, pager and sorter
     def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
         // Get mongo filters
-        def mongoFilters = mongoService.getLeadFilters(user, filters)
+        def pipeline = mongoService.getLeadPipeline(user, filters, sorter)
 
         // Get results
-        FindIterable fi = LeadM.find(and(mongoFilters))
-        int rowCount = fi.size()
-
-        // Apply Sorting with atleast name
-        if (!sorter) {sorter = [[name: Constants.Filter.SORT_ASC]]}
-        def sortBson = [:]
-        sorter.each {sortObj ->
-            def key = sortObj.keySet()[0]
-            sortBson[key] = sortObj[key]
-        }
-        fi = fi.sort(sortBson)
+        def dbResult = LeadM.aggregate(pipeline)
+        int count = dbResult.size()
 
         // Apply paging
-        def pagedResults = pager.apply(fi)
-
-        // Prepare leads array to return
-        def leads = []
-        pagedResults.each {LeadM lead -> leads.push(lead)}
+        def pagedResult = pager.apply(dbResult)
 
         // Return response
         return [
-                rowCount: rowCount,
-                leads: leads
+            rowCount: count,
+            leads: pagedResult.collect { (LeadM) it }
         ]
     }
 
