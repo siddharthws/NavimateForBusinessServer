@@ -114,101 +114,37 @@ class ReportService {
     }
 
     private def getSmoothPath(List<LatLng> path) {
-        // Get input array form path
-        def inputArr = getInputArr(path)
+        // Get roads path
+        def roadsResp = googleApiService.snapToRoads(path)
 
-        // Get google response for each input element
-        def respArr = getPathFromGoogle(inputArr)
-
-        // Parse input and response to a list of points with original indexes
-        def smoothPath = parseToSmoothPath(path, inputArr, respArr)
-
-        smoothPath
-    }
-
-    private def getInputArr(List<LatLng> path) {
-        def inputArr = []
-
-        // Create input array as per point distances in path
-        for (int i  = 0; i < path.size() - 1; i++) {
-            // Get distance between this and next point
-            int distance = Constants.getDistanceBetweenCoordinates(path[i], path[i+1])
-
-            if(distance <= 500) {
-                // Get the last added input
-                def lastAddedInput = inputArr ? inputArr.last() : null
-
-                // Add new if last one is invalid
-                if (!lastAddedInput || lastAddedInput.type == "directions") {
-                    lastAddedInput = [type: "roads", points: []]
-                    inputArr.push(lastAddedInput)
-                }
-
-                // Add this point to input
-                lastAddedInput.points.push(path[i])
-
-                // Add next point if it is the last point
-                if (i + 1 == path.size() - 1) {
-                    lastAddedInput.points.push(path[i + 1])
-                }
-            } else {
-                // Add as directions input
-                inputArr.push([type: "directions", start: path[i], end: path[i+1]])
-            }
-        }
-
-        inputArr
-    }
-
-    private def getPathFromGoogle(def arr) {
-        def respArr = []
-
-        arr.each {def entry ->
-            if (entry.type == "directions") {
-                // Get response form directions API
-                def resp = googleApiService.directions(entry.start, entry.end)
-                respArr.push(resp)
-            } else {
-                // Get response from roads API
-                def resp = googleApiService.snapToRoads(entry.points)
-                respArr.push(resp)
-            }
-        }
-
-        respArr
-    }
-
-    private def parseToSmoothPath(def origList, def inArr, def outArr) {
+        // Get point between which directions result is required
         def smoothPath = []
+        for (int i  = 0; i < roadsResp.points.size() - 1; i++) {
+            // Add this point in path
+            smoothPath.push(roadsResp.points[i])
 
-        // Thorw exception if input and output array are of different sizes
-        if (inArr.size() != outArr.size()) {
-            throw new ApiException("Illegal input and output for getting path", Constants.HttpCodes.INTERNAL_SERVER_ERROR)
+            // Get distance between this and next point
+            LatLng currPoint = roadsResp.points[i].point
+            LatLng nextPoint = roadsResp.points[i+1].point
+            int distance = Constants.getDistanceBetweenCoordinates(currPoint, nextPoint)
+
+            // Get result form directions API
+            if (distance > 300) {
+                def directions = googleApiService.directions(currPoint, nextPoint)
+                int dirDistance = Constants.getLatlngListDistance(directions.points)
+
+                // Ignore if too much difference in distance
+                if (dirDistance < 5 * distance) {
+                    for (int j = 1; j < directions.points.size() - 1; j++) {
+                        smoothPath.push([point: directions.points[j]])
+                    }
+                }
+            }
         }
 
-        for (int i = 0; i < inArr.size(); i++) {
-            // Get inptu and output elements
-            def inElem = inArr[i]
-            def outElem = outArr[i]
-
-            // Check type of element
-            if (inElem.type == "directions") {
-                // Add start point to array
-                smoothPath.push([point: outElem.points.first(), origIdx: origList.indexOf(inElem.start)])
-
-                // Push all points between first and last
-                outElem.points.subList(1, outElem.points.size() - 2).each {smoothPath.push([point: it])}
-
-                // Add endpoint to array
-                smoothPath.push([point: outElem.points.last(), origIdx: origList.indexOf(inElem.end)])
-            } else {
-                // Add all points to smooth path with correct indexes
-                int idxOffset = origList.indexOf(outElem.points[0])
-                outElem.points.findAll {it.origIdx}.each {it.origIdx += idxOffset}
-
-                // Add all points to smooth points
-                smoothPath.addAll(outElem.points)
-            }
+        // Add last point in path
+        if (roadsResp && roadsResp.points && roadsResp.points.size() > 1) {
+            smoothPath.push(roadsResp.points.last())
         }
 
         smoothPath
