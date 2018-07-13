@@ -37,6 +37,9 @@
 
             <!-- Play Button -->
             <imagebutton ng-if="!$ctrl.bPlaying" text="Play" image="/static/images/ic_play_white.png" ng-click="$ctrl.play()"></imagebutton>
+
+            <!-- Stop Playback Button -->
+            <imagebutton ng-if="$ctrl.bPlaying" text="Stop" image="/static/images/ic_stop_white.png" ng-click="$ctrl.stop()"></imagebutton>
         </div>
     </div>
 </div>
