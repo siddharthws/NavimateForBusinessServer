@@ -107,6 +107,10 @@ app.controller("MovementReportCtrl", function ( $rootScope, $scope, $timeout,
         $timeout(cbPlay, 0)
     }
 
+    vm.stop = function () {
+        vm.bPlaying = false
+    }
+
     function cbPlay() {
         // Get marker and polyline to update
         var polyline = vm.map.polylines[0]
@@ -125,7 +129,7 @@ app.controller("MovementReportCtrl", function ( $rootScope, $scope, $timeout,
         polyline.path.push([reportObj.latitude, reportObj.longitude])
 
         // Check if whole rpeort has been displayed
-        if (polyline.path.length < vm.report.length) {
+        if (vm.bPlaying && polyline.path.length < vm.report.length) {
             // Schedule next callback after 16 ms
             $timeout(cbPlay, 16)
         } else {
