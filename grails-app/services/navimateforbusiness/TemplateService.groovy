@@ -143,15 +143,15 @@ class TemplateService {
                     formService.remove(user, form)
                 }
                 // Remove all tasks associated with this form template
-                def tasks = taskService.getForUserByFormTemplate(user, template)
-                tasks.each {Task task ->
+                def tasks = taskService.getAllForUserByFilter(user, [formTemplate: [ids: [template.id]]])
+                tasks.each {TaskM task ->
                     taskService.remove(user, task)
                 }
                 break
             case Constants.Template.TYPE_TASK:
                 // Remove all tasks associated with this template
-                def tasks = taskService.getForUserByTemplate(user, template)
-                tasks.each {Task task ->
+                def tasks = taskService.getAllForUserByFilter(user, [template: [ids: [template.id]]])
+                tasks.each {TaskM task ->
                     taskService.remove(user, task)
                 }
                 break
@@ -185,9 +185,9 @@ class TemplateService {
         switch (template.type) {
             case Constants.Template.TYPE_FORM:
                 // Get FCMs for all affected tasks
-                def tasks = taskService.getForUserByFormTemplate(user, template)
-                def openTasks = tasks.findAll {Task it -> it.status == TaskStatus.OPEN}
-                openTasks.each {Task task -> if (task.rep) {reps.push(task.rep)} }
+                def tasks = taskService.getAllForUserByFilter(user, [formTemplate: [ids: [template.id]]])
+                def openTasks = tasks.findAll {TaskM it -> it.status == TaskStatus.OPEN}
+                openTasks.each {TaskM task -> if (task.repId) {reps.push(User.findById(task.repId))} }
                 break
             case Constants.Template.TYPE_LEAD:
                 // Get all affected leads
@@ -196,9 +196,9 @@ class TemplateService {
                 break
             case Constants.Template.TYPE_TASK:
                 // Get FCMs for all affected tasks
-                def tasks = taskService.getForUserByTemplate(user, template)
-                def openTasks = tasks.findAll {Task it -> it.status == TaskStatus.OPEN}
-                openTasks.each {Task task -> if (task.rep) {reps.push(task.rep)} }
+                def tasks = taskService.getAllForUserByFilter(user, [template: [ids: [template.id]]])
+                def openTasks = tasks.findAll {TaskM it -> it.status == TaskStatus.OPEN}
+                openTasks.each {TaskM task -> if (task.repId) {reps.push(User.findById(task.repId))} }
                 break
         }
 

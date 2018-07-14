@@ -127,7 +127,7 @@ class FormService {
         // Add task info
         if (json.taskId != -1) {
             // Add task
-            form.task = taskService.getForUserById(user, json.taskId)
+            form.task = taskService.getForUserByFilter(user, [ids: [json.taskId]])
             if (!form.task) {
                 throw new ApiException("Illegal access to task", Constants.HttpCodes.BAD_REQUEST)
             }

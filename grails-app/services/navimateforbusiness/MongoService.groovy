@@ -13,6 +13,7 @@ class MongoService {
     // ----------------------- Dependencies ---------------------------//
     def userService
     def leadService
+    def taskService
     def templateService
     def fieldService
 
@@ -32,6 +33,42 @@ class MongoService {
 
         // Replace Template Sorting Field
         replaceSorter(sorter, "template", "template_order")
+
+        // Add sorting stage
+        pipeline.push(new BasicDBObject('$sort', getSortBson(sorter)))
+
+        pipeline
+    }
+
+    def getTaskPipeline(User user, def filters, def sorter) {
+        def pipeline = []
+
+        // Add match stage
+        pipeline.push(new BasicDBObject('$match', ['$and': getTaskFilters(user, filters)]))
+
+        // Add atleast basic sorting
+        if (!sorter) {sorter = [[dateCreated: Constants.Filter.SORT_DESC],
+                                [status: Constants.Filter.SORT_DESC]]}
+
+        // Add template order column and replace in sorter if required
+        pipeline.push(getTemplateOrderStage(user, '$templateId', "template_order"))
+        replaceSorter(sorter, "template", "template_order")
+
+        // Add rep order column and replace in sorter if required
+        pipeline.push(getUserOrderStage(user, '$repId', "rep_order"))
+        replaceSorter(sorter, "rep", "rep_order")
+
+        // Add manager order column and replace in sorter if required
+        pipeline.push(getUserOrderStage(user, '$managerId', "manager_order"))
+        replaceSorter(sorter, "manager", "manager_order")
+
+        // Add creator order column and replace in sorter if required
+        pipeline.push(getUserOrderStage(user, '$creatorId', "creator_order"))
+        replaceSorter(sorter, "creator", "creator_order")
+
+        // Add lead order column and replace in sorter if required
+        pipeline.push(getLeadOrderStage(user, '$lead', "lead_order"))
+        replaceSorter(sorter, "lead", "lead_order")
 
         // Add sorting stage
         pipeline.push(new BasicDBObject('$sort', getSortBson(sorter)))
@@ -103,11 +140,73 @@ class MongoService {
                                                                        ['longitude': ['$ne': "0"]]]])}
 
         // Add template filter
-        if (colFilters.template.value) {filters.push(getMultiselectFilter("templateId", colFilters.template.value))}
-        if (colFilters.template.ids) {filters.push(["templateId": ['$in': colFilters.template.ids]])}
+        if (colFilters.template?.value) {filters.push(getMultiselectFilter("templateId", colFilters.template.value))}
+        if (colFilters.template?.ids) {filters.push(["templateId": ['$in': colFilters.template.ids]])}
 
         // Add filters for templated data
         def templates = templateService.getForUserByType(user, Constants.Template.TYPE_LEAD)
+        filters.addAll(getFieldFilters(templates, colFilters))
+
+        return filters
+    }
+
+    def getTaskFilters(User user, def colFilters) {
+        def filters = []
+
+        // Add all mandatory filters
+        filters.addAll(getMandatoryFilters(user, colFilters))
+
+        // Add role specific filters
+        switch (user.role) {
+            case Role.MANAGER:
+                // Get tasks where this user is manager
+                filters.push(['managerId': ['$eq': user.id]])
+                break
+            case Role.CC:
+                // Get tasks where this user is creator
+                filters.push(['creatorId': ['$eq': user.id]])
+                break
+            case Role.REP:
+                // Get tasks where this user is rep
+                filters.push(['repId': ['$eq': user.id]])
+                break
+        }
+
+        // Apply ID filter
+        if (colFilters.publicId?.value)     {filters.push(getMultiselectFilter("_id", colFilters.publicId.value))}
+        if (colFilters.publicId?.regex)     {filters.push(getTextFilter("publicId", colFilters.publicId.regex))}
+        if (colFilters.publicId?.bNoBlanks) {filters.push(['publicId': ['$ne': "-"]])}
+
+        // Apply manager, rep and creator filters
+        if (colFilters.manager?.value)  {filters.push(getMultiselectFilter("managerId", colFilters.manager.value))}
+        if (colFilters.rep?.value)      {filters.push(getMultiselectFilter("repId", colFilters.rep.value))}
+        if (colFilters.rep?.bNoBlanks)  {filters.push(['repId': ['$ne': null]])}
+        if (colFilters.rep?.ids)        {filters.push(['repId': ['$in': colFilters.rep.ids]])}
+        if (colFilters.creator?.value)  {filters.push(getMultiselectFilter("creatorId", colFilters.creator.value))}
+
+        // Apply resolution time filter
+        if (colFilters.resolutionTimeHrs?.value?.from)  {filters.push(['resolutionTimeHrs': ['$gte': colFilters.resolutionTimeHrs.value.from]])}
+        if (colFilters.resolutionTimeHrs?.value?.to)    {filters.push(['resolutionTimeHrs': ['$lte': colFilters.resolutionTimeHrs.value.to]])}
+
+        // Apply Status filter
+        if (colFilters.status?.value)  {filters.push(['status': ['$regex': /.*$colFilters.status.value.*/, '$options': 'i']])}
+
+        // Apply Lead Filter
+        if (colFilters.lead?.ids)           {filters.push(['lead': ['$in': colFilters.lead.ids]])}
+        if (colFilters.lead?.value)         {filters.push(getMultiselectFilter("lead", colFilters.lead.value))}
+        if (colFilters.location?.bNoBlanks) {filters.push(['$and': [['latitude': ['$ne': "0"]],
+                                                                    ['longitude': ['$ne': "0"]]]])}
+
+        // Add template filter
+        if (colFilters.formTemplate?.value) {filters.push(getMultiselectFilter("formTemplateId", colFilters.formTemplate.value))}
+        if (colFilters.formTemplate?.ids) {filters.push(["formTemplateId": ['$in': colFilters.formTemplate.ids]])}
+
+        // Add template filter
+        if (colFilters.template?.value) {filters.push(getMultiselectFilter("templateId", colFilters.template.value))}
+        if (colFilters.template?.ids) {filters.push(["templateId": ['$in': colFilters.template.ids]])}
+
+        // Add filters for templated data
+        def templates = templateService.getForUserByType(user, Constants.Template.TYPE_TASK)
         filters.addAll(getFieldFilters(templates, colFilters))
 
         return filters
@@ -128,8 +227,8 @@ class MongoService {
         if (colFilters.productId?.value) {filters.push(['productId': ['$regex': /.*$colFilters.productId.value.*/, '$options': 'i']])}
 
         // Add template filter
-        if (colFilters.template.value) {filters.push(getMultiselectFilter("templateId", colFilters.template.value))}
-        if (colFilters.template.ids) {filters.push(["templateId": ['$in': colFilters.template.ids]])}
+        if (colFilters.template?.value) {filters.push(getMultiselectFilter("templateId", colFilters.template.value))}
+        if (colFilters.template?.ids)   {filters.push(["templateId": ['$in': colFilters.template.ids]])}
 
         // Add filters for templated data
         def templates = templateService.getForUserByType(user, Constants.Template.TYPE_PRODUCT)
@@ -336,6 +435,54 @@ class MongoService {
 
         // Create pipeline stage for adding field
         def stage = new BasicDBObject('$addFields', [(outputFieldName): ['$indexOfArray': [templateIds, inputFieldName]]])
+
+        stage
+    }
+
+    def getUserOrderStage(User user, String inputFieldName, String outputFieldName) {
+        // Get all Templates
+        def users = userService.getAllForAccount(user.account)
+
+        // Sort using name
+        users = users.sort {it.name.toLowerCase()}
+
+        // Collect Template IDs
+        def userIds = users.collect {it.id}
+
+        // Create pipeline stage for adding field
+        def stage = new BasicDBObject('$addFields', [(outputFieldName): ['$indexOfArray': [userIds, inputFieldName]]])
+
+        stage
+    }
+
+    def getLeadOrderStage(User user, String inputFieldName, String outputFieldName) {
+        // Get all Templates
+        def leads = leadService.getAllForUserByFilter(user, [:])
+
+        // Sort using name
+        leads = leads.sort {it.name.toLowerCase()}
+
+        // Collect Template IDs
+        def leadIds = leads.collect {it.id}
+
+        // Create pipeline stage for adding field
+        def stage = new BasicDBObject('$addFields', [(outputFieldName): ['$indexOfArray': [leadIds, inputFieldName]]])
+
+        stage
+    }
+
+    def getTaskOrderStage(User user, String inputFieldName, String outputFieldName) {
+        // Get all Templates
+        def tasks = taskService.getAllForUserByFilter(user, [:])
+
+        // Sort using name
+        tasks = tasks.sort {it.publicId.toLowerCase()}
+
+        // Collect Template IDs
+        def taskIds = tasks.collect {it.id}
+
+        // Create pipeline stage for adding field
+        def stage = new BasicDBObject('$addFields', [(outputFieldName): ['$indexOfArray': [taskIds, inputFieldName]]])
 
         stage
     }

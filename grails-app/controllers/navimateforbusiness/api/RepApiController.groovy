@@ -2,13 +2,13 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import navimateforbusiness.AccountSettings
+import navimateforbusiness.TaskM
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 import navimateforbusiness.Form
 import navimateforbusiness.LeadM
 import navimateforbusiness.enums.Role
 import navimateforbusiness.util.SmsHelper
-import navimateforbusiness.Task
 import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.User
@@ -73,14 +73,13 @@ class RepApiController {
 
             // Iterate through all tasks of this rep
             def leads = []
-            taskService.getForUserRemoved(rep).each {Task task ->
+            taskService.getAllForUserByFilter(rep, [includeRemoved: true]).each { TaskM task ->
                 // Check if lead was updated after sync time
-                LeadM lead = leadService.getForUserByFilter(rep, [ids: [task.leadid], includeRemoved: true])
-                if (lead.isRemoved) {
-                    resp.leads.remove.push(lead.id)
+                if (task.lead.isRemoved) {
+                    resp.leads.remove.push(task.lead.id)
                 } else if ( (task.dateCreated > lastSyncTime) ||
-                            (lead.updateTime > lastSyncTimeString)) {
-                    if (!leads.contains(lead)) {leads.push(lead)}
+                            (task.lead.updateTime > lastSyncTimeString)) {
+                    if (!leads.contains(task.lead)) {leads.push(task.lead)}
                 }
 
                 // Check if task was updated after sync time

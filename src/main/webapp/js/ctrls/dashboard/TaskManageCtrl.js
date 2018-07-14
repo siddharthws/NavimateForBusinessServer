@@ -4,14 +4,14 @@
 
 app.controller("TaskManageCtrl",
                 function (  $scope, $rootScope, $http, $localStorage, $state,
-                            DialogService, ToastService, TableService, NavService, ImportService) {
+                            DialogService, ToastService, TableService, NavService, ImportService, TaskService) {
     var vm = this
 
     // Set Active Tab and Menu
     NavService.setActive(NavService.tasks, 0)
 
     // Set task table as active
-    TableService.activeTable = TableService.taskTable
+    TableService.activeTable = TaskService.table
     vm.table = TableService.activeTable
 
     /*-------------------------------- Scope APIs --------------------------------*/
@@ -62,6 +62,9 @@ app.controller("TaskManageCtrl",
     }
 
     vm.sync = function () {
+        // Reset table Selection
+        vm.table.selection = []
+
         // Broadcast Toggle Columns Event
         $scope.$broadcast(Constants.Events.TABLE_SYNC)
     }
@@ -72,7 +75,7 @@ app.controller("TaskManageCtrl",
 
     vm.close = function () {
         //Launch confirm Dialog box
-        DialogService.confirm("Are you sure you want to close these " + vm.table.selectedRows.length + " tasks ?",
+        DialogService.confirm("Are you sure you want to close these " + vm.table.selection.length + " tasks ?",
             function () {
                 //http call to close tasks
                 $rootScope.showWaitingDialog("Closing Tasks...")
@@ -105,7 +108,7 @@ app.controller("TaskManageCtrl",
 
     vm.remove = function () {
         //Launch confirm Dialog box
-        DialogService.confirm("Are you sure you want to remove these " + vm.table.selectedRows.length + " tasks ?",
+        DialogService.confirm("Are you sure you want to remove these " + vm.table.selection.length + " tasks ?",
             function () {
                 //http call to close tasks
                 $rootScope.showWaitingDialog("Removing Tasks...")
@@ -138,7 +141,7 @@ app.controller("TaskManageCtrl",
 
     vm.stopRenewal = function () {
         //Launch confirm Dialog box
-        DialogService.confirm("Are you sure you want to stop renewal for " + vm.table.selectedRows.length + " tasks ?",
+        DialogService.confirm("Are you sure you want to stop renewal for " + vm.table.selection.length + " tasks ?",
             function () {
                 //http call to stop task renewal
                 $rootScope.showWaitingDialog("Stopping renewal period...")

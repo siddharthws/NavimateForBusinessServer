@@ -196,10 +196,8 @@ class LeadService {
     // Method to remove a lead object
     def remove(User user, LeadM lead) {
         // Remove all tasks associated with lead
-        def tasks = taskService.getForUserByLead(user, lead)
-        tasks.each {Task task ->
-            taskService.remove(user, task)
-        }
+        def tasks = taskService.getAllForUserByFilter(user, [lead: [ids: [lead.id]]])
+        tasks.each {  taskService.remove(user, it) }
 
         // Remove lead
         lead.isRemoved = true
@@ -213,11 +211,9 @@ class LeadService {
         def reps = []
 
         // Get reps from all open tasks with this lead
-        def tasks = taskService.getForUserByLead(user, lead)
-        def openTasks = tasks.findAll {Task it -> it.status == TaskStatus.OPEN}
-        openTasks.each {Task task ->
-            if (task.rep) {reps.push(task.rep)}
-        }
+        def tasks = taskService.getAllForUserByFilter(user, [lead: [ids: [lead.id]]])
+        def openTasks = tasks.findAll {it.status == TaskStatus.OPEN}
+        openTasks.each { if (it.repId) {reps.push(User.findById(it.repId))} }
 
         reps
     }

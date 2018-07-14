@@ -66,7 +66,7 @@ class AdminApiController {
             User rep = userService.getRepForUserById(user, id)
 
             // Remove all tasks and forms of this rep
-            def tasks = taskService.getForUserByRep(user, rep)
+            def tasks = taskService.getAllForUserByFilter(user, [rep: [ids: [rep.id]]])
             tasks.each { taskService.remove(user, it) }
 
             def forms = formService.getForUser(rep)
