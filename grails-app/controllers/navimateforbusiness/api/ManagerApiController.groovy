@@ -961,5 +961,26 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    def removeProduct() {
+        // Get user
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Iterate through IDs to be remove
+        def reps = []
+        request.JSON.ids.each {id ->
+            // Get product with this id
+            ProductM product = productService.getForUserByFilter(user, [ids: [id]])
+            if (!product) {
+                throw new ApiException("Product not found...", Constants.HttpCodes.BAD_REQUEST)
+            }
+
+            // Remove product
+            productService.remove(user, product)
+        }
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     // ----------------------- Private methods ----------------------- //
 }
