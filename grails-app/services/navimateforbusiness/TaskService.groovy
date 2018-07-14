@@ -3,6 +3,7 @@ package navimateforbusiness
 import grails.gorm.transactions.Transactional
 import navimateforbusiness.enums.Role
 import navimateforbusiness.enums.TaskStatus
+import navimateforbusiness.objects.ObjPager
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 
@@ -12,182 +13,85 @@ class TaskService {
     def templateService
     def userService
     def leadService
-    def valueService
-    def fcmService
     def formService
+    def mongoService
+    def fieldService
 
     // ----------------------- Getter APIs ---------------------------//
-    // Method to get all tasks for a user
-    def getForUser(User user) {
-        def tasks = []
+    // Method to search leads in mongo database using filter, pager and sorter
+    def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
+        // Get mongo filters
+        def pipeline = mongoService.getTaskPipeline(user, filters, sorter)
 
-        // Get leads as per access level
-        switch (user.role) {
-            case Role.ADMIN:
-                // Get all unremoved tasks created of account
-                tasks = Task.findAllByAccountAndIsRemoved(user.account, false)
-                break
+        // Get results
+        def dbResult = TaskM.aggregate(pipeline)
+        int count = dbResult.size()
 
-            case Role.CC:
-                // Get all unremoved tasks created by this user
-                tasks = Task.findAllByAccountAndIsRemovedAndCreator(user.account, false, user)
-                break
+        // Apply paging
+        def pagedResult = pager.apply(dbResult)
 
-            case Role.MANAGER:
-                // Get all unremoved tasks created by this user
-                tasks = Task.findAllByAccountAndIsRemovedAndManager(user.account, false, user)
-                break
-
-            case Role.REP:
-                // Get all unremoved tasks assigned to this rep
-                tasks = Task.findAllByAccountAndIsRemovedAndRep(user.account, false, user)
-                break
-        }
-
-        // Sort tasks in descending order of create date
-        tasks = tasks.sort {it -> it.dateCreated}
-        tasks = tasks.sort {it -> it.status.name()}
-        tasks.reverse(true)
-
-        // Return tasks
-        tasks
+        // Return response
+        return [
+                rowCount: count,
+                tasks: pagedResult.collect { (TaskM) it }
+        ]
     }
 
-    def getForUserRemoved(User user) {
-        def tasks = []
-
-        // Get leads as per access level
-        switch (user.role) {
-            case Role.ADMIN:
-                // Get all unremoved tasks created of account
-                tasks = Task.findAllByAccount(user.account)
-                break
-
-            case Role.CC:
-                // Get all unremoved tasks created by this user
-                tasks = Task.findAllByAccountAndCreator(user.account, user)
-                break
-
-            case Role.MANAGER:
-                // Get all unremoved tasks created by this user
-                tasks = Task.findAllByAccountAndManager(user.account, user)
-                break
-
-            case Role.REP:
-                // Get all unremoved tasks assigned to this rep
-                tasks = Task.findAllByAccountAndRep(user.account, user)
-                break
-        }
-
-        // Sort tasks in descending order of create date
-        tasks = tasks.sort {it -> it.dateCreated}
-        tasks = tasks.sort {it -> it.status.name()}
-        tasks.reverse(true)
-
-        // Return tasks
-        tasks
+    // method to get list of leads using filters
+    List<TaskM> getAllForUserByFilter(User user, def filters) {
+        getAllForUserByFPS(user, filters, new ObjPager(), []).tasks
     }
 
-    // Method to get all tasks for a user
-    def getForUserById(User user, Long id) {
-        // Get all tasks for user
-        def tasks = getForUser(user)
-
-        // Find task by ID
-        def task = tasks.find {it -> it.id == id}
-
-        task
-    }
-
-    // Method to get all tasks for a user by rep
-    def getForUserByRep(User user, User rep) {
-        // Get all tasks for user
-        def tasks = getForUser(user)
-
-        // Find tasks by rep
-        def task = tasks.findAll {Task it -> it.rep && it.rep.id == rep.id}
-
-        task
-    }
-
-    // Method to get all tasks for a user by lead
-    def getForUserByLead(User user, LeadM lead) {
-        // Get all tasks for user
-        def tasks = getForUser(user)
-
-        // Find tasks by template
-        def task = tasks.findAll {Task it -> it.leadid == lead.id}
-
-        task
-    }
-
-    // Method to get all tasks for a user by template
-    def getForUserByTemplate(User user, Template template) {
-        // Get all tasks for user
-        def tasks = getForUser(user)
-
-        // Find tasks by template
-        def task = tasks.findAll {Task it -> it.templateData.template.id == template.id}
-
-        task
-    }
-
-    // Method to get all tasks for a user by Form template
-    def getForUserByFormTemplate(User user, Template template) {
-        // Get all tasks for user
-        def tasks = getForUser(user)
-
-        // Find tasks by template
-        def task = tasks.findAll {Task it -> it.formTemplate.id == template.id}
-
-        task
+    // Method to get a single lead using filters
+    TaskM getForUserByFilter(User user, def filters) {
+        getAllForUserByFilter(user, filters)[0]
     }
 
     // ----------------------- Public APIs ---------------------------//
     // Methods to convert task objects to / from JSON
-    def toJson(Task task, User user) {
-        // Get lead for this task
-        LeadM lead = leadService.getForUserByFilter(user, [ids: [task.leadid]])
-
+    def toJson(TaskM task, User user) {
         // Convert template properties to JSON
         def json = [
                 id: task.id,
                 publicId: task.publicId,
-                lead: [id: lead.id, name: lead.name, lat: lead.latitude, lng: lead.longitude],
-                manager: [id: task.manager.id, name: task.manager.name],
-                rep: task.rep ? [id: task.rep.id, name: task.rep.name] : null,
-                creator: [id: task.creator.id, name: task.creator.name],
+                lead: [id: task.lead.id, name: task.lead.name, lat: task.lead.latitude, lng: task.lead.longitude],
+                manager: [id: task.managerId, name: User.findById(task.managerId).name],
+                rep: task.repId ? [id: task.repId, name: User.findById(task.repId).name] : null,
+                creator: [id: task.creatorId, name: User.findById(task.creatorId).name],
                 status: task.status.value,
                 resolutionTime: task.resolutionTimeHrs,
                 period: task.period,
                 dateCreated: Constants.Formatters.LONG.format(Constants.Date.IST(task.dateCreated)),
-                formTemplateId: task.formTemplate.id,
-                templateId: task.templateData.template.id,
+                formTemplateId: task.formTemplateId,
+                templateId: task.templateId,
                 values: []
         ]
 
-        // Convert template values to JSON
-        def values = task.templateData.values.sort {it -> it.id}
-        values.each {value ->
-            json.values.push([fieldId: value.field.id, value: value.value])
+        // Add templated values in JSON
+        def template = templateService.getForUserById(user, task.templateId)
+        def fields = fieldService.getForTemplate(template)
+        fields.each {Field field ->
+            json.values.push([fieldId: field.id, value: task["$field.id"]])
         }
 
         json
     }
 
-    Task fromJson(def json, User user) {
-        Task task = null
+    TaskM fromJson(def json, User user) {
+        TaskM task = null
 
         // Get existing task or create new
         if (json.id) {
-            task = getForUserById(user, json.id)
+            task = getForUserByFilter(user, [ids: [json.id]])
             if (!task) {
                 throw new ApiException("Illegal access to task", Constants.HttpCodes.BAD_REQUEST)
             }
-        } else {
-            task = new Task(
-                    account: user.account
-            )
+        }
+
+        // Create new lead object if not found
+        if (!task) {
+            task = new TaskM(   accountId: user.account.id,
+                                isRemoved: false)
         }
 
         // Get manager to be assigned to task
@@ -206,28 +110,24 @@ class TaskService {
         }
 
         // Set parameters from JSON
-        task.manager = manager
-        task.creator = user
-        task.rep = rep
-        task.leadid = json.leadId
+        task.managerId = manager.id
+        task.creatorId = user.id
+        task.repId = rep.id
+        task.lead = leadService.getForUserByFilter(user, [ids: [json.leadId]])
         task.publicId = json.publicId ?: "-"
         task.status = TaskStatus.fromValue(json.status)
         task.period = json.period
-        task.formTemplate = templateService.getForUserById(user, json.formTemplateId)
+        task.formTemplateId = json.formTemplateId
+
+        // Set template ID
+        task.templateId = json.templateId
 
         // Prepare template data
         def template = templateService.getForUserById(user, json.templateId)
-        if (!task.templateData || task.templateData.template != template) {
-            task.templateData = new Data(account: user.account, owner: user, template: template)
-        }
-
-        // Prepare values
-        json.values.each {valueJson ->
-            Value value = valueService.fromJson(valueJson, task.templateData)
-
-            if (!value.id) {
-                task.templateData.addToValues(value)
-            }
+        def fields = fieldService.getForTemplate(template)
+        fields.each {field ->
+            // Set value for this field from JSON received
+            task["$field.id"] = fieldService.parseValue(field, json.values.find { it.fieldId == field.id}.value)
         }
 
         // Add date info
@@ -240,7 +140,7 @@ class TaskService {
     }
 
     // Method to get resolution time of task
-    double getResolutionTime(Task task) {
+    double getResolutionTime(TaskM task) {
         // Get elapsed time in millis
         def elapsedTimeMs = System.currentTimeMillis() - task.dateCreated.time
 
@@ -252,7 +152,7 @@ class TaskService {
     }
 
     // Method to remove a task object
-    def remove(User user, Task task) {
+    def remove(User user, TaskM task) {
         // Remove all forms associated with this task
         def forms = formService.getForUserByTask(user, task)
         forms.each {Form form ->
@@ -264,6 +164,61 @@ class TaskService {
         task.isRemoved = true
         task.lastUpdated = new Date()
         task.save(failOnError: true, flush: true)
+    }
+
+    // Method to convert lead array into exportable data
+    def getExportData(User user, List<TaskM> tasks, def params) {
+        List objects    = []
+        List fields     = []
+        Map labels      = [:]
+
+        // Validate data
+        if (!tasks) {
+            throw new ApiException("No rows to export", Constants.HttpCodes.BAD_REQUEST)
+        } else if (!params.columns) {
+            throw new ApiException("No columns to export", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Create one export object for each selected row
+        tasks.each {it -> objects.push([:])}
+
+        // Iterate through each column
+        params.columns.each {column ->
+            // Add field and label
+            fields.push(column.label)
+            labels.put(column.label, column.label)
+
+            // Iterate through each lead
+            tasks.eachWithIndex {task, i ->
+                def value
+
+                if (column.field == "template") {
+                    value = templateService.getForUserById(user, task.templateId).name
+                } else if (column.field == "formTemplate") {
+                    value = templateService.getForUserById(user, task.formTemplateId).name
+                } else if (column.field == "location") {
+                    value = "https://www.google.com/maps/search/?api=1&query=" + task.lead.latitude + "," + task.lead.longitude
+                } else {
+                    value = task["$column.field"]
+                    if (value) {
+                        value = fieldService.formatForExport(column.type, value)
+                    }
+                }
+
+                if (value == null || value.equals("")) {
+                    value = '-'
+                }
+
+                // Add data to objects
+                objects[i][column.label] = value
+            }
+        }
+
+        return [
+                objects: objects,
+                fields: fields,
+                labels: labels
+        ]
     }
 
     // ----------------------- Private APIs ---------------------------//

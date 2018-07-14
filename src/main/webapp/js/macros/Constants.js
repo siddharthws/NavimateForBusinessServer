@@ -237,11 +237,25 @@ Constants.Table = {
     ID_LEAD_TEMPLATE:           3,
     ID_LEAD_LAST:               3,
 
+    // IDs for mandatory columns in tasks
+    ID_TASK_ID:                 0,
+    ID_TASK_LEAD:               1,
+    ID_TASK_LOCATION:           2,
+    ID_TASK_MANAGER:            3,
+    ID_TASK_REP:                4,
+    ID_TASK_CREATOR:            5,
+    ID_TASK_DATE_CREATED:       6,
+    ID_TASK_FORM_TEMPLATE:      7,
+    ID_TASK_TEMPLATE:           8,
+    ID_TASK_STATUS:             9,
+    ID_TASK_RESOLUTION_TIME:    10,
+    ID_TASK_LAST:               10,
+
     // IDs for mandatory columns in product
     ID_PRODUCT_ID:                 0,
     ID_PRODUCT_NAME:               1,
     ID_PRODUCT_TEMPLATE:           2,
-    ID_PRODUCT_LAST:               3
+    ID_PRODUCT_LAST:               2
 }
 
 /* ------------------------------- Task -----------------------------------*/
