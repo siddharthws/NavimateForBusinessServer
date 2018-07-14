@@ -128,8 +128,8 @@ class TrackingService {
         }
 
         // Get latest form submission of rep with a valid latlng
-        def forms = formService.getForUser(rep)
-        Form latestForm = forms.find {it -> it.latitude || it.longitude}
+        def forms = formService.getAllForUserByFilter(rep, [:])
+        FormM latestForm = forms.find {it -> it.latitude || it.longitude}
 
         // Update location params from form if tracking object is invalid / older
         if (latestForm && trackObj.locUpdateTime < latestForm.dateCreated) {

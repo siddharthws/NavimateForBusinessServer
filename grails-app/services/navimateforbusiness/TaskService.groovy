@@ -154,8 +154,8 @@ class TaskService {
     // Method to remove a task object
     def remove(User user, TaskM task) {
         // Remove all forms associated with this task
-        def forms = formService.getForUserByTask(user, task)
-        forms.each {Form form ->
+        def forms = formService.getAllForUserByFilter(user, [task: [ids: [task.id]]])
+        forms.each {FormM form ->
             formService.remove(user, form)
         }
 

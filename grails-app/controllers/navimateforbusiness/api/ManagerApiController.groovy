@@ -2,7 +2,7 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import grails.core.GrailsApplication
-import navimateforbusiness.Form
+import navimateforbusiness.FormM
 import navimateforbusiness.TaskM
 import navimateforbusiness.User
 import navimateforbusiness.enums.Role
@@ -717,23 +717,17 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // get tasks for this user
-        def forms = formService.getForUser(user)
+        // Find leads with given IDs
+        def forms = formService.getAllForUserByFilter(user, [ids: request.JSON.ids])
 
-        // Find tasks with given IDs
-        def selectedForms = []
-        request.JSON.ids.each {id -> selectedForms.push(forms.find {it -> it.id == id}) }
-
-        // Throw exception if all tasks not found
-        if (selectedForms.size() != request.JSON.ids.size() ||
-            selectedForms.findAll {it == null}.size() > 0) {
-            throw new ApiException("Invalid task IDs requested", Constants.HttpCodes.BAD_REQUEST)
-
+        // Throw exception if all forms not found
+        if (forms.size() != request.JSON.ids.size()) {
+            throw new ApiException("Invalid form IDs requested", Constants.HttpCodes.BAD_REQUEST)
         }
 
         // Prepare JSON response
         def resp = []
-        selectedForms.each {Form form -> resp.push(formService.toJson(form, user))}
+        forms.each {form -> resp.push(formService.toJson(form, user))}
 
         render resp as JSON
     }
@@ -744,29 +738,16 @@ class ManagerApiController {
 
         // Get filters from request
         def filter = request.JSON.filter
-        ObjPager pager = new ObjPager(filter.pager)
+        def pager = new ObjPager(request.JSON.pager)
+        def sorter = request.JSON.sorter
 
-        // Get forms for this user
-        def forms = formService.getForUser(user)
+        // get leads for this user
+        def filteredForms = formService.getAllForUserByFPS(user, filter, pager, sorter)
 
-        // Convert forms to tabular format
-        def table = tableService.parseForms(user, forms)
-
-        // Apply column filters to table
-        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
-        int totalRows = table.rows.size()
-
-        // Apply sorting to table
-        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
-
-        // Apply paging to table
-        table.rows = pager.apply(table.rows)
-
-        // Send response
+        // Send JSON Response
         def resp = [
-                rows: table.rows,
-                columns: request.JSON.bColumns ? table.columns : null,
-                totalRows: totalRows
+                rowCount: filteredForms.rowCount,
+                forms: filteredForms.forms.collect {formService.toJson(it, user)}
         ]
         render resp as JSON
     }
@@ -777,27 +758,18 @@ class ManagerApiController {
 
         // Get filters from request
         def filter = request.JSON.filter
+        def sorter = request.JSON.sorter
 
-        // get forms for this user
-        def forms = formService.getForUser(user)
-
-        // Convert forms to tabular format
-        def table = tableService.parseForms(user, forms)
-
-        // Apply column filters to table
-        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
+        // get leads for this user
+        def filteredForms = formService.getAllForUserByFPS(user, filter, new ObjPager(), sorter)
 
         // Ensure number of rows are less than max limit
-        if (table.rows.size() > Constants.Table.MAX_SELECTION_COUNT) {
+        if (filteredForms.forms.size() > Constants.Table.MAX_SELECTION_COUNT) {
             throw new ApiException("Too many rows. Maximum " + Constants.Table.MAX_SELECTION_COUNT + " rows can be selected at once.")
         }
 
         // Prepare response as list of IDs & names
-        def resp = []
-        table.rows.each {row ->
-            resp.push(id: row.id, name: row.name)
-        }
-        // Send response
+        def resp = filteredForms.forms.collect {[id: it.id, name: User.findById(it.ownerId).name]}
         render resp as JSON
     }
 
@@ -807,22 +779,20 @@ class ManagerApiController {
 
         // Get filters from request
         def filter = request.JSON.filter
+        def sorter = request.JSON.sorter
         def exportParams = request.JSON.exportParams
 
-        // get forms for this user
-        def forms = formService.getForUser(user)
+        // get leads for this user
+        def forms = formService.getAllForUserByFPS(user, filter, new ObjPager(), sorter).forms
 
-        // Convert forms to tabular format
-        def table = tableService.parseForms(user, forms)
-
-        // Apply column filters to table
-        table.rows = filtrService.applyToTable(table.rows, filter.colFilters)
-
-        // Apply sorting to table
-        table.rows = sortingService.sortRows(table.columns, table.rows, filter.sortList)
+        // Extract selected leads if applicable
+        if (params.selection) {
+            // Find all leads with IDs contained in selection array
+            forms = forms.findAll {it -> params.selection.contains(it.id)}
+        }
 
         // Export table
-        def exportData = tableService.getExportData(table, exportParams)
+        def exportData = formService.getExportData(user, forms, exportParams)
 
         // Set response parameters
         response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
@@ -836,7 +806,7 @@ class ManagerApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         request.JSON.ids.each {id ->
-            Form form = formService.getForUserById(user, id)
+            FormM form = formService.getForUserByFilter(user, [ids: [id]])
             if (!form) {
                 throw new ApiException("Form not found...", Constants.HttpCodes.BAD_REQUEST)
             }

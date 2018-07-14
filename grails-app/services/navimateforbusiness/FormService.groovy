@@ -1,127 +1,92 @@
 package navimateforbusiness
 
 import grails.gorm.transactions.Transactional
-import navimateforbusiness.enums.Role
 import navimateforbusiness.enums.TaskStatus
+import navimateforbusiness.objects.ObjPager
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 
 @Transactional
 class FormService {
     // ----------------------- Dependencies ---------------------------//
+    def userService
     def taskService
     def leadService
+    def mongoService
     def templateService
-    def valueService
-    def userService
+    def fieldService
 
     // ----------------------- Public APIs ---------------------------//
-    // Method to get all tasks for a user
-    def getForUser(User user) {
-        List<Form> forms = []
+    // Method to search leads in mongo database using filter, pager and sorter
+    def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
+        // Get mongo filters
+        def pipeline = mongoService.getFormPipeline(user, filters, sorter)
 
-        switch (user.role) {
-            case Role.ADMIN:
-            case Role.MANAGER:
-                userService.getRepsForUser(user).each {it -> forms.addAll(Form.findAllByAccountAndIsRemovedAndOwner(user.account, false, it)) }
-                break
-            case Role.CC:
-                // No forms returned for customer care
-                break
-            case Role.REP:
-                forms = Form.findAllByAccountAndIsRemovedAndOwner(user.account, false, user)
-                break
-        }
+        // Get results
+        def dbResult = FormM.aggregate(pipeline)
+        int count = dbResult.size()
 
-        // Sort forms as per creation date
-        forms.sort{it.dateCreated}
-        forms.reverse(true)
+        // Apply paging
+        def pagedResult = pager.apply(dbResult)
 
-        // Return forms
-        forms
+        // Return response
+        return [
+                rowCount: count,
+                forms: pagedResult.collect { (FormM) it }
+        ]
     }
 
-    // Method to get all tasks for a user
-    def getForUserById(User user, long id) {
-        // Get all forms for user
-        def forms = getForUser(user)
-
-        // Find tasks by template
-        def form = forms.find {Form it -> it.id == id}
-
-        form
+    // method to get list of leads using filters
+    List<FormM> getAllForUserByFilter(User user, def filters) {
+        getAllForUserByFPS(user, filters, new ObjPager(), []).forms
     }
 
-    // Method to get all tasks for a user
-    def getForUserByTemplate(User user, Template template) {
-        // Get all forms for user
-        def forms = getForUser(user)
-
-        // Find tasks by template
-        def form = forms.findAll {Form it -> it.submittedData.template.id == template.id}
-
-        form
-    }
-
-    // Method to get all tasks for a user
-    def getForUserByTask(User user, Task task) {
-        // Get all forms for user
-        def forms = getForUser(user)
-
-        // Find tasks by template
-        def form = forms.findAll {Form it -> it.task ? it.task.id == task.id : false}
-
-        form
+    // Method to get a single lead using filters
+    FormM getForUserByFilter(User user, def filters) {
+        getAllForUserByFilter(user, filters)[0]
     }
 
     // Methods to convert form objects to / from JSON
-    def toJson(Form form, User user) {
-        // Get lead for this form
-        LeadM lead = form.task ? leadService.getForUserByFilter(user, [ids: [form.task.leadid]]) : null
-
-        // Get distance string
-        double distanceKm = getDistance(user, form)
-        String distance = distanceKm != -1 ? distanceKm + " km" : "-"
-
+    def toJson(FormM form, User user) {
         // Convert template properties to JSON
         def json = [
                 id:             form.id,
-                rep:            [id: form.owner.id, name: form.owner.name],
-                manager:        [id: form.owner.manager.id, name: form.owner.manager.name],
+                rep:            [id: form.ownerId, name: User.findById(form.ownerId).name],
                 lat:            form.latitude,
                 lng:            form.longitude,
                 submitTime:     Constants.Formatters.LONG.format(Constants.Date.IST(form.dateCreated)),
-                templateId:     form.submittedData.template.id,
-                distance:       distance,
-                task:           form.task ? [id: form.task.id, name: String.valueOf(form.task.id)] : null,
-                lead:           lead ? [id: lead.id, name: lead.name] : null,
+                templateId:     form.templateId,
+                distance:       form.distanceKm,
+                task:           form.task ? [id: form.task.id, name: form.task.publicId] : null,
+                lead:           form.task ? [id: form.task.lead.id, name: form.task.lead.name] : null,
                 status:         form.task ? form.taskStatus.name() : null,
                 values:         []
         ]
 
-        // Convert template values to JSON
-        def values = form.submittedData.values.sort {it -> it.id}
-        values.each {value ->
-            json.values.push([fieldId: value.field.id, value: value.value])
+        // Add templated values in JSON
+        def template = templateService.getForUserById(user, form.templateId)
+        def fields = fieldService.getForTemplate(template)
+        fields.each {Field field ->
+            json.values.push([fieldId: field.id, value: form["$field.id"]])
         }
 
         json
     }
 
-    Form fromJson(def json, User user) {
-        Form form = null
+    FormM fromJson(def json, User user) {
+        FormM form = null
 
         // Get existing task or create new
         if (json.id) {
-            form = getForUserById(user, json.id)
+            form = getForUserByFilter(user, [ids: [json.id]])
             if (!form) {
                 throw new ApiException("Illegal access to form", Constants.HttpCodes.BAD_REQUEST)
             }
-        } else {
-            form = new Form(
-                    account: user.account,
-                    owner: user
-            )
+        }
+
+        if (!form) {
+            form = new FormM(   accountId: user.account.id,
+                                ownerId: user.id)
         }
 
         // Add task info
@@ -139,20 +104,17 @@ class FormService {
         // Add location info
         form.latitude = json.latitude
         form.longitude = json.longitude
+        form.distanceKm = getDistance(user, form)
+
+        // Set template ID
+        form.templateId = json.templateId
 
         // Prepare template data
         def template = templateService.getForUserById(user, json.templateId)
-        if (!form.submittedData || form.submittedData.template != template) {
-            form.submittedData = new Data(account: user.account, owner: user, template: template)
-        }
-
-        // Prepare values
-        json.values.each {valueJson ->
-            Value value = valueService.fromJson(valueJson, form.submittedData)
-
-            if (!value.id) {
-                form.submittedData.addToValues(value)
-            }
+        def fields = fieldService.getForTemplate(template)
+        fields.each {field ->
+            // Set value for this field from JSON received
+            form["$field.id"] = fieldService.parseValue(field, json.values.find {it.fieldId == field.id}.value)
         }
 
         // Add date info
@@ -164,19 +126,72 @@ class FormService {
         form
     }
 
+    // Method to convert lead array into exportable data
+    def getExportData(User user, List<FormM> forms, def params) {
+        List objects    = []
+        List fields     = []
+        Map labels      = [:]
+
+        // Validate data
+        if (!forms) {
+            throw new ApiException("No rows to export", Constants.HttpCodes.BAD_REQUEST)
+        } else if (!params.columns) {
+            throw new ApiException("No columns to export", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Create one export object for each selected row
+        forms.each {it -> objects.push([:])}
+
+        // Iterate through each column
+        params.columns.each {column ->
+            // Add field and label
+            fields.push(column.label)
+            labels.put(column.label, column.label)
+
+            // Iterate through each lead
+            forms.eachWithIndex {form, i ->
+                def value
+
+                if (column.field == "template") {
+                    value = templateService.getForUserById(user, form.templateId).name
+                } else if (column.field == "location") {
+                    value = "https://www.google.com/maps/search/?api=1&query=" + form.latitude + "," + form.longitude
+                } else {
+                    value = form["$column.field"]
+                    if (value) {
+                        value = fieldService.formatForExport(column.type, value)
+                    }
+                }
+
+                if (value == null || value.equals("")) {
+                    value = '-'
+                }
+
+                // Add data to objects
+                objects[i][column.label] = value
+            }
+        }
+
+        return [
+                objects: objects,
+                fields: fields,
+                labels: labels
+        ]
+    }
+
     // Method to remove a form object
-    def remove(User user, Form form) {
+    def remove(User user, FormM form) {
         // Remove form
         form.isRemoved = true
         form.lastUpdated = new Date()
         form.save(failOnError: true, flush: true)
     }
 
-    def getDistance(User user, Form form) {
+    def getDistance(User user, FormM form) {
         double dis = -1
 
         if (form.task) {
-            LeadM lead = leadService.getForUserByFilter(user, [ids: [form.task.leadid]])
+            LeadM lead = form.task.lead
             if (lead && (lead.latitude || lead.longitude) && (form.latitude || form.longitude)) {
                 // Get distance in meters
                 long dist = distance(lead.latitude, form.latitude, lead.longitude, form.longitude)

@@ -76,6 +76,37 @@ class MongoService {
         pipeline
     }
 
+    def getFormPipeline(User user, def filters, def sorter) {
+        def pipeline = []
+
+        // Add match stage
+        pipeline.push(new BasicDBObject('$match', ['$and': getFormFilters(user, filters)]))
+
+        // Add atleast basic sorting
+        if (!sorter) {sorter = [[dateCreated: Constants.Filter.SORT_DESC]]}
+
+        // Add template order column and replace in sorter
+        pipeline.push(getTemplateOrderStage(user, '$templateId', "template_order"))
+        replaceSorter(sorter, "template", "template_order")
+
+        // Add rep order column and replace in sorter if required
+        pipeline.push(getUserOrderStage(user, '$repId', "rep_order"))
+        replaceSorter(sorter, "rep", "rep_order")
+
+        // Add lead order column and replace in sorter if required
+        pipeline.push(getLeadOrderStage(user, '$lead', "lead_order"))
+        replaceSorter(sorter, "lead", "lead_order")
+
+        // Add lead order column and replace in sorter if required
+        pipeline.push(getTaskOrderStage(user, '$task', "task_order"))
+        replaceSorter(sorter, "task", "task_order")
+
+        // Add sorting stage
+        pipeline.push(new BasicDBObject('$sort', getSortBson(sorter)))
+
+        pipeline
+    }
+
     def getProductPipeline(User user, def filters, def sorter) {
         def pipeline = []
 
@@ -207,6 +238,63 @@ class MongoService {
 
         // Add filters for templated data
         def templates = templateService.getForUserByType(user, Constants.Template.TYPE_TASK)
+        filters.addAll(getFieldFilters(templates, colFilters))
+
+        return filters
+    }
+
+    def getFormFilters(User user, def colFilters) {
+        def filters = []
+
+        // Add all mandatory filters
+        filters.addAll(getMandatoryFilters(user, colFilters))
+
+        // Add role specific filters
+        switch (user.role) {
+            case Role.MANAGER:
+                // Get forms submitted by this manager's reps
+                def reps = userService.getRepsForUser(user)
+                def repIds = reps.collect {it.id}
+                filters.push(['ownerId': ['$in': repIds]])
+                break
+            case Role.CC:
+                // Get forms submitted in tasks created by this CC
+                def tasks = taskService.getAllForUserByFilter(user, [creator: [ids: [user.id]]])
+                def taskIds = tasks.each {it.id}
+                filters.push(['task': ['$in': taskIds]])
+                break
+            case Role.REP:
+                // Get forms submitted by this user only
+                filters.push(['ownerId': ['$eq': user.id]])
+                break
+        }
+
+        // Apply rep filters
+        if (colFilters.rep?.ids)                {filters.push(['repId': ['$in': colFilters.rep.ids]])}
+        if (colFilters.rep?.value)              {filters.push(getMultiselectFilter("ownerId", colFilters.rep.value))}
+
+        // Apply location filters
+        if (colFilters.location?.bNoBlanks)    {filters.push(['$and': [['latitude': ['$ne': "0"]],
+                                                                       ['longitude': ['$ne': "0"]]]])}
+
+        // Apply distance filter
+        if (colFilters.distanceKm?.value?.from)   {filters.push(['distanceKm': ['$gte': colFilters.distanceKm.value.from]])}
+        if (colFilters.distanceKm?.value?.to)     {filters.push(['distanceKm': ['$lte': colFilters.distanceKm.value.to]])}
+        if (colFilters.distanceKm?.bNoBlanks)     {filters.push(['distanceKm': ['$ne': -1]])}
+
+        // Apply Status filter
+        if (colFilters.taskStatus?.value)       {filters.push(getTextFilter("taskStatus", colFilters.taskStatus.value))}
+
+        // Apply Task Filter
+        if (colFilters.task?.value) {filters.push(getMultiselectFilter("task", colFilters.task.value))}
+        if (colFilters.task?.ids)   {filters.push(['task': ['$in': colFilters.task.ids]])}
+
+        // Add template filter
+        if (colFilters.template?.value) {filters.push(getMultiselectFilter("templateId", colFilters.template.value))}
+        if (colFilters.template?.ids) {filters.push(["templateId": ['$in': colFilters.template.ids]])}
+
+        // Add filters for templated data
+        def templates = templateService.getForUserByType(user, Constants.Template.TYPE_FORM)
         filters.addAll(getFieldFilters(templates, colFilters))
 
         return filters
