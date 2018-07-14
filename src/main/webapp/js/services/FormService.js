@@ -2,15 +2,23 @@
  * Created by Siddharth on 31-05-2018.
  */
 
-app.service('FormService', function($q, $http, $localStorage, ObjForm) {
+app.service('FormService', function($q, $http, $localStorage, ObjForm, TemplateService, ObjTable2, ObjColumn) {
     /* ----------------------------- INIT --------------------------------*/
     var vm = this
+
+    vm.table = null
 
     // Sync Serialization related variables
     var canceller = null
     var bOngoing = false
 
     /* ----------------------------- APIs --------------------------------*/
+    // Method to reset Service
+    vm.reset = function () {
+        // Init Lead Table
+        vm.table = new ObjTable2(Constants.Table.TYPE_FORM, vm.getTableColumns, vm.parseTableResponse)
+    }
+
     // API to get task data
     vm.sync = function (ids){
         if (bOngoing) {
@@ -65,4 +73,52 @@ app.service('FormService', function($q, $http, $localStorage, ObjForm) {
 
         return deferred.promise
     }
+
+    // Methods to get columns for different table types
+    vm.getTableColumns = function () {
+        var columns = []
+
+        // Get constant reference for usign locally
+        var Table_C = Constants.Table
+        var Template_C = Constants.Template
+
+        // Add mandatory columns for forms
+        columns.push(new ObjColumn(Table_C.ID_FORM_REP,         "Representative", Template_C.FIELD_TYPE_REP,           null, "rep"))
+        columns.push(new ObjColumn(Table_C.ID_FORM_TEMPLATE,    "Template"      , Template_C.FIELD_TYPE_TEMPLATE,      null, "template"))
+        columns.push(new ObjColumn(Table_C.ID_FORM_DATE,        "Submit Date"   , Template_C.FIELD_TYPE_DATE,          null, "dateCreated"))
+        columns.push(new ObjColumn(Table_C.ID_FORM_LOCATION,    "Location"      , Template_C.FIELD_TYPE_LOCATION,      null, "location"))
+        columns.push(new ObjColumn(Table_C.ID_FORM_DISTANCE,    "Distance"      , Template_C.FIELD_TYPE_NUMBER,        null, "distanceKm"))
+        columns.push(new ObjColumn(Table_C.ID_FORM_LEAD,        "Lead"          , Template_C.FIELD_TYPE_LEAD,          null, "lead"))
+        columns.push(new ObjColumn(Table_C.ID_FORM_TASK,        "Task"          , Template_C.FIELD_TYPE_TASK,          null, "task"))
+        columns.push(new ObjColumn(Table_C.ID_FORM_TASK_STATUS, "Task Status"   , Template_C.FIELD_TYPE_TEXT,          null, "taskStatus"))
+
+        // Iterate through each lead template
+        TemplateService.getByType(Constants.Template.TYPE_FORM).forEach(function (template) {
+            // Iterate through each field
+            template.fields.forEach(function (field, i) {
+                // Add new column to array
+                columns.push(new ObjColumn(columns.length, field.title, field.type, field.id, String(field.id)))
+            })
+        })
+
+        return columns
+    }
+
+    // Method to parse lead sync response to tabular format
+    vm.parseTableResponse = function (response) {
+        // Parse response into rows for table
+        var rows = []
+        response.forms.forEach(function (json) {
+            // Parse to Form Object
+            var form = ObjForm.fromJson(json)
+
+            // Add to rows
+            rows.push(form.toRow(vm.table))
+        })
+
+        return rows
+    }
+
+    // Init Lead Table
+    vm.reset()
 })

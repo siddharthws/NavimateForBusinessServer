@@ -31,6 +31,7 @@ class PortingApiController {
     def taskService
     def formService
     def reportService
+    def fieldService
 
     def taskPublicId() {
         Task.findAll().each {
@@ -70,7 +71,11 @@ class PortingApiController {
 
             // Add field values
             it.templateData.values.each {value ->
-                task[String.valueOf(value.fieldId)] = value.value
+                if (value.value) {
+                    task[String.valueOf(value.fieldId)] = fieldService.parseValue(value.field, value.value)
+                } else {
+                    task[String.valueOf(value.fieldId)] = 0
+                }
             }
 
             // Save task
@@ -99,14 +104,20 @@ class PortingApiController {
                     task:           task,
                     latitude:       it.latitude,
                     longitude:      it.longitude,
-                    distanceKm:     formService.getDistance(it.account.admin, it),
                     taskStatus:     it.taskStatus,
                     templateId:     it.submittedData.template.id
             )
 
+            // Add distance info
+            form.distanceKm = formService.getDistance(it.account.admin, form)
+
             // Add field values
             it.submittedData.values.each {value ->
-                form[String.valueOf(value.fieldId)] = value.value
+                if (value.value) {
+                    form[String.valueOf(value.fieldId)] = fieldService.parseValue(value.field, value.value)
+                } else {
+                    form[String.valueOf(value.fieldId)] = 0
+                }
             }
 
             // Save task

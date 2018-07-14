@@ -138,8 +138,8 @@ class TemplateService {
         switch (template.type) {
             case Constants.Template.TYPE_FORM:
                 // Remove all forms associated with this template
-                def forms = formService.getForUserByTemplate(user, template)
-                forms.each {Form form ->
+                def forms = formService.getAllForUserByFilter(user, [template: [ids: [template.id]]])
+                forms.each {FormM form ->
                     formService.remove(user, form)
                 }
                 // Remove all tasks associated with this form template

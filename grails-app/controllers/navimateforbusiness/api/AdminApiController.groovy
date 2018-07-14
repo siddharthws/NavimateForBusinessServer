@@ -69,7 +69,7 @@ class AdminApiController {
             def tasks = taskService.getAllForUserByFilter(user, [rep: [ids: [rep.id]]])
             tasks.each { taskService.remove(user, it) }
 
-            def forms = formService.getForUser(rep)
+            def forms = formService.getAllForUserByFilter(rep, [:])
             forms.each { formService.remove(user, it) }
 
             // Remove Rep's Manager & account

@@ -4,11 +4,10 @@
 
 app.factory('ObjForm', function(TemplateService, ObjValue) {
     // ----------------------------------- Constructor ------------------------------------//
-    function ObjForm (id, manager, rep, lead, task, status, lat, lng, submitTime, distance, template, values) {
+    function ObjForm (id, rep, lead, task, status, lat, lng, submitTime, distance, template, values) {
         this.id             = id
 
         // User data
-        this.manager        = manager
         this.rep            = rep
 
         // Task related data
@@ -32,7 +31,6 @@ app.factory('ObjForm', function(TemplateService, ObjValue) {
     ObjForm.prototype.Clone = function () {
         // Create clone for lead and rep
         var rep = this.rep  ? {id: this.rep.id, name: this.rep.name} : null
-        var manager = this.manager  ? {id: this.manager.id, name: this.manager.name} : null
         var lead = this.lead  ? {id: this.lead.id, name: this.lead.name} : null
         var task = this.task  ? {id: this.task.id, name: this.task.name} : null
 
@@ -43,7 +41,38 @@ app.factory('ObjForm', function(TemplateService, ObjValue) {
         })
 
         // Return clone of task object
-        return new ObjForm(this.id, manager, rep, lead, task, this.status, this.lat, this.lng, this.submitTime, this.distance, this.template, values)
+        return new ObjForm(this.id, rep, lead, task, this.status, this.lat, this.lng, this.submitTime, this.distance, this.template, values)
+    }
+
+    // Method to parse data into row
+    ObjForm.prototype.toRow = function (table) {
+        // Create new row object with blank value for each column
+        var values = Statics.getArray(table.columns.length)
+        values.fill('-')
+
+        // Add id and name to row object
+        var row = {id: this.id, name: this.rep.name, values: values}
+
+        // Add data in mandatory columns
+        row.values[Constants.Table.ID_FORM_REP]             = this.rep.name
+        row.values[Constants.Table.ID_FORM_TEMPLATE]        = this.template.name
+        row.values[Constants.Table.ID_FORM_DATE]            = this.submitTime
+        row.values[Constants.Table.ID_FORM_LOCATION]        = this.lat || this.lng ? this.lat + ',' + this.lng : '-'
+        row.values[Constants.Table.ID_FORM_DISTANCE]        = this.distance
+        row.values[Constants.Table.ID_FORM_LEAD]            = this.lead
+        row.values[Constants.Table.ID_FORM_TASK]            = this.task
+        row.values[Constants.Table.ID_FORM_TASK_STATUS]     = this.status
+
+        // Iterate through template values in lead
+        this.values.forEach(function (value) {
+            // Get column for field
+            var column = table.getColumnForField(value.field)
+
+            // Add string value at appropriate index in row
+            row.values[column.id] = value.getDisplayString()
+        })
+
+        return row
     }
 
     // ----------------------------------- Validation APIs ------------------------------------//
@@ -59,7 +88,6 @@ app.factory('ObjForm', function(TemplateService, ObjValue) {
 
         return new ObjForm( json.id,
                             json.rep,
-                            json.manager,
                             json.lead,
                             json.task,
                             json.status,

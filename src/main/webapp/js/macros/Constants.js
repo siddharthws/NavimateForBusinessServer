@@ -251,6 +251,17 @@ Constants.Table = {
     ID_TASK_RESOLUTION_TIME:    10,
     ID_TASK_LAST:               10,
 
+    // IDs for mandatory columns in forms
+    ID_FORM_REP:                0,
+    ID_FORM_TEMPLATE:           1,
+    ID_FORM_DATE:               2,
+    ID_FORM_LOCATION:           3,
+    ID_FORM_DISTANCE:           4,
+    ID_FORM_LEAD:               5,
+    ID_FORM_TASK:               6,
+    ID_FORM_TASK_STATUS:        7,
+    ID_FORM_LAST:               7,
+
     // IDs for mandatory columns in product
     ID_PRODUCT_ID:                 0,
     ID_PRODUCT_NAME:               1,

@@ -3,7 +3,7 @@
  */
 
 app.controller("SubmissionReportCtrl", function (   $scope, $rootScope, $http, $localStorage,
-                                                    ToastService, TableService, NavService, DialogService) {
+                                                    ToastService, TableService, NavService, DialogService, FormService) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
@@ -11,12 +11,15 @@ app.controller("SubmissionReportCtrl", function (   $scope, $rootScope, $http, $
     NavService.setActive(NavService.reports, 0)
 
     // Set form table as active
-    TableService.activeTable = TableService.formTable
+    TableService.activeTable = FormService.table
     vm.table = TableService.activeTable
 
     /*-------------------------------------- Scope APIs ---------------------------------------*/
     // APIs for table based actions
     vm.sync = function () {
+        // Reset table Selection
+        vm.table.selection = []
+
         // Broadcast Sync Table Event
         $scope.$broadcast(Constants.Events.TABLE_SYNC)
     }
@@ -40,7 +43,7 @@ app.controller("SubmissionReportCtrl", function (   $scope, $rootScope, $http, $
     vm.remove = function() {
         // Launch Confirm Dialog
         DialogService.confirm(
-            "Are you sure you want to remove " + vm.table.selectedRows.length + " forms ?",
+            "Are you sure you want to remove " + vm.table.selection.length + " forms ?",
             function () {
                 $rootScope.showWaitingDialog("Please wait while we are removing forms...")
                 // Make Http call to remove leads

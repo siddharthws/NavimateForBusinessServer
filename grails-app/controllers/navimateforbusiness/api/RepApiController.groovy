@@ -2,10 +2,10 @@ package navimateforbusiness.api
 
 import grails.converters.JSON
 import navimateforbusiness.AccountSettings
+import navimateforbusiness.FormM
 import navimateforbusiness.TaskM
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
-import navimateforbusiness.Form
 import navimateforbusiness.LeadM
 import navimateforbusiness.enums.Role
 import navimateforbusiness.util.SmsHelper
@@ -99,10 +99,10 @@ class RepApiController {
             // Fill forms Response
             if (!request.JSON.lastSyncTime) {
                 // Get all forms filled by this rep
-                def forms = formService.getForUser(rep)
+                def forms = formService.getAllForUserByFilter(rep, [:])
 
                 // Send JSON Response for all forms
-                forms.each {Form form -> resp.forms.forms.push(formService.toJson(form, rep)) }
+                forms.each {FormM form -> resp.forms.forms.push(formService.toJson(form, rep)) }
             }
         }
 
@@ -119,7 +119,7 @@ class RepApiController {
 
         def idResp = []
         request.JSON.forms.each {def formJson ->
-            Form form = formService.fromJson(formJson, rep)
+            FormM form = formService.fromJson(formJson, rep)
             form.save(failOnError: true, flush: true)
 
             // Close task if required
