@@ -122,8 +122,8 @@ class LeadService {
                 // Get latlng from google for this address
                 String[] addresses = [json.address]
                 def latlngs = googleApiService.geocode(addresses)
-                lead.latitude = latlngs[0].latitude
-                lead.longitude = latlngs[0].longitude
+                lead.latitude = latlngs[0].lat
+                lead.longitude = latlngs[0].lng
             } else {
                 // Assign lat lng from JSON
                 lead.latitude = json.lat
