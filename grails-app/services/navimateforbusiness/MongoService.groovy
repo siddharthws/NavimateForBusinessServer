@@ -11,8 +11,9 @@ import java.text.SimpleDateFormat
 @Transactional
 class MongoService {
     // ----------------------- Dependencies ---------------------------//
-    def templateService
     def userService
+    def leadService
+    def templateService
     def fieldService
 
     // ----------------------- Public Methods ---------------------------//
@@ -101,9 +102,13 @@ class MongoService {
         if (colFilters.location?.bNoBlanks)    {filters.push(['$and': [['latitude': ['$ne': "0"]],
                                                                        ['longitude': ['$ne': "0"]]]])}
 
-        // Add all template related filters
+        // Add template filter
+        if (colFilters.template.value) {filters.push(getMultiselectFilter("templateId", colFilters.template.value))}
+        if (colFilters.template.ids) {filters.push(["templateId": ['$in': colFilters.template.ids]])}
+
+        // Add filters for templated data
         def templates = templateService.getForUserByType(user, Constants.Template.TYPE_LEAD)
-        filters.addAll(getTemplateFilters(templates, colFilters))
+        filters.addAll(getFieldFilters(templates, colFilters))
 
         return filters
     }
@@ -122,9 +127,13 @@ class MongoService {
         if (colFilters.productId?.equal) {filters.push(['productId': ['$eq': "$colFilters.productId.equal"]])}
         if (colFilters.productId?.value) {filters.push(['productId': ['$regex': /.*$colFilters.productId.value.*/, '$options': 'i']])}
 
-        // Add all template related filters
+        // Add template filter
+        if (colFilters.template.value) {filters.push(getMultiselectFilter("templateId", colFilters.template.value))}
+        if (colFilters.template.ids) {filters.push(["templateId": ['$in': colFilters.template.ids]])}
+
+        // Add filters for templated data
         def templates = templateService.getForUserByType(user, Constants.Template.TYPE_PRODUCT)
-        filters.addAll(getTemplateFilters(templates, colFilters))
+        filters.addAll(getFieldFilters(templates, colFilters))
 
         return filters
     }
@@ -157,16 +166,9 @@ class MongoService {
         filters
     }
 
-    // Method to get filters using templates
-    private def getTemplateFilters (templates, colFilters) {
+    // Method to get filters using field values
+    private def getFieldFilters(templates, colFilters) {
         def filters = []
-
-        // Apply Template Filter by ID
-        if (colFilters.template?.value) {
-            filters.push(getMultiselectFilter("templateId", colFilters.template.value))
-        } else if (colFilters.template?.ids) {
-            filters.push(['templateId': ['$in': colFilters.template.ids]])
-        }
 
         // Get all fields in templates
         def fields = []
