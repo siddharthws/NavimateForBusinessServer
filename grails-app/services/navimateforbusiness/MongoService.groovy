@@ -207,8 +207,10 @@ class MongoService {
                         filters.push(getCheckboxFilter(key, filterVal))
                         break
                     case Constants.Template.FIELD_TYPE_NUMBER:
-                    case Constants.Template.FIELD_TYPE_DATE:
                         if (filterVal.from || filterVal.to) {filters.push(getNumberFilter(key, filterVal))}
+                        break
+                    case Constants.Template.FIELD_TYPE_DATE:
+                        if (filterVal.from || filterVal.to) {filters.push(getDateFilter(key, filterVal))}
                         break
                 }
             }
@@ -274,6 +276,22 @@ class MongoService {
     }
 
     private def getNumberFilter(String fieldName, def filterVal) {
+        def filters = []
+
+        // Apply greater than filter
+        if (filterVal.from) {
+            filters.push([(fieldName): ['$gte': filterVal.from]])
+        }
+
+        // Apply less than filter
+        if (filterVal.to) {
+            filters.push([(fieldName): ['$lte': filterVal.to]])
+        }
+
+        return ['$and': filters]
+    }
+
+    private def getDateFilter(String fieldName, def filterVal) {
         def filters = []
 
         // Apply greater than filter

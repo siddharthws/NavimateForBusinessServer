@@ -103,7 +103,7 @@ class ProductService {
         def fields = fieldService.getForTemplate(template)
         fields.each {field ->
             // Set value for this field from JSON received
-            product["$field.id"] = json.values.find {it -> it.fieldId == field.id}.value
+            product["$field.id"] = fieldService.parseValue(field, json.values.find {it -> it.fieldId == field.id}.value)
         }
 
         // Add date info

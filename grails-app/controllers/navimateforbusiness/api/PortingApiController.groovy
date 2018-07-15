@@ -3,6 +3,7 @@ package navimateforbusiness.api
 import com.mongodb.client.FindIterable
 import navimateforbusiness.Account
 import navimateforbusiness.Data
+import navimateforbusiness.Field
 import navimateforbusiness.Form
 import navimateforbusiness.LeadM
 import grails.plugins.rest.client.RestBuilder
@@ -47,6 +48,27 @@ class PortingApiController {
 
         def resp = [success: true]
         render resp as JSON
+    }
+
+    def fixNumberField() {
+        // Find All number fields
+        def fields = Field.findAllByType(Constants.Template.FIELD_TYPE_NUMBER)
+        LeadM.findAll().each {LeadM lead ->
+            boolean bSave = false
+
+            // Check for number fields
+            fields.each {Field field ->
+                if (lead["$field.id"] != null) {
+                    lead["$field.id"] = Double.parseDouble(lead["$field.id"])
+                    bSave = true
+                }
+            }
+
+            // Save lead
+            if (bSave) {
+                lead.save(flush: true, failOnError: true)
+            }
+        }
     }
 
     def fixFcms() {

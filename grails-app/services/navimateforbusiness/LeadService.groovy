@@ -126,7 +126,7 @@ class LeadService {
         def fields = fieldService.getForTemplate(template)
         fields.each {field ->
             // Set value for this field from JSON received
-            lead["$field.id"] = json.values.find {it -> it.fieldId == field.id}.value
+            lead["$field.id"] = fieldService.parseValue(field, json.values.find {it -> it.fieldId == field.id}.value)
         }
 
         // Add date info in long format

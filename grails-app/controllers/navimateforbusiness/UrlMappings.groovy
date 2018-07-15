@@ -117,6 +117,7 @@ class UrlMappings {
         "/api/port/taskResolveTime"        (controller: "PortingApi") {action = [GET: "taskResolveTime"]}
         "/api/port/taskPublicId"           (controller: "PortingApi") {action = [GET: "taskPublicId"]}
         "/api/port/isRemoveUserFix"        (controller: "PortingApi") {action = [GET: "isRemoveUserFix"]}
+        "/api/port/fixNumberField"         (controller: "PortingApi") {action = [GET: "fixNumberField"]}
 
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs

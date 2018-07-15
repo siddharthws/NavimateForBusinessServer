@@ -65,6 +65,20 @@ class FieldService {
         field
     }
 
+    def parseValue(navimateforbusiness.Field field, def value) {
+        def parsedValue
+
+        switch (field.type) {
+            case Constants.Template.FIELD_TYPE_NUMBER:
+                parsedValue = Double.parseDouble(value)
+                break
+            default:
+                parsedValue = value
+        }
+
+        parsedValue
+    }
+
     String formatForExport(int type, def value) {
         String returnValue = ""
 
