@@ -50,6 +50,7 @@ app.controller('TaskEditorCtrl', function ( $scope, $rootScope, $mdDialog, $loca
                                 Constants.Task.STATUS_OPEN,
                                 0,
                                 null,
+                                -1,
                                 null,
                                 null,
                                 [])
