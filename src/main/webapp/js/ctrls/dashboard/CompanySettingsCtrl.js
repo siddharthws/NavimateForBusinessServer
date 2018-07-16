@@ -59,6 +59,30 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScop
         }
     }
 
+    vm.import = function (file) {
+        // Show waiting dialog
+        $rootScope.showWaitingDialog("Uploading Image. Please Wait...")
+
+        // Perform import
+        ImportService.import("/api/manager/leads/import", file).then(
+            // Success callback
+            function () {
+                // Sync data again
+                vm.reset()
+
+                // Notify user about success
+                $rootScope.hideWaitingDialog()
+                ToastService.toast("Image Uploaded successfully...")
+            },
+            // Error callback
+            function (message) {
+                // Notify user about error
+                $rootScope.hideWaitingDialog()
+                DialogService.alert("Upload Error : " + message)
+            }
+        )
+    }
+
     /*-------------------------------- Private APIs --------------------------------*/
     function initTime() {
         //get working hours from local storage

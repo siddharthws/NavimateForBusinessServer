@@ -410,3 +410,27 @@ app.directive('nvMap', function () {
         templateUrl: '/static/views/directives/nvMap.html'
     }
 })
+
+app.directive('image-picker', function () {
+    return {
+        scope: {
+            image:       "@",
+            text:        "@",
+            imagePicked: '&'
+        },
+        templateUrl: '/static/views/directives/ImageFilePicker.html',
+        controller: 'imageFilePickerCtrl',
+        /*link: function (scope, element, attrs) {
+            var model = $parse(attrs.image-picker),
+                modelSetter = model.assign;
+
+            element.bind('change', function () {
+                //Call apply on scope
+                scope.$apply(function () {
+                    //set the model value
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }*/
+    }
+})
