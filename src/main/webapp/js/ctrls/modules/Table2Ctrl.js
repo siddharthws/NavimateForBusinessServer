@@ -85,6 +85,12 @@ app.controller('Table2Ctrl', function (  $rootScope, $scope, $window, $state, $h
         DialogService.taskViewer(id)
     }
 
+    //API to show Product Information Dialog
+    vm.viewProduct = function (id) {
+        // Open Product Viewer dialog
+        DialogService.productViewer(id)
+    }
+
     /*
      * Paging related methods
      */

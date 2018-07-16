@@ -22,7 +22,7 @@ app.factory('ObjProduct', function(TemplateService, ObjValue) {
         })
 
         // Return clone of product object
-        return new ObjProduct(this.id, this.productId, this.name, this.template, values)
+        return new ObjProduct(this.id, this.productId, {id: this.id, name: this.name}, this.template, values)
     }
 
     // Method to parse data into row
@@ -36,7 +36,7 @@ app.factory('ObjProduct', function(TemplateService, ObjValue) {
 
         // Add data in mandatory columns
         row.values[Constants.Table.ID_PRODUCT_ID]       = this.productId
-        row.values[Constants.Table.ID_PRODUCT_NAME]     = this.name
+        row.values[Constants.Table.ID_PRODUCT_NAME]     = {id: this.id, name: this.name}
         row.values[Constants.Table.ID_PRODUCT_TEMPLATE] = this.template.name
 
         // Iterate through template values in product
