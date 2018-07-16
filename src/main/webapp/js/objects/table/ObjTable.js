@@ -307,7 +307,7 @@ app.factory('ObjTable', function($http, $q, $localStorage, FileService) {
                     break
                 }
                 case Constants.Template.FIELD_TYPE_LEAD:
-                case Constants.Template.FIELD_TYPE_TASK:  {
+                case Constants.Template.FIELD_TYPE_TASK: {
                     filter.type = Constants.Filter.TYPE_OBJECT
                     filter.value = ""
                     break

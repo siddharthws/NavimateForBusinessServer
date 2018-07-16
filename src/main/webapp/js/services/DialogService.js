@@ -256,6 +256,19 @@ app.service('DialogService', function($mdDialog) {
         })
     }
 
+    this.productViewer = function (id) {
+        // Show Dialog
+        $mdDialog.show({
+            templateUrl: '/static/views/dialogs/ProductViewer.html',
+            controller: 'ProductViewerCtrl as vm',
+            clickOutsideToClose: true,
+            multiple: true,
+            locals: {
+                id:  id
+            }
+        })
+    }
+
     this.FieldSettings = function (field) {
         // Show Dialog
         $mdDialog.show({

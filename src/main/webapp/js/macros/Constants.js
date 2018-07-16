@@ -281,6 +281,7 @@ Constants.Template = {
     // Special Object Column type
     FIELD_TYPE_LEAD:            21,
     FIELD_TYPE_TASK:            22,
+    FIELD_TYPE_PRODUCT:         23,
 
     FIELD_TYPE_TEMPLATE:        41,
     FIELD_TYPE_REP:             42,

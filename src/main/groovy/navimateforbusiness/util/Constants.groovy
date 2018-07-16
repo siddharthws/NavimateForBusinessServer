@@ -41,7 +41,7 @@ class Constants {
         public static final int TYPE_FORM                 = 1
         public static final int TYPE_LEAD                 = 2
         public static final int TYPE_TASK                 = 3
-        public static final int TYPE_PRODUCT            = 4
+        public static final int TYPE_PRODUCT              = 4
 
         // Field types
         public static final int FIELD_TYPE_NONE           = 0
@@ -59,6 +59,7 @@ class Constants {
         // Special Object Column type
         public static final int FIELD_TYPE_LEAD           = 21
         public static final int FIELD_TYPE_TASK           = 22
+        public static final int FIELD_TYPE_PRODUCT        = 23
 
         public static final int FIELD_TYPE_TEMPLATE       = 41
         public static final int FIELD_TYPE_REP            = 42
