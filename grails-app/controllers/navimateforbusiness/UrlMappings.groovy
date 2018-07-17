@@ -77,6 +77,7 @@ class UrlMappings {
         "/api/manager/products/getTable" (controller: "ManagerApi") {action = [POST: "getProductTable"]}
         "/api/manager/products/getIds"   (controller: "ManagerApi") {action = [POST: "getProductIds"]}
         "/api/manager/products/remove"   (controller: "ManagerApi") {action = [POST: "removeProduct"]}
+        "/api/manager/products/search"   (controller: "ManagerApi") {action = [POST: "searchProducts"]}
 
         /*------------------------- User APIs to be removed --------------------------*/
         "/api/users/changePassword" (controller: "UserApi") {action = [POST: "changePassword"]}
