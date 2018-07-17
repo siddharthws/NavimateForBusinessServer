@@ -308,7 +308,8 @@ class MongoService {
 
         // Apply Name filters if any
         if (colFilters.name?.equal) {filters.push(['name': ['$eq': "$colFilters.name.equal"]])}
-        if (colFilters.name?.value) {filters.push(['name': ['$regex': /.*$colFilters.name.value.*/, '$options': 'i']])}
+        if (colFilters.name?.value) {filters.push(getMultiselectFilter("_id", colFilters.name.value))}
+        if (colFilters.name?.regex) {filters.push(['name': ['$regex': /.*$colFilters.name.regex.*/, '$options': 'i']])}
 
         // Apply product ID filters
         if (colFilters.productId?.equal) {filters.push(['productId': ['$eq': "$colFilters.productId.equal"]])}

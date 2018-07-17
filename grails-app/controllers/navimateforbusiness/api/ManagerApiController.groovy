@@ -921,5 +921,24 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    def searchProducts() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get input params
+        String text = request.JSON.text
+        def pager = new ObjPager(request.JSON.pager)
+
+        // Filter products for this user
+        def products = productService.getAllForUserByFPS(user, [name: [regex: text]], pager, [])
+
+        // Send response with IDs, names and total count
+        def resp = [
+                results: products.products.collect {[id: it.id, name: it.name]},
+                totalCount: products.rowCount
+        ]
+        render resp as JSON
+    }
+
     // ----------------------- Private methods ----------------------- //
 }
