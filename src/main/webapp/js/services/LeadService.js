@@ -134,17 +134,17 @@ app.service('LeadService', function($q, $http, $localStorage, ObjLead, TemplateS
         var Template_C = Constants.Template
 
         // Add mandatory columns
-        columns.push(new ObjColumn(Table_C.ID_LEAD_NAME,        "Name",     Template_C.FIELD_TYPE_LEAD,     null, "lead",       Constants.Template.TYPE_LEAD))
-        columns.push(new ObjColumn(Table_C.ID_LEAD_ADDRESS,     "Address",  Template_C.FIELD_TYPE_TEXT,     null, "address",    Constants.Template.TYPE_LEAD))
-        columns.push(new ObjColumn(Table_C.ID_LEAD_LOCATION,    "Location", Template_C.FIELD_TYPE_LOCATION, null, "location",   Constants.Template.TYPE_LEAD))
-        columns.push(new ObjColumn(Table_C.ID_LEAD_TEMPLATE,    "Template", Template_C.FIELD_TYPE_TEMPLATE, null, "template",   Constants.Template.TYPE_LEAD))
+        columns.push(new ObjColumn(Table_C.ID_LEAD_NAME,        "Name",     Template_C.FIELD_TYPE_LEAD,     null, "lead",       Constants.Template.TYPE_LEAD, 1))
+        columns.push(new ObjColumn(Table_C.ID_LEAD_ADDRESS,     "Address",  Template_C.FIELD_TYPE_TEXT,     null, "address",    Constants.Template.TYPE_LEAD, 2))
+        columns.push(new ObjColumn(Table_C.ID_LEAD_LOCATION,    "Location", Template_C.FIELD_TYPE_LOCATION, null, "location",   Constants.Template.TYPE_LEAD, 3))
+        columns.push(new ObjColumn(Table_C.ID_LEAD_TEMPLATE,    "Template", Template_C.FIELD_TYPE_TEMPLATE, null, "template",   Constants.Template.TYPE_LEAD, 4))
 
         // Iterate through each lead template
         TemplateService.getByType(Constants.Template.TYPE_LEAD).forEach(function (template) {
             // Iterate through each field
             template.fields.forEach(function (field, i) {
                 // Add new column to array
-                columns.push(new ObjColumn(field.id, field.title, field.type, field.id, String(field.id), Constants.Template.TYPE_LEAD))
+                columns.push(new ObjColumn(field.id, field.title, field.type, field.id, String(field.id), Constants.Template.TYPE_LEAD, columns.length + 1))
             })
         })
 

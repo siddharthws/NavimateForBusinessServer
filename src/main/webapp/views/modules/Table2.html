@@ -36,7 +36,7 @@
             </th>
 
             <!-- Columns returned by server -->
-            <th ng-repeat="column in vm.table.columns"  ng-if="column.filter.bShow"
+            <th ng-repeat="column in vm.table.getOrderedColumns()"  ng-if="column.filter.bShow"
                 ng-class="{ 'tbl-col-s' : column.size == vm.TableConst.COL_SIZE_S,
                             'tbl-col-m' : column.size == vm.TableConst.COL_SIZE_M,
                             'tbl-col-l' : column.size == vm.TableConst.COL_SIZE_L}">
@@ -115,7 +115,7 @@
                 </td>
 
                 <!-- Data returned by server -->
-                <td ng-repeat="column in vm.table.columns"  ng-if="column.filter.bShow"
+                <td ng-repeat="column in vm.table.getOrderedColumns()"  ng-if="column.filter.bShow"
                     ng-init="value = row.values[vm.table.getColumnIdxById(column.id)]"
                     ng-class="{ 'tbl-col-s' : column.size == vm.TableConst.COL_SIZE_S,
                                     'tbl-col-m' : column.size == vm.TableConst.COL_SIZE_M,

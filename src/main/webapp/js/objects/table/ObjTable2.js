@@ -232,6 +232,17 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
             return vm.columns.indexOf(col)
         }
 
+        // Method to get ordered columns
+        vm.getOrderedColumns = function () {
+            var orderedCols = Statics.getArray(vm.columns.length)
+
+            vm.columns.forEach(function (column) {
+                orderedCols[column.position - 1] = column
+            })
+
+            return orderedCols
+        }
+
         // ----------------------------------- Private Methods ------------------------------------//
 
         // Method to refresh column sizes as per latest data
@@ -307,7 +318,8 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
             }
 
             // Iterate through columns in current order
-            vm.columns.forEach(function (column) {
+            var orderedColumns = vm.getOrderedColumns()
+            orderedColumns.forEach(function (column) {
                 if (column.filter.bShow) {
                     // Push to params
                     params.columns.push({
