@@ -224,6 +224,14 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
             return null
         }
 
+        vm.getColumnIdxById = function (id) {
+            // Get column
+            var col = vm.getColumnById(id)
+
+            // Return index
+            return vm.columns.indexOf(col)
+        }
+
         // ----------------------------------- Private Methods ------------------------------------//
 
         // Method to refresh column sizes as per latest data
@@ -240,7 +248,7 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
                     // Get total number of character in columns
                     var charCount = column.name.length
                     vm.rows.forEach(function (row) {
-                        var value = row.values[column.id]
+                        var value = row.values[vm.getColumnIdxById(column.id)]
                         if (value) {
                             charCount += value.length
                         }

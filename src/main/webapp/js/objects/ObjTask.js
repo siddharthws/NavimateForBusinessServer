@@ -49,25 +49,22 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         var row = {id: this.id, name: this.publicId, values: values}
 
         // Add data in mandatory columns
-        row.values[Constants.Table.ID_TASK_ID]              = {id: this.id, name: this.publicId}
-        row.values[Constants.Table.ID_TASK_LEAD]            = this.lead
-        row.values[Constants.Table.ID_TASK_LOCATION]        = this.lead.lat || this.lead.lng ? this.lead.lat + ',' + this.lead.lng : '-'
-        row.values[Constants.Table.ID_TASK_MANAGER]         = this.manager.name
-        row.values[Constants.Table.ID_TASK_REP]             = this.rep ? this.rep.name : '-'
-        row.values[Constants.Table.ID_TASK_CREATOR]         = this.creator.name
-        row.values[Constants.Table.ID_TASK_DATE_CREATED]    = this.dateCreated
-        row.values[Constants.Table.ID_TASK_FORM_TEMPLATE]   = this.formTemplate.name
-        row.values[Constants.Table.ID_TASK_TEMPLATE]        = this.template.name
-        row.values[Constants.Table.ID_TASK_STATUS]          = this.status
-        row.values[Constants.Table.ID_TASK_RESOLUTION_TIME] = this.resolutionTime
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_ID)]              = {id: this.id, name: this.publicId}
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_LEAD)]            = this.lead
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_LOCATION)]        = this.lead.lat || this.lead.lng ? this.lead.lat + ',' + this.lead.lng : '-'
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_MANAGER)]         = this.manager.name
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_REP)]             = this.rep ? this.rep.name : '-'
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_CREATOR)]         = this.creator.name
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_DATE_CREATED)]    = this.dateCreated
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_FORM_TEMPLATE)]   = this.formTemplate.name
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_TEMPLATE)]        = this.template.name
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_STATUS)]          = this.status
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_RESOLUTION_TIME)] = this.resolutionTime
 
-        // Iterate through template values in lead
+        // Iterate through template values
         this.values.forEach(function (value) {
-            // Get column for field
-            var column = table.getColumnForField(value.field)
-
             // Add string value at appropriate index in row
-            row.values[column.id] = value.getDisplayString()
+            row.values[table.getColumnIdxById(value.field.id)] = value.getDisplayString()
         })
 
         return row
