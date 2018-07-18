@@ -44,6 +44,13 @@ app.factory('ObjLead', function($localStorage, TemplateService, ObjValue) {
         // Add id and name to row object
         var row = {id: this.id, name: this.name, values: values}
 
+        // Parse values form task to row
+        row = this.parseRow(table, row)
+
+        return row
+    }
+
+    ObjLead.prototype.parseRow = function (table, row) {
         // Add data in mandatory columns
         row.values[table.getColumnIdxById(Constants.Table.ID_LEAD_NAME)]       = {id: this.id, name: this.name}
         row.values[table.getColumnIdxById(Constants.Table.ID_LEAD_ADDRESS)]    = this.address
