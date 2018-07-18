@@ -134,24 +134,24 @@ app.service('TaskService', function($q, $http, $localStorage, ObjTask, TemplateS
         var Template_C = Constants.Template
 
         // Add mandatory columns
-        columns.push(new ObjColumn(Table_C.ID_TASK_ID,             "ID",                    Template_C.FIELD_TYPE_TASK,     null, "publicId"))
-        columns.push(new ObjColumn(Table_C.ID_TASK_LEAD,           "Lead",                  Template_C.FIELD_TYPE_LEAD,     null, "lead"))
-        columns.push(new ObjColumn(Table_C.ID_TASK_LOCATION,       "Location",              Template_C.FIELD_TYPE_LOCATION, null, "location"))
-        columns.push(new ObjColumn(Table_C.ID_TASK_MANAGER,        "Manager",               Template_C.FIELD_TYPE_NON_REP,  null, "manager"))
-        columns.push(new ObjColumn(Table_C.ID_TASK_REP,            "Rep",                   Template_C.FIELD_TYPE_REP,      null, "rep"))
-        columns.push(new ObjColumn(Table_C.ID_TASK_CREATOR,        "Created By",            Template_C.FIELD_TYPE_NON_REP,  null, "creator"))
-        columns.push(new ObjColumn(Table_C.ID_TASK_DATE_CREATED,   "Create Date",           Template_C.FIELD_TYPE_DATE,     null, "dateCreated"))
-        columns.push(new ObjColumn(Table_C.ID_TASK_FORM_TEMPLATE,  "Form",                  Template_C.FIELD_TYPE_TEMPLATE, null, "formTemplate"))
-        columns.push(new ObjColumn(Table_C.ID_TASK_TEMPLATE,       "Template",              Template_C.FIELD_TYPE_TEMPLATE, null, "template"))
-        columns.push(new ObjColumn(Table_C.ID_TASK_STATUS,         "Status",                Template_C.FIELD_TYPE_TEXT,     null, "status"))
-        columns.push(new ObjColumn(Table_C.ID_TASK_RESOLUTION_TIME,"Resolved In (Hrs)",     Template_C.FIELD_TYPE_NUMBER,   null, "resolutionTimeHrs"))
+        columns.push(new ObjColumn(Table_C.ID_TASK_ID,             "ID",                    Template_C.FIELD_TYPE_TASK,     null, "publicId",           Constants.Template.TYPE_TASK))
+        columns.push(new ObjColumn(Table_C.ID_TASK_LEAD,           "Lead",                  Template_C.FIELD_TYPE_LEAD,     null, "lead",               Constants.Template.TYPE_TASK))
+        columns.push(new ObjColumn(Table_C.ID_TASK_LOCATION,       "Location",              Template_C.FIELD_TYPE_LOCATION, null, "location",           Constants.Template.TYPE_TASK))
+        columns.push(new ObjColumn(Table_C.ID_TASK_MANAGER,        "Manager",               Template_C.FIELD_TYPE_NON_REP,  null, "manager",            Constants.Template.TYPE_TASK))
+        columns.push(new ObjColumn(Table_C.ID_TASK_REP,            "Rep",                   Template_C.FIELD_TYPE_REP,      null, "rep",                Constants.Template.TYPE_TASK))
+        columns.push(new ObjColumn(Table_C.ID_TASK_CREATOR,        "Created By",            Template_C.FIELD_TYPE_NON_REP,  null, "creator",            Constants.Template.TYPE_TASK))
+        columns.push(new ObjColumn(Table_C.ID_TASK_DATE_CREATED,   "Create Date",           Template_C.FIELD_TYPE_DATE,     null, "dateCreated",        Constants.Template.TYPE_TASK))
+        columns.push(new ObjColumn(Table_C.ID_TASK_FORM_TEMPLATE,  "Form",                  Template_C.FIELD_TYPE_TEMPLATE, null, "formTemplate",       Constants.Template.TYPE_TASK))
+        columns.push(new ObjColumn(Table_C.ID_TASK_TEMPLATE,       "Template",              Template_C.FIELD_TYPE_TEMPLATE, null, "template",           Constants.Template.TYPE_TASK))
+        columns.push(new ObjColumn(Table_C.ID_TASK_STATUS,         "Status",                Template_C.FIELD_TYPE_TEXT,     null, "status",             Constants.Template.TYPE_TASK))
+        columns.push(new ObjColumn(Table_C.ID_TASK_RESOLUTION_TIME,"Resolved In (Hrs)",     Template_C.FIELD_TYPE_NUMBER,   null, "resolutionTimeHrs",  Constants.Template.TYPE_TASK))
 
         // Iterate through each lead template
         TemplateService.getByType(Constants.Template.TYPE_TASK).forEach(function (template) {
             // Iterate through each field
             template.fields.forEach(function (field, i) {
                 // Add new column to array
-                columns.push(new ObjColumn(columns.length, field.title, field.type, field.id, String(field.id)))
+                columns.push(new ObjColumn(columns.length, field.title, field.type, field.id, String(field.id), Constants.Template.TYPE_TASK))
             })
         })
 
