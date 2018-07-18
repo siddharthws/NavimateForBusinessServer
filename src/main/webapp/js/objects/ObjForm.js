@@ -54,22 +54,19 @@ app.factory('ObjForm', function(TemplateService, ObjValue) {
         var row = {id: this.id, name: this.rep.name, values: values}
 
         // Add data in mandatory columns
-        row.values[Constants.Table.ID_FORM_REP]             = this.rep.name
-        row.values[Constants.Table.ID_FORM_TEMPLATE]        = this.template.name
-        row.values[Constants.Table.ID_FORM_DATE]            = this.submitTime
-        row.values[Constants.Table.ID_FORM_LOCATION]        = this.lat || this.lng ? this.lat + ',' + this.lng : '-'
-        row.values[Constants.Table.ID_FORM_DISTANCE]        = this.distance
-        row.values[Constants.Table.ID_FORM_LEAD]            = this.lead
-        row.values[Constants.Table.ID_FORM_TASK]            = this.task
-        row.values[Constants.Table.ID_FORM_TASK_STATUS]     = this.status
+        row.values[table.getColumnIdxById(Constants.Table.ID_FORM_REP)]             = this.rep.name
+        row.values[table.getColumnIdxById(Constants.Table.ID_FORM_TEMPLATE)]        = this.template.name
+        row.values[table.getColumnIdxById(Constants.Table.ID_FORM_DATE)]            = this.submitTime
+        row.values[table.getColumnIdxById(Constants.Table.ID_FORM_LOCATION)]        = this.lat || this.lng ? this.lat + ',' + this.lng : '-'
+        row.values[table.getColumnIdxById(Constants.Table.ID_FORM_DISTANCE)]        = this.distance
+        row.values[table.getColumnIdxById(Constants.Table.ID_FORM_LEAD)]            = this.lead
+        row.values[table.getColumnIdxById(Constants.Table.ID_FORM_TASK)]            = this.task
+        row.values[table.getColumnIdxById(Constants.Table.ID_FORM_TASK_STATUS)]     = this.status
 
-        // Iterate through template values in lead
+        // Iterate through template values
         this.values.forEach(function (value) {
-            // Get column for field
-            var column = table.getColumnForField(value.field)
-
             // Add string value at appropriate index in row
-            row.values[column.id] = value.getDisplayString()
+            row.values[table.getColumnIdxById(value.field.id)] = value.getDisplayString()
         })
 
         return row

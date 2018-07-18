@@ -35,17 +35,14 @@ app.factory('ObjProduct', function(TemplateService, ObjValue) {
         var row = {id: this.id, name: this.name, values: values}
 
         // Add data in mandatory columns
-        row.values[Constants.Table.ID_PRODUCT_ID]       = this.productId
-        row.values[Constants.Table.ID_PRODUCT_NAME]     = {id: this.id, name: this.name}
-        row.values[Constants.Table.ID_PRODUCT_TEMPLATE] = this.template.name
+        row.values[table.getColumnIdxById(Constants.Table.ID_PRODUCT_ID)]       = this.productId
+        row.values[table.getColumnIdxById(Constants.Table.ID_PRODUCT_NAME)]     = {id: this.id, name: this.name}
+        row.values[table.getColumnIdxById(Constants.Table.ID_PRODUCT_TEMPLATE)] = this.template.name
 
-        // Iterate through template values in product
+        // Iterate through template values
         this.values.forEach(function (value) {
-            // Get column for field
-            var column = table.getColumnForField(value.field)
-
             // Add string value at appropriate index in row
-            row.values[column.id] = value.getDisplayString()
+            row.values[table.getColumnIdxById(value.field.id)] = value.getDisplayString()
         })
 
         return row

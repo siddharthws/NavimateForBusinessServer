@@ -45,18 +45,15 @@ app.factory('ObjLead', function($localStorage, TemplateService, ObjValue) {
         var row = {id: this.id, name: this.name, values: values}
 
         // Add data in mandatory columns
-        row.values[Constants.Table.ID_LEAD_NAME]       = {id: this.id, name: this.name}
-        row.values[Constants.Table.ID_LEAD_ADDRESS]    = this.address
-        row.values[Constants.Table.ID_LEAD_LOCATION]   = this.lat && this.lng ? this.lat + ',' + this.lng : '-'
-        row.values[Constants.Table.ID_LEAD_TEMPLATE]   = this.template.name
+        row.values[table.getColumnIdxById(Constants.Table.ID_LEAD_NAME)]       = {id: this.id, name: this.name}
+        row.values[table.getColumnIdxById(Constants.Table.ID_LEAD_ADDRESS)]    = this.address
+        row.values[table.getColumnIdxById(Constants.Table.ID_LEAD_LOCATION)]   = this.lat && this.lng ? this.lat + ',' + this.lng : '-'
+        row.values[table.getColumnIdxById(Constants.Table.ID_LEAD_TEMPLATE)]   = this.template.name
 
-        // Iterate through template values in lead
+        // Iterate through template values
         this.values.forEach(function (value) {
-            // Get column for field
-            var column = table.getColumnForField(value.field)
-
             // Add string value at appropriate index in row
-            row.values[column.id] = value.getDisplayString()
+            row.values[table.getColumnIdxById(value.field.id)] = value.getDisplayString()
         })
 
         return row

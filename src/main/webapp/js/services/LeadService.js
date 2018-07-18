@@ -144,7 +144,7 @@ app.service('LeadService', function($q, $http, $localStorage, ObjLead, TemplateS
             // Iterate through each field
             template.fields.forEach(function (field, i) {
                 // Add new column to array
-                columns.push(new ObjColumn(columns.length, field.title, field.type, field.id, String(field.id), Constants.Template.TYPE_LEAD))
+                columns.push(new ObjColumn(field.id, field.title, field.type, field.id, String(field.id), Constants.Template.TYPE_LEAD))
             })
         })
 
