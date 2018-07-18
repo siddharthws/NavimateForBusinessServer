@@ -48,6 +48,13 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         // Add id and name to row object
         var row = {id: this.id, name: this.publicId, values: values}
 
+        // Parse values form task to row
+        row = this.parseRow(table, row)
+
+        return row
+    }
+
+    ObjTask.prototype.parseRow = function (table, row) {
         // Add data in mandatory columns
         row.values[table.getColumnIdxById(Constants.Table.ID_TASK_ID)]              = {id: this.id, name: this.publicId}
         row.values[table.getColumnIdxById(Constants.Table.ID_TASK_LEAD)]            = this.lead

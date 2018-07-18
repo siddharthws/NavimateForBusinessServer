@@ -53,6 +53,13 @@ app.factory('ObjForm', function(TemplateService, ObjValue) {
         // Add id and name to row object
         var row = {id: this.id, name: this.rep.name, values: values}
 
+        // Parse values form task to row
+        row = this.parseRow(table, row)
+
+        return row
+    }
+
+    ObjForm.prototype.parseRow = function (table, row) {
         // Add data in mandatory columns
         row.values[table.getColumnIdxById(Constants.Table.ID_FORM_REP)]             = this.rep.name
         row.values[table.getColumnIdxById(Constants.Table.ID_FORM_TEMPLATE)]        = this.template.name

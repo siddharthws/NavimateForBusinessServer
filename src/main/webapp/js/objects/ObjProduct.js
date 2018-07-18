@@ -34,6 +34,13 @@ app.factory('ObjProduct', function(TemplateService, ObjValue) {
         // Add id and name to row object
         var row = {id: this.id, name: this.name, values: values}
 
+        // Parse values form task to row
+        row = this.parseRow(table, row)
+
+        return row
+    }
+
+    ObjProduct.prototype.parseRow = function (table, row) {
         // Add data in mandatory columns
         row.values[table.getColumnIdxById(Constants.Table.ID_PRODUCT_ID)]       = this.productId
         row.values[table.getColumnIdxById(Constants.Table.ID_PRODUCT_NAME)]     = {id: this.id, name: this.name}
