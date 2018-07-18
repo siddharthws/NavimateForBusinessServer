@@ -136,16 +136,16 @@ app.service('ProductService', function($q, $http, $localStorage, TemplateService
         var Template_C = Constants.Template
 
         // Add mandatory columns
-        columns.push(new ObjColumn(Table_C.ID_PRODUCT_ID,       "ID",       Template_C.FIELD_TYPE_TEXT,         null, "productId",  Constants.Template.TYPE_PRODUCT))
-        columns.push(new ObjColumn(Table_C.ID_PRODUCT_NAME,     "Name",     Template_C.FIELD_TYPE_PRODUCT,      null, "name",       Constants.Template.TYPE_PRODUCT))
-        columns.push(new ObjColumn(Table_C.ID_PRODUCT_TEMPLATE, "Template", Template_C.FIELD_TYPE_TEMPLATE,     null, "template",   Constants.Template.TYPE_PRODUCT))
+        columns.push(new ObjColumn(Table_C.ID_PRODUCT_ID,       "ID",       Template_C.FIELD_TYPE_TEXT,         null, "productId",  Constants.Template.TYPE_PRODUCT, 1))
+        columns.push(new ObjColumn(Table_C.ID_PRODUCT_NAME,     "Name",     Template_C.FIELD_TYPE_PRODUCT,      null, "name",       Constants.Template.TYPE_PRODUCT, 2))
+        columns.push(new ObjColumn(Table_C.ID_PRODUCT_TEMPLATE, "Template", Template_C.FIELD_TYPE_TEMPLATE,     null, "template",   Constants.Template.TYPE_PRODUCT, 3))
 
         // Iterate through each product template
         TemplateService.getByType(Constants.Template.TYPE_PRODUCT).forEach(function (template) {
             // Iterate through each field
             template.fields.forEach(function (field, i) {
                 // Add new column to array
-                columns.push(new ObjColumn(field.id, field.title, field.type, field.id, String(field.id), Constants.Template.TYPE_PRODUCT))
+                columns.push(new ObjColumn(field.id, field.title, field.type, field.id, String(field.id), Constants.Template.TYPE_PRODUCT, columns.length + 1))
             })
         })
 

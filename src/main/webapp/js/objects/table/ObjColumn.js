@@ -4,7 +4,7 @@
 
 app.factory('ObjColumn', function(ObjFilter) {
     // ----------------------------------- Constructor ------------------------------------//
-    function ObjColumn (id, name, type, fieldId, label, objectId) {
+    function ObjColumn (id, name, type, fieldId, label, objectId, position) {
         this.id = id
         this.name = name
         this.type = type
@@ -13,6 +13,7 @@ app.factory('ObjColumn', function(ObjFilter) {
         this.objectId = objectId
         this.filter = new ObjFilter(type)
         this.size = Constants.Table.COL_SIZE_L
+        this.position = position
     }
 
     // ----------------------------------- Public APIs ------------------------------------//

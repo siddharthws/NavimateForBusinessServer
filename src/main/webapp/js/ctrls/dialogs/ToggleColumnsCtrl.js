@@ -23,16 +23,40 @@ app.controller('ToggleColumnsCtrl', function ($scope, $mdDialog, columns) {
     }
 
     // Column Re-ordering APIs
-    vm.moveUp = function(index) {
-        if (index > 0) {
-            vm.columns.move(index, index - 1)
+    vm.add = function(index) {
+        // Get column
+        var column = vm.columns[index]
+
+        // Find column with next position
+        var nextColumn = null
+        for (var i = 0; i < vm.columns.length; i++) {
+            if (vm.columns[i].position == column.position + 1) {
+                nextColumn = vm.columns[i]
+                break
+            }
         }
+
+        // Update position
+        column.position = column.position + 1
+        nextColumn.position = nextColumn.position - 1
     }
 
-    vm.moveDown = function(index) {
-        if (index < (vm.columns.length - 1)) {
-            vm.columns.move(index, index + 1)
+    vm.minus = function(index) {
+        // Get column
+        var column = vm.columns[index]
+
+        // Find column with next position
+        var prevColumn = null
+        for (var i = 0; i < vm.columns.length; i++) {
+            if (vm.columns[i].position == column.position - 1) {
+                prevColumn = vm.columns[i]
+                break
+            }
         }
+
+        // Update position
+        column.position = column.position - 1
+        prevColumn.position = prevColumn.position + 1
     }
 
     /* ------------------------------- Local APIs -----------------------------------*/

@@ -16,7 +16,7 @@
                         Name
                     </th>
                     <th class="text-left">
-                        Re-order
+                        Position
                     </th>
                 </thead>
                 <tr ng-repeat="column in $ctrl.columns track by $index">
@@ -27,10 +27,11 @@
                         {{column.name}}
                     </td>
                     <td>
-                        <input type="button" value="" class="ib-base ib-hover ib-xs ib-up"
-                               ng-click="$ctrl.moveUp($index)" ng-show="$index > 0"/>
-                        <input type="button" value="" class="ib-base ib-hover ib-xs ib-down"
-                               ng-click="$ctrl.moveDown($index)" ng-show="$index < ($ctrl.columns.length - 1)"/>
+                        <input type="button" value="" class="ib-base ib-hover ib-xs ib-minus"
+                               ng-click="$ctrl.minus($index)" ng-show="column.position > 1"/>
+                        <span>{{column.position}}</span>
+                        <input type="button" value="" class="ib-base ib-hover ib-xs ib-add"
+                               ng-click="$ctrl.add($index)" ng-show="column.position < $ctrl.columns.length"/>
                     </td>
                 </tr>
             </table>
