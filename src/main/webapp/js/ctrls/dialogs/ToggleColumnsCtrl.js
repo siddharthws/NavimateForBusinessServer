@@ -7,8 +7,9 @@ app.controller('ToggleColumnsCtrl', function ($scope, $mdDialog, columns) {
     /* ------------------------------- INIT -----------------------------------*/
     var vm = this
 
-    // Init columns using arguments
+    // Columns & groups
     vm.columns = columns
+    vm.groups = []
 
     /* ------------------------------- Html APIs -----------------------------------*/
     vm.done = function () {
@@ -23,10 +24,7 @@ app.controller('ToggleColumnsCtrl', function ($scope, $mdDialog, columns) {
     }
 
     // Column Re-ordering APIs
-    vm.add = function(index) {
-        // Get column
-        var column = vm.columns[index]
-
+    vm.add = function(column) {
         // Find column with next position
         var nextColumn = null
         for (var i = 0; i < vm.columns.length; i++) {
@@ -41,10 +39,7 @@ app.controller('ToggleColumnsCtrl', function ($scope, $mdDialog, columns) {
         nextColumn.position = nextColumn.position - 1
     }
 
-    vm.minus = function(index) {
-        // Get column
-        var column = vm.columns[index]
-
+    vm.minus = function(column) {
         // Find column with next position
         var prevColumn = null
         for (var i = 0; i < vm.columns.length; i++) {
@@ -59,5 +54,37 @@ app.controller('ToggleColumnsCtrl', function ($scope, $mdDialog, columns) {
         prevColumn.position = prevColumn.position + 1
     }
 
-    /* ------------------------------- Local APIs -----------------------------------*/
+    /* ------------------------------- Private APIs -----------------------------------*/
+    function initGroups() {
+        // Collect Objects IDs from columns
+        var objIds = []
+        columns.forEach(function (column) {
+            if (!objIds.contains(column.objectId)) {
+                objIds.push(column.objectId)
+            }
+        })
+
+        // Divide columns into groups
+        vm.groups = []
+        objIds.forEach(function (objId) {
+            // Create group
+            var group = {
+                name: Constants.Template.OBJ_NAMES[objId],
+                columns: []
+            }
+
+            // Add columns to group
+            columns.forEach(function (column) {
+                if (column.objectId == objId) {
+                    group.columns.push(column)
+                }
+            })
+
+            // Add to groups
+            vm.groups.push(group)
+        })
+    }
+
+    /* ------------------------------- INIT -----------------------------------*/
+    initGroups()
 })

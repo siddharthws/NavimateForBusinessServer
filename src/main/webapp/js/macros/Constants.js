@@ -285,7 +285,16 @@ Constants.Template = {
     TYPE_FORM:          1,
     TYPE_LEAD:          2,
     TYPE_TASK:          3,
-    TYPE_PRODUCT:     4,
+    TYPE_PRODUCT:       4,
+
+    // Object Names for each type
+    OBJ_NAMES: [
+        "",
+        "Form",
+        "Lead",
+        "Task",
+        "Product"
+    ],
 
     // Template Field types
     FIELD_TYPE_TEXT:            1,
