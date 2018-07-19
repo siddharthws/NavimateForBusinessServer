@@ -126,3 +126,16 @@ button:focus {
     background-color: #aaaaaa;
     background-image: none;
 }
+
+.btn-counter {
+    height: 1.25rem;
+    width: 1.25rem;
+    font-size: 0.75em;
+    font-weight: bold;
+    background-color: #a60000;
+    border-radius: 0.625em;
+    border-width: 0.625em;
+    border-color: #a60000;
+    color: white;
+    text-align: center;
+}

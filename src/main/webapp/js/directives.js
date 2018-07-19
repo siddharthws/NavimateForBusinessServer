@@ -66,7 +66,8 @@ app.directive("imagebutton", function () {
         scope: {
             image:          "@",
             text:           "@",
-            bTransparent:   "@"
+            bTransparent:   "@",
+            counter:        "="
         },
         templateUrl: '/static/views/directives/imagebutton.html'
     }
