@@ -30,7 +30,7 @@
                 <text-box class="mr-4" label="Task ID" text="{{vm.obj.task ? vm.obj.task.name : '-'}}"></text-box>
 
                 <!-- Status -->
-                <text-box class="mr-4" label="Task Status" text="{{vm.obj.task ? vm.obj.status : '-'}}"></text-box>
+                <text-box class="mr-4" label="Task Status" text="{{vm.obj.task ? $root.Constants.Task.STATUS_NAME[vm.obj.status] : '-'}}"></text-box>
 
                 <!-- Lead -->
                 <text-box class="mr-4" label="Lead" text="{{vm.obj.lead ? vm.obj.lead.name : '-'}}"></text-box>
