@@ -3,7 +3,8 @@
     <imagebutton image="/static/images/ic_add_white.png" text="Add" ng-click="vm.add()" ng-if="!$root.isCC()"></imagebutton>
     <imagebutton image="/static/images/ic_sync_white.png" text="Sync" ng-click="vm.sync()"></imagebutton>
     <imagebutton image="/static/images/ic_reset_white.png" text="Reset" ng-click="vm.reset()"></imagebutton>
-    <imagebutton image="/static/images/ic_customize_table_white.png" text="Columns" ng-click="vm.toggleColumns()"></imagebutton>
+    <imagebutton image="/static/images/ic_customize_table_white.png" text="Columns" ng-click="vm.toggleColumns()"
+                 counter="vm.table.columns.length - vm.table.getVisibleColumns().length" ></imagebutton>
     <div class="dropdown"  ng-if="!$root.isCC()">
         <button class="btn-shiny d-flex justify-content-around align-items-center" data-toggle="dropdown"
                 ng-disabled="!vm.table.selection.length">

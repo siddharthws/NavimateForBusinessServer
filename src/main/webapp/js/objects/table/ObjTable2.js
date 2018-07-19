@@ -243,6 +243,18 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
             return orderedCols
         }
 
+        vm.getVisibleColumns = function () {
+            var visibleCols = []
+
+            vm.columns.forEach(function (column) {
+                if (column.filter.bShow) {
+                    visibleCols.push(column)
+                }
+            })
+
+            return visibleCols
+        }
+
         // ----------------------------------- Private Methods ------------------------------------//
 
         // Method to refresh column sizes as per latest data
