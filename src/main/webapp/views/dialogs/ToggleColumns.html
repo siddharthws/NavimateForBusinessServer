@@ -1,40 +1,32 @@
 <!-- HTML template for Alert Dialog -->
-<md-dialog class="dialog-container box box-dialog w-50">
-    <div class="d-flex flex-column">
-        <div class="container-fluid">
-            <h6><b>Select columns to show</b></h6>
-            <hr>
-        </div>
+<md-dialog class="dialog-container box box-dialog h-75 w-25">
+    <div class="fbx-v h-100 w-100">
+        <h5 class="py-1 bdr-bottom-lighgrey"><b>Column Settings</b></h5>
 
+        <!-- Group Container -->
         <div class="flex-1 overflow-auto">
-            <table class="table table-striped">
-                <thead>
-                    <th class="text-center">
-                        <md-checkbox ng-model="$ctrl.bCheckAll" ng-change="$ctrl.toggleAll()"></md-checkbox>
-                    </th>
-                    <th class="text-left">
-                        Name
-                    </th>
-                    <th class="text-left">
-                        Position
-                    </th>
-                </thead>
-                <tr ng-repeat="column in $ctrl.columns track by $index">
-                    <td class="text-center">
-                        <md-checkbox ng-value="column.name" ng-model="column.filter.bShow"></md-checkbox>
-                    </td>
-                    <td>
-                        {{column.name}}
-                    </td>
-                    <td>
+            <div class="fbx-v mt-3" ng-repeat="group in $ctrl.groups">
+                <!-- Group Title -->
+                <h6><b>{{group.name}}</b></h6>
+
+                <!-- Settings for each columns -->
+                <div class="fbx-h mx-2 align-items-center bdr-bottom-lighgrey" ng-repeat="column in group.columns">
+                    <!-- Column Visibility -->
+                    <md-checkbox class="cb-s" ng-value="column.name" ng-model="column.filter.bShow"></md-checkbox>
+
+                    <!-- Column Name -->
+                    <span class="flex-1">{{column.name}}</span>
+
+                    <!-- Column Ordering -->
+                    <div class="fbx-h align-items-center">
                         <input type="button" value="" class="ib-base ib-hover ib-xs ib-minus"
-                               ng-click="$ctrl.minus($index)" ng-show="column.position > 1"/>
+                               ng-click="$ctrl.minus(column)" ng-show="column.position > 1"/>
                         <span>{{column.position}}</span>
                         <input type="button" value="" class="ib-base ib-hover ib-xs ib-add"
-                               ng-click="$ctrl.add($index)" ng-show="column.position < $ctrl.columns.length"/>
-                    </td>
-                </tr>
-            </table>
+                               ng-click="$ctrl.add(column)" ng-show="column.position < $ctrl.columns.length"/>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="container-fluid d-flex justify-content-end">

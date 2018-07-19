@@ -2,9 +2,18 @@ md-checkbox {
     margin: 0.25em;
 }
 
+md-checkbox.cb-s {
+    margin: 0em;
+    transform: scale(0.75);
+}
+
 /*Bugfix for vertical scrollbar in login dialog : https://github.com/angular/material2/issues/4764 */
 md-dialog md-checkbox {
     padding: 0.25em;
+}
+
+md-dialog md-checkbox.cb-s {
+    padding: 0em;
 }
 
 md-checkbox.md-checked .md-icon {

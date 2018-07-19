@@ -65,6 +65,13 @@ td.has-error, div.has-error, select.has-error {
     border: 1px solid red;
 }
 
+.hr {
+    height: 1px;
+    background-color: grey;
+    padding: 0px;
+    margin: 0px;
+}
+
 .vr {
     width: 1px;
     background-color: grey;
