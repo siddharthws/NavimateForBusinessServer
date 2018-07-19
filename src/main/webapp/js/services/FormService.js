@@ -83,21 +83,23 @@ app.service('FormService', function($q, $http, $localStorage, ObjForm, TemplateS
         var Template_C = Constants.Template
 
         // Add mandatory columns for forms
-        columns.push(new ObjColumn(Table_C.ID_FORM_REP,         "Representative", Template_C.FIELD_TYPE_REP,           null, "rep",         Constants.Template.TYPE_FORM, 1))
-        columns.push(new ObjColumn(Table_C.ID_FORM_TEMPLATE,    "Template"      , Template_C.FIELD_TYPE_TEMPLATE,      null, "template",    Constants.Template.TYPE_FORM, 2))
-        columns.push(new ObjColumn(Table_C.ID_FORM_DATE,        "Submit Date"   , Template_C.FIELD_TYPE_DATE,          null, "dateCreated", Constants.Template.TYPE_FORM, 3))
-        columns.push(new ObjColumn(Table_C.ID_FORM_LOCATION,    "Location"      , Template_C.FIELD_TYPE_LOCATION,      null, "location",    Constants.Template.TYPE_FORM, 4))
-        columns.push(new ObjColumn(Table_C.ID_FORM_DISTANCE,    "Distance"      , Template_C.FIELD_TYPE_NUMBER,        null, "distanceKm",  Constants.Template.TYPE_FORM, 5))
-        columns.push(new ObjColumn(Table_C.ID_FORM_LEAD,        "Lead"          , Template_C.FIELD_TYPE_LEAD,          null, "lead",        Constants.Template.TYPE_FORM, 6))
-        columns.push(new ObjColumn(Table_C.ID_FORM_TASK,        "Task"          , Template_C.FIELD_TYPE_TASK,          null, "task",        Constants.Template.TYPE_FORM, 7))
-        columns.push(new ObjColumn(Table_C.ID_FORM_TASK_STATUS, "Task Status"   , Template_C.FIELD_TYPE_TEXT,          null, "taskStatus",  Constants.Template.TYPE_FORM, 8))
+        columns.push(new ObjColumn(Table_C.ID_FORM_REP,         "Representative", Template_C.FIELD_TYPE_REP,           null, "rep",         Constants.Template.TYPE_FORM, 1, true))
+        columns.push(new ObjColumn(Table_C.ID_FORM_TEMPLATE,    "Template"      , Template_C.FIELD_TYPE_TEMPLATE,      null, "template",    Constants.Template.TYPE_FORM, 2, false))
+        columns.push(new ObjColumn(Table_C.ID_FORM_DATE,        "Submit Date"   , Template_C.FIELD_TYPE_DATE,          null, "dateCreated", Constants.Template.TYPE_FORM, 3, true))
+        columns.push(new ObjColumn(Table_C.ID_FORM_LOCATION,    "Location"      , Template_C.FIELD_TYPE_LOCATION,      null, "location",    Constants.Template.TYPE_FORM, 4, true))
+        columns.push(new ObjColumn(Table_C.ID_FORM_DISTANCE,    "Distance"      , Template_C.FIELD_TYPE_NUMBER,        null, "distanceKm",  Constants.Template.TYPE_FORM, 5, true))
+        columns.push(new ObjColumn(Table_C.ID_FORM_LEAD,        "Lead"          , Template_C.FIELD_TYPE_LEAD,          null, "lead",        Constants.Template.TYPE_FORM, 6, true))
+        columns.push(new ObjColumn(Table_C.ID_FORM_TASK,        "Task"          , Template_C.FIELD_TYPE_TASK,          null, "task",        Constants.Template.TYPE_FORM, 7, true))
+        columns.push(new ObjColumn(Table_C.ID_FORM_TASK_STATUS, "Task Status"   , Template_C.FIELD_TYPE_TEXT,          null, "taskStatus",  Constants.Template.TYPE_FORM, 8, true))
 
         // Iterate through each lead template
         TemplateService.getByType(Constants.Template.TYPE_FORM).forEach(function (template) {
             // Iterate through each field
             template.fields.forEach(function (field, i) {
+                var bShow = i < 2
+
                 // Add new column to array
-                columns.push(new ObjColumn(field.id, field.title, field.type, field.id, String(field.id), Constants.Template.TYPE_FORM, columns.length + 1))
+                columns.push(new ObjColumn(field.id, field.title, field.type, field.id, String(field.id), Constants.Template.TYPE_FORM, columns.length + 1, bShow))
             })
         })
 

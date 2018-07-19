@@ -4,7 +4,7 @@
 
 app.factory('ObjFilter', function() {
     // ----------------------------------- Constructor ------------------------------------//
-    function ObjFilter (fieldType) {
+    function ObjFilter (fieldType, bShow) {
         // Assign type and value based on field type
         switch (fieldType) {
             case Constants.Template.FIELD_TYPE_TEXT:
@@ -39,7 +39,7 @@ app.factory('ObjFilter', function() {
 
         // Assign other parameters
         this.bNoBlanks = false
-        this.bShow = true
+        this.bShow = bShow
         this.bSortable = isSortable()
         this.sort = Constants.Table.SORT_NONE
 
