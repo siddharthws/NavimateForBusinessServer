@@ -65,7 +65,7 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
         row.values[table.getColumnIdxById(Constants.Table.ID_TASK_DATE_CREATED)]    = this.dateCreated
         row.values[table.getColumnIdxById(Constants.Table.ID_TASK_FORM_TEMPLATE)]   = this.formTemplate.name
         row.values[table.getColumnIdxById(Constants.Table.ID_TASK_TEMPLATE)]        = this.template.name
-        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_STATUS)]          = this.status
+        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_STATUS)]          = Constants.Task.STATUS_NAME[this.status]
         row.values[table.getColumnIdxById(Constants.Table.ID_TASK_RESOLUTION_TIME)] = this.resolutionTime
 
         // Iterate through template values

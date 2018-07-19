@@ -59,7 +59,7 @@ class FormService {
                 distance:       form.distanceKm,
                 task:           form.task ? [id: form.task.id, name: form.task.publicId] : null,
                 lead:           form.task ? [id: form.task.lead.id, name: form.task.lead.name] : null,
-                status:         form.task ? form.taskStatus.name() : null,
+                status:         form.task ? form.taskStatus.value : null,
                 values:         []
         ]
 
