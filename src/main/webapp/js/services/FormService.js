@@ -2,7 +2,7 @@
  * Created by Siddharth on 31-05-2018.
  */
 
-app.service('FormService', function($q, $http, $localStorage, ObjForm, TemplateService, ObjTable2, ObjColumn) {
+app.service('FormService', function($q, $http, $localStorage, ObjForm, ObjTask, ObjLead, LeadService, TaskService, TemplateService, ObjTable2, ObjColumn) {
     /* ----------------------------- INIT --------------------------------*/
     var vm = this
 
@@ -88,9 +88,21 @@ app.service('FormService', function($q, $http, $localStorage, ObjForm, TemplateS
         columns.push(new ObjColumn(Table_C.ID_FORM_DATE,        "Submit Date"   , Template_C.FIELD_TYPE_DATE,          null, "dateCreated", Constants.Template.TYPE_FORM, 3, true))
         columns.push(new ObjColumn(Table_C.ID_FORM_LOCATION,    "Location"      , Template_C.FIELD_TYPE_LOCATION,      null, "location",    Constants.Template.TYPE_FORM, 4, true))
         columns.push(new ObjColumn(Table_C.ID_FORM_DISTANCE,    "Distance"      , Template_C.FIELD_TYPE_NUMBER,        null, "distanceKm",  Constants.Template.TYPE_FORM, 5, true))
-        columns.push(new ObjColumn(Table_C.ID_FORM_LEAD,        "Lead"          , Template_C.FIELD_TYPE_LEAD,          null, "lead",        Constants.Template.TYPE_FORM, 6, true))
-        columns.push(new ObjColumn(Table_C.ID_FORM_TASK,        "Task"          , Template_C.FIELD_TYPE_TASK,          null, "task",        Constants.Template.TYPE_FORM, 7, true))
-        columns.push(new ObjColumn(Table_C.ID_FORM_TASK_STATUS, "Task Status"   , Template_C.FIELD_TYPE_TEXT,          null, "taskStatus",  Constants.Template.TYPE_FORM, 8, true))
+        columns.push(new ObjColumn(Table_C.ID_FORM_TASK_STATUS, "Task Status"   , Template_C.FIELD_TYPE_TEXT,          null, "taskStatus",  Constants.Template.TYPE_FORM, 6, true))
+
+        // Add task columns
+        var taskColumns = TaskService.getTableColumns()
+        taskColumns.forEach(function (column) {
+            column.position += columns.length
+
+            // Set column visibility
+            if (column.id != Constants.Table.ID_LEAD_NAME && column.id != Constants.Table.ID_TASK_ID) {
+                column.filter.bShow = false
+            } else {
+                column.filter.bShow = true
+            }
+        })
+        columns.addAll(taskColumns)
 
         // Iterate through each lead template
         TemplateService.getByType(Constants.Template.TYPE_FORM).forEach(function (template) {
@@ -110,12 +122,23 @@ app.service('FormService', function($q, $http, $localStorage, ObjForm, TemplateS
     vm.parseTableResponse = function (response) {
         // Parse response into rows for table
         var rows = []
-        response.forms.forEach(function (json) {
-            // Parse to Form Object
+        response.forms.forEach(function (json, i) {
+            // Parse to Task Object
             var form = ObjForm.fromJson(json)
+            var task = response.tasks[i] ? ObjTask.fromJson(response.tasks[i]) : null
+            var lead = response.leads[i] ? ObjLead.fromJson(response.leads[i]) : null
+
+            // Prepare row
+            var row = form.toRow(vm.table)
+            if (task) {
+                row = task.parseRow(vm.table, row)
+            }
+            if (lead) {
+                row = lead.parseRow(vm.table, row)
+            }
 
             // Add to rows
-            rows.push(form.toRow(vm.table))
+            rows.push(row)
         })
 
         return rows

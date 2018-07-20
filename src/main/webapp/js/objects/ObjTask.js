@@ -57,8 +57,6 @@ app.factory('ObjTask', function(TemplateService, ObjValue) {
     ObjTask.prototype.parseRow = function (table, row) {
         // Add data in mandatory columns
         row.values[table.getColumnIdxById(Constants.Table.ID_TASK_ID)]              = {id: this.id, name: this.publicId}
-        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_LEAD)]            = this.lead
-        row.values[table.getColumnIdxById(Constants.Table.ID_TASK_LOCATION)]        = this.lead.lat || this.lead.lng ? this.lead.lat + ',' + this.lead.lng : '-'
         row.values[table.getColumnIdxById(Constants.Table.ID_TASK_MANAGER)]         = this.manager.name
         row.values[table.getColumnIdxById(Constants.Table.ID_TASK_REP)]             = this.rep ? this.rep.name : '-'
         row.values[table.getColumnIdxById(Constants.Table.ID_TASK_CREATOR)]         = this.creator.name
