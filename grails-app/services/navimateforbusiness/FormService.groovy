@@ -17,6 +17,24 @@ class FormService {
     def fieldService
 
     // ----------------------- Public APIs ---------------------------//
+    // Method to filter using input JSON
+    def filter (User user, def requestJson, boolean bPaging) {
+        // Filter Tasks
+        def filteredTasks = taskService.filter(user, requestJson, false).tasks
+
+        // Get filters, sorter and pager
+        def formFilter = requestJson.filter.find {it.id == Constants.Template.TYPE_FORM}.filter
+        def formSorter = requestJson.sorter.find {it.id == Constants.Template.TYPE_FORM}.sorter
+        ObjPager pager = bPaging ? new ObjPager(requestJson.pager) : new ObjPager()
+
+        // Add task related filtering and sorting
+        formFilter.task = [ids: filteredTasks.collect {it.id}]
+        formSorter.push([task: Constants.Filter.SORT_ASC])
+
+        // Filter and return
+        getAllForUserByFPS(user, formFilter, pager, formSorter)
+    }
+
     // Method to search leads in mongo database using filter, pager and sorter
     def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
         // Get mongo filters

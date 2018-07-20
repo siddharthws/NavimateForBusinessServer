@@ -291,20 +291,14 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get filters from request
-        def filter = request.JSON.filter
-        ObjPager pager = new ObjPager(request.JSON.pager)
-        def sorter = request.JSON.sorter
-
         // get leads for this user
-        def filteredLeads = leadService.getAllForUserByFPS(user, filter, pager, sorter)
+        def filteredLeads = leadService.filter(user, request.JSON, true)
 
         // Send JSON Response
         def resp = [
                 rowCount: filteredLeads.rowCount,
-                leads: []
+                leads: filteredLeads.leads.collect {leadService.toJson(it, user)}
         ]
-        filteredLeads.leads.each {LeadM lead -> resp.leads.push(leadService.toJson(lead, user))}
         render resp as JSON
     }
 
@@ -500,18 +494,14 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get filters from request
-        def filter = request.JSON.filter
-        ObjPager pager = new ObjPager(request.JSON.pager)
-        def sorter = request.JSON.sorter
-
-        // get leads for this user
-        def filteredTasks = taskService.getAllForUserByFPS(user, filter, pager, sorter)
+        // Filter Tasks
+        def filteredTasks = taskService.filter(user, request.JSON, true)
 
         // Send JSON Response
         def resp = [
                 rowCount: filteredTasks.rowCount,
-                tasks: filteredTasks.tasks.collect {taskService.toJson(it, user)}
+                tasks: filteredTasks.tasks.collect {taskService.toJson(it, user)},
+                leads: filteredTasks.tasks.collect {leadService.toJson(it.lead, user)}
         ]
         render resp as JSON
     }
@@ -736,18 +726,15 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get filters from request
-        def filter = request.JSON.filter
-        def pager = new ObjPager(request.JSON.pager)
-        def sorter = request.JSON.sorter
-
         // get leads for this user
-        def filteredForms = formService.getAllForUserByFPS(user, filter, pager, sorter)
+        def filteredForms = formService.filter(user, request.JSON, true)
 
         // Send JSON Response
         def resp = [
                 rowCount: filteredForms.rowCount,
-                forms: filteredForms.forms.collect {formService.toJson(it, user)}
+                forms: filteredForms.forms.collect {formService.toJson(it, user)},
+                tasks: filteredForms.forms.collect {it.task ? taskService.toJson(it.task, user) : null},
+                leads: filteredForms.forms.collect {it.task ? leadService.toJson(it.task.lead, user) : null}
         ]
         render resp as JSON
     }
