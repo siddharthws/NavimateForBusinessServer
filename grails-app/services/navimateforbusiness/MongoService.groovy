@@ -67,7 +67,7 @@ class MongoService {
         replaceSorter(sorter, "creator", "creator_order")
 
         // Add lead order column and replace in sorter if required
-        pipeline.push(getLeadOrderStage(user, '$lead', "lead_order"))
+        pipeline.push(getLeadOrderStage(user, '$lead', "lead_order", filters.lead?.ids))
         replaceSorter(sorter, "lead", "lead_order")
 
         // Add sorting stage
@@ -94,11 +94,7 @@ class MongoService {
         replaceSorter(sorter, "rep", "rep_order")
 
         // Add lead order column and replace in sorter if required
-        pipeline.push(getLeadOrderStage(user, '$lead', "lead_order"))
-        replaceSorter(sorter, "lead", "lead_order")
-
-        // Add lead order column and replace in sorter if required
-        pipeline.push(getTaskOrderStage(user, '$task', "task_order"))
+        pipeline.push(getTaskOrderStage(user, '$task', "task_order", filters.task?.ids))
         replaceSorter(sorter, "task", "task_order")
 
         // Add sorting stage
@@ -224,9 +220,6 @@ class MongoService {
 
         // Apply Lead Filter
         if (colFilters.lead?.ids)           {filters.push(['lead': ['$in': colFilters.lead.ids]])}
-        if (colFilters.lead?.value)         {filters.push(getMultiselectFilter("lead", colFilters.lead.value))}
-        if (colFilters.location?.bNoBlanks) {filters.push(['$and': [['latitude': ['$ne': "0"]],
-                                                                    ['longitude': ['$ne': "0"]]]])}
 
         // Add template filter
         if (colFilters.formTemplate?.value) {filters.push(getMultiselectFilter("formTemplateId", colFilters.formTemplate.value))}
@@ -286,7 +279,6 @@ class MongoService {
         if (colFilters.taskStatus?.value)       {filters.push(getTextFilter("taskStatus", colFilters.taskStatus.value))}
 
         // Apply Task Filter
-        if (colFilters.task?.value) {filters.push(getMultiselectFilter("task", colFilters.task.value))}
         if (colFilters.task?.ids)   {filters.push(['task': ['$in': colFilters.task.ids]])}
 
         // Add template filter
@@ -544,15 +536,17 @@ class MongoService {
         stage
     }
 
-    def getLeadOrderStage(User user, String inputFieldName, String outputFieldName) {
-        // Get all Templates
-        def leads = leadService.getAllForUserByFilter(user, [:])
+    def getLeadOrderStage(User user, String inputFieldName, String outputFieldName, def leadIds) {
+        if (!leadIds) {
+            // Get all Templates
+            def leads = leadService.getAllForUserByFilter(user, [:])
 
-        // Sort using name
-        leads = leads.sort {it.name.toLowerCase()}
+            // Sort using name
+            leads = leads.sort {it.name.toLowerCase()}
 
-        // Collect Template IDs
-        def leadIds = leads.collect {it.id}
+            // Collect Template IDs
+            leadIds = leads.collect {it.id}
+        }
 
         // Create pipeline stage for adding field
         def stage = new BasicDBObject('$addFields', [(outputFieldName): ['$indexOfArray': [leadIds, inputFieldName]]])
@@ -560,15 +554,17 @@ class MongoService {
         stage
     }
 
-    def getTaskOrderStage(User user, String inputFieldName, String outputFieldName) {
-        // Get all Templates
-        def tasks = taskService.getAllForUserByFilter(user, [:])
+    def getTaskOrderStage(User user, String inputFieldName, String outputFieldName, def taskIds) {
+        if (!taskIds) {
+            // Get all tasks
+            def tasks = taskService.getAllForUserByFilter(user, [:])
 
-        // Sort using name
-        tasks = tasks.sort {it.publicId.toLowerCase()}
+            // Sort using name
+            tasks = tasks.sort {it.publicId.toLowerCase()}
 
-        // Collect Template IDs
-        def taskIds = tasks.collect {it.id}
+            // Collect IDs
+            taskIds = tasks.collect {it.id}
+        }
 
         // Create pipeline stage for adding field
         def stage = new BasicDBObject('$addFields', [(outputFieldName): ['$indexOfArray': [taskIds, inputFieldName]]])

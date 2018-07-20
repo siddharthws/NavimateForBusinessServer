@@ -293,34 +293,73 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
         }
 
         function getFilters () {
-            // Prepare column filters for server
-            var colFilters = {}
-
-            // iterate through all columns
+            // Collect Objects IDs from columns
+            var objIds = []
             vm.columns.forEach(function (column) {
-                colFilters[column.label] = column.filter.toJson()
+                if (!objIds.contains(column.objectId)) {
+                    objIds.push(column.objectId)
+                }
+            })
+
+            // Divide columns into groups
+            var groups = []
+            objIds.forEach(function (objId) {
+                // Create group
+                var group = {
+                    id: objId,
+                    filter: {}
+                }
+
+                // Add filters to group
+                vm.columns.forEach(function (column) {
+                    if (column.objectId == objId) {
+                        group.filter[column.label] = column.filter.toJson()
+                    }
+                })
+
+                // Add to groups
+                groups.push(group)
             })
 
             // Return filter object
-            return colFilters
+            return groups
         }
 
         function getSorter () {
-            var sorter = []
-
-            vm.sortOrder.forEach(function (colId) {
-                // Get column
-                var column = vm.getColumnById(colId)
-
-                // prepare sort object
-                var sortObj = {}
-                sortObj[column.label] = column.filter.sort
-
-                // Push sorting object to sorter
-                sorter.push(sortObj)
+            // Collect Objects IDs from columns
+            var objIds = []
+            vm.columns.forEach(function (column) {
+                if (!objIds.contains(column.objectId)) {
+                    objIds.push(column.objectId)
+                }
             })
 
-            return sorter
+            // Divide columns into groups
+            var groups = []
+            objIds.forEach(function (objId) {
+                // Create group
+                var group = {
+                    id: objId,
+                    sorter: []
+                }
+
+                vm.sortOrder.forEach(function (colId) {
+                    // Get column
+                    var column = vm.getColumnById(colId)
+                    if (column.objectId == objId) {
+                        // prepare sort object
+                        var sortObj = {}
+                        sortObj[column.label] = column.filter.sort
+                        group.sorter.push(sortObj)
+                    }
+                })
+
+                // Add to groups
+                groups.push(group)
+            })
+
+            // Return sorter object
+            return groups
         }
 
         function getExportParams() {

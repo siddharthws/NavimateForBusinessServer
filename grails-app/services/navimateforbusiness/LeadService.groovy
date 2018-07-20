@@ -20,6 +20,17 @@ class LeadService {
     def mongoService
 
     // ----------------------- Getter APIs ---------------------------//
+    // Method to filter using input JSON
+    def filter (User user, def requestJson, boolean bPaging) {
+        // Get task filters, sorter and pager
+        def leadFilter = requestJson.filter.find {it.id == Constants.Template.TYPE_LEAD}.filter
+        def leadSorter = requestJson.sorter.find {it.id == Constants.Template.TYPE_LEAD}.sorter
+        ObjPager pager = bPaging ? new ObjPager(requestJson.pager) : new ObjPager()
+
+        // Filter and return
+        getAllForUserByFPS(user, leadFilter, pager, leadSorter)
+    }
+
     // Method to search leads in mongo database using filter, pager and sorter
     def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
         // Get mongo filters
