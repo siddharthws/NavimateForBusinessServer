@@ -66,8 +66,6 @@ app.factory('ObjForm', function(TemplateService, ObjValue) {
         row.values[table.getColumnIdxById(Constants.Table.ID_FORM_DATE)]            = this.submitTime
         row.values[table.getColumnIdxById(Constants.Table.ID_FORM_LOCATION)]        = this.lat || this.lng ? this.lat + ',' + this.lng : '-'
         row.values[table.getColumnIdxById(Constants.Table.ID_FORM_DISTANCE)]        = this.distance
-        row.values[table.getColumnIdxById(Constants.Table.ID_FORM_LEAD)]            = this.lead
-        row.values[table.getColumnIdxById(Constants.Table.ID_FORM_TASK)]            = this.task
         row.values[table.getColumnIdxById(Constants.Table.ID_FORM_TASK_STATUS)]     = this.status ? Constants.Task.STATUS_NAME[this.status] : "-"
 
         // Iterate through template values

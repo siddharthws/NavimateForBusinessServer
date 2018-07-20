@@ -1,7 +1,7 @@
 /**
  * Created by aroha on 18-01-2018.
  */
-app.service('TaskService', function($q, $http, $localStorage, ObjTask, TemplateService, ObjTable2, ObjColumn) {
+app.service('TaskService', function($q, $http, $localStorage, ObjTask, ObjLead, LeadService, TemplateService, ObjTable2, ObjColumn) {
     /* ----------------------------- INIT --------------------------------*/
     var vm = this
 
@@ -134,17 +134,30 @@ app.service('TaskService', function($q, $http, $localStorage, ObjTask, TemplateS
         var Template_C = Constants.Template
 
         // Add mandatory columns
-        columns.push(new ObjColumn(Table_C.ID_TASK_ID,             "ID",                    Template_C.FIELD_TYPE_TASK,     null, "publicId",           Constants.Template.TYPE_TASK, 1,    true))
-        columns.push(new ObjColumn(Table_C.ID_TASK_LEAD,           "Lead",                  Template_C.FIELD_TYPE_LEAD,     null, "lead",               Constants.Template.TYPE_TASK, 2,    true))
-        columns.push(new ObjColumn(Table_C.ID_TASK_LOCATION,       "Location",              Template_C.FIELD_TYPE_LOCATION, null, "location",           Constants.Template.TYPE_TASK, 3,    true))
-        columns.push(new ObjColumn(Table_C.ID_TASK_MANAGER,        "Manager",               Template_C.FIELD_TYPE_NON_REP,  null, "manager",            Constants.Template.TYPE_TASK, 4,    false))
-        columns.push(new ObjColumn(Table_C.ID_TASK_REP,            "Rep",                   Template_C.FIELD_TYPE_REP,      null, "rep",                Constants.Template.TYPE_TASK, 5,    true))
-        columns.push(new ObjColumn(Table_C.ID_TASK_CREATOR,        "Created By",            Template_C.FIELD_TYPE_NON_REP,  null, "creator",            Constants.Template.TYPE_TASK, 6,    false))
-        columns.push(new ObjColumn(Table_C.ID_TASK_DATE_CREATED,   "Create Date",           Template_C.FIELD_TYPE_DATE,     null, "dateCreated",        Constants.Template.TYPE_TASK, 7,    true))
-        columns.push(new ObjColumn(Table_C.ID_TASK_FORM_TEMPLATE,  "Form",                  Template_C.FIELD_TYPE_TEMPLATE, null, "formTemplate",       Constants.Template.TYPE_TASK, 8,    false))
-        columns.push(new ObjColumn(Table_C.ID_TASK_TEMPLATE,       "Template",              Template_C.FIELD_TYPE_TEMPLATE, null, "template",           Constants.Template.TYPE_TASK, 9,    false))
-        columns.push(new ObjColumn(Table_C.ID_TASK_STATUS,         "Status",                Template_C.FIELD_TYPE_TEXT,     null, "status",             Constants.Template.TYPE_TASK, 10,   true))
-        columns.push(new ObjColumn(Table_C.ID_TASK_RESOLUTION_TIME,"Resolved In (Hrs)",     Template_C.FIELD_TYPE_NUMBER,   null, "resolutionTimeHrs",  Constants.Template.TYPE_TASK, 11,   true))
+        columns.push(new ObjColumn(Table_C.ID_TASK_ID,             "ID",                    Template_C.FIELD_TYPE_TASK,     null, "publicId",           Constants.Template.TYPE_TASK, 1,   true))
+        columns.push(new ObjColumn(Table_C.ID_TASK_MANAGER,        "Manager",               Template_C.FIELD_TYPE_NON_REP,  null, "manager",            Constants.Template.TYPE_TASK, 2,   false))
+        columns.push(new ObjColumn(Table_C.ID_TASK_REP,            "Rep",                   Template_C.FIELD_TYPE_REP,      null, "rep",                Constants.Template.TYPE_TASK, 3,   true))
+        columns.push(new ObjColumn(Table_C.ID_TASK_CREATOR,        "Created By",            Template_C.FIELD_TYPE_NON_REP,  null, "creator",            Constants.Template.TYPE_TASK, 4,   false))
+        columns.push(new ObjColumn(Table_C.ID_TASK_DATE_CREATED,   "Create Date",           Template_C.FIELD_TYPE_DATE,     null, "dateCreated",        Constants.Template.TYPE_TASK, 5,   true))
+        columns.push(new ObjColumn(Table_C.ID_TASK_FORM_TEMPLATE,  "Form",                  Template_C.FIELD_TYPE_TEMPLATE, null, "formTemplate",       Constants.Template.TYPE_TASK, 6,   false))
+        columns.push(new ObjColumn(Table_C.ID_TASK_TEMPLATE,       "Template",              Template_C.FIELD_TYPE_TEMPLATE, null, "template",           Constants.Template.TYPE_TASK, 7,   false))
+        columns.push(new ObjColumn(Table_C.ID_TASK_STATUS,         "Status",                Template_C.FIELD_TYPE_TEXT,     null, "status",             Constants.Template.TYPE_TASK, 8,   true))
+        columns.push(new ObjColumn(Table_C.ID_TASK_RESOLUTION_TIME,"Resolved In (Hrs)",     Template_C.FIELD_TYPE_NUMBER,   null, "resolutionTimeHrs",  Constants.Template.TYPE_TASK, 9,   true))
+
+        // Add lead columns
+        var leadColumns = LeadService.getTableColumns()
+        leadColumns.forEach(function (column) {
+            // Offset Column Position
+            column.position += columns.length
+
+            // Set column visibility
+            if (column.id != Constants.Table.ID_LEAD_NAME && column.id != Constants.Table.ID_LEAD_LOCATION) {
+                column.filter.bShow = false
+            } else {
+                column.filter.bShow = true
+            }
+        })
+        columns.addAll(leadColumns)
 
         // Iterate through each lead template
         TemplateService.getByType(Constants.Template.TYPE_TASK).forEach(function (template) {
@@ -164,12 +177,17 @@ app.service('TaskService', function($q, $http, $localStorage, ObjTask, TemplateS
     vm.parseTableResponse = function (response) {
         // Parse response into rows for table
         var rows = []
-        response.tasks.forEach(function (json) {
+        response.tasks.forEach(function (json, i) {
             // Parse to Task Object
             var task = ObjTask.fromJson(json)
+            var lead = ObjLead.fromJson(response.leads[i])
+
+            // Prepare row
+            var row = task.toRow(vm.table)
+            row = lead.parseRow(vm.table, row)
 
             // Add to rows
-            rows.push(task.toRow(vm.table))
+            rows.push(row)
         })
 
         return rows
