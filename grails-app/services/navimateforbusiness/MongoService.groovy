@@ -155,17 +155,15 @@ class MongoService {
         // Apply Ext ID filters if any
         if (colFilters.extId) {filters.push(['extId': ['$eq': "$colFilters.extId"]])}
 
-        // Apply multi select filter
-        if (colFilters.lead?.value) {filters.push(getMultiselectFilter("_id", colFilters.lead.value))}
-
         // Apply Name filters if any
         if (colFilters.name?.equal) {filters.push(['name': ['$eq': "$colFilters.name.equal"]])}
-        if (colFilters.name?.value) {filters.push(['name': ['$regex': /.*$colFilters.name.value.*/, '$options': 'i']])}
+        if (colFilters.name?.regex) {filters.push(['name': ['$regex': /.*$colFilters.name.regex.*/, '$options': 'i']])}
+        if (colFilters.name?.value) {filters.push(getMultiselectFilter("_id", colFilters.name.value))}
 
         // Apply address / location filter
         if (colFilters.address?.value)         {filters.push(['address': ['$regex': /.*$colFilters.address.value.*/, '$options': 'i']])}
-        if (colFilters.location?.bNoBlanks)    {filters.push(['$and': [['latitude': ['$ne': "0"]],
-                                                                       ['longitude': ['$ne': "0"]]]])}
+        if (colFilters.location?.bNoBlanks)    {filters.push(['$and': [['latitude': ['$ne': 0]],
+                                                                       ['longitude': ['$ne': 0]]]])}
 
         // Add template filter
         if (colFilters.template?.value) {filters.push(getMultiselectFilter("templateId", colFilters.template.value))}
@@ -215,6 +213,7 @@ class MongoService {
         // Apply resolution time filter
         if (colFilters.resolutionTimeHrs?.value?.from)  {filters.push(['resolutionTimeHrs': ['$gte': colFilters.resolutionTimeHrs.value.from]])}
         if (colFilters.resolutionTimeHrs?.value?.to)    {filters.push(['resolutionTimeHrs': ['$lte': colFilters.resolutionTimeHrs.value.to]])}
+        if (colFilters.resolutionTimeHrs?.bNoBlanks)    {filters.push(['resolutionTimeHrs': ['$ne': -1]])}
 
         // Apply Status filter
         if (colFilters.status?.value)  {filters.push(['status': ['$regex': /.*$colFilters.status.value.*/, '$options': 'i']])}
@@ -268,8 +267,8 @@ class MongoService {
         if (colFilters.rep?.value)              {filters.push(getMultiselectFilter("ownerId", colFilters.rep.value))}
 
         // Apply location filters
-        if (colFilters.location?.bNoBlanks)    {filters.push(['$and': [['latitude': ['$ne': "0"]],
-                                                                       ['longitude': ['$ne': "0"]]]])}
+        if (colFilters.location?.bNoBlanks)    {filters.push(['$and': [['latitude': ['$ne': 0]],
+                                                                       ['longitude': ['$ne': 0]]]])}
 
         // Apply distance filter
         if (colFilters.distanceKm?.value?.from)   {filters.push(['distanceKm': ['$gte': colFilters.distanceKm.value.from]])}
@@ -278,6 +277,7 @@ class MongoService {
 
         // Apply Status filter
         if (colFilters.taskStatus?.value)       {filters.push(getTextFilter("taskStatus", colFilters.taskStatus.value))}
+        if (colFilters.taskStatus?.bNoBlanks)   {filters.push(['taskStatus': ['$ne': null]])}
 
         // Apply Task Filter
         def taskFilters = []
