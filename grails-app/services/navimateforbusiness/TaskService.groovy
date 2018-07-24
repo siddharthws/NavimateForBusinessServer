@@ -29,9 +29,14 @@ class TaskService {
         def taskSorter = new ObjSorter(requestJson.sorter.find {it.id == Constants.Template.TYPE_TASK}.sorter)
         ObjPager pager = bPaging ? new ObjPager(requestJson.pager) : new ObjPager()
 
-        // Add lead related filtering and sorting
+        // Add lead related filtering
         taskFilter.lead = [ids: filteredLeads.collect {it.id}]
-        taskSorter.list.push([lead: Constants.Filter.SORT_ASC])
+
+        // Add lead sorting
+        def leadSorter = new ObjSorter(requestJson.sorter.find {it.id == Constants.Template.TYPE_LEAD}.sorter)
+        if (leadSorter.list) {
+            taskSorter.list.push([lead: Constants.Filter.SORT_ASC])
+        }
 
         // Filter and return
         getAllForUserByFPS(user, taskFilter, pager, taskSorter)
