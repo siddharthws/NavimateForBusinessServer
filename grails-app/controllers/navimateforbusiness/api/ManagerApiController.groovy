@@ -365,7 +365,7 @@ class ManagerApiController {
         def pager = new ObjPager(request.JSON.pager)
 
         // Filter leads for this user
-        def leads = leadService.getAllForUserByFPS(user, [name: [value: text]], pager, [])
+        def leads = leadService.getAllForUserByFPS(user, [name: [regex: text]], pager, [])
 
         // Send response with IDs, names and total count
         def resp = [
