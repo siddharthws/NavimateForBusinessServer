@@ -134,12 +134,12 @@ app.service('TaskService', function($q, $http, $localStorage, ObjTask, ObjLead, 
         var Template_C = Constants.Template
 
         // Add mandatory columns
-        columns.push(new ObjColumn(Table_C.ID_TASK_ID,             "ID",                    Template_C.FIELD_TYPE_TASK,     null, "publicId",           Constants.Template.TYPE_TASK, 1,   true))
+        columns.push(new ObjColumn(Table_C.ID_TASK_ID,             "Task ID",               Template_C.FIELD_TYPE_TASK,     null, "publicId",           Constants.Template.TYPE_TASK, 1,   true))
         columns.push(new ObjColumn(Table_C.ID_TASK_MANAGER,        "Manager",               Template_C.FIELD_TYPE_NON_REP,  null, "manager",            Constants.Template.TYPE_TASK, 2,   false))
-        columns.push(new ObjColumn(Table_C.ID_TASK_REP,            "Rep",                   Template_C.FIELD_TYPE_REP,      null, "rep",                Constants.Template.TYPE_TASK, 3,   true))
+        columns.push(new ObjColumn(Table_C.ID_TASK_REP,            "Assigned To",           Template_C.FIELD_TYPE_REP,      null, "rep",                Constants.Template.TYPE_TASK, 3,   true))
         columns.push(new ObjColumn(Table_C.ID_TASK_CREATOR,        "Created By",            Template_C.FIELD_TYPE_NON_REP,  null, "creator",            Constants.Template.TYPE_TASK, 4,   false))
-        columns.push(new ObjColumn(Table_C.ID_TASK_DATE_CREATED,   "Create Date",           Template_C.FIELD_TYPE_DATE,     null, "dateCreated",        Constants.Template.TYPE_TASK, 5,   true))
-        columns.push(new ObjColumn(Table_C.ID_TASK_FORM_TEMPLATE,  "Form",                  Template_C.FIELD_TYPE_TEMPLATE, null, "formTemplate",       Constants.Template.TYPE_TASK, 6,   false))
+        columns.push(new ObjColumn(Table_C.ID_TASK_DATE_CREATED,   "Created On",            Template_C.FIELD_TYPE_DATE,     null, "dateCreated",        Constants.Template.TYPE_TASK, 5,   true))
+        columns.push(new ObjColumn(Table_C.ID_TASK_FORM_TEMPLATE,  "Form Template",         Template_C.FIELD_TYPE_TEMPLATE, null, "formTemplate",       Constants.Template.TYPE_TASK, 6,   false))
         columns.push(new ObjColumn(Table_C.ID_TASK_TEMPLATE,       "Template",              Template_C.FIELD_TYPE_TEMPLATE, null, "template",           Constants.Template.TYPE_TASK, 7,   false))
         columns.push(new ObjColumn(Table_C.ID_TASK_STATUS,         "Status",                Template_C.FIELD_TYPE_TEXT,     null, "status",             Constants.Template.TYPE_TASK, 8,   true))
         columns.push(new ObjColumn(Table_C.ID_TASK_RESOLUTION_TIME,"Resolved In (Hrs)",     Template_C.FIELD_TYPE_NUMBER,   null, "resolutionTimeHrs",  Constants.Template.TYPE_TASK, 9,   true))

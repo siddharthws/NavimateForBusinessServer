@@ -83,10 +83,10 @@ app.service('FormService', function($q, $http, $localStorage, ObjForm, ObjTask, 
         var Template_C = Constants.Template
 
         // Add mandatory columns for forms
-        columns.push(new ObjColumn(Table_C.ID_FORM_REP,         "Representative", Template_C.FIELD_TYPE_REP,           null, "rep",         Constants.Template.TYPE_FORM, 1, true))
+        columns.push(new ObjColumn(Table_C.ID_FORM_REP,         "Submitted By"  , Template_C.FIELD_TYPE_REP,           null, "rep",         Constants.Template.TYPE_FORM, 1, true))
         columns.push(new ObjColumn(Table_C.ID_FORM_TEMPLATE,    "Template"      , Template_C.FIELD_TYPE_TEMPLATE,      null, "template",    Constants.Template.TYPE_FORM, 2, false))
-        columns.push(new ObjColumn(Table_C.ID_FORM_DATE,        "Submit Date"   , Template_C.FIELD_TYPE_DATE,          null, "dateCreated", Constants.Template.TYPE_FORM, 3, true))
-        columns.push(new ObjColumn(Table_C.ID_FORM_LOCATION,    "Location"      , Template_C.FIELD_TYPE_LOCATION,      null, "location",    Constants.Template.TYPE_FORM, 4, true))
+        columns.push(new ObjColumn(Table_C.ID_FORM_DATE,        "Submitted On"  , Template_C.FIELD_TYPE_DATE,          null, "dateCreated", Constants.Template.TYPE_FORM, 3, true))
+        columns.push(new ObjColumn(Table_C.ID_FORM_LOCATION,    "Submitted At"  , Template_C.FIELD_TYPE_LOCATION,      null, "location",    Constants.Template.TYPE_FORM, 4, true))
         columns.push(new ObjColumn(Table_C.ID_FORM_DISTANCE,    "Distance"      , Template_C.FIELD_TYPE_NUMBER,        null, "distanceKm",  Constants.Template.TYPE_FORM, 5, true))
         columns.push(new ObjColumn(Table_C.ID_FORM_TASK_STATUS, "Task Status"   , Template_C.FIELD_TYPE_TEXT,          null, "taskStatus",  Constants.Template.TYPE_FORM, 6, true))
 

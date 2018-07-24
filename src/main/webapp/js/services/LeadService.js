@@ -134,7 +134,7 @@ app.service('LeadService', function($q, $http, $localStorage, ObjLead, TemplateS
         var Template_C = Constants.Template
 
         // Add mandatory columns
-        columns.push(new ObjColumn(Table_C.ID_LEAD_NAME,        "Name",     Template_C.FIELD_TYPE_LEAD,     null, "lead",       Constants.Template.TYPE_LEAD, 1, true))
+        columns.push(new ObjColumn(Table_C.ID_LEAD_NAME,        "Lead",     Template_C.FIELD_TYPE_LEAD,     null, "name",       Constants.Template.TYPE_LEAD, 1, true))
         columns.push(new ObjColumn(Table_C.ID_LEAD_ADDRESS,     "Address",  Template_C.FIELD_TYPE_TEXT,     null, "address",    Constants.Template.TYPE_LEAD, 2, true))
         columns.push(new ObjColumn(Table_C.ID_LEAD_LOCATION,    "Location", Template_C.FIELD_TYPE_LOCATION, null, "location",   Constants.Template.TYPE_LEAD, 3, true))
         columns.push(new ObjColumn(Table_C.ID_LEAD_TEMPLATE,    "Template", Template_C.FIELD_TYPE_TEMPLATE, null, "template",   Constants.Template.TYPE_LEAD, 4, false))
