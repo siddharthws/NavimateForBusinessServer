@@ -5,6 +5,9 @@
 app.factory('ObjFilter', function() {
     // ----------------------------------- Constructor ------------------------------------//
     function ObjFilter (fieldType, bShow) {
+        this.type = Constants.Filter.TYPE_NONE
+        this.value = null
+
         // Assign type and value based on field type
         switch (fieldType) {
             case Constants.Template.FIELD_TYPE_TEXT:
@@ -40,9 +43,7 @@ app.factory('ObjFilter', function() {
         // Assign other parameters
         this.bNoBlanks = false
         this.bShow = bShow
-        this.bSortable = isSortable()
         this.sort = Constants.Table.SORT_NONE
-
     }
 
     // ----------------------------------- Public APIs ------------------------------------//
@@ -53,21 +54,8 @@ app.factory('ObjFilter', function() {
             bNoBlanks: this.bNoBlanks
         }
     }
+
     // ----------------------------------- Private APIs ------------------------------------//
-    // Method to determine if sorting is allowed for this filter
-    function isSortable() {
-        // Mark non sortable for specific field types
-        if (this.type == Constants.Template.FIELD_TYPE_PHOTO ||
-            this.type == Constants.Template.FIELD_TYPE_FILE ||
-            this.type == Constants.Template.FIELD_TYPE_SIGN ||
-            this.type == Constants.Template.FIELD_TYPE_LOCATION) {
-            return false
-        }
-
-        // Mark sortable for all other field types
-        return true
-    }
-
     // ----------------------------------- Static APIs ------------------------------------//
 
     return ObjFilter

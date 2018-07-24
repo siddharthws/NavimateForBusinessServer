@@ -5,6 +5,7 @@ import com.mongodb.client.FindIterable
 import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.enums.Visibility
 import navimateforbusiness.objects.ObjPager
+import navimateforbusiness.objects.ObjSorter
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 
@@ -24,7 +25,7 @@ class LeadService {
     def filter (User user, def requestJson, boolean bPaging) {
         // Get task filters, sorter and pager
         def leadFilter = requestJson.filter.find {it.id == Constants.Template.TYPE_LEAD}.filter
-        def leadSorter = requestJson.sorter.find {it.id == Constants.Template.TYPE_LEAD}.sorter
+        def leadSorter = new ObjSorter(requestJson.sorter.find {it.id == Constants.Template.TYPE_LEAD}.sorter)
         ObjPager pager = bPaging ? new ObjPager(requestJson.pager) : new ObjPager()
 
         // Filter and return
@@ -32,7 +33,7 @@ class LeadService {
     }
 
     // Method to search leads in mongo database using filter, pager and sorter
-    def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
+    def getAllForUserByFPS(User user, def filters, ObjPager pager, ObjSorter sorter) {
         // Get mongo filters
         def pipeline = mongoService.getLeadPipeline(user, filters, sorter)
 
@@ -52,7 +53,7 @@ class LeadService {
 
     // method to get list of leads using filters
     List<LeadM> getAllForUserByFilter(User user, def filters) {
-        getAllForUserByFPS(user, filters, new ObjPager(), []).leads
+        getAllForUserByFPS(user, filters, new ObjPager(), new ObjSorter()).leads
     }
 
     // Method to get a single lead using filters

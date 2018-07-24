@@ -4,6 +4,7 @@ import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import com.mongodb.client.FindIterable
 import navimateforbusiness.objects.ObjPager
+import navimateforbusiness.objects.ObjSorter
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 import navimateforbusiness.ProductM
@@ -20,7 +21,7 @@ class ProductService {
 
     // ----------------------- Getter APIs ---------------------------//
     // Method to search products in mongo database using filter, pager and sorter
-    def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
+    def getAllForUserByFPS(User user, def filters, ObjPager pager, ObjSorter sorter) {
         // Get mongo filters
         def pipeline = mongoService.getProductPipeline(user, filters, sorter)
 
@@ -40,7 +41,7 @@ class ProductService {
 
     // method to get list of products using filters
     List<ProductM> getAllForUserByFilter(User user, def filters) {
-        getAllForUserByFPS(user, filters, new ObjPager(), []).products
+        getAllForUserByFPS(user, filters, new ObjPager(), new ObjSorter()).products
     }
 
     // Method to get a single product using filters
