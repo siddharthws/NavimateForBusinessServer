@@ -4,6 +4,7 @@ import grails.gorm.transactions.Transactional
 import navimateforbusiness.enums.Role
 import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.objects.ObjPager
+import navimateforbusiness.objects.ObjSorter
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 
@@ -25,19 +26,19 @@ class TaskService {
 
         // Get task filters, sorter and pager
         def taskFilter = requestJson.filter.find {it.id == Constants.Template.TYPE_TASK}.filter
-        def taskSorter = requestJson.sorter.find {it.id == Constants.Template.TYPE_TASK}.sorter
+        def taskSorter = new ObjSorter(requestJson.sorter.find {it.id == Constants.Template.TYPE_TASK}.sorter)
         ObjPager pager = bPaging ? new ObjPager(requestJson.pager) : new ObjPager()
 
         // Add lead related filtering and sorting
         taskFilter.lead = [ids: filteredLeads.collect {it.id}]
-        taskSorter.push([lead: Constants.Filter.SORT_ASC])
+        taskSorter.list.push([lead: Constants.Filter.SORT_ASC])
 
         // Filter and return
         getAllForUserByFPS(user, taskFilter, pager, taskSorter)
     }
 
     // Method to search leads in mongo database using filter, pager and sorter
-    def getAllForUserByFPS(User user, def filters, ObjPager pager, def sorter) {
+    def getAllForUserByFPS(User user, def filters, ObjPager pager, ObjSorter sorter) {
         // Get mongo filters
         def pipeline = mongoService.getTaskPipeline(user, filters, sorter)
 
@@ -57,7 +58,7 @@ class TaskService {
 
     // method to get list of leads using filters
     List<TaskM> getAllForUserByFilter(User user, def filters) {
-        getAllForUserByFPS(user, filters, new ObjPager(), []).tasks
+        getAllForUserByFPS(user, filters, new ObjPager(), new ObjSorter()).tasks
     }
 
     // Method to get a single lead using filters

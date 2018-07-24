@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import navimateforbusiness.enums.Role
+import navimateforbusiness.objects.ObjSorter
 import navimateforbusiness.util.Constants
 
 import java.text.SimpleDateFormat
@@ -19,107 +20,107 @@ class MongoService {
 
     // ----------------------- Public Methods ---------------------------//
     // Pipeline Generation methods
-    def getLeadPipeline(User user, def filters, def sorter) {
+    def getLeadPipeline(User user, def filters, ObjSorter sorter) {
         def pipeline = []
 
         // Add match stage
         pipeline.push(new BasicDBObject('$match', ['$and': getLeadFilters(user, filters)]))
 
         // Add atleast basic sorting
-        if (!sorter) {sorter = [[name: Constants.Filter.SORT_ASC]]}
+        if (!sorter.list) {sorter.list = [[name: Constants.Filter.SORT_ASC]]}
 
         // Add template order column and replace in sorter if required
         pipeline.push(getTemplateOrderStage(user, '$templateId', "template_order"))
 
         // Replace Template Sorting Field
-        replaceSorter(sorter, "template", "template_order")
+        sorter.replace("template", "template_order")
 
         // Add sorting stage
-        pipeline.push(new BasicDBObject('$sort', getSortBson(sorter)))
+        pipeline.push(new BasicDBObject('$sort', sorter.getBson()))
 
         pipeline
     }
 
-    def getTaskPipeline(User user, def filters, def sorter) {
+    def getTaskPipeline(User user, def filters, ObjSorter sorter) {
         def pipeline = []
 
         // Add match stage
         pipeline.push(new BasicDBObject('$match', ['$and': getTaskFilters(user, filters)]))
 
         // Add atleast basic sorting
-        if (!sorter) {sorter = [[dateCreated: Constants.Filter.SORT_DESC],
-                                [status: Constants.Filter.SORT_DESC]]}
+        if (!sorter.list) {sorter.list =   [[status: Constants.Filter.SORT_DESC],
+                                            [dateCreated: Constants.Filter.SORT_DESC]]}
 
         // Add template order column and replace in sorter if required
         pipeline.push(getTemplateOrderStage(user, '$templateId', "template_order"))
-        replaceSorter(sorter, "template", "template_order")
+        sorter.replace("template", "template_order")
 
         // Add rep order column and replace in sorter if required
         pipeline.push(getUserOrderStage(user, '$repId', "rep_order"))
-        replaceSorter(sorter, "rep", "rep_order")
+        sorter.replace("rep", "rep_order")
 
         // Add manager order column and replace in sorter if required
         pipeline.push(getUserOrderStage(user, '$managerId', "manager_order"))
-        replaceSorter(sorter, "manager", "manager_order")
+        sorter.replace("manager", "manager_order")
 
         // Add creator order column and replace in sorter if required
         pipeline.push(getUserOrderStage(user, '$creatorId', "creator_order"))
-        replaceSorter(sorter, "creator", "creator_order")
+        sorter.replace("creator", "creator_order")
 
         // Add lead order column and replace in sorter if required
         pipeline.push(getLeadOrderStage(user, '$lead', "lead_order", filters.lead?.ids))
-        replaceSorter(sorter, "lead", "lead_order")
+        sorter.replace("lead", "lead_order")
 
         // Add sorting stage
-        pipeline.push(new BasicDBObject('$sort', getSortBson(sorter)))
+        pipeline.push(new BasicDBObject('$sort', sorter.getBson()))
 
         pipeline
     }
 
-    def getFormPipeline(User user, def filters, def sorter) {
+    def getFormPipeline(User user, def filters, ObjSorter sorter) {
         def pipeline = []
 
         // Add match stage
         pipeline.push(new BasicDBObject('$match', ['$and': getFormFilters(user, filters)]))
 
         // Add atleast basic sorting
-        if (!sorter) {sorter = [[dateCreated: Constants.Filter.SORT_DESC]]}
+        if (!sorter.list) {sorter.list = [[dateCreated: Constants.Filter.SORT_DESC]]}
 
         // Add template order column and replace in sorter
         pipeline.push(getTemplateOrderStage(user, '$templateId', "template_order"))
-        replaceSorter(sorter, "template", "template_order")
+        sorter.replace("template", "template_order")
 
         // Add rep order column and replace in sorter if required
         pipeline.push(getUserOrderStage(user, '$repId', "rep_order"))
-        replaceSorter(sorter, "rep", "rep_order")
+        sorter.replace("rep", "rep_order")
 
         // Add lead order column and replace in sorter if required
         pipeline.push(getTaskOrderStage(user, '$task', "task_order", filters.task?.ids))
-        replaceSorter(sorter, "task", "task_order")
+        sorter.replace("task", "task_order")
 
         // Add sorting stage
-        pipeline.push(new BasicDBObject('$sort', getSortBson(sorter)))
+        pipeline.push(new BasicDBObject('$sort', sorter.getBson()))
 
         pipeline
     }
 
-    def getProductPipeline(User user, def filters, def sorter) {
+    def getProductPipeline(User user, def filters, ObjSorter sorter) {
         def pipeline = []
 
         // Add match stage
         pipeline.push(new BasicDBObject('$match', ['$and': getProductFilters(user, filters)]))
 
         // Add atleast basic sorting
-        if (!sorter) {sorter = [[name: Constants.Filter.SORT_ASC]]}
+        if (!sorter.list) {sorter.list = [[name: Constants.Filter.SORT_ASC]]}
 
         // Add template order column and replace in sorter if required
         pipeline.push(getTemplateOrderStage(user, '$templateId', "template_order"))
 
         // Replace Template Sorting Field
-        replaceSorter(sorter, "template", "template_order")
+        sorter.replace("template", "template_order")
 
         // Add sorting stage
-        pipeline.push(new BasicDBObject('$sort', getSortBson(sorter)))
+        pipeline.push(new BasicDBObject('$sort', sorter.getBson()))
 
         pipeline
     }
@@ -570,25 +571,5 @@ class MongoService {
         def stage = new BasicDBObject('$addFields', [(outputFieldName): ['$indexOfArray': [taskIds, inputFieldName]]])
 
         stage
-    }
-
-    def replaceSorter(def sorter, String from, String to) {
-        def sortObj = sorter.find {it.keySet()[0].equals(from)}
-        if (sortObj) {
-            def replaceIdx = sorter.indexOf(sortObj)
-            sorter[replaceIdx] = [(to): sorter[replaceIdx][from]]
-        }
-    }
-
-    def getSortBson(def sorter) {
-        def sorts = [:]
-
-        sorter.each {sortObj ->
-            String key = sortObj.keySet()[0]
-            int value = sortObj[key]
-            sorts[key] = value
-        }
-
-        sorts
     }
 }

@@ -45,12 +45,13 @@
                     <div class="d-flex">
                         <!-- Column Name -->
                         <span class="flex-1 text-nowrap">
-                                {{column.name}}
-                            </span>
+                            {{column.name}}
+                        </span>
 
                         <!-- Sorting Button -->
                         <input type="button" value="" class="ib-base ib-xs ib-sort" title="Toggle Sorting"
-                               ng-if="column.filter.bSortable" ng-click="vm.toggleSorting($index)"
+                               ng-if="column.filter.type != $root.Constants.Filter.TYPE_NONE"
+                               ng-click="vm.toggleSorting($index)"
                                ng-class="{  'sort-asc'  : column.filter.sort == vm.TableConst.SORT_ASC,
                                             'sort-desc' : column.filter.sort == vm.TableConst.SORT_DESC}"/>
 
