@@ -28,9 +28,29 @@ class FormService {
         ObjSorter formSorter = new ObjSorter(requestJson.sorter.find {it.id == Constants.Template.TYPE_FORM}.sorter)
         ObjPager pager = bPaging ? new ObjPager(requestJson.pager) : new ObjPager()
 
-        // Add task related filtering and sorting
+        // Add task ID Filter
         formFilter.task = [ids: filteredTasks.collect {it.id}]
-        formSorter.list.push([task: Constants.Filter.SORT_ASC])
+
+        // Add task no blank filter
+        def taskFilter = requestJson.filter.find {it.id == Constants.Template.TYPE_TASK}.filter
+        taskFilter.each {k, v ->
+            if (v.bNoBlanks) {
+                formFilter.task.bNoBlanks = true
+            }
+        }
+        def leadFilter = requestJson.filter.find {it.id == Constants.Template.TYPE_LEAD}.filter
+        leadFilter.each {k, v ->
+            if (v.bNoBlanks) {
+                formFilter.task.bNoBlanks = true
+            }
+        }
+
+        // Add task sorting
+        def taskSorter = new ObjSorter(requestJson.sorter.find {it.id == Constants.Template.TYPE_TASK}.sorter)
+        def leadSorter = new ObjSorter(requestJson.sorter.find {it.id == Constants.Template.TYPE_LEAD}.sorter)
+        if (leadSorter.list || taskSorter.list) {
+            formSorter.list.push([task: Constants.Filter.SORT_ASC])
+        }
 
         // Filter and return
         getAllForUserByFPS(user, formFilter, pager, formSorter)

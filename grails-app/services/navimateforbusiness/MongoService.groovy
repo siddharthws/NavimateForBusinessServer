@@ -280,7 +280,10 @@ class MongoService {
         if (colFilters.taskStatus?.value)       {filters.push(getTextFilter("taskStatus", colFilters.taskStatus.value))}
 
         // Apply Task Filter
-        if (colFilters.task?.ids)   {filters.push(['task': ['$in': colFilters.task.ids]])}
+        def taskFilters = []
+        if (colFilters.task?.ids)           {taskFilters.push(['task': ['$in': colFilters.task.ids]])}
+        if (!colFilters.task?.bNoBlanks)    {taskFilters.push(['task': ['$eq': null]])}
+        if (taskFilters)                    {filters.push(['$or': taskFilters])}
 
         // Add template filter
         if (colFilters.template?.value) {filters.push(getMultiselectFilter("templateId", colFilters.template.value))}
