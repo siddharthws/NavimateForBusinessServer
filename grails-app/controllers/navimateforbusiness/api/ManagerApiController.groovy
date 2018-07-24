@@ -845,20 +845,14 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get filters from request
-        def filter = request.JSON.filter
-        def pager = new ObjPager(request.JSON.pager)
-        def sorter = request.JSON.sorter
-
-        // get products for this user
-        def filteredProducts = productService.getAllForUserByFPS(user, filter, pager, sorter)
+        // filter using request JSON
+        def filteredProducts = productService.filter(user, request.JSON, true)
 
         // Send JSON Response
         def resp = [
                 rowCount: filteredProducts.rowCount,
-                products: []
+                products: filteredProducts.products.collect {productService.toJson(it, user)}
         ]
-        filteredProducts.products.each {ProductM product -> resp.products.push(productService.toJson(product, user))}
         render resp as JSON
     }
 

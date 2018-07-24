@@ -20,6 +20,17 @@ class ProductService {
     def mongoService
 
     // ----------------------- Getter APIs ---------------------------//
+    // Method to filter using input JSON
+    def filter (User user, def requestJson, boolean bPaging) {
+        // Get filters, sorter and pager
+        def filter = requestJson.filter.find {it.id == Constants.Template.TYPE_PRODUCT}.filter
+        ObjSorter sorter = new ObjSorter(requestJson.sorter.find {it.id == Constants.Template.TYPE_PRODUCT}.sorter)
+        ObjPager pager = bPaging ? new ObjPager(requestJson.pager) : new ObjPager()
+
+        // Filter and return
+        getAllForUserByFPS(user, filter, pager, sorter)
+    }
+
     // Method to search products in mongo database using filter, pager and sorter
     def getAllForUserByFPS(User user, def filters, ObjPager pager, ObjSorter sorter) {
         // Get mongo filters
