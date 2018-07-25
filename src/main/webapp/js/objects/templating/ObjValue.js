@@ -24,6 +24,13 @@ app.factory('ObjValue', function(TemplateService) {
                     return this.value.options[this.value.selection]
                 }
                 break
+            case Constants.Template.FIELD_TYPE_PRODUCT:
+                if (this.value && this.value.id) {
+                    return this.value
+                } else {
+                    return '-'
+                }
+                break
             case Constants.Template.FIELD_TYPE_CHECKLIST:
                 if (this.value) {
                     var valueString = ""
@@ -59,6 +66,7 @@ app.factory('ObjValue', function(TemplateService) {
             case Constants.Template.FIELD_TYPE_SIGN:
             case Constants.Template.FIELD_TYPE_LOCATION:
             case Constants.Template.FIELD_TYPE_DATE:
+            case Constants.Template.FIELD_TYPE_PRODUCT:
                 if(this.field.settings.bMandatory){
                     if(!this.value){
                         err = 'Field is mandatory'

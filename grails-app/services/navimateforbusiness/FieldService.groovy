@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat
 class FieldService {
     // ----------------------- Dependencies ---------------------------//
 
+    def productService
+
     // ----------------------- Getter Methods ---------------------------//
     List<Field> getForTemplate(Template template) {
         // Sort fields by ID
@@ -182,6 +184,16 @@ class FieldService {
                     value = defValueJson.toString()
                 }
                 break
+            case Constants.Template.FIELD_TYPE_PRODUCT:
+                if (value) {
+                    def product = productService.getForUserByFilter(user, [productId: [equal:value]])
+                    if(product){
+                        value = [id: product.id, name: product.name].toString()
+                    } else {
+                        throw new ApiException("Cell " + excelValue.cell + ": Product ID not found", Constants.HttpCodes.BAD_REQUEST)
+                    }
+                }
+                break
         }
 
         value
@@ -202,6 +214,9 @@ class FieldService {
             case Constants.Template.FIELD_TYPE_RADIOLIST:
                 def valueJson = JSON.parse(value)
                 returnValue = valueJson.options[valueJson.selection]
+                break
+            case Constants.Template.FIELD_TYPE_PRODUCT:
+                returnValue = value?.name ?: "-"
                 break
             case Constants.Template.FIELD_TYPE_CHECKLIST:
                 def valueJson = JSON.parse(value)

@@ -27,6 +27,12 @@
         <checklist ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_CHECKLIST"
                    label="{{value.field.title}}" value="value.value"></checklist>
 
+        <!-- Product Field Editor -->
+        <pick-n-view  ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_PRODUCT"
+                      label="{{value.field.title}}" text="value.value.name"
+                      on-pick="vm.pickProduct(value)" on-view="vm.viewProduct(value)"
+                      b-show-error="bShowError" err="value.getErr()"></pick-n-view>
+
         <!-- Date Field Editor -->
         <div class="fbx-v" ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_DATE">
             <datepicker hint="{{value.field.title}}" date-model="value.value"

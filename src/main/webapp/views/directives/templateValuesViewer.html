@@ -15,8 +15,16 @@
         <!-- Values with string display -->
         <text-box ng-if="(value.field.type != $root.Constants.Template.FIELD_TYPE_PHOTO &&
                           value.field.type != $root.Constants.Template.FIELD_TYPE_FILE &&
-                          value.field.type != $root.Constants.Template.FIELD_TYPE_SIGN) ||
-                         value.value == '-'"
-                  label="{{value.field.title}}" text="{{value.getDisplayString()}}"></text-box>
+                          value.field.type != $root.Constants.Template.FIELD_TYPE_SIGN &&
+                          value.field.type != $root.Constants.Template.FIELD_TYPE_PRODUCT)||
+                          value.value == '-'"
+                  label="{{value.field.title}}" text="{{value.getDisplayString()}}">
+        </text-box>
+
+        <!-- Link to open Product -->
+        <div class="box box-sm fbx-v" ng-if="value.value && (value.field.type == $root.Constants.Template.FIELD_TYPE_PRODUCT)">
+            <span class="text-label">{{value.field.title}}</span>
+            <a href ng-click="$root.Statics.absorbEvent($event); vm.viewProduct(value.value.id)">{{value.value.name}}</a>
+        </div>
     </div>
 </div>
