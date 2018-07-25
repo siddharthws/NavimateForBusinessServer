@@ -52,6 +52,8 @@ app.controller('TemplateEditorCtrl', function ( $scope, $rootScope,
             value = []
         } else if (newType == vm.Const.FIELD_TYPE_CHECKBOX) {
             value = false
+        } else if (newType == vm.Const.FIELD_TYPE_PRODUCT) {
+            value = {}
         }
 
         // Update field type

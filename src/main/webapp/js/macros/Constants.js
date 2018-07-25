@@ -329,7 +329,8 @@ Constants.Template = {
         'Location',
         'Checkbox',
         'Date',
-        'File Upload'
+        'File Upload',
+        'Product'
     ]
 }
 
