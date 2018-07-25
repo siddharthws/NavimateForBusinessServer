@@ -307,11 +307,11 @@ Constants.Template = {
     FIELD_TYPE_CHECKBOX:        8,
     FIELD_TYPE_DATE:            9,
     FIELD_TYPE_FILE:            10,
+    FIELD_TYPE_PRODUCT:         11,
 
     // Special Object Column type
     FIELD_TYPE_LEAD:            21,
     FIELD_TYPE_TASK:            22,
-    FIELD_TYPE_PRODUCT:         23,
 
     FIELD_TYPE_TEMPLATE:        41,
     FIELD_TYPE_REP:             42,
@@ -329,7 +329,8 @@ Constants.Template = {
         'Location',
         'Checkbox',
         'Date',
-        'File Upload'
+        'File Upload',
+        'Product'
     ]
 }
 

@@ -129,7 +129,7 @@ class ImportService {
             name: name,
             address: address,
             templateId: template.id,
-            values: parseTemplateData(columns, row, template, rowIdx)
+            values: parseTemplateData(columns, row, template, rowIdx, user)
         ]
 
         leadJson
@@ -197,7 +197,7 @@ class ImportService {
                 period: period,
                 formTemplateId: form.id,
                 templateId: template.id,
-                values: parseTemplateData(columns, row, template, rowIdx)
+                values: parseTemplateData(columns, row, template, rowIdx, user)
         ]
 
         taskJson
@@ -233,7 +233,7 @@ class ImportService {
     }
 
     // ----------------------- Private APIs ---------------------------//
-    private def parseTemplateData(def columns, def row, Template template, int rowIdx) {
+    private def parseTemplateData(def columns, def row, Template template, int rowIdx, User user) {
 
         // Iterate through template fields
         def templateData = []
@@ -292,6 +292,17 @@ class ImportService {
                         throw new ApiException("Value in cell " + getCellAddress(colIdx, rowIdx) + " must be either 'Yes' or 'No'", Constants.HttpCodes.BAD_REQUEST)
                     } else {
                         value = (value == "Yes") ? "true" : "false"
+                    }
+                    break
+                case Constants.Template.FIELD_TYPE_PRODUCT:
+                    if (value) {
+                            def product = productService.getForUserByFilter(user, [productId: [equal:value]])
+                            if(product){
+                                value.id = product.id
+                                value.name = product.name
+                            } else {
+                                throw new ApiException("Could not parse product in cell " + getCellAddress(colIdx, rowIdx), Constants.HttpCodes.BAD_REQUEST)
+                            }
                     }
                     break
                 case Constants.Template.FIELD_TYPE_RADIOLIST:

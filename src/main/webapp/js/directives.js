@@ -379,6 +379,7 @@ app.directive('templateValuesEditor', function () {
             values:      '='
         },
         // Controller and view
+        controller: 'TemplateValuesEditorCtrl as vm',
         templateUrl: '/static/views/directives/templateValuesEditor.html'
     }
 })

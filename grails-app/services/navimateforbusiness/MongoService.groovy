@@ -398,6 +398,9 @@ class MongoService {
                     case Constants.Template.FIELD_TYPE_DATE:
                         if (filterVal.from || filterVal.to) {filters.push(getDateFilter(key, filterVal))}
                         break
+                    case Constants.Template.FIELD_TYPE_PRODUCT:
+                        filters.push(getMultiselectFilter(key, filterVal))
+                        break
                 }
             }
         }

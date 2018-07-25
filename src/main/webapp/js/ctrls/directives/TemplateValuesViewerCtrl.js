@@ -33,4 +33,8 @@ app.controller('TemplateValuesViewerCtrl', function (   $rootScope, $http, $loca
             }
         )
     }
+
+    vm.viewProduct = function (id) {
+        DialogService.productViewer(id)
+    }
 })

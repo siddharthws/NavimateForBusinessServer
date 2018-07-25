@@ -55,11 +55,11 @@ class Constants {
         public static final int FIELD_TYPE_CHECKBOX       = 8
         public static final int FIELD_TYPE_DATE           = 9
         public static final int FIELD_TYPE_FILE           = 10
+        public static final int FIELD_TYPE_PRODUCT        = 11
 
         // Special Object Column type
         public static final int FIELD_TYPE_LEAD           = 21
         public static final int FIELD_TYPE_TASK           = 22
-        public static final int FIELD_TYPE_PRODUCT        = 23
 
         public static final int FIELD_TYPE_TEMPLATE       = 41
         public static final int FIELD_TYPE_REP            = 42
