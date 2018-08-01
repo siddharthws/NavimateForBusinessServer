@@ -127,6 +127,55 @@ class ProductService {
         product
     }
 
+    ProductM fromExcelJson(User user, def json) {
+        ProductM product = null
+
+        // Validate Mandatory Columns
+        if (!json.ID)         {throw new ApiException("'ID' Column Not Found")}
+        if (!json.Name)       {throw new ApiException("'Name' Column Not Found")}
+        if (!json.Template)   {throw new ApiException("'Template' Column Not Found")}
+
+        // Validate mandatory parameters
+        if (!json.ID.value)         {throw new ApiException("Cell " + json.ID.cell + ": ID is missing") }
+        if (!json.Name.value)       {throw new ApiException("Cell " + json.Name.cell + ": Name is missing")}
+        if (!json.Template.value)   {throw new ApiException("Cell " + json.Template.cell + ": Template is missing")}
+
+        // Ensure template exists
+        def templates = templateService.getForUserByType(user, Constants.Template.TYPE_PRODUCT)
+        def template = templates.find {it.name.equals(json.Template.value)}
+        if (!template) {throw new ApiException("Cell " + json.Template.cell + ": Template not found")}
+
+        // Get existing object from id
+        product = getForUserByFilter(user, [productId: [equal: json.ID.value]])
+
+        // Create new lead object if not found
+        if (!product) {
+            product = new ProductM(
+                    accountId: user.account.id,
+                    ownerId: user.id,
+                    productId: json.ID.value
+            )
+        }
+
+        // Set name from json
+        product.name = json.Name.value
+
+        // Set templated data
+        product.templateId = template.id
+        def fields = fieldService.getForTemplate(template)
+        fields.each {field ->
+            // Set value for this field from JSON received
+            product["$field.id"] = fieldService.parseExcelValue(user, field, json[field.title])
+        }
+
+        // Add date info
+        Date currentDate = new Date()
+        if (!product.dateCreated) {product.dateCreated = currentDate}
+        product.lastUpdated = currentDate
+
+        product
+    }
+
     // Method to remove a product object
     def remove(User user, ProductM product) {
         // Remove product

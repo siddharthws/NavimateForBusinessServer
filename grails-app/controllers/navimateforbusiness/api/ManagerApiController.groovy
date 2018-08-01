@@ -14,6 +14,7 @@ import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.enums.Visibility
 import navimateforbusiness.util.ApiException
+import org.springframework.web.multipart.MultipartFile
 
 // APIs exposed to users with manager access or higher
 class ManagerApiController {
@@ -32,6 +33,7 @@ class ManagerApiController {
     def exportService
     def importService
     def productService
+    def excelService
 
     GrailsApplication grailsApplication
 
@@ -434,38 +436,10 @@ class ManagerApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get file
-        def file = request.getFile('importFile')
+        MultipartFile file = request.getFile('importFile')
 
-        // Get table from file
-        def table = tableService.parseExcel(file)
-
-        // Validate all columns
-        importService.checkLeadColumns(table.columns)
-
-        // Ensure all IDs are unique
-        importService.checkIds(table.columns, table.rows)
-
-        // Get lead JSON for each row
-        def leadsJson = []
-        table.rows.eachWithIndex {row, i -> leadsJson.push(importService.parseLeadRow(table.columns, row, i, user))}
-
-        // Parse each JSON object into Lead object
-        def leads = []
-        leadsJson.each {leadJson ->
-            // Parse to lead object and assign update & create time
-            LeadM lead = leadService.fromJson(leadJson, user)
-
-            leads.push(lead)
-        }
-
-        // Save each lead
-        leads.each {lead ->
-            // Make lead public
-            lead.visibility = Visibility.PUBLIC
-
-            // Save lead
-            lead.save(flush: true, failOnError: true)
-        }
+        // Parse to Leads and save
+        excelService.importFile(user, Constants.Template.TYPE_LEAD, file)
 
         def resp = [success: true]
         render resp as JSON
@@ -587,24 +561,10 @@ class ManagerApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get file
-        def file = request.getFile('importFile')
+        MultipartFile file = request.getFile('importFile')
 
-        // Get table from file
-        def table = tableService.parseExcel(file)
-
-        // Validate all columns
-        importService.checkTaskColumns(table.columns)
-
-        // Get task JSON for each row
-        def tasksJson = []
-        table.rows.eachWithIndex {row, i -> tasksJson.push(importService.parseTaskRow(table.columns, row, i, user))}
-
-        // Parse each JSON object into Task object
-        def tasks = []
-        tasksJson.each {taskJson -> tasks.push(taskService.fromJson(taskJson, user))}
-
-        // Save each task
-        tasks.each {task -> task.save(flush: true, failOnError: true) }
+        // Parse to Leads and save
+        excelService.importFile(user, Constants.Template.TYPE_TASK, file)
 
         def resp = [success: true]
         render resp as JSON
