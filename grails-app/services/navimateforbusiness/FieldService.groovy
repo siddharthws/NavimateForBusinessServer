@@ -192,6 +192,8 @@ class FieldService {
                     } else {
                         throw new ApiException("Cell " + excelValue.cell + ": Product ID not found", Constants.HttpCodes.BAD_REQUEST)
                     }
+                } else {
+                    value = [:].toString()
                 }
                 break
         }
