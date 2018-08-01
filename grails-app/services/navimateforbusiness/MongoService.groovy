@@ -199,6 +199,7 @@ class MongoService {
         }
 
         // Apply ID filter
+        if (colFilters.publicId?.equal)     {filters.push(['publicId': ['$eq': "$colFilters.publicId.equal"]])}
         if (colFilters.publicId?.value)     {filters.push(getMultiselectFilter("_id", colFilters.publicId.value))}
         if (colFilters.publicId?.regex)     {filters.push(getTextFilter("publicId", colFilters.publicId.regex))}
         if (colFilters.publicId?.bNoBlanks) {filters.push(['publicId': ['$ne': "-"]])}
