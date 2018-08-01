@@ -60,6 +60,7 @@ class UrlMappings {
         "/api/manager/tasks/stopRenewal" (controller: "ManagerApi") {action = [POST: "stopTaskRenewal"]}
         "/api/manager/tasks/remove"      (controller: "ManagerApi") {action = [POST: "removeTasks"]}
         "/api/manager/tasks/search"      (controller: "ManagerApi") {action = [POST: "searchTasks"]}
+        "/api/manager/tasks/import"      (controller: "ManagerApi") {action = [POST: "importTasks"]}
 
         // Form Related APIs
         "/api/manager/forms/getByIds"    (controller: "ManagerApi") {action = [POST: "getFormsById"]}
