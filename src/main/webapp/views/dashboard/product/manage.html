@@ -5,6 +5,7 @@
     <imagebutton image="/static/images/ic_reset_white.png" text="Reset" ng-click="vm.reset()"></imagebutton>
     <imagebutton image="/static/images/ic_customize_table_white.png" text="Columns" ng-click="vm.toggleColumns()"
                  counter="vm.table.columns.length - vm.table.getVisibleColumns().length" ></imagebutton>
+    <ib-filepicker image="/static/images/ic_import_white.png" text="Import" file-picked="vm.import(file)"></ib-filepicker>
     <div class="dropdown"  ng-if="!$root.isCC()">
         <button class="btn-shiny d-flex justify-content-around align-items-center" data-toggle="dropdown"
                 ng-disabled="!vm.table.selection.length">
