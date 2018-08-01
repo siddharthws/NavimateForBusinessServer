@@ -39,6 +39,31 @@ app.controller("ProductManageCtrl", function ( $scope, $http, $rootScope, $local
             $scope.$broadcast(Constants.Events.TABLE_SYNC)
         }
 
+        // API to import tasks
+        vm.import = function (file) {
+            // Show waiting dialog
+            $rootScope.showWaitingDialog("Importing products. This may take some time...")
+
+            // Perform import
+            ImportService.import("/api/manager/products/import", file).then(
+                // Success callback
+                function () {
+                    // Sync data again
+                    vm.sync()
+
+                    // Notify user about success
+                    $rootScope.hideWaitingDialog()
+                    ToastService.toast("Products imported successfully...")
+                },
+                // Error callback
+                function (message) {
+                    // Notify user about error
+                    $rootScope.hideWaitingDialog()
+                    DialogService.alert("Upload Error : " + message)
+                }
+            )
+        }
+
         // APIs for actions in dropdown
         vm.remove = function() {
             // Launch Confirm Dialog

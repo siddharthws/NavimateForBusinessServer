@@ -881,5 +881,19 @@ class ManagerApiController {
         render resp as JSON
     }
 
+    def importProducts() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get file
+        MultipartFile file = request.getFile('importFile')
+
+        // Parse to Leads and save
+        excelService.importFile(user, Constants.Template.TYPE_PRODUCT, file)
+
+        def resp = [success: true]
+        render resp as JSON
+    }
+
     // ----------------------- Private methods ----------------------- //
 }
