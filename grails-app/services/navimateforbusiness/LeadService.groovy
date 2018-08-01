@@ -152,6 +152,69 @@ class LeadService {
         lead
     }
 
+    LeadM fromExcelJson(User user, def json) {
+        LeadM lead = null
+
+        // Validate Mandatory Columns
+        if (!json.ID)         {throw new ApiException("'ID' Column Not Found")}
+        if (!json.Name)       {throw new ApiException("'Name' Column Not Found")}
+        if (!json.Address)    {throw new ApiException("'Address' Column Not Found")}
+        if (!json.Template)   {throw new ApiException("'Template' Column Not Found")}
+
+        // Validate mandatory parameters
+        if (!json.ID.value)         {throw new ApiException("Cell " + json.ID.cell + ": ID is missing") }
+        if (!json.Name.value)       {throw new ApiException("Cell " + json.Name.cell + ": Name is missing")}
+        if (!json.Address.value)    {throw new ApiException("Cell " + json.Address.cell + ": Address is missing")}
+        if (!json.Template.value)   {throw new ApiException("Cell " + json.Template.cell + ": Template is missing")}
+
+        // Ensure template exists
+        def templates = templateService.getForUserByType(user, Constants.Template.TYPE_LEAD)
+        def template = templates.find {it.name.equals(json.Template.value)}
+        if (!template) {throw new ApiException("Cell " + json.Template.cell + ": Template not found")}
+
+        // Get existing object from id
+        lead = getForUserByFilter(user, [extId: json.ID.value])
+
+        // Create new lead object if not found
+        if (!lead) {
+            lead = new LeadM(
+                    accountId: user.account.id,
+                    ownerId: user.id,
+                    visibility: Visibility.PUBLIC,
+                    extId: json.ID.value
+            )
+        }
+
+        // Set name from json
+        lead.name = json.Name.value
+
+        // Update address and latlng
+        if (lead.address != json.Address.value) {
+            lead.address = json.Address.value
+
+            // Get latlng from google for this address
+            String[] addresses = [json.Address.value]
+            def latlngs = googleApiService.geocode(addresses)
+            lead.latitude = latlngs[0].lat
+            lead.longitude = latlngs[0].lng
+        }
+
+        // Set templated data
+        lead.templateId = template.id
+        def fields = fieldService.getForTemplate(template)
+        fields.each {field ->
+            // Set value for this field from JSON received
+            lead["$field.id"] = fieldService.parseExcelValue(user, field, json[field.title])
+        }
+
+        // Add date info in long format
+        String currentTime = new Date().format( Constants.Date.FORMAT_LONG, Constants.Date.TIMEZONE_IST)
+        if (!lead.createTime) {lead.createTime = currentTime}
+        lead.updateTime = currentTime
+
+        lead
+    }
+
     // Method to convert lead array into exportable data
     def getExportData(User user, List<LeadM> leads, def params) {
         List objects    = []

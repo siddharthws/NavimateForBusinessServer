@@ -1,6 +1,7 @@
 package navimateforbusiness.util
 
 import navimateforbusiness.objects.LatLng
+import org.apache.poi.ss.usermodel.DataFormatter
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.ISODateTimeFormat
@@ -117,6 +118,9 @@ class Constants {
         public static final SimpleDateFormat DATE = new SimpleDateFormat(Constants.Date.FORMAT_DATE_ONLY)
         public static final SimpleDateFormat TIME = new SimpleDateFormat(Constants.Date.FORMAT_TIME_ONLY)
         public static final SimpleDateFormat TIME_SHORT = new SimpleDateFormat(Constants.Date.FORMAT_TIME_SHORT)
+
+        // Data Formatter for Excel import
+        public static final DataFormatter DATA = new DataFormatter()
     }
 
     class Notifications {

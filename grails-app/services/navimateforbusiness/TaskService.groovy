@@ -163,6 +163,87 @@ class TaskService {
         task
     }
 
+    TaskM fromExcelJson(User user, def json) {
+        TaskM task = null
+
+        // Validate Mandatory Columns
+        if (!json.ID)           {throw new ApiException("'ID' Column Not Found")}
+        if (!json.Lead)         {throw new ApiException("'Name' Column Not Found")}
+        if (!json.Form)         {throw new ApiException("'Form' Column Not Found")}
+        if (!json.Template)     {throw new ApiException("'Template' Column Not Found")}
+
+        // Validate mandatory parameters
+        if (!json.ID.value)         {throw new ApiException("Cell " + json.ID.cell + ": ID is missing") }
+        if (!json.Lead.value)       {throw new ApiException("Cell " + json.Lead.cell + ": Lead is missing")}
+        if (!json.Form.value)       {throw new ApiException("Cell " + json.Form.cell + ": Form is missing")}
+        if (!json.Template.value)   {throw new ApiException("Cell " + json.Template.cell + ": Template is mandatory")}
+
+        // Ensure template exists
+        def templates = templateService.getForUserByType(user, Constants.Template.TYPE_TASK)
+        def template = templates.find {it.name.equals(json.Template.value)}
+        if (!template) {throw new ApiException("Cell " + json.Template.cell + ": Template not found")}
+
+        // Ensure form template exists
+        def formTemplates = templateService.getForUserByType(user, Constants.Template.TYPE_FORM)
+        def formTemplate = formTemplates.find {it.name.equals(json.Form.value)}
+        if (!formTemplate) {throw new ApiException("Cell " + json.Form.cell + ": Form Template not found")}
+
+        // Ensure lead exists by searching through ID or Name
+        def lead = leadService.getForUserByFilter(user, [extId: json.Lead.value])
+        if (!lead) {lead = leadService.getForUserByFilter(user, [name: [equal: json.Lead.value]])}
+        if (!lead) {throw new ApiException("Cell " + json.Lead.cell + ": Lead not found. Value should either be Lead's Name or ID")}
+
+        // Validate manager
+        def manager = user
+        if (json.Manager && json.Manager.value) {
+            manager = userService.getManagerForUserByName(user, json.Manager.value)
+            if (!manager) {throw new ApiException("Cell " + json.Manager.cell + ": Manager not found")}
+        }
+
+        // Validate rep
+        def rep
+        if (json.Rep && json.Rep.value) {
+            rep = userService.getRepForUserByName(user, json.Rep.value)
+            if (!rep) {throw new ApiException("Cell " + json.Rep.cell + ": Rep not found")}
+        }
+
+        // Get existing object from id
+        task = getForUserByFilter(user, [publicId: [equal: json.ID.value]])
+
+        // Ensure task is OPEN
+        if (task && task.status != TaskStatus.OPEN) {throw new ApiException("Cell " + json.ID.cell + ": Task has ben closed. Closed tasks cannot be edited.")}
+
+        // Create new lead object if not found
+        if (!task) {
+            task = new TaskM(
+                    accountId: user.account.id,
+                    creatorId: user.id,
+                    publicId: json.ID.value
+            )
+        }
+
+        // Set values from json
+        task.lead = lead
+        task.managerId = manager.id
+        task.repId = rep ? rep.id : null
+        task.formTemplateId = formTemplate.id
+
+        // Set templated data
+        task.templateId = template.id
+        def fields = fieldService.getForTemplate(template)
+        fields.each {field ->
+            // Set value for this field from JSON received
+            task["$field.id"] = fieldService.parseExcelValue(user, field, json[field.title])
+        }
+
+        // Add date info
+        Date currentDate = new Date()
+        if (!task.dateCreated) {task.dateCreated = currentDate}
+        task.lastUpdated = currentDate
+
+        task
+    }
+
     // Method to get resolution time of task
     double getResolutionTime(TaskM task) {
         // Get elapsed time in millis
