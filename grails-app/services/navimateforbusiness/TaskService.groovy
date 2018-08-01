@@ -20,7 +20,7 @@ class TaskService {
 
     // ----------------------- Getter APIs ---------------------------//
     // Method to filter using input JSON
-    private def filter(User user, def requestJson, boolean bPaging) {
+    def filter(User user, def requestJson, boolean bPaging) {
         // Filter Leads
         def filteredLeads = leadService.filter(user, requestJson, false).leads
 
