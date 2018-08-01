@@ -69,6 +69,7 @@ Statics.getValueFromString = function (valueString, fieldType) {
     switch (fieldType) {
         case Constants.Template.FIELD_TYPE_RADIOLIST:
         case Constants.Template.FIELD_TYPE_CHECKLIST:
+        case Constants.Template.FIELD_TYPE_PRODUCT:
             if (value && value.length) {
                 value = JSON.parse(value)
             }
@@ -89,6 +90,7 @@ Statics.getStringFromValue = function (value, fieldType) {
     switch (fieldType) {
         case Constants.Template.FIELD_TYPE_RADIOLIST:
         case Constants.Template.FIELD_TYPE_CHECKLIST:
+        case Constants.Template.FIELD_TYPE_PRODUCT:
             if (value) {
                 valueString = JSON.stringify(value)
             }

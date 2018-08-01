@@ -39,7 +39,7 @@ app.controller('TemplateEditorCtrl', function ( $scope, $rootScope,
             (newType == vm.Const.FIELD_TYPE_PHOTO) ||
             (newType == vm.Const.FIELD_TYPE_FILE) ||
             (newType == vm.Const.FIELD_TYPE_SIGN) ||
-            (newType == vm.Const.FIELD_TYPE_DATE)) {
+            (newType == vm.Const.FIELD_TYPE_DATE)){
             value = ""
         } else if (newType == vm.Const.FIELD_TYPE_NUMBER) {
             value = 0
@@ -52,6 +52,8 @@ app.controller('TemplateEditorCtrl', function ( $scope, $rootScope,
             value = []
         } else if (newType == vm.Const.FIELD_TYPE_CHECKBOX) {
             value = false
+        } else if (newType == vm.Const.FIELD_TYPE_PRODUCT) {
+            value = null
         }
 
         // Update field type

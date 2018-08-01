@@ -191,7 +191,7 @@ class TemplateService {
                 break
             case Constants.Template.TYPE_LEAD:
                 // Get all affected leads
-                def leads = leadService.getAllForUserByFilter(user, [template: [value: template.name]])
+                def leads = leadService.getAllForUserByFilter(user, [template: [ids: [template.id]]])
                 leads.each {LeadM lead -> reps.addAll(leadService.getAffectedReps(user, lead)) }
                 break
             case Constants.Template.TYPE_TASK:

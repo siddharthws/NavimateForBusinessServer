@@ -203,6 +203,9 @@ class FieldService {
                 def valueJson = JSON.parse(value)
                 returnValue = valueJson.options[valueJson.selection]
                 break
+            case Constants.Template.FIELD_TYPE_PRODUCT:
+                returnValue = value.name
+                break
             case Constants.Template.FIELD_TYPE_CHECKLIST:
                 def valueJson = JSON.parse(value)
                 valueJson.each {option ->

@@ -7,6 +7,7 @@ import navimateforbusiness.TaskM
 import navimateforbusiness.User
 import navimateforbusiness.enums.Role
 import navimateforbusiness.objects.ObjPager
+import navimateforbusiness.objects.ObjSorter
 import navimateforbusiness.util.Constants
 import navimateforbusiness.LeadM
 import navimateforbusiness.ProductM
@@ -367,7 +368,7 @@ class ManagerApiController {
         def pager = new ObjPager(request.JSON.pager)
 
         // Filter leads for this user
-        def leads = leadService.getAllForUserByFPS(user, [name: [regex: text]], pager, [])
+        def leads = leadService.getAllForUserByFPS(user, [name: [regex: text]], pager, new ObjSorter())
 
         // Send response with IDs, names and total count
         def resp = [
@@ -871,7 +872,7 @@ class ManagerApiController {
         def pager = new ObjPager(request.JSON.pager)
 
         // Filter products for this user
-        def products = productService.getAllForUserByFPS(user, [name: [regex: text]], pager, [])
+        def products = productService.getAllForUserByFPS(user, [name: [regex: text]], pager, new ObjSorter())
 
         // Send response with IDs, names and total count
         def resp = [
