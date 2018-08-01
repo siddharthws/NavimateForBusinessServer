@@ -7,6 +7,7 @@ import navimateforbusiness.TaskM
 import navimateforbusiness.User
 import navimateforbusiness.enums.Role
 import navimateforbusiness.objects.ObjPager
+import navimateforbusiness.objects.ObjSorter
 import navimateforbusiness.util.Constants
 import navimateforbusiness.LeadM
 import navimateforbusiness.ProductM
@@ -367,7 +368,7 @@ class ManagerApiController {
         def pager = new ObjPager(request.JSON.pager)
 
         // Filter leads for this user
-        def leads = leadService.getAllForUserByFPS(user, [name: [regex: text]], pager, [])
+        def leads = leadService.getAllForUserByFPS(user, [name: [regex: text]], pager, new ObjSorter())
 
         // Send response with IDs, names and total count
         def resp = [
@@ -484,12 +485,8 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get filters from request
-        def filter = request.JSON.filter
-        def sorter = request.JSON.sorter
-
-        // get leads for this user
-        def filteredTasks = taskService.getAllForUserByFPS(user, filter, new ObjPager(), sorter)
+        // Filter Tasks
+        def filteredTasks = taskService.filter(user, request.JSON, false)
 
         // Ensure number of rows are less than max limit
         if (filteredTasks.tasks.size() > Constants.Table.MAX_SELECTION_COUNT) {
@@ -704,11 +701,7 @@ class ManagerApiController {
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
         // Get filters from request
-        def filter = request.JSON.filter
-        def sorter = request.JSON.sorter
-
-        // get leads for this user
-        def filteredForms = formService.getAllForUserByFPS(user, filter, new ObjPager(), sorter)
+        def filteredForms = formService.filter(user, request.JSON, false)
 
         // Ensure number of rows are less than max limit
         if (filteredForms.forms.size() > Constants.Table.MAX_SELECTION_COUNT) {
@@ -820,12 +813,8 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get filters from request
-        def filter = request.JSON.filter
-        def sorter = request.JSON.sorter
-
-        // get products for this user
-        def filteredProducts = productService.getAllForUserByFPS(user, filter, new ObjPager(), sorter)
+        // filter using request JSON
+        def filteredProducts = productService.filter(user, request.JSON, false)
 
         // Ensure number of rows are less than max limit
         if (filteredProducts.products.size() > Constants.Table.MAX_SELECTION_COUNT) {
@@ -871,7 +860,7 @@ class ManagerApiController {
         def pager = new ObjPager(request.JSON.pager)
 
         // Filter products for this user
-        def products = productService.getAllForUserByFPS(user, [name: [regex: text]], pager, [])
+        def products = productService.getAllForUserByFPS(user, [name: [regex: text]], pager, new ObjSorter())
 
         // Send response with IDs, names and total count
         def resp = [
