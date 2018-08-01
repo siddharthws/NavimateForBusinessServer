@@ -95,6 +95,7 @@ class UrlMappings {
         "/api/reps/sync/fields"     (controller: "RepApi") {action = [POST: "syncFields"]}
         "/api/reps/sync/data"       (controller: "RepApi") {action = [POST: "syncData"]}
         "/api/reps/sync/values"     (controller: "RepApi") {action = [POST: "syncValues"]}
+        "/api/reps/product/id"      (controller: "RepApi") {action = [POST: "getProductById"]}
         "/api/reps/fcm"             (controller: "RepApi") {action = [POST: "updateFcm"]}
         "/api/reps/name"            (controller: "RepApi") {action = [POST: "updateName"]}
         "/api/reps/otp"             (controller: "RepApi") {action = [POST: "sendOtpSms"]}

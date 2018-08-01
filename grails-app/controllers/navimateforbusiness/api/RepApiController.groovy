@@ -20,6 +20,7 @@ class RepApiController {
     def taskService
     def leadService
     def templateService
+    def productService
 
     def register() {
         // Remove '+' from phone number
@@ -138,6 +139,22 @@ class RepApiController {
         def resp = [
                 "forms" : idResp
         ]
+        render resp as JSON
+    }
+
+    def getProductById () {
+        def rep = authenticate()
+
+        // Find products with given IDs
+        def product = productService.getForUserByFilter(rep, [ids: [request.JSON.id]])
+
+        // Throw exception if object not found
+        if (!product) {
+            throw new ApiException("Invalid product ID requested", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Send JSON response
+        def resp = productService.toJson(product, rep)
         render resp as JSON
     }
 
