@@ -407,29 +407,28 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get filters from request
-        def filter = request.JSON.filter
-        def sorter = request.JSON.sorter
+        // Get Export Parameters
         def exportParams = request.JSON.exportParams
 
-        // get leads for this user
-        def leads = leadService.getAllForUserByFPS(user, filter, new ObjPager(), sorter).leads
+        // Filter objects
+        def leads = leadService.filter(user, request.JSON, false).leads
 
         // Extract selected leads if applicable
-        if (params.selection) {
+        if (exportParams.selection) {
             // Find all leads with IDs contained in selection array
-            leads = leads.findAll {it -> params.selection.contains(it.id)}
+            leads = leads.findAll {it -> exportParams.selection.contains(it.id)}
         }
 
-        // Export table
-        def exportData = leadService.getExportData(user, leads, exportParams)
+        // Create workbook using excel service
+        def wb = excelService.exportToWorkbook(user, Constants.Template.TYPE_LEAD, leads, exportParams)
 
         // Set response parameters
         response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
         response.contentType = grailsApplication.config.getProperty("grails.mime.types.excel")
 
-        // Export data
-        exportService.export('excel', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+        // Send workboot as response
+        wb.write(response.getOutputStream())
+        response.flushBuffer()
     }
 
     def importLeads() {
@@ -528,29 +527,28 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get filters from request
-        def filter = request.JSON.filter
-        def sorter = request.JSON.sorter
+        // Get Export Parameters
         def exportParams = request.JSON.exportParams
 
-        // get leads for this user
-        def tasks = taskService.getAllForUserByFPS(user, filter, new ObjPager(), sorter).tasks
+        // Filter objects
+        def tasks = taskService.filter(user, request.JSON, false).tasks
 
         // Extract selected leads if applicable
-        if (params.selection) {
+        if (exportParams.selection) {
             // Find all leads with IDs contained in selection array
-            tasks = tasks.findAll {it -> params.selection.contains(it.id)}
+            tasks = tasks.findAll {it -> exportParams.selection.contains(it.id)}
         }
 
-        // Export table
-        def exportData = taskService.getExportData(user, tasks, exportParams)
+        // Create workbook using excel service
+        def wb = excelService.exportToWorkbook(user, Constants.Template.TYPE_TASK, tasks, exportParams)
 
         // Set response parameters
         response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
         response.contentType = grailsApplication.config.getProperty("grails.mime.types.excel")
 
-        // Export data
-        exportService.export('excel', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+        // Send workboot as response
+        wb.write(response.getOutputStream())
+        response.flushBuffer()
     }
 
     def importTasks() {
@@ -717,29 +715,28 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get filters from request
-        def filter = request.JSON.filter
-        def sorter = request.JSON.sorter
+        // Get Export Parameters
         def exportParams = request.JSON.exportParams
 
-        // get leads for this user
-        def forms = formService.getAllForUserByFPS(user, filter, new ObjPager(), sorter).forms
+        // Filter objects
+        def forms = formService.filter(user, request.JSON, false).forms
 
         // Extract selected leads if applicable
-        if (params.selection) {
+        if (exportParams.selection) {
             // Find all leads with IDs contained in selection array
-            forms = forms.findAll {it -> params.selection.contains(it.id)}
+            forms = forms.findAll {it -> exportParams.selection.contains(it.id)}
         }
 
-        // Export table
-        def exportData = formService.getExportData(user, forms, exportParams)
+        // Create workbook using excel service
+        def wb = excelService.exportToWorkbook(user, Constants.Template.TYPE_FORM, forms, exportParams)
 
         // Set response parameters
         response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
         response.contentType = grailsApplication.config.getProperty("grails.mime.types.excel")
 
-        // Export data
-        exportService.export('excel', response.outputStream, exportData.objects, exportData.fields, exportData.labels, [:], [:])
+        // Send workboot as response
+        wb.write(response.getOutputStream())
+        response.flushBuffer()
     }
 
     def removeForms() {
@@ -882,6 +879,34 @@ class ManagerApiController {
 
         def resp = [success: true]
         render resp as JSON
+    }
+
+    def exportProducts() {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        // Get Export Parameters
+        def exportParams = request.JSON.exportParams
+
+        // Filter objects
+        def products = productService.filter(user, request.JSON, false).products
+
+        // Extract selected leads if applicable
+        if (exportParams.selection) {
+            // Find all leads with IDs contained in selection array
+            products = products.findAll {it -> exportParams.selection.contains(it.id)}
+        }
+
+        // Create workbook using excel service
+        def wb = excelService.exportToWorkbook(user, Constants.Template.TYPE_PRODUCT, products, exportParams)
+
+        // Set response parameters
+        response.setHeader("Content-disposition", "attachment; filename=exportfile.xls")
+        response.contentType = grailsApplication.config.getProperty("grails.mime.types.excel")
+
+        // Send workboot as response
+        wb.write(response.getOutputStream())
+        response.flushBuffer()
     }
 
     // ----------------------- Private methods ----------------------- //

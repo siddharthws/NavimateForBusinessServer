@@ -112,6 +112,42 @@ class FormService {
         json
     }
 
+    def toExcelJson(User user, FormM form, def params) {
+        def json = [:]
+
+        params.columns.each { def column ->
+            if (column.objectId == Constants.Template.TYPE_LEAD) {
+                json[column.name] = form.task ? leadService.getColumnValue(user, column, form.task.lead) : '-'
+            } else if (column.objectId == Constants.Template.TYPE_TASK) {
+                json[column.name] = form.task ? taskService.getColumnValue(user, column, form.task) : '-'
+            } else if (column.objectId == Constants.Template.TYPE_FORM) {
+                json[column.name] = getColumnValue(user, column, form)
+            }
+        }
+
+        json
+    }
+
+    String getColumnValue(User user, def column, FormM form) {
+        String value
+
+        if (column.fieldName == "template") {
+            value = templateService.getForUserById(user, form.templateId).name
+        } else if (column.fieldName == "location") {
+            value = "https://www.google.com/maps/search/?api=1&query=" + form.latitude + "," + form.longitude
+        } else if (column.fieldName == "rep") {
+            value = userService.getRepForUserById(user, form.ownerId).name
+        } else {
+            value = fieldService.formatForExport(column.type, form[column.fieldName])
+        }
+
+        if (value == null || value.equals("")) {
+            value = '-'
+        }
+
+        value
+    }
+
     FormM fromJson(def json, User user) {
         FormM form = null
 

@@ -101,6 +101,44 @@ class TaskService {
         json
     }
 
+    def toExcelJson(User user, TaskM task, def params) {
+        def json = [:]
+
+        params.columns.each { def column ->
+            if (column.objectId == Constants.Template.TYPE_LEAD) {
+                json[column.name] = leadService.getColumnValue(user, column, task.lead)
+            } else if (column.objectId == Constants.Template.TYPE_TASK) {
+                json[column.name] = getColumnValue(user, column, task)
+            }
+        }
+
+        json
+    }
+
+    String getColumnValue(User user, def column, TaskM task) {
+        String value
+
+        if (column.fieldName == "template") {
+            value = templateService.getForUserById(user, task.templateId).name
+        } else if (column.fieldName == "formTemplate") {
+            value = templateService.getForUserById(user, task.formTemplateId).name
+        } else if (column.fieldName == "rep") {
+            value = userService.getRepForUserById(user, task.repId).name
+        } else if (column.fieldName == "manager") {
+            value = userService.getManagerForUserById(user, task.managerId).name
+        } else if (column.fieldName == "creator") {
+            value = userService.getManagerForUserById(user, task.creatorId).name
+        } else {
+            value = fieldService.formatForExport(column.type, task[column.fieldName])
+        }
+
+        if (value == null || value.equals("")) {
+            value = '-'
+        }
+
+        value
+    }
+
     TaskM fromJson(def json, User user) {
         TaskM task = null
 

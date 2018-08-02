@@ -86,6 +86,36 @@ class LeadService {
         json
     }
 
+    def toExcelJson(User user, LeadM lead, def params) {
+        def json = [:]
+
+        params.columns.each { def column ->
+            if (column.objectId == Constants.Template.TYPE_LEAD) {
+                json[column.name] = getColumnValue(user, column, lead)
+            }
+        }
+
+        json
+    }
+
+    String getColumnValue(User user, def column, LeadM lead) {
+        String value
+
+        if (column.fieldName == "template") {
+            value = templateService.getForUserById(user, lead.templateId).name
+        } else if (column.fieldName == "location") {
+            value = "https://www.google.com/maps/search/?api=1&query=" + lead.latitude + "," + lead.longitude
+        } else {
+            value = fieldService.formatForExport(column.type, lead[column.fieldName])
+        }
+
+        if (value == null || value.equals("")) {
+            value = '-'
+        }
+
+        value
+    }
+
     LeadM fromJson(def json, User user) {
         LeadM lead = null
 

@@ -304,7 +304,7 @@ app.controller('Table2Ctrl', function (  $rootScope, $scope, $window, $state, $h
             // Error Callback
             function (error) {
                 $rootScope.hideWaitingDialog()
-                ToastService.toast("Error : " + error.data.error + " !!!")
+                DialogService.alert("Export Error: " + error.data.error)
             }
         )
     })
