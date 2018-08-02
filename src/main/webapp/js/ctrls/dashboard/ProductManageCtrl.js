@@ -24,6 +24,11 @@ app.controller("ProductManageCtrl", function ( $scope, $http, $rootScope, $local
             DialogService.productEditor(vm.table.getSelectedIds(), vm.reset)
         }
 
+        vm.export = function () {
+            // Broadcast Toggle Columns Event
+            $scope.$broadcast(Constants.Events.TABLE_EXPORT)
+        }
+
         vm.reset = function () {
             // Broadcast Toggle Columns Event
             $scope.$broadcast(Constants.Events.TABLE_RESET)

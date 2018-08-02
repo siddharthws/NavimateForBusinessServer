@@ -82,6 +82,34 @@ class ProductService {
         json
     }
 
+    def toExcelJson(User user, ProductM product, def params) {
+        def json = [:]
+
+        params.columns.each { def column ->
+            if (column.objectId == Constants.Template.TYPE_PRODUCT) {
+                json[column.name] = getColumnValue(user, column, product)
+            }
+        }
+
+        json
+    }
+
+    String getColumnValue(User user, def column, ProductM product) {
+        String value
+
+        if (column.fieldName == "template") {
+            value = templateService.getForUserById(user, product.templateId).name
+        } else {
+            value = fieldService.formatForExport(column.type, product[column.fieldName])
+        }
+
+        if (value == null || value.equals("")) {
+            value = '-'
+        }
+
+        value
+    }
+
     ProductM fromJson(def json, User user) {
         ProductM product = null
 

@@ -374,9 +374,10 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
                 if (column.filter.bShow) {
                     // Push to params
                     params.columns.push({
-                        field: column.label,
-                        label: column.name,
-                        type: column.type
+                        name: column.name,
+                        type: column.type,
+                        fieldName: column.label,
+                        objectId: column.objectId
                     })
                 }
             })

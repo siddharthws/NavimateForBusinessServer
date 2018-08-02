@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.util.CellReference
 import org.apache.poi.xssf.usermodel.XSSFCell
 import org.apache.poi.xssf.usermodel.XSSFRow
+import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.web.multipart.MultipartFile
 
@@ -16,6 +17,7 @@ class ExcelService {
     /*------------------------ Dependencies --------------------*/
     def leadService
     def taskService
+    def formService
     def productService
 
     /*------------------------ Public methods --------------------*/
@@ -28,6 +30,16 @@ class ExcelService {
 
         // Save all objects
         objects.each {it.save(flush: true, failOnError: true)}
+    }
+
+    XSSFWorkbook exportToWorkbook(User user, int type, def objects, def params) {
+        // Convert all objects to excel JSON
+        def json = objects.collect { parseObjectToJson(user, type, params, it) }
+
+        // Parse to workbook
+        def wb = jsonToWorkbook(params, json)
+
+        wb
     }
 
     /*------------------------ Private methods --------------------*/
@@ -66,6 +78,22 @@ class ExcelService {
         json = json.findAll {it}
 
         json
+    }
+
+    // Method to convert a JSON formatted for excel into a workbook
+    private XSSFWorkbook jsonToWorkbook(def params, def json) {
+        // Create workbook and sheet
+        def wb = new XSSFWorkbook()
+        def sheet = wb.createSheet()
+
+        // Add header row
+        def header = sheet.createRow(0)
+        params.columns.eachWithIndex {def column, int i -> header.createCell(i).setCellValue(column.name) }
+
+        // Add data rows
+        json.each { jsonToRow(sheet, params, it) }
+
+        wb
     }
 
     // Method to convert a row to JSON
@@ -112,7 +140,15 @@ class ExcelService {
         bValid ? json : null
     }
 
-    // Method to convert row JSON to Object
+    private def jsonToRow(XSSFSheet sheet, def params, def json) {
+        // Create row
+        def row = sheet.createRow(sheet.lastRowNum + 1)
+
+        // Create cells in the row for each column
+        params.columns.eachWithIndex {def column, int i -> row.createCell(i).setCellValue(json[column.name]) }
+    }
+
+    // Methods to convert between JSONs and Domain Objects
     private def parseJsonToObject(User user, int type, def json) {
         def object
 
@@ -131,6 +167,29 @@ class ExcelService {
         }
 
         object
+    }
+
+    private def parseObjectToJson(User user, int type, def params, def object) {
+        def json
+
+        switch (type) {
+            case Constants.Template.TYPE_LEAD:
+                json = leadService.toExcelJson(user, object, params)
+                break
+            case Constants.Template.TYPE_TASK:
+                json = taskService.toExcelJson(user, object, params)
+                break
+            case Constants.Template.TYPE_FORM:
+                json = formService.toExcelJson(user, object, params)
+                break
+            case Constants.Template.TYPE_PRODUCT:
+                json = productService.toExcelJson(user, object, params)
+                break
+            default:
+                throw new ApiException("Cannot parse object of unknown type")
+        }
+
+        json
     }
 
     // Methods to get String value based on Cell Type
