@@ -191,7 +191,7 @@ class AuthService {
         Template defaultTemplate = new Template(
                 owner: manager,
                 account: manager.account,
-                name: "Default",
+                name: "Default Form",
                 type: Constants.Template.TYPE_FORM,
                 dateCreated: new Date(),
                 lastUpdated: new Date()
@@ -212,7 +212,7 @@ class AuthService {
 
     Template createDefaultLeadTemplate(User user) {
         // Create a default Lead template
-        Template template = new Template(account: user.account, owner: user, name: "Default", type: Constants.Template.TYPE_LEAD, dateCreated: new Date(), lastUpdated: new Date())
+        Template template = new Template(account: user.account, owner: user, name: "Default Lead", type: Constants.Template.TYPE_LEAD, dateCreated: new Date(), lastUpdated: new Date())
 
         // Create Fields for the template
         Field descField     = new Field(account: user.account, type: Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false, value: "")
@@ -229,7 +229,7 @@ class AuthService {
 
     Template createDefaultTaskTemplate(User admin) {
         // Create a default Task template
-        Template template = new Template(account: admin.account, owner: admin, name: "Default", type: Constants.Template.TYPE_TASK, dateCreated: new Date(), lastUpdated: new Date())
+        Template template = new Template(account: admin.account, owner: admin, name: "Default Task", type: Constants.Template.TYPE_TASK, dateCreated: new Date(), lastUpdated: new Date())
 
         // Create Fields for the template
         Field descField     = new Field(account: admin.account, type: Constants.Template.FIELD_TYPE_TEXT, title: "Description", bMandatory: false, value: "")
@@ -242,7 +242,7 @@ class AuthService {
 
     Template createDefaultProductTemplate(User admin) {
         // Create a default product template
-        Template template = new Template(account: admin.account, owner: admin, name: "Default", type: Constants.Template.TYPE_PRODUCT, dateCreated: new Date(), lastUpdated: new Date())
+        Template template = new Template(account: admin.account, owner: admin, name: "Default Product", type: Constants.Template.TYPE_PRODUCT, dateCreated: new Date(), lastUpdated: new Date())
 
         // Create Fields for the template
         Field unitsField            = new Field(account: admin.account, type: Constants.Template.FIELD_TYPE_NUMBER, title: "Units", bMandatory: false, value: "0")
