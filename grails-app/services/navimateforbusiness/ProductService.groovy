@@ -99,6 +99,8 @@ class ProductService {
 
         if (column.fieldName == "template") {
             value = templateService.getForUserById(user, product.templateId).name
+        } else if (column.fieldName == "name") {
+            value = product.name
         } else {
             value = fieldService.formatForExport(column.type, product[column.fieldName])
         }

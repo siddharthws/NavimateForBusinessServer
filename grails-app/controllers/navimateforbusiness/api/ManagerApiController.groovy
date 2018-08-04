@@ -382,12 +382,8 @@ class ManagerApiController {
         // Get user object
         def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
 
-        // Get filters from request
-        def filter = request.JSON.filter
-        def sorter = request.JSON.sorter
-
-        // get leads for this user
-        def filteredLeads = leadService.getAllForUserByFPS(user, filter, new ObjPager(), sorter)
+        // filter using request JSON
+        def filteredLeads = leadService.filter(user, request.JSON, false)
 
         // Ensure number of rows are less than max limit
         if (filteredLeads.leads.size() > Constants.Table.MAX_SELECTION_COUNT) {

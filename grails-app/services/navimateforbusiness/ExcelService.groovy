@@ -73,8 +73,9 @@ class ExcelService {
         if (uniqueCols.size() != columns.size()) { throw new ApiException("Duplicate column names are not allowed. Check first row of file.") }
 
         // Convert Data rows to JSON Objects
-        def dataRows = sheet.rowIterator().withIndex().findAll {it, i -> i > 0}
-        def json = dataRows.collect { rowToJson(columns, it) }
+        def dataRows = sheet.rowIterator().findAll()
+        dataRows.removeAt(0)
+        def json = dataRows.collect { XSSFRow it -> rowToJson(columns, it) }
         json = json.findAll {it}
 
         json

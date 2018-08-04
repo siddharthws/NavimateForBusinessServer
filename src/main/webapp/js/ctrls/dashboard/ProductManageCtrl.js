@@ -3,7 +3,7 @@
  */
 
 app.controller("ProductManageCtrl", function ( $scope, $http, $rootScope, $localStorage,  ToastService,
-                                               NavService, DialogService, TableService, ProductService) {
+                                               NavService, DialogService, TableService, ProductService, ImportService) {
         /* ------------------------------- INIT -----------------------------------*/
         var vm = this
 
