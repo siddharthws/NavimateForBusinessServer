@@ -4,7 +4,7 @@
 
 // Controller for Template Editor Dialog
 app.controller('TemplateEditorCtrl', function ( $scope, $rootScope,
-                                                ToastService, ObjField, DialogService) {
+                                                ToastService, ObjField, DialogService, TemplateService) {
     var vm = this
     vm.Const = $rootScope.Constants.Template
 
@@ -137,6 +137,8 @@ app.controller('TemplateEditorCtrl', function ( $scope, $rootScope,
 
         if (!vm.template.name) {
             toastMessage = "Please fill template name..."
+        } else if (vm.templateNames.contains(vm.template.name)) {
+            toastMessage = "Another template with this name already exists"
         } else if (vm.fields.length)  {
             for (var i = 0; i < vm.fields.length; i++) {
                 var field = vm.fields[i]
@@ -206,6 +208,14 @@ app.controller('TemplateEditorCtrl', function ( $scope, $rootScope,
     vm.availableFieldTypes = $scope.availableFieldTypes
     vm.fields = vm.template.fields
     vm.bShowError = false
+
+    // Get all template names
+    vm.templateNames = []
+    TemplateService.cache.forEach(function (template) {
+        if (template.id != vm.template.id) {
+            vm.templateNames.push(template.name)
+        }
+    })
 
     // Set broadcast listener
     // Validation event

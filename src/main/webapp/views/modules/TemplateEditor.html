@@ -3,7 +3,9 @@
     <div class="d-flex align-items-center">
         <span>Template Name :</span>
         <input class="input-underlined flex-1 ml-2" type="text" placeholder="Enter name for template..."
-               ng-class="{'has-error': !$ctrl.template.name && $ctrl.bShowError}"
+               ng-class="{'has-error': (!$ctrl.template.name ||
+                                        $ctrl.templateNames.contains($ctrl.template.name)) &&
+                                       $ctrl.bShowError}"
                ng-model="$ctrl.template.name">
     </div>
 
