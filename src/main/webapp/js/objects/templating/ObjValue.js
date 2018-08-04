@@ -58,9 +58,6 @@ app.factory('ObjValue', function(TemplateService) {
 
         switch (this.field.type) {
             case Constants.Template.FIELD_TYPE_TEXT:
-            case Constants.Template.FIELD_TYPE_CHECKBOX:
-            case Constants.Template.FIELD_TYPE_RADIOLIST:
-            case Constants.Template.FIELD_TYPE_CHECKLIST:
             case Constants.Template.FIELD_TYPE_PHOTO:
             case Constants.Template.FIELD_TYPE_FILE:
             case Constants.Template.FIELD_TYPE_SIGN:
@@ -77,6 +74,10 @@ app.factory('ObjValue', function(TemplateService) {
                 if (!Statics.validateNumber(this.value)) {
                     err = 'Cannot be empty'
                 }
+                break
+            case Constants.Template.FIELD_TYPE_RADIOLIST:
+            case Constants.Template.FIELD_TYPE_CHECKLIST:
+            case Constants.Template.FIELD_TYPE_CHECKBOX:
                 break
             default:
                 err = "Invalid Field Type"
