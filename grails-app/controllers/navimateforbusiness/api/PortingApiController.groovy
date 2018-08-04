@@ -32,6 +32,7 @@ class PortingApiController {
     def formService
     def reportService
     def fieldService
+    def authService
 
     def taskPublicId() {
         Task.findAll().each {
@@ -302,6 +303,16 @@ class PortingApiController {
             if (task.rep && (!task.rep.account || task.rep.account.id != task.account.id)) {
                 taskService.remove(task.account.admin, task)
             }
+        }
+    }
+
+    def createProductTemplates() {
+        Account.findAll().each { Account acc ->
+            // Create product template
+            def template = authService.createDefaultProductTemplate(acc.admin)
+
+            // Save template
+            template.save(flush: true, failOnError: true)
         }
     }
 }

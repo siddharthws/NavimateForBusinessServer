@@ -125,6 +125,7 @@ class UrlMappings {
         "/api/port/isRemoveUserFix"        (controller: "PortingApi") {action = [GET: "isRemoveUserFix"]}
         "/api/port/fixNumberField"         (controller: "PortingApi") {action = [GET: "fixNumberField"]}
         "/api/port/mongoObjects"           (controller: "PortingApi") {action = [GET: "mongoObjects"]}
+        "/api/port/productTemplates"       (controller: "PortingApi") {action = [GET: "createProductTemplates"]}
 
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs
