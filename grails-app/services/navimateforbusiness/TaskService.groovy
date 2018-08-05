@@ -128,6 +128,8 @@ class TaskService {
             value = userService.getManagerForUserById(user, task.managerId).name
         } else if (column.fieldName == "creator") {
             value = userService.getManagerForUserById(user, task.creatorId).name
+        } else if (column.fieldName == "resolutionTimeHrs") {
+            value = task.resolutionTimeHrs != -1 ? String.valueOf(task.resolutionTimeHrs) : "-"
         } else {
             value = fieldService.formatForExport(column.type, task[column.fieldName])
         }
@@ -174,7 +176,7 @@ class TaskService {
         // Set parameters from JSON
         task.managerId = manager.id
         task.creatorId = user.id
-        task.repId = rep.id
+        task.repId = rep ? rep.id : null
         task.lead = leadService.getForUserByFilter(user, [ids: [json.leadId]])
         task.publicId = json.publicId ?: "-"
         task.status = TaskStatus.fromValue(json.status)
