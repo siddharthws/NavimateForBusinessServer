@@ -137,6 +137,8 @@ class FormService {
             value = "https://www.google.com/maps/search/?api=1&query=" + form.latitude + "," + form.longitude
         } else if (column.fieldName == "rep") {
             value = userService.getRepForUserById(user, form.ownerId).name
+        } else if (column.fieldName == "distanceKm") {
+            value = form.distanceKm != -1 ? String.valueOf(form.distanceKm) : "-"
         } else {
             value = fieldService.formatForExport(column.type, form[column.fieldName])
         }

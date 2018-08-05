@@ -29,7 +29,7 @@ app.controller('Table2Ctrl', function (  $rootScope, $scope, $window, $state, $h
 
     /* ----------------------------- Public APIs --------------------------------*/
     // API to show photo on new page
-    vm.showImage = function (filename) {
+    vm.showImage = function (filename, colIdx) {
         // Get photo from server
         $rootScope.showWaitingDialog("Downloading..")
 

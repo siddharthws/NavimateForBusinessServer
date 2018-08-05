@@ -74,7 +74,7 @@ class FieldService {
 
         switch (field.type) {
             case Constants.Template.FIELD_TYPE_NUMBER:
-                parsedValue = Double.parseDouble(value)
+                parsedValue = Double.parseDouble(String.valueOf(value))
                 break
             default:
                 parsedValue = value
@@ -203,6 +203,10 @@ class FieldService {
 
     String formatForExport(int type, def value) {
         String returnValue = ""
+
+        if (!value) {
+            return returnValue
+        }
 
         // Parse special values as per column type
         switch (type) {
