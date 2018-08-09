@@ -4,6 +4,7 @@ import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
+import org.grails.web.json.JSONObject
 
 import java.text.SimpleDateFormat
 
@@ -188,7 +189,10 @@ class FieldService {
                 if (value) {
                     def product = productService.getForUserByFilter(user, [productId: [equal:value]])
                     if(product){
-                        value = [id: product.id, name: product.name].toString()
+                        def temp = new JSONObject()
+                        temp.put("id", product.id)
+                        temp.put("name", product.name)
+                        value = temp.toString()
                     } else {
                         throw new ApiException("Cell " + excelValue.cell + ": Product ID not found", Constants.HttpCodes.BAD_REQUEST)
                     }
