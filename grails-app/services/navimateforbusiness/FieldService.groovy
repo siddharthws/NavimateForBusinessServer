@@ -84,6 +84,24 @@ class FieldService {
         parsedValue
     }
 
+    def toFrontendValue(User user, Field field, def value) {
+        def val
+
+        switch (field.type) {
+            case Constants.Template.FIELD_TYPE_PRODUCT:
+                if (value) {
+                    def product = productService.getForUserByFilter(user, [ids: [value]])
+                    def temp = new JSONObject([id: product.id, name: product.name])
+                    val = temp.toString()
+                }
+                break
+            default:
+                val = value
+        }
+
+        val
+    }
+
     String parseExcelValue (User user, Field field, def excelValue) {
         String defValue = field.value
 
@@ -189,15 +207,10 @@ class FieldService {
                 if (value) {
                     def product = productService.getForUserByFilter(user, [productId: [equal:value]])
                     if(product){
-                        def temp = new JSONObject()
-                        temp.put("id", product.id)
-                        temp.put("name", product.name)
-                        value = temp.toString()
+                        value = product.id
                     } else {
                         throw new ApiException("Cell " + excelValue.cell + ": Product ID not found", Constants.HttpCodes.BAD_REQUEST)
                     }
-                } else {
-                    value = [:].toString()
                 }
                 break
         }
@@ -205,7 +218,7 @@ class FieldService {
         value
     }
 
-    String formatForExport(int type, def value) {
+    String formatForExport(User user, int type, def value) {
         String returnValue = ""
 
         if (!value) {
@@ -227,8 +240,8 @@ class FieldService {
                 break
             case Constants.Template.FIELD_TYPE_PRODUCT:
                 if (value) {
-                    def valueJson = JSON.parse(value)
-                    returnValue = valueJson.name
+                    def product = productService.getForUserByFilter(user, [ids: [value]])
+                    returnValue = product.name
                 }
 
                 if (!returnValue) {
