@@ -106,7 +106,7 @@ class FormService {
         def template = templateService.getForUserById(user, form.templateId)
         def fields = fieldService.getForTemplate(template)
         fields.each {Field field ->
-            json.values.push([fieldId: field.id, value: form["$field.id"]])
+            json.values.push([fieldId: field.id, value: fieldService.toFrontendValue(user, field, form["$field.id"])])
         }
 
         json
@@ -140,7 +140,7 @@ class FormService {
         } else if (column.fieldName == "distanceKm") {
             value = form.distanceKm != -1 ? String.valueOf(form.distanceKm) : "-"
         } else {
-            value = fieldService.formatForExport(column.type, form[column.fieldName])
+            value = fieldService.formatForExport(user, column.type, form[column.fieldName])
         }
 
         if (value == null || value.equals("")) {
@@ -236,7 +236,7 @@ class FormService {
                 } else {
                     value = form["$column.field"]
                     if (value) {
-                        value = fieldService.formatForExport(column.type, value)
+                        value = fieldService.formatForExport(user, column.type, value)
                     }
                 }
 

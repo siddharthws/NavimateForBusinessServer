@@ -76,7 +76,7 @@ class ProductService {
         def template = templateService.getForUserById(user, product.templateId)
         def fields = fieldService.getForTemplate(template)
         fields.each {Field field ->
-            json.values.push([fieldId: field.id, value: product["$field.id"]])
+            json.values.push([fieldId: field.id, value: fieldService.toFrontendValue(user, field, product["$field.id"])])
         }
 
         json
@@ -102,7 +102,7 @@ class ProductService {
         } else if (column.fieldName == "name") {
             value = product.name
         } else {
-            value = fieldService.formatForExport(column.type, product[column.fieldName])
+            value = fieldService.formatForExport(user, column.type, product[column.fieldName])
         }
 
         if (value == null || value.equals("")) {

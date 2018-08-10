@@ -80,7 +80,7 @@ class LeadService {
         def template = templateService.getForUserById(user, lead.templateId)
         def fields = fieldService.getForTemplate(template)
         fields.each {Field field ->
-            json.values.push([fieldId: field.id, value: lead["$field.id"]])
+            json.values.push([fieldId: field.id, value: fieldService.toFrontendValue(user, field, lead["$field.id"])])
         }
 
         json
@@ -106,7 +106,7 @@ class LeadService {
         } else if (column.fieldName == "location") {
             value = "https://www.google.com/maps/search/?api=1&query=" + lead.latitude + "," + lead.longitude
         } else {
-            value = fieldService.formatForExport(column.type, lead[column.fieldName])
+            value = fieldService.formatForExport(user, column.type, lead[column.fieldName])
         }
 
         if (value == null || value.equals("")) {
@@ -278,7 +278,7 @@ class LeadService {
                 } else {
                     value = lead["$column.field"]
                     if (value) {
-                        value = fieldService.formatForExport(column.type, value)
+                        value = fieldService.formatForExport(user, column.type, value)
                     }
                 }
 

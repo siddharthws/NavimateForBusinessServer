@@ -127,6 +127,7 @@ class UrlMappings {
         "/api/port/fixNumberField"         (controller: "PortingApi") {action = [GET: "fixNumberField"]}
         "/api/port/mongoObjects"           (controller: "PortingApi") {action = [GET: "mongoObjects"]}
         "/api/port/productTemplates"       (controller: "PortingApi") {action = [GET: "createProductTemplates"]}
+        "/api/port/fixProductField"        (controller: "PortingApi") {action = [GET: "fixProductField"]}
 
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs

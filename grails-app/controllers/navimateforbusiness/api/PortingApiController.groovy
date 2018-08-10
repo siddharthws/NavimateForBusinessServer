@@ -21,6 +21,7 @@ import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.enums.Visibility
 import navimateforbusiness.util.Constants
 import navimateforbusiness.util.ApiException
+import org.grails.web.json.JSONObject
 
 import static com.mongodb.client.model.Filters.eq
 
@@ -33,6 +34,46 @@ class PortingApiController {
     def reportService
     def fieldService
     def authService
+
+    def fixProductField() {
+        // Get all product fields
+        def fields = Field.findAllByType(Constants.Template.FIELD_TYPE_PRODUCT)
+        fields.each {def field ->
+            switch (field.template.type) {
+                case Constants.Template.TYPE_TASK:
+                    // Iterate through all tasks
+                    TaskM.findAll().each { TaskM it ->
+                        if (it["$field.id"]) {
+                            def valueJson = new JSONObject(it["$field.id"])
+                            if (valueJson.id) {
+                                it["$field.id"] = valueJson.id
+                            } else {
+                                it["$field.id"] = null
+                            }
+
+                            it.save(flush: true, failOnError: true)
+                        }
+                    }
+                    break
+
+                case Constants.Template.TYPE_LEAD:
+                    // Iterate through all tasks
+                    LeadM.findAll().each { LeadM it ->
+                        if (it["$field.id"]) {
+                            def valueJson = new JSONObject(it["$field.id"])
+                            if (valueJson.id) {
+                                it["$field.id"] = valueJson.id
+                            } else {
+                                it["$field.id"] = null
+                            }
+
+                            it.save(flush: true, failOnError: true)
+                        }
+                    }
+                    break
+            }
+        }
+    }
 
     def taskPublicId() {
         Task.findAll().each {

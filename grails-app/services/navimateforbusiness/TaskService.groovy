@@ -95,7 +95,7 @@ class TaskService {
         def template = templateService.getForUserById(user, task.templateId)
         def fields = fieldService.getForTemplate(template)
         fields.each {Field field ->
-            json.values.push([fieldId: field.id, value: task["$field.id"]])
+            json.values.push([fieldId: field.id, value: fieldService.toFrontendValue(user, field, task["$field.id"])])
         }
 
         json
@@ -131,7 +131,7 @@ class TaskService {
         } else if (column.fieldName == "resolutionTimeHrs") {
             value = task.resolutionTimeHrs != -1 ? String.valueOf(task.resolutionTimeHrs) : "-"
         } else {
-            value = fieldService.formatForExport(column.type, task[column.fieldName])
+            value = fieldService.formatForExport(user, column.type, task[column.fieldName])
         }
 
         if (value == null || value.equals("")) {
@@ -346,7 +346,7 @@ class TaskService {
                 } else {
                     value = task["$column.field"]
                     if (value) {
-                        value = fieldService.formatForExport(column.type, value)
+                        value = fieldService.formatForExport(user, column.type, value)
                     }
                 }
 
