@@ -305,6 +305,20 @@ class MongoService {
         // Add all mandatory filters
         filters.addAll(getMandatoryFilters(user, colFilters))
 
+        // Add role specific filters
+        if (user.role == Role.MANAGER) {
+            // Objects should either be owned by user or by account admin
+            filters.push(['$or': [['ownerId': ['$eq': user.id]],
+                                  ['ownerId': ['$eq': user.account.admin.id]]]])
+        } else if (user.role == Role.CC) {
+            // Objects should either be owned by account admin
+            filters.push(['$eq': ['ownerId': user.account.admin.id]])
+        } else if (user.role == Role.REP) {
+            // Objects should either be owned by rep's manager or admin
+            filters.push(['$or': [['ownerId': ['$eq': user.manager.id]],
+                                  ['ownerId': ['$eq': user.account.admin.id]]]])
+        }
+
         // Apply Name filters if any
         if (colFilters.name?.equal) {filters.push(['name': ['$eq': "$colFilters.name.equal"]])}
         if (colFilters.name?.value) {filters.push(getMultiselectFilter("_id", colFilters.name.value))}
