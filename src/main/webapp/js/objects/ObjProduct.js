@@ -2,10 +2,11 @@
  * Created by aroha on 16-06-2018.
  */
 
-app.factory('ObjProduct', function(TemplateService, ObjValue) {
+app.factory('ObjProduct', function($localStorage, TemplateService, ObjValue) {
     // ----------------------------------- Constructor ------------------------------------//
-    function ObjProduct (id, productId, name, template, values) {
+    function ObjProduct (id, owner, productId, name, template, values) {
         this.id             = id
+        this.owner          = owner
         this.productId      = productId
         this.name           = name
         this.template       = template
@@ -22,7 +23,7 @@ app.factory('ObjProduct', function(TemplateService, ObjValue) {
         })
 
         // Return clone of product object
-        return new ObjProduct(this.id, this.productId, {id: this.id, name: this.name}, this.template, values)
+        return new ObjProduct(this.id, {id: this.owner.id, name: this.owner.name}, this.productId, {id: this.id, name: this.name}, this.template, values)
     }
 
     // Method to parse data into row
@@ -53,6 +54,19 @@ app.factory('ObjProduct', function(TemplateService, ObjValue) {
         })
 
         return row
+    }
+
+    // Method to check if lead is owned by current user
+    ObjProduct.prototype.canEdit = function () {
+        // Check if current user is not owner
+        if (this.owner && this.owner.id != $localStorage.id) {
+            // Check if current user is not Admin
+            if ($localStorage.role != Constants.Role.ADMIN) {
+                return false
+            }
+        }
+
+        return true
     }
 
     // ----------------------------------- Validation APIs ------------------------------------//
@@ -110,6 +124,7 @@ app.factory('ObjProduct', function(TemplateService, ObjValue) {
 
         return new ObjProduct(
             json.id,
+            json.owner,
             json.productId,
             json.name,
             TemplateService.getById(json.templateId),

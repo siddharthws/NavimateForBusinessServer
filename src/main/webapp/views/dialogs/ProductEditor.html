@@ -3,9 +3,9 @@
     <!-- Main container -->
     <div class="fbx-h w-100 h-100">
         <!-- Content for left side of dialog -->
-        <div class="fbx-h w-75 h-100 dialog-editor-content fbx-center-children">
+        <div class="pos-r w-75 h-100 dialog-editor-content">
             <!-- Error Waiting UI -->
-            <div class="fbx-h">
+            <div class="pos-a fbx-h w-100 h-100 fbx-center-children">
                 <!-- Waiting Spinner -->
                 <div class="fbx-h fbx-center-children" ng-if="vm.bLoading">
                     <loader class="loader-l"></loader>
@@ -20,7 +20,15 @@
             </div>
 
             <!-- Product information form -->
-            <div class="fbx-v w-100 h-100 overflow-auto align-items-start" ng-if="!vm.bLoading && !vm.bLoadError">
+            <div class="pos-a fbx-v w-100 h-100 overflow-auto align-items-start" ng-if="!vm.bLoading && !vm.bLoadError">
+                <!-- Lock -->
+                <div class="fbx-h align-items-center align-self-center" ng-if="!vm.selectedProduct.canEdit()">
+                    <img class="ib-base ib-xs" src="/static/images/ic_lock.png">
+                    <span class="text-error ml-2">
+                        This product is owned by {{vm.selectedProduct.owner.name}}. <br>
+                        You cannot edit this product.
+                    </span>
+                </div>
 
                 <!-- Product ID -->
                 <input-box label="Product ID" model="vm.selectedProduct.productId" hint="Enter product ID..."
@@ -37,6 +45,9 @@
                 <!-- Template Values -->
                 <template-values-editor class="px-2 mt-2" values="vm.selectedProduct.values" b-show-error="vm.bInputError"></template-values-editor>
             </div>
+
+            <!-- Cover for non clickable items -->
+            <div class="pos-a w-100 h-100" ng-click="return false" ng-if="!vm.selectedProduct.canEdit()"></div>
         </div>
 
         <!-- Content for right side of dialog -->

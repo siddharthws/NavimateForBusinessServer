@@ -836,8 +836,12 @@ class ManagerApiController {
                 throw new ApiException("Product not found...", Constants.HttpCodes.BAD_REQUEST)
             }
 
-            // Remove product
-            productService.remove(user, product)
+            // remove only if product is editable by this user
+            if (user.role == Role.ADMIN || product.ownerId == user.id) {
+                // Remove lead
+                reps.addAll(productService.getAffectedReps(user, product))
+                productService.remove(user, product)
+            }
         }
 
         def resp = [success: true]

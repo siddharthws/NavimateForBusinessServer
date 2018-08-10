@@ -66,6 +66,7 @@ class ProductService {
         // Convert template properties to JSON
         def json = [
                 id:         product.id,
+                owner:      [id: product.ownerId, name: User.findById(product.ownerId).name],
                 productId:  product.productId,
                 name:       product.name,
                 templateId: product.templateId,

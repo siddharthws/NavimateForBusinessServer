@@ -28,6 +28,7 @@ app.controller("ProductEditorCtrl", function ( $scope, $rootScope, $mdDialog, Na
         // Create empty product
         var product = new ObjProduct(
             null,
+            null,
             "",
             "",
             null,
@@ -82,8 +83,14 @@ app.controller("ProductEditorCtrl", function ( $scope, $rootScope, $mdDialog, Na
     vm.save = function () {
         // Validate Entered Data
         if (validate()) {
+            // Get editable products
+            var editableProducts = []
+            vm.products.forEach(function (product) {
+                if (product.canEdit()) {editableProducts.push(product)}
+            })
+
             $rootScope.showWaitingDialog("Please wait while Products are edited...")
-            ProductService.edit(vm.products).then(
+            ProductService.edit(editableProducts).then(
                 // Success callback
                 function () {
                     // Dismiss Dialog & notify user
@@ -135,7 +142,7 @@ app.controller("ProductEditorCtrl", function ( $scope, $rootScope, $mdDialog, Na
 
         // Validate each product
         for (var i = 0; i < vm.products.length; i++) {
-            if (!vm.products[i].isValid()) {
+            if (vm.products[i].canEdit() && !vm.products[i].isValid()) {
                 vm.bInputError = true
                 return false
             }
