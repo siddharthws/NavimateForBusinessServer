@@ -35,6 +35,35 @@ class PortingApiController {
     def fieldService
     def authService
 
+    def fixAxisAccount() {
+        // Update Account Name
+        def acc = Account.findById(146071)
+        acc.name = "Axis Infoline"
+        acc.save(flush: true, failOnError: true)
+
+        // Change accounts of managers registered for above account
+        def man1 = User.findById(146088)
+        def man2 = User.findById(146089)
+        def man3 = User.findById(146090)
+        def man4 = User.findById(146091)
+        man1.account = acc
+        man2.account = acc
+        man3.account = acc
+        man4.account = acc
+        man1.save(flush: true, failOnError: true)
+        man2.save(flush: true, failOnError: true)
+        man3.save(flush: true, failOnError: true)
+        man4.save(flush: true, failOnError: true)
+
+        // Change emails of duplicate accounts
+        def dup1 = User.findById(146092)
+        def dup2 = User.findById(146093)
+        dup1.email = "utr1@axis.com"
+        dup2.email = "utr2@axis.com"
+        dup1.save(flush: true, failOnError: true)
+        dup2.save(flush: true, failOnError: true)
+    }
+
     def fixProductField() {
         // Get all product fields
         def fields = Field.findAllByType(Constants.Template.FIELD_TYPE_PRODUCT)
