@@ -24,7 +24,7 @@ class AuthService {
         //register a new admin
         if(role == Role.ADMIN) {
             // Create and save a new account
-            account = new Account(name: input.companyName)
+            account = new Account(name: input.companyName, photoName:"")
             account.save(flush: true, failOnError: true)
 
             // Create and save account settings

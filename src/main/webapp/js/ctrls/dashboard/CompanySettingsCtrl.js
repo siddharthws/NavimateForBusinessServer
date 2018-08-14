@@ -2,7 +2,7 @@
  * Created by Chandel on 06-02-2018.
  */
 
-app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScope, $http,
+app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScope, $http, DialogService, $filter,
                                                 ToastService, NavService) {
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
@@ -21,6 +21,7 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScop
     vm.apiKey           = $localStorage.apiKey
     vm.companySize      = $localStorage.companySize
 
+    vm.image            = ""
     /*-------------------------------- Scope APIs --------------------------------*/
     vm.update = function () {
         //set day start and day end
@@ -59,6 +60,22 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScop
         }
     }
 
+    vm.uploadCompanyIcon = function (image) {
+
+        // Perform import
+        ImageUploadService.import("/api/photos/uploadCompanyIcon", image).then(
+            // Success callback
+            function () {
+                // Notify user about success
+                ToastService.toast("Image Uploaded successfully...")
+            },
+            // Error callback
+            function (message) {
+                // Notify user about error
+                DialogService.alert("Upload Error : " + message)
+            }
+        )
+    }
     /*-------------------------------- Private APIs --------------------------------*/
     function initTime() {
         //get working hours from local storage

@@ -8,6 +8,7 @@ class Account {
 
     // Company Name
     String          name
+    String          photoName
 
     // List of users
     User admin
@@ -18,6 +19,7 @@ class Account {
 
     static constraints = {
         admin nullable: true
+        photoName nullable: true
     }
 
     static mapping = {
