@@ -146,9 +146,10 @@ class UrlMappings {
         "/api/acra/get"             (controller: "AppApi") {action = [GET: "getAcra"]}
 
         // Photo Related APIs
-        "/api/photos/upload"        (controller: "PhotoApi") {action = [POST: "upload"]}
-        "/api/photos/uploadFile"    (controller: "PhotoApi") {action = [POST: "uploadFile"]}
-        "/api/photos/get"           (controller: "PhotoApi") {action = [GET: "get"]}
+        "/api/photos/upload"              (controller: "PhotoApi") {action = [POST: "upload"]}
+        "/api/photos/uploadFile"          (controller: "PhotoApi") {action = [POST: "uploadFile"]}
+        "/api/photos/get"                 (controller: "PhotoApi") {action = [GET: "get"]}
+        "/api/photos/uploadCompanyIcon"   (controller: "PhotoApi") {action = [POST: "uploadCompanyIcon"]}
 
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
