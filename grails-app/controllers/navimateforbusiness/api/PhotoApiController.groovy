@@ -5,6 +5,8 @@ import grails.converters.JSON
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 import navimateforbusiness.User
+import navimateforbusiness.Account
+import grails.io.IOUtils
 
 class PhotoApiController {
 
@@ -109,4 +111,47 @@ class PhotoApiController {
         def resp=  [success: true]
         render resp as JSON
     }
+
+    def uploadPhoto(){
+
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        if (!user) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Get file
+        def image = request.getFile('image')
+        // Get input stream
+        InputStream is = image.getInputStream()
+        // Generate  UUID
+        def filename = UUID.randomUUID().toString()
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream()
+        byte[] buffer = new byte[1024]
+        int bytesRead = is.read(buffer)
+        while (bytesRead > 0) {
+            baos.write(buffer, 0, bytesRead)
+            bytesRead = is.read(buffer)
+        }
+        def ba = baos.toByteArray()
+
+        // Upload to S3 with a UUID filename
+        ByteArrayInputStream bis = new ByteArrayInputStream(ba)
+        ObjectMetadata meta = new ObjectMetadata()
+        meta.setContentLength(ba.length)
+        meta.setContentType("image/jpg")
+        amazonS3Service.storeInputStream(filename, bis, meta)
+
+        // Attach photo name to the account
+        Account account = Account.findByAdmin(user)
+        account.photoName = filename
+        account.save(failOnError: true, flush: true)
+
+        // Send response
+        def resp=  [success: true]
+        render resp as JSON
+    }
+
 }

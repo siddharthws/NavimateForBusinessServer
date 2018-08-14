@@ -8,6 +8,7 @@ class Account {
 
     // Company Name
     String          name
+    String          photoName
 
     // List of users
     User admin
