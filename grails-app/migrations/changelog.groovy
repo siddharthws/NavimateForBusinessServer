@@ -48,4 +48,5 @@ databaseChangeLog = {
     include file: 'add-loc-report.groovy'
     include file: 'update-task-resolution-time.groovy'
     include file: 'update-task-public-id.groovy'
+    include file: 'add-account-photo.groovy'
 }

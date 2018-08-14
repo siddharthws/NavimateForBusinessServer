@@ -2,7 +2,7 @@
  * Created by Chandel on 06-02-2018.
  */
 
-app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScope, $http,
+app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScope, $http, DialogService,
                                                 ToastService, NavService) {
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
@@ -57,6 +57,22 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScop
                     ToastService.toast("Failed to Update settings!!!")
                 })
         }
+    }
+
+    vm.uploadCompanyIcon = function (image) {
+        // Perform import
+        ImageUploadService.uploadCompanyIcon("/api/photos/uploadCompanyIcon", image).then(
+            // Success callback
+            function () {
+                // Notify user about success
+                ToastService.toast("Image Uploaded successfully...")
+            },
+            // Error callback
+            function (message) {
+                // Notify user about error
+                DialogService.alert("Upload Error : " + message)
+            }
+        )
     }
 
     /*-------------------------------- Private APIs --------------------------------*/
