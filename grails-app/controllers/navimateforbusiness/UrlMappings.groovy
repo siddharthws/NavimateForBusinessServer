@@ -149,6 +149,7 @@ class UrlMappings {
         "/api/photos/upload"        (controller: "PhotoApi") {action = [POST: "upload"]}
         "/api/photos/uploadFile"    (controller: "PhotoApi") {action = [POST: "uploadFile"]}
         "/api/photos/get"           (controller: "PhotoApi") {action = [GET: "get"]}
+        "/api/photos/uploadCompanyIcon"   (controller: "PhotoApi") {action = [POST: "uploadCompanyIcon"]}
 
         "500"(controller: "Utils", action: "handleError")
         "404"(controller: "Utils", action: "handle404")
