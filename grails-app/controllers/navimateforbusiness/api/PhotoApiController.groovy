@@ -113,8 +113,10 @@ class PhotoApiController {
     }
 
     def uploadCompanyIcon(){
-        // Authenticate Request
-        if (!authService.authenticate(request.getHeader("X-Auth-Token"))) {
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+
+        if (!user) {
             throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
         }
 
@@ -149,5 +151,42 @@ class PhotoApiController {
         // Send response
         def resp=  [success: true]
         render resp as JSON
+    }
+
+    def getCompanyIcon() {
+        // Authenticate Request
+        if (!authService.authenticate(request.getHeader("X-Auth-Token"))) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        // Get user object
+        def user = authService.getUserFromAccessToken(request.getHeader("X-Auth-Token"))
+        Account account = Account.findByAdmin(user)
+
+        // Get filename
+        String filename = account.photoName
+
+        if (!filename) {
+            throw new ApiException("Image not found...", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Check if file exists
+        if (!amazonS3Service.exists(filename)) {
+            throw new ApiException("Invalid Filename : " + filename, Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Get File from S3
+        File imageFile = amazonS3Service.getFile(filename, filename)
+        if (!imageFile || !imageFile.length()) {
+            throw new ApiException("Invalid File..." + filename, Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Set response parameters
+        response.setHeader("Content-disposition", "attachment; filename=" + filename)
+        response.contentType = "application/octet-stream"
+
+        // Send file as response
+        imageFile.withInputStream { response.outputStream << it }
+        imageFile.delete()
     }
 }

@@ -5,7 +5,7 @@
 app.controller('DashboardCtrl',
                 function (  $scope, $rootScope, $state, $window, $localStorage, $timeout,
                             AuthService, DialogService, ToastService, NavService, LocationService,
-                            LeadService, LocReportDS, TableService, TaskService, TeamService, TemplateService) {
+                            LeadService, LocReportDS, TableService, TaskService, TeamService, TemplateService, ImageUploadService) {
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
 
@@ -32,6 +32,17 @@ app.controller('DashboardCtrl',
 
     // Init Location Service
     LocationService.init()
+
+    // Get Company Icon
+    ImageUploadService.getCompanyIcon().then(
+        // Success callback
+        function () {
+            $scope.$broadcast(Constants.Events.COMPANY_ICON_LOADED)
+        },
+        // Error callback
+        function (message) {
+        }
+    )
 
     /*------------------------------------ Root APIs --------------------------------*/
     // Access Checker API
