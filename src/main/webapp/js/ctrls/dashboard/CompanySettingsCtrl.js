@@ -3,7 +3,7 @@
  */
 
 app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScope, $http, DialogService,
-                                                ToastService, NavService) {
+                                                ToastService, NavService, ImageUploadService) {
     /*------------------------------------ INIT --------------------------------*/
     var vm = this
 
@@ -64,7 +64,8 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScop
         ImageUploadService.uploadCompanyIcon("/api/photos/uploadCompanyIcon", image).then(
             // Success callback
             function () {
-                // Notify user about success
+                // Fetch latest Icon
+                ImageUploadService.getCompanyIcon()
                 ToastService.toast("Image Uploaded successfully...")
             },
             // Error callback

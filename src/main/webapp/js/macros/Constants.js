@@ -25,7 +25,10 @@ Constants.Events = {
     MAP_CENTER:             "evt-map-center",
     MAP_MARKER_CLICK:       "evt-marker-click",
     MAP_MARKER_DRAGEND:     "evt-marker-dragend",
-    MAP_MARKER_SELECTED:     "evt-marker-selected"
+    MAP_MARKER_SELECTED:     "evt-marker-selected",
+
+    // Photo events
+    COMPANY_ICON_LOADED:    "event-company-icon-loaded"
 }
 
 /* ------------------------------- Tracking -----------------------------------*/
