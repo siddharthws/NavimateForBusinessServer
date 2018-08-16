@@ -1,0 +1,15 @@
+<!-- View for image button directive -->
+<div id="ifp-container" class="d-flex align-items-center justify-content-center"
+     ng-click="pickImage()">
+    <!-- Display Image -->
+    <img id="ic-company-settings" ng-src="{{image}}">
+
+    <!-- Loader -->
+    <loader ng-show="!image"></loader>
+
+    <!-- Edit image overlay -->
+    <div id="ifp-overlay">Upload Image</div>
+</div>
+
+<!-- File Picker hidden Input -->
+<input type="file" value="" id="image-picker" class="hidden-element" fileread="imagePicked({'file': file})"/>

@@ -21,6 +21,8 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScop
     vm.apiKey           = $localStorage.apiKey
     vm.companySize      = $localStorage.companySize
 
+    vm.image = ImageUploadService.companyIconUrl
+
     /*-------------------------------- Scope APIs --------------------------------*/
     vm.update = function () {
         //set day start and day end
@@ -60,12 +62,18 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScop
     }
 
     vm.uploadCompanyIcon = function (image) {
+        // Display Loader Icon
+        vm.image = null
         // Perform import
         ImageUploadService.uploadCompanyIcon("/api/photos/uploadCompanyIcon", image).then(
             // Success callback
             function () {
                 // Fetch latest Icon
-                ImageUploadService.getCompanyIcon()
+                ImageUploadService.getCompanyIcon().then(
+                    function () {
+                        vm.image = ImageUploadService.companyIconUrl
+                    },
+                    function (error) {})
                 ToastService.toast("Image Uploaded successfully...")
             },
             // Error callback
@@ -82,6 +90,14 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScop
         vm.dayStart = new Date(0,0,0,$localStorage.startHr,0,0,0)
         vm.dayEnd = new Date(0,0,0,$localStorage.endHr,0,0,0)
     }
+
+    /*-------------------------------- Event Listeners --------------------------------*/
+    // Add event listener
+    // Event listener for Icon loading event
+    $scope.$on(Constants.Events.COMPANY_ICON_LOADED, function (event, args) {
+        //set image Url
+        vm.image = ImageUploadService.companyIconUrl
+    })
 
     /*-------------------------------- Post Init --------------------------------*/
     initTime()

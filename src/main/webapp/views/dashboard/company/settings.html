@@ -2,7 +2,8 @@
 
 <div class="d-flex flex-column p-4">
     <div class="fbx-v fbx-center-children">
-        <img src="/static/images/ic_logo.png" class="ib-base ib-xl ">
+        <image-picker image="{{$ctrl.image}}" image-picked="$ctrl.uploadCompanyIcon(file)"></image-picker>
+        <br>
         <span class="text-bold text-blue d-flex justify-content-center">{{$ctrl.companyName}}</span>
     </div>
     <hr class="w-100">
@@ -18,7 +19,6 @@
                 <span class="ml-2">{{$ctrl.apiKey}}</span>
             </div>
         </div>
-        <div class="vr"></div>
         <div class="fbx-v">
             <span class="text-label">Working Hours</span>
             <div class="fbx-h align-items-center ml-2">
