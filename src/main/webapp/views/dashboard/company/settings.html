@@ -2,7 +2,8 @@
 
 <div class="d-flex flex-column p-4">
     <div class="fbx-v fbx-center-children">
-        <img src="/static/images/ic_logo.png" class="ib-base ib-xl ">
+        <image-picker image="{{$ctrl.image}}" class="ib-base ib-xl" image-picked="$ctrl.uploadCompanyIcon(file)" ng-if="$root.isAdmin()"></image-picker>
+        <br>
         <span class="text-bold text-blue d-flex justify-content-center">{{$ctrl.companyName}}</span>
     </div>
     <hr class="w-100">

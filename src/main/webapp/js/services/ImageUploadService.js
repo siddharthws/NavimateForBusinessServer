@@ -4,7 +4,7 @@
 app.service('ImageUploadService', function ($http, $q, $localStorage, DialogService, FileService ) {
     /* ----------------------------- Globals --------------------------------*/
     var vm = this
-    vm.companyIconUrl = ""
+    vm.companyIconUrl = null
 
     /* ----------------------------- Public APIs --------------------------------*/
     vm.uploadCompanyIcon = function (url, image) {
