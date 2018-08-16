@@ -33,3 +33,12 @@
 .active .ic-tick{
     background-image: url("/static/images/ic_tick_white.png");
 }
+
+/* -- Company icon identifier--*/
+#ic-company-settings {
+    max-width: 10em;
+    max-height: 10em;
+    display: block;
+    width: 100%;
+    height: auto;
+}

@@ -1,0 +1,29 @@
+#ifp-container {
+    position: relative;
+    width: 10em;
+    height: 10em;
+}
+
+#ifp-container > loader {
+    position: absolute;
+    top: 3.5em;
+    left: 3.5em;
+}
+
+#ifp-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background: rgb(200, 200, 200); /* Black see-through */
+    color: #444444;
+    opacity:0;
+    font-size: 0.8rem;
+    text-align: center;
+    transition: .5s ease;
+}
+
+#ifp-container:hover > #ifp-overlay{
+    opacity: 1;
+}
