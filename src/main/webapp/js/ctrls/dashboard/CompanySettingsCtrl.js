@@ -21,6 +21,14 @@ app.controller("CompanySettingsCtrl", function ($scope, $localStorage ,$rootScop
     vm.apiKey           = $localStorage.apiKey
     vm.companySize      = $localStorage.companySize
 
+    vm.image = ImageUploadService.companyIconUrl
+    // Add event listener
+    // Event listener for Template validation success
+    $scope.$on(Constants.Events.COMPANY_ICON_LOADED, function (event, args) {
+        //set image Url
+        vm.image = ImageUploadService.companyIconUrl
+    })
+
     /*-------------------------------- Scope APIs --------------------------------*/
     vm.update = function () {
         //set day start and day end

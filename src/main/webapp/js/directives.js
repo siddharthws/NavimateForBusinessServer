@@ -413,6 +413,17 @@ app.directive('nvMap', function () {
     }
 })
 
+app.directive('imagePicker', function () {
+    return {
+        scope: {
+            image: "@",
+            text: "@",
+            imagePicked: '&'
+        },
+        templateUrl: '/static/views/directives/imageFilePicker.html',
+        controller: 'ImageFilepickerCtrl'
+    }
+})
 // Directive for multiselection filters
 app.directive('multiselectFilter', function () {
     return {
