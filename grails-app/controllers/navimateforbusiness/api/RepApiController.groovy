@@ -12,6 +12,8 @@ import navimateforbusiness.util.SmsHelper
 import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.Template
 import navimateforbusiness.User
+import navimateforbusiness.objects.ObjPager
+import navimateforbusiness.objects.ObjSorter
 
 class RepApiController {
 
@@ -311,5 +313,24 @@ class RepApiController {
         }
 
         rep
+    }
+
+    def getProducts() {
+        // Get user object
+        def rep = authenticate()
+
+        // Get input params
+        String text = request.JSON.text
+        def pager = new ObjPager(request.JSON.pager)
+
+        // Filter products for this user
+        def products = productService.getAllForUserByFPS(rep, [name: [regex: text]], pager, new ObjSorter())
+
+        // Send response with IDs, names and total count
+        def resp = [
+                results: products.products.collect {[id: it.id, name: it.name]},
+                totalCount: products.rowCount
+        ]
+        render resp as JSON
     }
 }
