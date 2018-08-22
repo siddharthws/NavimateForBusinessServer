@@ -105,6 +105,7 @@ class UrlMappings {
         "/api/reps/locationReport"  (controller: "RepApi") {action = [POST: "syncLocationReport"]}
         "/api/reps/addTask"         (controller: "RepApi") {action = [POST: "addTask"]}
         "/api/reps/addLead"         (controller: "RepApi") {action = [POST: "addLead"]}
+        "/api/reps/products/search" (controller: "RepApi") {action = [POST: "getProducts"]}
 
         /*------------------------- External APIs --------------------------*/
         "/api/ext/sync/managers"        (controller: "ExtApi") {action = [POST: "syncManagers"]}
