@@ -129,6 +129,7 @@ class UrlMappings {
         "/api/port/productTemplates"       (controller: "PortingApi") {action = [GET: "createProductTemplates"]}
         "/api/port/fixProductField"        (controller: "PortingApi") {action = [GET: "fixProductField"]}
         "/api/port/fixAxisAccount"         (controller: "PortingApi") {action = [GET: "fixAxisAccount"]}
+        "/api/port/zbcWf"                  (controller: "PortingApi") {action = [GET: "portZbcWorkflow"]}
 
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs

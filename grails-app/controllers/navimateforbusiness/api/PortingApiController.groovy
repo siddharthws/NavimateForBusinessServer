@@ -34,6 +34,16 @@ class PortingApiController {
     def reportService
     def fieldService
     def authService
+    def workflowService
+
+    def portZbcWorkflow() {
+        // Get all ZBC forms
+        Account acc = Account.findById(131927)
+        def forms = formService.getAllForUserByFilter(acc.admin, [:])
+        forms.each {FormM form ->
+            workflowService.execZbcFormSubmissionWf(User.findById(form.ownerId), form)
+        }
+    }
 
     def fixAxisAccount() {
         // Update Account Name

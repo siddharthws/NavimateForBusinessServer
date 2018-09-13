@@ -92,9 +92,8 @@ class GoogleApiService {
             if (respJson && (respJson.status == "OK")) {
                 // Push new latlng into list
                 addresses.push([address: respJson.results[0].formatted_address])
-            }
-            else {
-                throw new ApiException("Google API call failed with status : " + respJson.status)
+            } else {
+                addresses.push([address: "NA"])
             }
 
             // Mandatory 50 second delay between suucessive requests (recommended by google)

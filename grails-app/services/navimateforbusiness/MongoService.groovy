@@ -134,8 +134,10 @@ class MongoService {
 
         // Add role specific filters
         if (user.role == Role.MANAGER) {
+            def repIds = userService.getRepsForUser(user).collect {it.id}
             // Objects should either be owned by user or by account admin
             filters.push(['$or': [['ownerId': ['$eq': user.id]],
+                                  ['ownerId': ['$in': repIds]],
                                   ['ownerId': ['$eq': user.account.admin.id]]]])
         } else if (user.role == Role.CC) {
             // Objects should either be owned by account admin
@@ -143,6 +145,7 @@ class MongoService {
         } else if (user.role == Role.REP) {
             // Objects should either be owned by rep's manager or admin
             filters.push(['$or': [['ownerId': ['$eq': user.manager.id]],
+                                  ['ownerId': ['$eq': user.id]],
                                   ['ownerId': ['$eq': user.account.admin.id]]]])
         }
 

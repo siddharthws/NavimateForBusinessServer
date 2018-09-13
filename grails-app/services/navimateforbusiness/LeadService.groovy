@@ -4,6 +4,7 @@ import grails.gorm.transactions.Transactional
 import com.mongodb.client.FindIterable
 import navimateforbusiness.enums.TaskStatus
 import navimateforbusiness.enums.Visibility
+import navimateforbusiness.objects.LatLng
 import navimateforbusiness.objects.ObjPager
 import navimateforbusiness.objects.ObjSorter
 import navimateforbusiness.util.ApiException
@@ -114,6 +115,40 @@ class LeadService {
         }
 
         value
+    }
+
+    LeadM newInstance(User user, String name, LatLng latlng, long templateId, def values) {
+        // Get address from latlng
+        LatLng[] latlngs = [latlng]
+        def addresses = googleApiService.reverseGeocode(latlngs)
+
+        LeadM lead = new LeadM(
+            accountId: user.account.id,
+            ownerId: user.id,
+            visibility: Visibility.PUBLIC,
+            isRemoved: false,
+            extId: "",
+            name: name,
+            address: addresses[0].address,
+            latitude: latlng.lat,
+            longitude: latlng.lng,
+            templateId: templateId
+        )
+
+        // Prepare template data
+        def template = templateService.getForUserById(user, templateId)
+        def fields = fieldService.getForTemplate(template)
+        fields.each {field ->
+            // Set value for this field from JSON received
+            lead["$field.id"] = values["$field.id"]
+        }
+
+        // Add date info in long format
+        String currentTime = new Date().format( Constants.Date.FORMAT_LONG, Constants.Date.TIMEZONE_IST)
+        lead.createTime = currentTime
+        lead.updateTime = currentTime
+
+        lead
     }
 
     LeadM fromJson(def json, User user) {
