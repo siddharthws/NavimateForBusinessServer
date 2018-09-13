@@ -4,6 +4,7 @@ import grails.converters.JSON
 import navimateforbusiness.AccountSettings
 import navimateforbusiness.FormM
 import navimateforbusiness.TaskM
+import navimateforbusiness.objects.ObjWorkflow
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 import navimateforbusiness.LeadM
@@ -23,6 +24,7 @@ class RepApiController {
     def leadService
     def templateService
     def productService
+    def workflowService
 
     def register() {
         // Remove '+' from phone number
@@ -132,6 +134,9 @@ class RepApiController {
                 form.task.lastUpdated = new Date()
                 form.task.save(failOnError: true, flush: true)
             }
+
+            // Execute workflow
+            workflowService.exec(new ObjWorkflow(type: ObjWorkflow.TYPE_SUBMIT_FORM, user: rep, input: form))
 
             // Add Form IS to response JSON
             idResp.push(form.id)
