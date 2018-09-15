@@ -41,5 +41,10 @@
             <!-- Error Text -->
             <span class="text-error align-self-end" ng-if="bShowError && value.getErr().length > 0">{{value.getErr()}}</span>
         </div>
+
+        <!-- Invoice Field Editor -->
+        <div class="fbx-v" ng-if="value.field.type == $root.Constants.Template.FIELD_TYPE_INVOICE">
+            <!-- Placeholder -->
+        </div>
     </div>
 </div>

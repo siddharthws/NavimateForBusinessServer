@@ -265,7 +265,8 @@ app.factory('ObjTable2', function($http, $q, $localStorage, FileService) {
                 if (column.type == Constants.Template.FIELD_TYPE_SIGN ||
                     column.type == Constants.Template.FIELD_TYPE_PHOTO ||
                     column.type == Constants.Template.FIELD_TYPE_FILE ||
-                    column.type == Constants.Template.FIELD_TYPE_LOCATION) {
+                    column.type == Constants.Template.FIELD_TYPE_LOCATION ||
+                    column.type == Constants.Template.FIELD_TYPE_INVOICE) {
                     column.size = Constants.Table.COL_SIZE_S
                 } else {
                     // Get total number of character in columns

@@ -311,6 +311,7 @@ Constants.Template = {
     FIELD_TYPE_DATE:            9,
     FIELD_TYPE_FILE:            10,
     FIELD_TYPE_PRODUCT:         11,
+    FIELD_TYPE_INVOICE:         12,
 
     // Special Object Column type
     FIELD_TYPE_LEAD:            21,
@@ -347,7 +348,8 @@ Constants.Template.FORM_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_FILE,
     Constants.Template.FIELD_TYPE_SIGN,
     Constants.Template.FIELD_TYPE_CHECKBOX,
-    Constants.Template.FIELD_TYPE_DATE
+    Constants.Template.FIELD_TYPE_DATE,
+    //Constants.Template.FIELD_TYPE_INVOICE
 ]
 
 Constants.Template.LEAD_FIELD_TYPES = [
@@ -367,7 +369,8 @@ Constants.Template.TASK_FIELD_TYPES = [
     Constants.Template.FIELD_TYPE_CHECKLIST,
     Constants.Template.FIELD_TYPE_CHECKBOX,
     Constants.Template.FIELD_TYPE_DATE,
-    Constants.Template.FIELD_TYPE_PRODUCT
+    Constants.Template.FIELD_TYPE_PRODUCT,
+    //Constants.Template.FIELD_TYPE_INVOICE
 ]
 
 Constants.Template.PRODUCT_FIELD_TYPES = [

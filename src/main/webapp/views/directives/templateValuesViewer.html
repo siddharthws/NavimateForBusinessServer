@@ -6,7 +6,8 @@
              ng-if="(value.value != '-') &&
                     (value.field.type == $root.Constants.Template.FIELD_TYPE_PHOTO ||
                      value.field.type == $root.Constants.Template.FIELD_TYPE_FILE ||
-                     value.field.type == $root.Constants.Template.FIELD_TYPE_SIGN)">
+                     value.field.type == $root.Constants.Template.FIELD_TYPE_SIGN ||
+                     value.field.type == $root.Constants.Template.FIELD_TYPE_INVOICE)">
             <span class="text-label">{{value.field.title}}</span>
             <input type="button" value="" class="ib-base ib-xs ib-hover ib-link" title="Open Image"
                    ng-click="vm.showImage(value)"/>

@@ -78,6 +78,7 @@ app.factory('ObjValue', function(TemplateService) {
             case Constants.Template.FIELD_TYPE_RADIOLIST:
             case Constants.Template.FIELD_TYPE_CHECKLIST:
             case Constants.Template.FIELD_TYPE_CHECKBOX:
+            case Constants.Template.FIELD_TYPE_INVOICE:
                 break
             default:
                 err = "Invalid Field Type"

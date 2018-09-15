@@ -129,7 +129,8 @@
                                                         column.type != vm.TemplateConst.FIELD_TYPE_CHECKBOX &&
                                                         column.type != vm.TemplateConst.FIELD_TYPE_LEAD &&
                                                         column.type != vm.TemplateConst.FIELD_TYPE_PRODUCT &&
-                                                        column.type != vm.TemplateConst.FIELD_TYPE_TASK )">
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_TASK &&
+                                                        column.type != vm.TemplateConst.FIELD_TYPE_INVOICE )">
                         {{value}}
                     </span>
 
@@ -137,7 +138,8 @@
                     <input type="button" value="" class="ib-base ib-xs ib-hover ib-link" title="Open Image"
                            ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_PHOTO ||
                                                          column.type == vm.TemplateConst.FIELD_TYPE_FILE ||
-                                                         column.type == vm.TemplateConst.FIELD_TYPE_SIGN)"
+                                                         column.type == vm.TemplateConst.FIELD_TYPE_SIGN ||
+                                                         column.type == vm.TemplateConst.FIELD_TYPE_INVOICE)"
                            ng-click="$root.Statics.absorbEvent($event); vm.showImage(value, $index)"/>
 
                     <!-- Button to open location -->
