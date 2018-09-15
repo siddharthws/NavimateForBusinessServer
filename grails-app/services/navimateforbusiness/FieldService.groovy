@@ -213,6 +213,10 @@ class FieldService {
                     }
                 }
                 break
+            case Constants.Template.FIELD_TYPE_INVOICE:
+                // Invoice cannot be imported
+                value = ""
+                break
         }
 
         value
@@ -230,6 +234,10 @@ class FieldService {
             case Constants.Template.FIELD_TYPE_PHOTO:
             case Constants.Template.FIELD_TYPE_SIGN:
                 returnValue = "https://biz.navimateapp.com/#/photos?name=" + value
+                break
+            case Constants.Template.FIELD_TYPE_INVOICE:
+                // Placeholder
+                returnValue = ""
                 break
             case Constants.Template.FIELD_TYPE_CHECKBOX:
                 returnValue = value ? "yes" : "no"
