@@ -395,4 +395,28 @@ class PortingApiController {
             template.save(flush: true, failOnError: true)
         }
     }
+
+    def fixPhotoField(){
+        // Find All photo fields
+        def fields = Field.findAllByType( Constants.Template.FIELD_TYPE_PHOTO)
+        FormM.findAll().each {FormM form ->
+            boolean bSave = false
+
+            // Check for photo fields
+            fields.each {Field field ->
+                if (form["$field.id"]) {
+                    form["$field.id"] = [form["$field.id"]]
+                    bSave = true
+                }else {
+                    form["$field.id"] = []
+                    bSave = true
+                }
+            }
+
+            // Save form
+            if (bSave) {
+                form.save(flush: true, failOnError: true)
+            }
+        }
+    }
 }
