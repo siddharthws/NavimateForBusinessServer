@@ -130,6 +130,7 @@ class UrlMappings {
         "/api/port/fixProductField"        (controller: "PortingApi") {action = [GET: "fixProductField"]}
         "/api/port/fixAxisAccount"         (controller: "PortingApi") {action = [GET: "fixAxisAccount"]}
         "/api/port/zbcWf"                  (controller: "PortingApi") {action = [GET: "portZbcWorkflow"]}
+        "/api/port/fixPhotoField"          (controller: "PortingApi") {action = [GET: "fixPhotoField"]}
 
         /*------------------------- Other APIs --------------------------*/
         // Tracking related APIs
