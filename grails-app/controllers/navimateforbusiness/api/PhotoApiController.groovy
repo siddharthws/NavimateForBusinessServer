@@ -46,6 +46,35 @@ class PhotoApiController {
         imageFile.delete()
     }
 
+    def getFile() {
+        authenticate()
+
+        // Get filename
+        String filename = request.JSON.filename
+        if (!filename) {
+            throw new ApiException("Filename not found...", Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Check if file exists
+        if (!amazonS3Service.exists(filename)) {
+            throw new ApiException("Invalid Filename : " + filename, Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Get File from S3
+        File file = amazonS3Service.getFile(filename, filename)
+        if (!file || !file.length()) {
+            throw new ApiException("Invalid File..." + filename, Constants.HttpCodes.BAD_REQUEST)
+        }
+
+        // Set response parameters
+        response.setHeader("Content-disposition", "attachment; filename=" + filename)
+        response.contentType = "application/octet-stream"
+
+        // Send file as response
+        file.withInputStream { response.outputStream << it }
+        file.delete()
+    }
+
     // APi to upload photo form app
     def upload() {
         // Check app's ID
