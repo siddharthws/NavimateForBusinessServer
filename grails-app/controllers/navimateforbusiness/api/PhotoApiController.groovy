@@ -2,6 +2,7 @@ package navimateforbusiness.api
 
 import com.amazonaws.services.s3.model.ObjectMetadata
 import grails.converters.JSON
+import navimateforbusiness.enums.Role
 import navimateforbusiness.util.ApiException
 import navimateforbusiness.util.Constants
 import navimateforbusiness.User
@@ -15,7 +16,8 @@ class PhotoApiController {
 
     def get() {
         if (!authService.authenticate(request.getHeader("X-Auth-Token"))) {
-            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+            // Authenticate Rep
+            authenticate()
         }
 
         // Get filename
@@ -188,5 +190,23 @@ class PhotoApiController {
         // Send file as response
         imageFile.withInputStream { response.outputStream << it }
         imageFile.delete()
+    }
+
+    private def authenticate() {
+        // Get id from request
+        long id = 0L
+        try {
+            id = Long.parseLong(request.getHeader("id"))
+        } catch (Exception e) {
+            id = 0
+        }
+
+        // Find representative with this ID
+        User rep = User.findByRoleAndId(Role.REP, id)
+        if (!rep) {
+            throw new ApiException("Unauthorized", Constants.HttpCodes.UNAUTHORIZED)
+        }
+
+        rep
     }
 }
