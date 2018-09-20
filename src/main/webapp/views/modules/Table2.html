@@ -134,10 +134,16 @@
                         {{value}}
                     </span>
 
+                    <!-- Buttons to open multiple photos -->
+                    <span ng-repeat="index in value track by $index">
+                        <input type="button" value="" class="ib-base ib-xs ib-hover ib-link" title="Open Image"
+                               ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_PHOTO)"
+                               ng-click="$root.Statics.absorbEvent($event); vm.showImage(value[$index], $index)"/>
+                    </span>
+
                     <!-- Button to open image -->
                     <input type="button" value="" class="ib-base ib-xs ib-hover ib-link" title="Open Image"
-                           ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_PHOTO ||
-                                                         column.type == vm.TemplateConst.FIELD_TYPE_FILE ||
+                           ng-if="(value != '-') && (column.type == vm.TemplateConst.FIELD_TYPE_FILE ||
                                                          column.type == vm.TemplateConst.FIELD_TYPE_SIGN ||
                                                          column.type == vm.TemplateConst.FIELD_TYPE_INVOICE)"
                            ng-click="$root.Statics.absorbEvent($event); vm.showImage(value, $index)"/>
